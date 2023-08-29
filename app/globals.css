@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+  --accent-color: #6495A3;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+.invalid_input {
+  outline: 5px solid red;
+}
+
+.btnFancy {
+  appearance: none;
+  border: none;
+  outline: none;
+  padding: 15px 30px;
+  border-radius: 6px;
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 15px;
+  cursor: pointer;
+  transition: 0.4s;
+  color: var(--accent-color);
+  border: 3px solid var(--accent-color);
+  background-image: linear-gradient(to top, var(--accent-color) 50%, transparent 50%);
+  background-size: 100% 200%;
+  background-position: 0% 0%;
+}
+.btnFancy:hover {
+  color: #FFF;
+  background-position: 0% 100%;
+}
+.btnFancy:active {
+  color: #FFF;
+  background-position: 0% 100%;
+}
