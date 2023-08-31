@@ -62,12 +62,6 @@ padding: 3.5rem;
 
 
 @media screen and (max-width: 767px) {
-  @supports (backdrop-filter: blur(1rem)) {
-    .navbar__list {
-      background: var(--accent-color);
-      backdrop-filter: blur(1rem);
-    }
-  }
  .navbar{
   padding: 0 ;
   z-index: 100;
@@ -81,7 +75,6 @@ padding: 3.5rem;
     top:0;
     list-style: none;
     position: absolute;
-    background: hsl(0 0% 100% / 0.1);
     backdrop-filter: blur(1rem);
   }
  

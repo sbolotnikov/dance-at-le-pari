@@ -145,7 +145,7 @@ const ShowIcon = ({ icon, stroke }) => {
 
         </g>
       );
-    } else {
+    }  else {
       return;
     }
   };
