@@ -24,8 +24,11 @@ const Navbar = ({ navbarLinks, path, locale }: Props) => {
   const { data: session } = useSession();
   console.log('Client role', session?.user);
   useEffect(() => {
+    // if (window.innerHeight < 568) {
+    //   screen.orientation.lock('portrait');
+    //   console.log("orientation", screen.orientation.type)
+    // }
     if (window.innerWidth < 768) {
-      document.getElementsByClassName('navbar__list')[0].classList.add('translate-x-80');
       let items = document.querySelectorAll('.navbar__item');
       for (let i = 0; i < items.length; i++) {
         items[i].classList.add('translate-x-80');
@@ -35,15 +38,63 @@ const Navbar = ({ navbarLinks, path, locale }: Props) => {
       document.getElementById('profile-toggle')?.classList.add('hidden');
     }
   }, []);
+   const changeMenu =()=>{
+    if (window.innerWidth < 768) {
+    if (burgerState)
+       { document
+           .getElementsByClassName('navbar__list')[0]
+           .classList.add('translate-x-80')
+           document
+           .getElementsByClassName('navbar__list')[0].classList.add('delay-600')
+       } else
+       { document
+           .getElementsByClassName('navbar__list')[0]
+           .classList.remove('translate-x-80');
+           document
+           .getElementsByClassName('navbar__list')[0].classList.remove('delay-600')
+       }
+     let items = document.querySelectorAll('.navbar__item');
+     for (let i = 0; i < items.length; i++) {
+       if (burgerState) {
+         // items[i].classList.remove('w-8');
+         items[i].classList.add('translate-x-80');
+       } else {
+         items[i].classList.remove('translate-x-80');
+         // items[i].classList.add('w-8');
+       }
+     }
+     burgerState
+       ? document.getElementById('theme-toggle')?.classList.add('hidden')
+       : document
+           .getElementById('theme-toggle')
+           ?.classList.remove('hidden');
+     burgerState
+       ? document
+           .getElementById('profile-toggle')
+           ?.classList.add('hidden')
+       : document
+           .getElementById('profile-toggle')
+           ?.classList.remove('hidden');
+     burgerState
+       ? document
+           .getElementById('locale-toggle')
+           ?.classList.add('hidden')
+       : document
+           .getElementById('locale-toggle')
+           ?.classList.remove('hidden');
+
+     setBurgerState(!burgerState);
+   }}
   return (
     <nav className="navbar">
-      <ul className="navbar__list bg-darkMainBG/25 backdrop-blur-md dark:bg-lightMainBG/25 md:bg-transparent md:backdrop-filter-none transition  duration-1000 ease-in-out">
+      <ul className="navbar__list bg-darkMainBG/25 translate-x-80 backdrop-blur-md dark:bg-lightMainBG/25 md:translate-x-0 md:bg-transparent md:backdrop-filter-none transition  duration-1000 ease-in-out">
         {navbarLinks.map((item, index) => {
           return (
             <li
               className={` navbar__item transition duration-300 ease-in-out`}
               style={{transitionDelay:`${100+index*100}ms`}}
               key={index}
+              onClick={() =>changeMenu()}
             >
               <NavItem title={item.title} icon={item.icon} url={item.url} />
             </li>
@@ -73,6 +124,7 @@ const Navbar = ({ navbarLinks, path, locale }: Props) => {
             id="profile-toggle"
             type="button"
             className="  rounded-full h-full  mr-3 md:mr-6 outline-none "
+            onClick={() =>{burgerState?changeMenu():{}}}
           >
             <Link href={'/profile'}>
               <div className="group h-6 w-6 md:h-8 md:w-8 flex  cursor-pointer  hover:scale-110  flex-col items-center ">
@@ -125,52 +177,7 @@ const Navbar = ({ navbarLinks, path, locale }: Props) => {
 
         <button
           className="relative m-1 flex cursor-pointer p-1.5  outline-none rounded-md hover:ring-2 hover:ring-lightAccentColor focus:ring-lightAccentColor dark:hover:ring-darkAccentColor dark:focus:ring-darkAccentColor md:hidden"
-          onClick={() => {
-           if (burgerState)
-              { document
-                  .getElementsByClassName('navbar__list')[0]
-                  .classList.add('translate-x-80')
-                  document
-                  .getElementsByClassName('navbar__list')[0].classList.add('delay-600')
-              } else
-              { document
-                  .getElementsByClassName('navbar__list')[0]
-                  .classList.remove('translate-x-80');
-                  document
-                  .getElementsByClassName('navbar__list')[0].classList.remove('delay-600')
-              }
-            let items = document.querySelectorAll('.navbar__item');
-            for (let i = 0; i < items.length; i++) {
-              if (burgerState) {
-                // items[i].classList.remove('w-8');
-                items[i].classList.add('translate-x-80');
-              } else {
-                items[i].classList.remove('translate-x-80');
-                // items[i].classList.add('w-8');
-              }
-            }
-            burgerState
-              ? document.getElementById('theme-toggle')?.classList.add('hidden')
-              : document
-                  .getElementById('theme-toggle')
-                  ?.classList.remove('hidden');
-            burgerState
-              ? document
-                  .getElementById('profile-toggle')
-                  ?.classList.add('hidden')
-              : document
-                  .getElementById('profile-toggle')
-                  ?.classList.remove('hidden');
-            burgerState
-              ? document
-                  .getElementById('locale-toggle')
-                  ?.classList.add('hidden')
-              : document
-                  .getElementById('locale-toggle')
-                  ?.classList.remove('hidden');
-
-            setBurgerState(!burgerState);
-          }}
+          onClick={() =>changeMenu()}
         >
           <Burger status={burgerState} />
         </button>
