@@ -41,8 +41,9 @@ export default function RootLayout({
       <body suppressHydrationWarning={true}>
         <Providers>
           <main id="mainPage" className="w-screen h-screen p-0 m-0 items-center justify-center overflow-hidden text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG">
-            <Navbar navbarLinks={navbarLinks} path={''} locale={'EN'} />
+            <Navbar navbarLinks={navbarLinks} path={''} locale={'EN'} >
             {children}
+            </Navbar>
           </main>
         </Providers>
       </body>

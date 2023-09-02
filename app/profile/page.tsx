@@ -175,20 +175,20 @@ console.log(passwordRef.current?.value)
       }
     });
   }
-return <div className="w-full flex justify-center items-center">
+return <div className="absolute inset-0 w-full flex justify-center items-center">
       {revealAlert && <AlertMenu onReturn={onReturn} styling={alertStyle} />}
       {revealCloud && <ChooseAvatar onReturn={onReturnAvatar} styling={alertStyle} />}
       {loading && <Loading />}
       <div
-        className="border-0 rounded-md  max-auto p-4 shadow-2xl max-w-[450px] w-full m-3"
+        className="border-0 rounded-md   shadow-2xl max-w-[450px] w-full m-3"
         // style={{ boxShadow: '0 0 150px rgb(255 236 0 / 50%)'}}
       >
         <h2
-          className="text-center fw-bolder text-uppercase"
+          className="text-center font-bold text-uppercase"
           style={{   letterSpacing: '1px' }}
         >
           Your's {session?.user.role} Profile
-          <div className="relative flex justify-center items-center outline-none border rounded-md w-24 p-4 my-6 mx-auto">
+          <div className="relative flex justify-center items-center outline-none border rounded-md w-24 my-6 mx-auto">
             {((userURL !== null)&&(userURL !== undefined)) ? (
              
               <ImgFromDb url={userURL} stylings="object-contain"  alt="User Picture" />
@@ -221,34 +221,34 @@ return <div className="w-full flex justify-center items-center">
           </div>
         </h2>
         <form onSubmit={handleSubmit}>
-          <label className="flex flex-col items-center p-3 rounded-t-md bottom-0">
+          <label className="flex flex-col items-center p-1 rounded-t-md bottom-0">
             Your Name:
             <input
               name="user_name"
               id="user_name"
-              className="flex-1 outline-none bg-menuBGColor border-none rounded-md p-0.5 mx-1 my-1"
+              className="flex-1 outline-none bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor border-none rounded-md p-0.5 mx-1 my-1"
               type="text"
               placeholder="Enter Name"
               ref={userNameRef}
             />
           </label>
 
-          <label className="flex flex-col items-center p-3  rounded-t-md bottom-0">
+          <label className="flex flex-col items-center p-1  rounded-t-md bottom-0">
             Email Address
             <input
               name="user_email"
               id="user_email"
-              className="flex-1 outline-none bg-menuBGColor border-none rounded-md -bg p-0.5 mx-1 my-1"
+              className="flex-1 outline-none bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor border-none rounded-md -bg p-0.5 mx-1 my-1"
               type="email"
               ref={emailRef}
               required
             />
                       
           </label>
-          <label className="flex flex-col items-center p-3  rounded-t-md bottom-0">
+          <label className="flex flex-col items-center p-1  rounded-t-md bottom-0">
             Password
             <input
-              className="flex-1 outline-none bg-menuBGColor border-none rounded-md  p-0.5 mx-1 my-1"
+              className="flex-1 outline-none bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor border-none rounded-md  p-0.5 mx-1 my-1"
               name="password"
               id="password"
               type="password"
@@ -257,10 +257,10 @@ return <div className="w-full flex justify-center items-center">
               
             />
           </label>
-          <label className="flex flex-col items-center p-3  rounded-t-md bottom-0">
+          <label className="flex flex-col items-center p-1  rounded-t-md bottom-0">
             Confirm Password
             <input
-              className="flex-1 outline-none bg-menuBGColor border-none rounded-md  p-0.5 mx-1 my-1"
+              className="flex-1 outline-none bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor border-none rounded-md  p-0.5 mx-1 my-1"
               name="passwordConfirm"
               id="passwordConfirm"
               type="password"
@@ -268,10 +268,10 @@ return <div className="w-full flex justify-center items-center">
               placeholder="leave blank if not needed to change"
             />
           </label>
-          <label className="flex flex-col items-center p-3  rounded-t-md bottom-0">
+          <label className="flex flex-col items-center p-1  rounded-t-md bottom-0">
             Telephone:
             <input
-              className="flex-1 outline-none bg-menuBGColor border-none rounded-md bg-main-bg p-0.5 mx-1 my-1"
+              className="flex-1 outline-none bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor border-none rounded-md bg-main-bg p-0.5 mx-1 my-1"
               name="telephone"
               id="telephone"
               type="tel"

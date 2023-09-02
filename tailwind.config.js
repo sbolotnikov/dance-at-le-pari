@@ -24,7 +24,7 @@ module.exports = {
         lightlavender:"#AFCDCD",
 
         alertcolor:"#a01c1c",
-        menuBGColor:"#6495A3",
+        menuBGColor:"#0E0C71",
         darkMainColor: '#F3F4F6',
         darkMainBG: '#374151',
         darkAccentColor: '#F3F4F6',

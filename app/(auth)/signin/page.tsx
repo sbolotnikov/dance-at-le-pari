@@ -53,7 +53,7 @@ const page: FC<pageProps> = ({}) => {
     
       return (
         <div
-        className="w-full h-screen flex items-center justify-center"
+        className="absolute top-0 left-0 w-full h-screen flex items-center justify-center"
       >
       {/* {revealAlert && <AlertMenu onReturn={onReturn} styling={alertStyle} />} */}
         <div
@@ -78,7 +78,7 @@ const page: FC<pageProps> = ({}) => {
             )}
             <label className="flex flex-col items-center">Email 
             <input
-              className="flex-1 outline-none border-none rounded-md  p-0.5 mx-1"
+              className="flex-1 outline-none border-none rounded-md   text-lightMainColor p-0.5 mx-1"
               id="email"
               type="email"
               ref={emailRef}
@@ -87,7 +87,7 @@ const page: FC<pageProps> = ({}) => {
             </label>
             <label className="flex flex-col items-center">Password 
             <input
-              className="flex-1 outline-none border-none rounded-md  p-0.5 mx-1"
+              className="flex-1 outline-none border-none rounded-md   text-lightMainColor p-0.5 mx-1"
               id="password"
               type="password"
               ref={passwordRef}
@@ -95,7 +95,7 @@ const page: FC<pageProps> = ({}) => {
               required
             />
             </label>
-            <label className="flex flex-col items-center">Password Confirmation
+            <label className="flex flex-col items-center   text-lightMainColor">Password Confirmation
             <input
               className="flex-1 outline-none border-none rounded-md  p-0.5 mx-1 mb-2"
               id="password-confirm"

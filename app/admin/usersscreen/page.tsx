@@ -1,18 +1,19 @@
-'use client'
+'use client';
 import { useState, useEffect } from 'react';
 import UserForm from '@/components/userForm';
 import AlertMenu from '@/components/alertMenu';
 
 interface UserType {
-    name:string;
-    email:string;
-    role:string;
-    image:string;
-    id:number}
+  name: string;
+  email: string;
+  role: string;
+  image: string;
+  id: number;
+}
 
 function page() {
   const [users, setUsers] = useState<UserType[]>([]);
-  const [usersType, setUsersType] = useState("All");
+  const [usersType, setUsersType] = useState('All');
   const [usersDisplay, setUsersDisplay] = useState<UserType[]>([]);
   const [revealAlert, setRevealAlert] = useState(false);
   const [alertStyle, setAlertStyle] = useState({
@@ -23,42 +24,45 @@ function page() {
     button1: '',
     color2: '',
     button2: '',
-    inputField:""
+    inputField: '',
   });
   const [selectedId, setSelectedId] = useState(0);
   const [style1, setStyle1] = useState({ display: 'none' });
-  var filtersArray = [["All",""],["Users","User"], ["Administarors","Admin"] ]
+  var filtersArray = [
+    ['All', ''],
+    ['Users', 'User'],
+    ['Administarors', 'Admin'],
+  ];
 
   useEffect(() => {
     // GET request
-     fetch('/api/admin/users', {
-    cache:'no-store'
+    fetch('/api/admin/users', {
+      cache: 'no-store',
     }).then((res) => {
-        res.json().then (data => {
-            console.log(data)
-            setUsers(data);
-            setUsersDisplay(data)
-        });     
-    })
-
-
-  }, []);
-  const handleDelete=(id:number, name:string)=>{
-      console.log(id)
-      setSelectedId(id);
-      setAlertStyle({
-        variantHead: 'danger',
-        heading: 'Warning!',
-        text: `Are you sure about deleting record of ${name}?`,
-        color1: 'danger',
-        button1: 'Confirm',
-        color2: 'secondary',
-        button2: 'Cancel',
-        inputField:""
+      res.json().then((data) => {
+        console.log(data);
+        setUsers(data);
+        setUsersDisplay(data);
       });
-      setRevealAlert(true);
-  }
-  const onReturn = (decision1:string) => {
+    });
+    // document.getElementById('userContainer')?.style({height:`[${window.innerHeight-100}px]`});
+  }, []);
+  const handleDelete = (id: number, name: string) => {
+    console.log(id);
+    setSelectedId(id);
+    setAlertStyle({
+      variantHead: 'danger',
+      heading: 'Warning!',
+      text: `Are you sure about deleting record of ${name}?`,
+      color1: 'danger',
+      button1: 'Confirm',
+      color2: 'secondary',
+      button2: 'Cancel',
+      inputField: '',
+    });
+    setRevealAlert(true);
+  };
+  const onReturn = (decision1: string) => {
     setRevealAlert(false);
     if (decision1 == 'Confirm') {
       fetch('/api/admin/del_user', {
@@ -67,23 +71,24 @@ function page() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          id:selectedId,
+          id: selectedId,
         }),
-      }).then(()=>{
-        window.location.reload()
-      })
-      ;
-    }else setSelectedId(0);
-}
+      }).then(() => {
+        window.location.reload();
+      });
+    } else setSelectedId(0);
+  };
   return (
-    <div className="w-full flex justify-center items-center">
-        {revealAlert && <AlertMenu onReturn={onReturn} styling={alertStyle} />}
-        
-      <div className="w-full max-w-[1000px] flex flex-row justify-center items-center flex-wrap">
+    <div className="absolute top-0 left-0 w-full flex justify-center items-center">
+      {revealAlert && <AlertMenu onReturn={onReturn} styling={alertStyle} />}
+
+      <div className="w-full max-w-[1000px] flex flex-row mt-12 md:mt-20 justify-center items-center flex-wrap">
         <h3 className="w-full xs:text-md sm:text-xl phone:text-2xl tablet:text-3xl text-center">
           Table of project Users's Roles
-          </h3>
-          <h5 className="w-full xs:text-md sm:text-lg phone:text-xl tablet:text-2xl text-center"> filter:
+        </h3>
+        <h5 className="w-full xs:text-md sm:text-lg phone:text-xl tablet:text-2xl text-center">
+          {' '}
+          filter:
           <div
             className="relative cursor-pointer"
             onMouseEnter={(e) => {
@@ -91,38 +96,44 @@ function page() {
             }}
             onMouseLeave={(e) => {
               setStyle1({ display: 'none' });
-            }}          
+            }}
           >
             {usersType}
             <div
               style={style1}
-              className="absolute top-8 right-0 bg-menuBGColor   border rounded-md z-[1000] w-full shadow-inner flex flex-col justify-center items-center flex-wrap "
+              className="absolute top-8 right-0 bg-menuBGColor   border rounded-md z-[1000] w-[98%] shadow-inner flex flex-col justify-center items-center flex-wrap "
             >
               <div className="w-auto  p-0.5 m-1">
-                { filtersArray.map((item, index) => {
+                {filtersArray.map((item, index) => {
                   return (
-                    
-                      <h3 key={`usertype__${index}`} data-id={item[1]} onClick={(e: React.SyntheticEvent<EventTarget>)=>{
+                    <h3
+                      key={`usertype__${index}`}
+                      data-id={item[1]}
+                      onClick={(e: React.SyntheticEvent<EventTarget>) => {
                         e.preventDefault();
                         if (!(e.target instanceof HTMLElement)) {
-                            return;
-                          }
-                          console.log(e.target.innerHTML)
-                        setUsersType(e.target.innerHTML)
-                        let groupID=e.target.dataset.id
-                          if (groupID=="") setUsersDisplay(users)
-                        else setUsersDisplay(users.filter(user=>user.role==groupID)) 
-                    }}>
+                          return;
+                        }
+                        console.log(e.target.innerHTML);
+                        setUsersType(e.target.innerHTML);
+                        let groupID = e.target.dataset.id;
+                        if (groupID == '') setUsersDisplay(users);
+                        else
+                          setUsersDisplay(
+                            users.filter((user) => user.role == groupID)
+                          );
+                      }}
+                    >
                       {item[0]}
-                    </h3> 
-                    
+                    </h3>
                   );
                 })}
               </div>
             </div>
           </div>
         </h5>
-        {usersDisplay &&
+        <div id='userContainer' className={`w-full overflow-y-scroll`} style={{height:`${window.innerHeight-177}px`}}>
+          {usersDisplay &&
             usersDisplay.map((item, index) => {
               return (
                 <UserForm
@@ -130,14 +141,12 @@ function page() {
                   user={item}
                   delUser={handleDelete}
                 />
-              )
-            })
-            }
-
+              );
+            })}
+        </div>
       </div>
     </div>
   );
 }
-                  
-export default page;
 
+export default page;

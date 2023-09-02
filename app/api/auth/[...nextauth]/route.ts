@@ -23,20 +23,15 @@ export const authOptions: NextAuthOptions = {
 
   providers: [
     CredentialsProvider({
-      name: 'Sign in',
+      name: 'Credentials',
       credentials: {
-        email: {
-          label: 'Email',
-          type: 'email',
-          placeholder: 'hello@example.com',
-        },
-        password: { label: 'Password', type: 'password' },
-      },
-      async authorize(credentials, req) {
+        email: { label: 'Email', type: 'text'},
+        password: { label: 'Password', type: 'password' }},
+      async authorize(credentials , req) {
         if (!credentials?.email || !credentials.password) {
           return null;
         }
-
+        console.log("inside credentuals")
         const user = await prisma.user.findUnique({
           where: {
             email: credentials.email,
@@ -90,6 +85,10 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+  pages: {
+    signIn: '/login',
+    error: '/login',
+  },
   callbacks: {
     session: async ({ session, token }) => {
       const user1 = await prisma.user.findUnique({
