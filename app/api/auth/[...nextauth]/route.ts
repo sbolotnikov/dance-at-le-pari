@@ -113,7 +113,7 @@ export const authOptions: NextAuthOptions = {
             name: session.user.name,
             image: session.user.image,
             emailVerified: `${year}-${month}-${date} ${hour}:${minute}:${second}`,
-            role: 'User',
+            role: 'Student',
           },
         });
       }

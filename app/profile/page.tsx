@@ -180,9 +180,25 @@ return <div className="absolute inset-0 w-full flex justify-center items-center"
       {revealCloud && <ChooseAvatar onReturn={onReturnAvatar} styling={alertStyle} />}
       {loading && <Loading />}
       <div
-        className="border-0 rounded-md   shadow-2xl max-w-[450px] w-full m-3"
+        className="border-0 rounded-md relative  shadow-2xl max-w-[450px] w-full m-3"
         // style={{ boxShadow: '0 0 150px rgb(255 236 0 / 50%)'}}
       >
+                  <button
+            type="button"
+            className="absolute top-0 right-0 mt-2 h-6 w-6 mr-3 md:mr-6 md:h-8 md:w-8 rounded-sm outline-none"
+            onClick={() => {
+               signOut();
+            }}
+          >
+            <div className="group flex  cursor-pointer  hover:scale-110  flex-col items-center ">
+              <div className=" h-6 w-6 md:h-8 md:w-8 fill-none group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
+                <ShowIcon icon={'Logout'} stroke={'2'} />
+              </div>
+              <p className="hidden tracking-widest mx-3   opacity-100 group-hover:inline-flex md:block md:opacity-0 md:group-hover:opacity-100 ">
+                {'Logout'}
+              </p>
+            </div>
+          </button>
         <h2
           className="text-center font-bold text-uppercase"
           style={{   letterSpacing: '1px' }}
@@ -197,6 +213,7 @@ return <div className="absolute inset-0 w-full flex justify-center items-center"
                       <ShowIcon icon={'DefaultUser'} stroke={'2'}/>
                     </div>
             )}
+
             <button className=" outline-none border-none fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor rounded-md  absolute p-1 -top-3 -right-3 w-8 h-8"
             onClick={(e) => {
                 e.preventDefault();

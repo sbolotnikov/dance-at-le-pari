@@ -134,22 +134,22 @@ const Navbar = ({ navbarLinks, path, locale, children }: Props) => {
         </ul>
 
         <div className="navbar__right_span md:top-7 ">
-          <button
+        {!session &&<button
             type="button"
             className="  h-6 w-6 mr-3 md:mr-6 md:h-8 md:w-8 rounded-sm outline-none"
             onClick={() => {
-              session ? signOut() : signIn();
+               signIn();
             }}
           >
             <div className="group flex  cursor-pointer  hover:scale-110  flex-col items-center ">
               <div className=" h-6 w-6 md:h-8 md:w-8 fill-none group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
-                <ShowIcon icon={session ? 'Logout' : 'Login'} stroke={'2'} />
+                <ShowIcon icon={'Login'} stroke={'2'} />
               </div>
               <p className="hidden tracking-widest mx-3   opacity-100 group-hover:inline-flex md:block md:opacity-0 md:group-hover:opacity-100 ">
-                {session ? 'Logout' : 'Login'}
+                {'Login'}
               </p>
             </div>
-          </button>
+          </button>}
           {session && (
             <button
               id="profile-toggle"

@@ -117,7 +117,7 @@ const page: FC<pageProps> = ({}) => {
           <button
             className="btnBlue1 p-2 max-w-xs"
             onClick={() => {
-              router.replace('/');
+              router.replace('/login');
             }}
           >
            Login
