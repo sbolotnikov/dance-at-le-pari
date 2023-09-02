@@ -9,7 +9,7 @@ export const Providers = ({ children }: Props) => {
 
   return (
     <SessionProvider>
-      {children}
+       {children}
     </SessionProvider>
   );
 };

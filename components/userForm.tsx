@@ -37,7 +37,7 @@ function UserForm(props: UserType) {
     props.delUser(props.user.id, props.user.name);
   };
   return (
-    <div className="w-full relative flex flex-row justify-between flex-wrap mb-28 mx-2">
+    <div className="w-full relative flex flex-row justify-between flex-wrap mb-10 mx-2">
       {props.user.image ? (
         <ImgFromDb
           url={props.user.image}
@@ -57,12 +57,12 @@ function UserForm(props: UserType) {
         {'>'}
       </h3>
       <select
-        className="bg-main-bg mx-2 rounded-md bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor"
+        className="bg-main-bg m-2 rounded-md bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor"
         value={props.user.role}
         onChange={changeStatus}
-      >
-        <option value="undefined">Не определен</option>
-        <option value="User">User</option>
+      > 
+        <option value="Student">Student</option>
+        <option value="Teacher">Teacher</option>
         <option value="Admin">Admin</option>
       </select>
       <button

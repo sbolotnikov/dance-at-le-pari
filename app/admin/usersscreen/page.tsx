@@ -10,12 +10,18 @@ interface UserType {
   image: string;
   id: number;
 }
-
+interface DimentionsType{
+  width: number,
+  hight:number
+}
 function page() {
   const [users, setUsers] = useState<UserType[]>([]);
   const [usersType, setUsersType] = useState('All');
   const [usersDisplay, setUsersDisplay] = useState<UserType[]>([]);
   const [revealAlert, setRevealAlert] = useState(false);
+  const [dimensions, setDimensions] = useState( {height:0, width:0} );
+   
+  console.log(dimensions);
   const [alertStyle, setAlertStyle] = useState({
     variantHead: '',
     heading: '',
@@ -45,6 +51,7 @@ function page() {
         setUsersDisplay(data);
       });
     });
+    setDimensions({height:window.innerHeight, width:window.innerWidth});
     // document.getElementById('userContainer')?.style({height:`[${window.innerHeight-100}px]`});
   }, []);
   const handleDelete = (id: number, name: string) => {
@@ -132,7 +139,7 @@ function page() {
             </div>
           </div>
         </h5>
-        <div id='userContainer' className={`w-full overflow-y-scroll`} style={{height:`${window.innerHeight-177}px`}}>
+        {dimensions.height &&<div id='userContainer' className='w-[95%] border-2 rounded-md overflow-y-scroll' style={{height:`${dimensions.height-177}px`}}>
           {usersDisplay &&
             usersDisplay.map((item, index) => {
               return (
@@ -143,7 +150,7 @@ function page() {
                 />
               );
             })}
-        </div>
+        </div>}
       </div>
     </div>
   );
