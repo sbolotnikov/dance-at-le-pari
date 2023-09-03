@@ -194,7 +194,7 @@ return <div className="absolute inset-0 w-full flex justify-center items-center"
               <div className=" h-6 w-6 md:h-8 md:w-8 fill-none group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
                 <ShowIcon icon={'Logout'} stroke={'2'} />
               </div>
-              <p className="hidden tracking-widest mx-3   opacity-100 group-hover:inline-flex md:block md:opacity-0 md:group-hover:opacity-100 ">
+              <p className=" tracking-widest mx-3  group-hover:inline-flex ">
                 {'Logout'}
               </p>
             </div>

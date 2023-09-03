@@ -24,14 +24,7 @@ const Navbar = ({ navbarLinks, path, locale, children }: Props) => {
 
   const { data: session } = useSession();
   console.log('Client role', session?.user);
-
-  // const el = document.querySelector('#mainPage');
-  // function StopScroll(){
-  //   // prevent scrolling
-  //   var x=0;
-  //   var y=el?.scrollTop;
-  //   window.onscroll=function(){if(y) window.scrollTo(x, y);};
-  // }
+ 
   useEffect(() => {
     if (window.innerWidth < 768) {
       let items = document.querySelectorAll('.navbar__item');
@@ -42,6 +35,7 @@ const Navbar = ({ navbarLinks, path, locale, children }: Props) => {
       document.getElementById('locale-toggle')?.classList.add('hidden');
       document.getElementById('profile-toggle')?.classList.add('hidden');
     }
+
   }, []);
   const changeMenu = () => {
     if (window.innerWidth < 768) {
@@ -88,12 +82,13 @@ const Navbar = ({ navbarLinks, path, locale, children }: Props) => {
     {link:'https://www.facebook.com/LEPARIDANCENTER',additionalStyle:'fill-darkMainColor',icon:'Facebook', stroke:'5',text:''},
     {link:'https://www.instagram.com/lepari34/',additionalStyle:'',icon:'Instagram', stroke:'1.5',text:''},
     {link:'https://www.youtube.com/channel/UCPC1HL3l6zTTScOZ3qkC8cw',additionalStyle:'',icon:'Youtube', stroke:'1.5',text:''},
+    {link:'https://www.tiktok.com/@dance_at_lepari',additionalStyle:'fill-darkMainColor',icon:'Tiktok', stroke:'1.5',text:''},
   ]
   return (
-    <nav className="navbar absolute top-0 left-0 w-screen h-screen overflow-hidden">
+    <nav className="navbar fixed w-screen h-screen overflow-hidden">
       {children}
 
-      <div className=" w-full h-full flex-row justify-end md:justify-between ">
+      <div className=" w-full  flex-row justify-end md:justify-between " style={{height:'100%'}}>
         <div className="absolute bottom-0 right-0 w-screen bg-franceBlue h-12 md:h-8 flex justify-between px-3 items-center md:relative md:flex-1 md:justify-around">
           {barArray.map((item, index) => {
             return (
