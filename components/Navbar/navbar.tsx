@@ -77,7 +77,7 @@ const Navbar = ({ navbarLinks, path, locale, children }: Props) => {
   };
   let barArray=[
     {link:'tel:1-8482440512',additionalStyle:'',icon:'Phone', stroke:'2',text:'(848)244-0512'},
-    {link:'mailto:lepari34@gmail.com',additionalStyle:'fill-darkMainColor',icon:'Email', stroke:'0.5',text:'lepari34@gmail.com'},
+    {link:'/mail_page',additionalStyle:'fill-darkMainColor',icon:'Email', stroke:'0.5',text:'lepari34@gmail.com'},
     { additionalStyle:'',icon:'GMaps', stroke:'1',text:'34 South Ave., Fanwood, NJ 07023', link:'https://www.google.com/maps/place/Le+Pari+Dance+Fitness+Center/@40.6355598,-74.3933059,17z/data=!3m1!4b1!4m5!3m4!1s0x89c3b097b4d07caf:0x3c77409024a4ea95!8m2!3d40.6355598!4d-74.3911172'},
     {link:'https://www.facebook.com/LEPARIDANCENTER',additionalStyle:'fill-darkMainColor',icon:'Facebook', stroke:'5',text:''},
     {link:'https://www.instagram.com/lepari34/',additionalStyle:'',icon:'Instagram', stroke:'1.5',text:''},
