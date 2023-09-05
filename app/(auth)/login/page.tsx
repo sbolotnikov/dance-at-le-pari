@@ -42,13 +42,7 @@ const page: FC<pageProps> = ({}) => {
             if(response?.error !== null) { 
                 if(response?.error === "401") setError("Incorrect password"); 
             } console.log(response); });
-
-    //   setError(res?.message);
-    // } catch (error) {
-    //   if (error) {
-    //     setError('Fail to Login user');
-    //   }
-    // }
+ 
 
     setLoading(false);
   };
