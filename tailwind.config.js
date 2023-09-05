@@ -8,6 +8,9 @@ module.exports = {
   darkMode:'class',
   theme: {
     extend: {
+      fontFamily: {
+        DancingScript: ['var(--font-DancingScript)']
+      },
       colors: {
         // lightteal:"#35536B",
         // lightblue:"#63A8C7",      

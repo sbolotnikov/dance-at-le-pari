@@ -4,7 +4,29 @@ import './globals.css';
 import { Providers } from './providers';
 import { Inter } from 'next/font/google';
 import Head from 'next/head';
+import localFont from '@next/font/local'
 
+const dancingScript = localFont({
+  src: [
+    {
+      path: '../public/fonts/static/DancingScript-Bold.ttf',
+      weight: '700'
+    },
+    {
+      path: '../public/fonts/static/DancingScript-SemiBold.ttf',
+      weight: '600'
+    },
+    {
+      path: '../public/fonts/static/DancingScript-Regular.ttf',
+      weight: '400'
+    },
+    {
+      path: '../public/fonts/static/DancingScript-Medium.ttf',
+      weight: '500'
+    },
+  ],
+  variable: '--font-DancingScript'
+})
 const inter = Inter({ subsets: ['latin'] });
 let navbarLinks = [
   {
@@ -40,10 +62,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`min-h-screen  light antialiased ${inter.className}`}
+      className={`min-h-screen  light antialiased ${inter.className} ${dancingScript.variable}`}
     >
                     <Head>
-          <link
+          {/* <link
             rel="apple-touch-icon"
             sizes="180x180"
             href="/apple-touch-icon.png"
@@ -115,7 +137,8 @@ export default function RootLayout({
             sizes="16x16"
             href="/favicon-16x16.png"
           />
-         <link rel="icon" href="/favicon.ico" sizes="any" />
+         <link rel="icon" href="/favicon.ico" sizes="any" /> */}
+         <link rel="icon" href="/icon?<generated>" type="image/png" sizes="32x32" />
           <link rel="manifest" href="/site.webmanifest" />
           <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
           <meta name="msapplication-TileColor" content="#da532c" />
