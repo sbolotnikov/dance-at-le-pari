@@ -128,7 +128,7 @@ const page: FC<pageProps> = () => {
             className="w-[80%] h-[80%] max-w-[700px] shadow-2xl max-h-[700px] rounded-md flex flex-col justify-between  items-center p-2 "
            
           >
-            <h1 className=" font-semibold text-center text-3xl">
+            <h1 className=" font-semibold text-center text-2xl">
               Send us an Email
             </h1>
             <p className="w-full ">
@@ -142,8 +142,6 @@ const page: FC<pageProps> = () => {
               className="w-full rounded text-lightteal"
               type="text"
               placeholder="Your name"
-
-              // minLength={3}
             />
 
             <input
@@ -153,16 +151,13 @@ const page: FC<pageProps> = () => {
               type="text"
               placeholder="Email"
 
-              // onChange={(e)=>{setEmail(e.target.value)}}
-              // value = {email}
             />
             <textarea
               name="message"
               id="message"
               className="w-full rounded text-lightteal"
               placeholder="Your question"
-              // onChange={(e)=>{setMessage(e.target.value)}}
-              // value = {message}
+             
               minLength={5}
             />
             <div className="error alert alert-error"></div>
