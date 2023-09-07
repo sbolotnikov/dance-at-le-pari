@@ -1,3 +1,4 @@
+import Logo from '@/components/svg/logo';
 import Image from 'next/image';
 import { ImageResponse } from 'next/server';
 
@@ -16,9 +17,12 @@ export default function Icon() {
   return new ImageResponse(
     (
       // ImageResponse JSX element
-      <div  className="bg-transparent bg-contain bg-no-repeat bg-center w-full h-full flex flex-col justify-center items-center"
-      style={{backgroundImage:"url('/logo.svg')"}}
-         />   
+      // <div  className="bg-transparent bg-contain bg-no-repeat bg-center w-full h-full flex flex-col justify-center items-center"
+      // style={{backgroundImage:"url('/logo.svg')"}}
+      //    />  
+         <div className="  w-full h-full flex flex-col items-center justify-center "> 
+         <Logo shadow={'0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0'} />           
+     </div> 
     ),
     // ImageResponse options
     {

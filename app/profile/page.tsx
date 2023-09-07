@@ -185,7 +185,7 @@ return <div className="absolute inset-0 w-full flex justify-center items-center"
       >
                   <button
             type="button"
-            className="absolute top-0 right-0 mt-2 h-6 w-6 mr-3 md:mr-6 md:h-8 md:w-8 rounded-sm outline-none"
+            className="absolute top-0 right-0 mt-2 h-6 w-6 mr-5 md:mr-6 md:h-8 md:w-8 rounded-sm outline-none"
             onClick={() => {
                signOut();
             }}
