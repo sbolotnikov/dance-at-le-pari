@@ -85,7 +85,7 @@ const Navbar = ({ navbarLinks, path, locale, children }: Props) => {
     {link:'https://www.tiktok.com/@dance_at_lepari',additionalStyle:'fill-darkMainColor',icon:'Tiktok', stroke:'1.5',text:''},
   ]
   return (
-    <nav className="navbar fixed w-screen h-screen overflow-hidden">
+    <nav className="navbar w-screen h-screen overflow-hidden">
       {children}
 
       <div className=" w-full  flex-row justify-end md:justify-between " style={{height:'100%'}}>
