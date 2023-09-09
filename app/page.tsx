@@ -4,26 +4,29 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from './api/auth/[...nextauth]/route';
 import Head from 'next/head';
 import Logo from '@/components/svg/logo';
+import Link from 'next/link';
 // import { useEffect, useState } from 'react';
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
   console.log(session);
-  // const [shadow, setShadow] = useState("0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0");
-  // useEffect(() => {
-  //    if (shadow=='light') setShadow("0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0")
-  //      else setShadow("0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0")
-  // }, []);
+ 
+  let departmentsArray=[
+    {name:'Wedding Dance', path:"/images/wedding.jpg", link:'/wedding'},
+    {name:'Social Dancing', path:"/images/social.webp", link:'/social'},
+    {name:'Competitive \n Dance', path:"/images/competitive.webp", link:'/competition'},
+    {name:'Rentals', path:"/images/ballroom.webp", link:'/rentals'},
+  ]
   return (
     <>
-      <Head>
+      {/* <Head>
         <link
           rel="icon"
           href="/icon?<generated>"
           type="image/png"
           sizes="32x32"
         />
-      </Head>
+      </Head> */}
       <div>
         {/* <Image className="h-1/2" src="/logo.png" 
       width={300}
@@ -48,59 +51,31 @@ export default async function Home() {
             </h2>
           </div>
           <div className="text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG mt-3 p-3 shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2">
-            <h1 className="font-bold text-5xl text-alertcolor  text-center font-DancingScript text-shadow  dark:text-shadow-light  ">
+            <h1 className="font-bold text-5xl text-alertcolor  text-center  text-shadow  dark:text-shadow-light  ">
               What are you interested in?
             </h1>
           </div> 
-          <div className="w-full  flex flex-col overflow-y-auto md:flex-row justify-center items-center">
-            <div className="m-1 text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG mt-3 p-3 shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2">
-              <h1 className="font-bold text-5xl text-franceBlue text-center font-DancingScript text-shadow  dark:text-shadow-light mt-12 ">
-                Wedding Dance
+          <div className="w-full  flex flex-col overflow-y-auto md:flex-row justify-center items-center my-4">
+          {departmentsArray.map((item, index) => {
+            return (
+              <Link key={"Links"+index} href={item.link} className="m-1 text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG mt-3 p-3 shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2">
+              <h1 className=" text-2xl   text-center   text-shadow  dark:text-shadow-light mt-12 ">
+                {item.name}
               </h1>
               <Image
-                className="rounded-md  "
-                src="/images/wedding.jpg"
+                className="rounded-md overflow-hidden "
+                src={item.path}
                 width={300}
                 height={300}
+                // style={{objectFit: "contain"}}
                 alt="Logo"
               />
-            </div>
-            <div className="m-1 text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG mt-3 p-3 shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2">
-              <h1 className="font-bold text-5xl text-franceBlue  text-center font-DancingScript text-shadow  dark:text-shadow-light  ">
-                Social Dance
-              </h1>
-              <Image
-                className="rounded-md  "
-                src="/images/social.webp"
-                width={300}
-                height={300}
-                alt="Logo"
-              />
-            </div>
-            <div className="m-1 text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG mt-3 p-3 shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2">
-              <h1 className="font-bold text-5xl text-franceBlue  text-center font-DancingScript text-shadow  dark:text-shadow-light  ">
-                {`Competitive \n Dance`}
-              </h1>
-              <Image
-                className="rounded-md  "
-                src="/images/competitive.webp"
-                width={300}
-                height={300}
-                alt="Logo"
-              />
-            </div>
-            <div className="m-1 text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG mt-3 p-3 shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2">
-              <h1 className="font-bold text-5xl text-franceBlue  text-center font-DancingScript text-shadow  dark:text-shadow-light  ">
-                Rentals
-              </h1>
-              <Image
-                className="rounded-md  "
-                src="/images/ballroom.webp"
-                width={300}
-                height={400}
-                alt="Logo"
-              />
-            </div>
+            </Link>
+            )})}
+
+
+
+ 
           </div>
         </div>
       </div>

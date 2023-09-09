@@ -85,11 +85,11 @@ const Navbar = ({ navbarLinks, path, locale, children }: Props) => {
     {link:'https://www.tiktok.com/@dance_at_lepari',additionalStyle:'fill-darkMainColor',icon:'Tiktok', stroke:'1.5',text:''},
   ]
   return (
-    <nav className="navbar w-screen h-screen overflow-hidden">
+    <nav className="navbar w-screen h-[100vh] overflow-hidden">
       {children}
 
       <div className=" w-full  flex-row justify-end md:justify-between " style={{height:'100%'}}>
-        <div className="absolute bottom-0 right-0 w-screen bg-franceBlue h-12 md:h-8 flex justify-between px-3 items-center md:relative md:flex-1 md:justify-around">
+        <div className="fixed bottom-0 right-0 w-screen bg-franceBlue h-12 md:h-8 flex justify-between px-3 items-center md:relative md:flex-1 md:justify-around">
           {barArray.map((item, index) => {
             return (
               <Link
