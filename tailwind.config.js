@@ -11,6 +11,10 @@ module.exports = {
       fontFamily: {
         DancingScript: ['var(--font-DancingScript)']
       },
+      fontSize: {
+        mdv: 'calc( 2.5 * ( 1vh + 1vw ) )',
+         
+      },
       colors: {
         // lightteal:"#35536B",
         // lightblue:"#63A8C7",      

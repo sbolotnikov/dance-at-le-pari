@@ -157,7 +157,7 @@ const page: FC<pageProps> = () => {
               id="message"
               className="w-full rounded text-lightteal"
               placeholder="Your question"
-             
+              rows={4}
               minLength={5}
             />
             <div className="error alert alert-error"></div>
