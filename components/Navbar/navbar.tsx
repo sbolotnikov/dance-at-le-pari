@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import NavItem from './navItem';
@@ -8,6 +8,10 @@ import { useSession } from 'next-auth/react';
 import ShowIcon from '../svg/showIcon';
 import { signIn, signOut } from 'next-auth/react';
 import ImgFromDb from '../ImgFromDb';
+import { SettingsContext } from '@/hooks/useSettings';
+import { ScreenSettingsContextType } from '@/types/screen-settings';
+import Logo from '../svg/logo';
+  
 
 type Props = {
   navbarLinks: { url: string; title: string; icon: string }[];
@@ -17,14 +21,12 @@ type Props = {
 };
 
 const Navbar = ({ navbarLinks, path, locale, children }: Props) => {
-  const [style1, setStyle1] = useState({ display: 'none' });
-  const [darkMode, setDarkMode] = useState(false);
+  const [style1, setStyle1] = useState({ display: 'none' }); 
   const [burgerState, setBurgerState] = useState(false);
   const router = useRouter();
-
+  const { changeTheme, darkMode } = useContext(SettingsContext) as ScreenSettingsContextType;
   const { data: session } = useSession();
-  console.log('Client role', session?.user);
- 
+  console.log('Client role', session?.user); 
   useEffect(() => {
     if (window.innerWidth < 768) {
       let items = document.querySelectorAll('.navbar__item');
@@ -86,6 +88,9 @@ const Navbar = ({ navbarLinks, path, locale, children }: Props) => {
   ]
   return (
     <nav className="navbar w-screen h-[100vh] overflow-hidden">
+              <div className=" absolute inset-0 flex flex-col items-center justify-center "> 
+          <Logo shadow={darkMode?'0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0':'0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0'} />
+        </div>
       {children}
 
       <div className=" w-full  flex-row justify-end md:justify-between " style={{height:'100%'}}>
@@ -179,9 +184,8 @@ const Navbar = ({ navbarLinks, path, locale, children }: Props) => {
           <button
             id="theme-toggle"
             type="button"
-            onClick={() => {
-              // setTheme(!darkMode)
-              setDarkMode(!darkMode);
+            onClick={() => { 
+              changeTheme(!darkMode);
               !darkMode
                 ? document.getElementsByTagName('body')[0].classList.add('dark')
                 : document

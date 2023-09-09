@@ -1,16 +1,14 @@
 // 'use client';
 import Image from 'next/image';
-import { getServerSession } from 'next-auth';
+// import { getServerSession } from 'next-auth';
 import { authOptions } from './api/auth/[...nextauth]/route';
 import Head from 'next/head';
-import Logo from '@/components/svg/logo';
 import Link from 'next/link';
-// import { useEffect, useState } from 'react';
 
 export default async function Home() {
-  const session = await getServerSession(authOptions);
-  console.log(session);
- 
+  // const session = await getServerSession(authOptions);
+  // console.log(session);
+  
   let departmentsArray=[ 
     {name:'Wedding Dance', path:"/images/weddingcouple.jpg", link:'/wedding'},
     {name:'Social Dancing', path:"/images/social.jpg", link:'/social'},
@@ -20,24 +18,6 @@ export default async function Home() {
   ]
   return (
     <>
-      {/* <Head>
-        <link
-          rel="icon"
-          href="/icon?<generated>"
-          type="image/png"
-          sizes="32x32"
-        />
-      </Head> */}
-      <div>
-        {/* <Image className="h-1/2" src="/logo.png" 
-      width={300}
-      height={400}
-      alt="Logo" /> */}
-
-        <div className=" absolute inset-0 flex flex-col items-center justify-center ">
-          {/* <Logo shadow={shadow} />"0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0" */}
-          <Logo shadow={'0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0'} />
-        </div>
         <div className="bg-transparent bg-contain bg-no-repeat bg-center  absolute inset-0 flex flex-col justify-start mt-14 items-center">
           <div
             id="text"
@@ -81,8 +61,7 @@ export default async function Home() {
 
  
           </div>
-        </div>
-      </div>
+        </div> 
     </>
   );
 }

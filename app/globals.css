@@ -63,7 +63,7 @@ body {
   border-radius: 6px;
   font-size: 20px;
   font-weight: 600;
-  margin: 0 15px;
+  margin: 5px 15px;
   cursor: pointer;
   transition: 0.4s;
   color: var(--accent-color);

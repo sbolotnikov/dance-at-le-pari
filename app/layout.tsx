@@ -50,15 +50,28 @@ export const metadata = {
   title: 'Le Pari Dance Center | In-Studio & Online Dance Lessons, Wedding Dance | Fanwood, NJ',
   description: 'Looking for dance lessons? This is the place! Le Pari Dance Fitness Center is the best dance studio in Fanwood, New Jersey that provides ballroom & latin group and private dance lessons, wedding dance lessons as well as online dance classes.  Dance lessons near me. Dance Studio near me.',
 icons:{
-  icon:{
-    url:"/favicon-32x32.png",
-    type:'image/png'
+  icons: {
+    icon: [{ url: 'favicon-32x32.png' },  ],
+    shortcut: ['favicon-32x32.png'],
+    apple: [
+      { url: 'apple-touch-icon.png' },
+      { url: 'apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+    other: [
+      {
+        rel: 'android-chrome',
+        url: 'android-chrome-192x192.png',
+      },
+      {
+        rel: 'android-chrome',
+        url: 'android-chrome-512x512.png',
+      },
+    ],
   },
-  shortcut:{
-    url:"/favicon-32x32.png",
-    type:'image/png'
-  },
+  
+ 
 },
+manifest: 'site.webmanifest',
   "og:description":"Looking for dance lessons? This is the place! Le Pari Dance Fitness Center is the best dance studio in Fanwood, New Jersey that provides ballroom & latin group and private dance lessons, wedding dance lessons as well as online dance classes.  Dance lessons near me. Dance Studio near me.",
 
 };

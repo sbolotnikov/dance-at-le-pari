@@ -125,7 +125,7 @@ const page: FC<pageProps> = () => {
         <div className="absolute top-0 left-0 h-[100vh] w-[100vw] flex justify-center  items-center">
           <form
             onSubmit={handleSubmit}
-            className="w-[80%] h-[80%] max-w-[700px] shadow-2xl max-h-[700px] rounded-md flex flex-col justify-between  items-center p-2 "
+            className="w-[80%] h-[80%] max-w-[700px] shadow-2xl max-h-[700px] rounded-md flex flex-col justify-between  items-center p-2 bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md "
            
           >
             <h1 className=" font-semibold text-center text-2xl">

@@ -186,7 +186,7 @@ const page: FC<pageProps> = () => {
         )}
         {loading && <Loading />}
         <div
-          className="border-0 rounded-md relative  shadow-2xl max-w-[450px] w-full m-3 landscape:mb-12 landscape:md:mb-0 "
+          className="border-0 rounded-md relative  shadow-2xl max-w-[450px] w-[95%] m-3 landscape:mb-12 landscape:md:mb-0 bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md"
           // style={{ boxShadow: '0 0 150px rgb(255 236 0 / 50%)'}}
         >
           <button
@@ -310,8 +310,7 @@ const page: FC<pageProps> = () => {
             </label>
             <button
               disabled={loading}
-              className="btnFancy"
-              style={{ width: '100%', margin: '2% auto' }}
+              className="btnFancy w-[90%]"
               type="submit"
             >
               Update

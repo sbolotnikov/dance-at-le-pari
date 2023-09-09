@@ -51,7 +51,7 @@ const page: FC<pageProps> = ({}) => {
     <div className="absolute inset-0">
       <div className="w-full h-full relative overflow-y-auto ">
         <div className="absolute top-0 left-0 w-full min-h-full flex flex-col justify-center items-center ">
-          <div className="border-0 rounded-md p-4  shadow-2xl w-[90%]  max-w-[450px] md:w-full  m-12 ">
+          <div className="border-0 rounded-md p-4  shadow-2xl w-[90%]  max-w-[450px] md:w-full  m-12 bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
             <h2
               className="text-center font-bold uppercase"
               style={{ letterSpacing: '1px' }}
@@ -89,7 +89,7 @@ const page: FC<pageProps> = ({}) => {
                   required
                 />
               </label>
-              <label className="flex flex-col items-center   text-lightMainColor">
+              <label className="flex flex-col items-center    ">
                 Password Confirmation
                 <input
                   className="flex-1 outline-none border-none rounded-md  p-0.5 mx-1 mb-2"

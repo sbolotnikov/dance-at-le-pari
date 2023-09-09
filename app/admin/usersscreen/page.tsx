@@ -36,7 +36,7 @@ function page() {
   const [style1, setStyle1] = useState({ display: 'none' });
   var filtersArray = [
     ['All', ''],
-    ['Users', 'User'],
+    ['Students', 'Student'],
     ['Administarors', 'Admin'],
   ];
 
@@ -89,7 +89,7 @@ function page() {
     <div className="absolute top-0 left-0 w-full flex justify-center items-center">
       {revealAlert && <AlertMenu onReturn={onReturn} styling={alertStyle} />}
 
-      <div className="w-full max-w-[1000px] flex flex-row mt-12 md:mt-20 justify-center items-center flex-wrap">
+      <div className="w-full max-w-[1000px] flex flex-row mt-12 md:mt-20 justify-center items-center flex-wrap bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
         <h3 className="w-full xs:text-md sm:text-xl phone:text-2xl tablet:text-3xl text-center">
           Table of project Users's Roles
         </h3>
