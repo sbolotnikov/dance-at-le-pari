@@ -1,5 +1,5 @@
 .navbar {
-  height: 5rem;
+  height: 5.5rem;
   /* background-color: transparent; */
   display: flex;
   justify-content: space-between;
@@ -88,7 +88,16 @@ padding: 1.5rem;
     margin:1.25rem 0;
     z-index: 100;
   }
-
+  .navbar__right_span {
+    margin-right: .5rem;
+    height: 3rem;
+    position: absolute;
+    right: 0;
+    top:0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
 }
 @keyframes dashout {
