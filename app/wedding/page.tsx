@@ -1,38 +1,30 @@
-'use client'
-import {FC} from 'react'
-import { useRouter } from 'next/navigation'
-import { useRef  } from 'react';
-interface pageProps {
-  
-}
+'use client';
+import { FC } from 'react';
+import { useRouter } from 'next/navigation';
+import { useRef } from 'react';
+import { PageWrapper } from '@/components/page-wrapper';
+interface pageProps {}
 
 const page: FC<pageProps> = ({}) => {
+  const router = useRouter();
+  const emailRef = useRef<HTMLInputElement>(null);
 
-      const router = useRouter();
-      const emailRef = useRef<HTMLInputElement>(null);
- 
-
-    
-      return (
-        <div
-        className="absolute top-0 left-0 w-full h-screen flex items-center justify-center"
-      >
+  return (
+    <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
       {/* {revealAlert && <AlertMenu onReturn={onReturn} styling={alertStyle} />} */}
-        <div
-          className="border-0 rounded-md p-4  shadow-2xl w-[90%]  max-w-[450px] md:w-full"
-          // style={{ boxShadow: '0 0 150px rgb(113, 113, 109 / 50%),inset 0 0 20px #242422' }}
+      <div
+        className="border-0 rounded-md p-4  shadow-2xl w-[90%]  max-w-[450px] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md"
+        // style={{ boxShadow: '0 0 150px rgb(113, 113, 109 / 50%),inset 0 0 20px #242422' }}
+      >
+        <h2
+          className="text-center font-bold uppercase"
+          style={{ letterSpacing: '1px' }}
         >
-          <h2
-            className="text-center font-bold uppercase"
-            style={{   letterSpacing: '1px' }}
-          >
-           Weddings
-          </h2>
+          Weddings
+        </h2>
+      </div>
+    </PageWrapper>
+  );
+};
 
-        </div>
-        </div>
-      );
-    }
-
-
-export default page
+export default page;

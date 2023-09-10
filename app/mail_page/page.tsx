@@ -1,6 +1,7 @@
 'use client';
 import { useState, useRef, FC } from 'react';
 import AlertMenu from '@/components/alertMenu';
+import { PageWrapper } from '@/components/page-wrapper';
 
 interface pageProps {}
 
@@ -119,14 +120,13 @@ const page: FC<pageProps> = () => {
       });
   };
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center py-2  dark:text-light">
+    <PageWrapper className="flex min-h-screen flex-col items-center justify-center py-2  dark:text-light">
       <main>
         {revealAlert && <AlertMenu onReturn={onReturn} styling={alertStyle} />}
         <div className="absolute top-0 left-0 h-[100vh] w-[100vw] flex justify-center  items-center">
           <form
             onSubmit={handleSubmit}
             className="w-[80%] h-[80%] max-w-[700px] shadow-2xl max-h-[700px] rounded-md flex flex-col justify-between  items-center p-2 bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md "
-           
           >
             <h1 className=" font-semibold text-center text-2xl">
               Send us an Email
@@ -150,7 +150,6 @@ const page: FC<pageProps> = () => {
               className="w-full rounded text-lightteal"
               type="text"
               placeholder="Email"
-
             />
             <textarea
               name="message"
@@ -161,17 +160,13 @@ const page: FC<pageProps> = () => {
               minLength={5}
             />
             <div className="error alert alert-error"></div>
-            <button
-              type="submit"
-              value="Send"
-              className="btnFancy"
-            >
+            <button type="submit" value="Send" className="btnFancy">
               Send Message
             </button>
           </form>
         </div>
       </main>
-    </div>
+    </PageWrapper>
   );
 };
 

@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import UserForm from '@/components/userForm';
 import AlertMenu from '@/components/alertMenu';
+import { PageWrapper } from '@/components/page-wrapper';
 
 interface UserType {
   name: string;
@@ -10,17 +11,17 @@ interface UserType {
   image: string;
   id: number;
 }
-interface DimentionsType{
-  width: number,
-  hight:number
+interface DimentionsType {
+  width: number;
+  hight: number;
 }
 function page() {
   const [users, setUsers] = useState<UserType[]>([]);
   const [usersType, setUsersType] = useState('All');
   const [usersDisplay, setUsersDisplay] = useState<UserType[]>([]);
   const [revealAlert, setRevealAlert] = useState(false);
-  const [dimensions, setDimensions] = useState( {height:0, width:0} );
-   
+  const [dimensions, setDimensions] = useState({ height: 0, width: 0 });
+
   console.log(dimensions);
   const [alertStyle, setAlertStyle] = useState({
     variantHead: '',
@@ -51,7 +52,7 @@ function page() {
         setUsersDisplay(data);
       });
     });
-    setDimensions({height:window.innerHeight, width:window.innerWidth});
+    setDimensions({ height: window.innerHeight, width: window.innerWidth });
     // document.getElementById('userContainer')?.style({height:`[${window.innerHeight-100}px]`});
   }, []);
   const handleDelete = (id: number, name: string) => {
@@ -86,7 +87,7 @@ function page() {
     } else setSelectedId(0);
   };
   return (
-    <div className="absolute top-0 left-0 w-full flex justify-center items-center">
+    <PageWrapper className="absolute top-0 left-0 w-full flex justify-center items-center">
       {revealAlert && <AlertMenu onReturn={onReturn} styling={alertStyle} />}
 
       <div className="w-full max-w-[1000px] flex flex-row mt-12 md:mt-20 justify-center items-center flex-wrap bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
@@ -139,20 +140,26 @@ function page() {
             </div>
           </div>
         </h5>
-        {dimensions.height &&<div id='userContainer' className='w-[95%] border-2 rounded-md overflow-y-scroll' style={{height:`${dimensions.height-177}px`}}>
-          {usersDisplay &&
-            usersDisplay.map((item, index) => {
-              return (
-                <UserForm
-                  key={'userN' + index}
-                  user={item}
-                  delUser={handleDelete}
-                />
-              );
-            })}
-        </div>}
+        {dimensions.height && (
+          <div
+            id="userContainer"
+            className="w-[95%] border-2 rounded-md overflow-y-scroll"
+            style={{ height: `${dimensions.height - 177}px` }}
+          >
+            {usersDisplay &&
+              usersDisplay.map((item, index) => {
+                return (
+                  <UserForm
+                    key={'userN' + index}
+                    user={item}
+                    delUser={handleDelete}
+                  />
+                );
+              })}
+          </div>
+        )}
       </div>
-    </div>
+    </PageWrapper>
   );
 }
 

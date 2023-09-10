@@ -3,6 +3,7 @@ import { FC, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import ShowIcon from '@/components/svg/showIcon';
 import { signIn, useSession } from 'next-auth/react';
+import { PageWrapper } from '@/components/page-wrapper';
 
 interface pageProps {}
 
@@ -32,23 +33,24 @@ const page: FC<pageProps> = ({}) => {
       return setError('Passwords should be at least 6 symbols long');
     }
     // try {
-      setError('');
-      setLoading(true);
-       signIn('credentials', {
-          email: emailRef.current?.value,
-          password: passwordRef.current?.value,
-          redirect: true
-        }).then((response) => { 
-            if(response?.error !== null) { 
-                if(response?.error === "401") setError("Incorrect password"); 
-            } console.log(response); });
- 
+    setError('');
+    setLoading(true);
+    signIn('credentials', {
+      email: emailRef.current?.value,
+      password: passwordRef.current?.value,
+      redirect: true,
+    }).then((response) => {
+      if (response?.error !== null) {
+        if (response?.error === '401') setError('Incorrect password');
+      }
+      console.log(response);
+    });
 
     setLoading(false);
   };
 
   return (
-    <div className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
+    <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
       {/* {revealAlert && <AlertMenu onReturn={onReturn} styling={alertStyle} />} */}
       <div
         className="border-0 rounded-md p-4  shadow-2xl w-[90%]  max-w-[450px] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md"
@@ -131,10 +133,14 @@ const page: FC<pageProps> = ({}) => {
                   isEmailValid(email2Ref.current?.value)
                 ) {
                   const res = await signIn('email', {
-                    email: email2Ref.current?.value, redirect: false
+                    email: email2Ref.current?.value,
+                    redirect: false,
                   });
-                  console.log(res)
-                  if (res?.status==200) setError('Please check your email. Link was send from Dance At Le Pari')
+                  console.log(res);
+                  if (res?.status == 200)
+                    setError(
+                      'Please check your email. Link was send from Dance At Le Pari'
+                    );
                 } else setError('Please enter a valid email address');
               }}
             >
@@ -143,7 +149,7 @@ const page: FC<pageProps> = ({}) => {
           </label>
         </label>
       </div>
-    </div>
+    </PageWrapper>
   );
 };
 
