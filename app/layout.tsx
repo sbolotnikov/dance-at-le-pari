@@ -49,28 +49,11 @@ let navbarLinks = [
 export const metadata = {
   title: 'Le Pari Dance Center | In-Studio & Online Dance Lessons, Wedding Dance | Fanwood, NJ',
   description: 'Looking for dance lessons? This is the place! Le Pari Dance Fitness Center is the best dance studio in Fanwood, New Jersey that provides ballroom & latin group and private dance lessons, wedding dance lessons as well as online dance classes.  Dance lessons near me. Dance Studio near me.',
-icons:{
-  icons: {
-    icon: [{ url: 'favicon-32x32.png' },  ],
-    shortcut: ['favicon-32x32.png'],
-    apple: [
-      { url: 'apple-touch-icon.png' },
-      { url: 'apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
-    ],
-    other: [
-      {
-        rel: 'android-chrome',
-        url: 'android-chrome-192x192.png',
-      },
-      {
-        rel: 'android-chrome',
-        url: 'android-chrome-512x512.png',
-      },
-    ],
-  },
-  
- 
-},
+// icons:{
+//   icons: {
+//     icon: [{ url: 'favicon-32x32.png' },  ],
+//     shortcut: ['favicon-32x32.png'],
+//     apple: [],},},
 manifest: 'site.webmanifest',
   "og:description":"Looking for dance lessons? This is the place! Le Pari Dance Fitness Center is the best dance studio in Fanwood, New Jersey that provides ballroom & latin group and private dance lessons, wedding dance lessons as well as online dance classes.  Dance lessons near me. Dance Studio near me.",
 
@@ -86,8 +69,8 @@ export default function RootLayout({
       lang="en"
       className={`min-h-screen  light antialiased ${inter.className} ${dancingScript.variable}`}
     >
-                    <Head>
-          {/* <link
+           {/*         <Head>
+           <link
             rel="apple-touch-icon"
             sizes="180x180"
             href="/apple-touch-icon.png"
@@ -174,9 +157,7 @@ export default function RootLayout({
           <meta property="og:image" content="https://static.wixstatic.com/media/450706_74c29be5586e474992220accb2bedc18.png/v1/fill/w_1277,h_825,al_c/450706_74c29be5586e474992220accb2bedc18.png"/>
           <meta property="og:image:width" content="1277"/>
           <meta property="og:image:height" content="825"/>
-  */}
- 
-        </Head>
+        </Head>  */}
       <body suppressHydrationWarning={true}>
         <Providers>
           <main id="mainPage" className="fixed w-screen h-[100vh] p-0 m-0 items-center justify-center overflow-hidden text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG">
