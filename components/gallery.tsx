@@ -61,7 +61,7 @@ const Gallery = ({ pictures, auto, seconds, width, height }: Props) => {
     } else setFirstTime(false);
   }, [nextActivePic]);
   return (
-    <div className={` relative h-[${height}] w-[${width}] rounded-md overflow-hidden flex justify-between items-center `}>
+    <div className={` relative  h-[${height}] w-[${width}] rounded-md overflow-hidden flex justify-between items-center `}>
       <button
         id="prevButton"
         className={`bg-lightMainBG/70 dark:bg-darkMainBG/70 origin-center cursor-pointer z-10 ${
