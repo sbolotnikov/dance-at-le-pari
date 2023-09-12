@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { gsap } from '../utils/gsap';
+import ShowIcon from './svg/showIcon';
 type Props = {
   pictures: string[];
   auto: boolean;
@@ -64,7 +65,7 @@ const Gallery = ({ pictures, auto, seconds, width, height }: Props) => {
     <div className={` relative  h-[${height}] w-[${width}] rounded-md overflow-hidden flex justify-between items-center `}>
       <button
         id="prevButton"
-        className={`bg-lightMainBG/70 dark:bg-darkMainBG/70 origin-center cursor-pointer z-10 ${
+        className={` origin-center cursor-pointer z-10 hover:scale-125 ${
           auto ? 'hidden' : ''
         }`}
         onClick={() => {
@@ -72,7 +73,9 @@ const Gallery = ({ pictures, auto, seconds, width, height }: Props) => {
           else setNextActivePic(pictures.length - 1);
         }}
       >
-        {'<'}
+                <div className="ml-2 h-8 w-8 md:h-16 md:w-16  fill-darkMainColor stroke-darkMainColor">
+          <ShowIcon icon={'ArrowLeft'} stroke={'.1'} />
+        </div>
       </button>
       {pictures.map((item, index) => (
         <div key={'img' + index}>
@@ -81,6 +84,7 @@ const Gallery = ({ pictures, auto, seconds, width, height }: Props) => {
             src={item}
             alt={item}
             fill
+            style={{objectFit: "contain"}}
             className={`absolute inset-0 ${
               index !== activePic ? 'opacity-0' : 'opacity-100'
             }`}
@@ -97,7 +101,7 @@ const Gallery = ({ pictures, auto, seconds, width, height }: Props) => {
       ))}
       <button
         id="nextButton"
-        className={`bg-lightMainBG/70 dark:bg-darkMainBG/70 origin-center cursor-pointer z-10  ${
+        className={` origin-center cursor-pointer z-10 hover:scale-125 ${
           auto ? 'hidden' : ''
         }`}
         onClick={() => {
@@ -105,7 +109,9 @@ const Gallery = ({ pictures, auto, seconds, width, height }: Props) => {
           else setNextActivePic(0);
         }}
       >
-        {'>'}
+        <div className="mr-2 h-8 w-8 md:h-16 md:w-16  fill-darkMainColor stroke-darkMainColor">
+          <ShowIcon icon={'ArrowRight'} stroke={'.1'} />
+        </div>
       </button>
       <svg className="absolute inset-0 h-full w-full">
         <filter id="noise" x="0%" y="0%" width="100%" height="100%">
