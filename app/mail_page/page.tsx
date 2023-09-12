@@ -121,7 +121,7 @@ const page: FC<pageProps> = () => {
   };
   return (
     <PageWrapper className="flex min-h-screen flex-col items-center justify-center py-2  dark:text-light">
-      <main>
+       
         {revealAlert && <AlertMenu onReturn={onReturn} styling={alertStyle} />}
         <div className="absolute top-0 left-0 h-[100vh] w-[100vw] flex justify-center  items-center">
           <form
@@ -164,8 +164,7 @@ const page: FC<pageProps> = () => {
               Send Message
             </button>
           </form>
-        </div>
-      </main>
+        </div> 
     </PageWrapper>
   );
 };
