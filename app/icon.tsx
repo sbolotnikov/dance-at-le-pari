@@ -16,13 +16,22 @@ export const contentType = 'image/png';
 export default function Icon() {
   return new ImageResponse(
     (
-      // ImageResponse JSX element
-      // <div  className="bg-transparent bg-contain bg-no-repeat bg-center w-full h-full flex flex-col justify-center items-center"
-      // style={{backgroundImage:"url('/logo.svg')"}}
-      //    />  
-         <div className="  w-full h-full flex flex-col items-center justify-center "> 
-         <Logo shadow={'0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0'} />           
-     </div> 
+    //   ImageResponse JSX element
+    <div
+    style={{
+      fontSize: 24,
+      background: 'black',
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      color: 'white',
+    }}
+  >
+      {/* <Image width={32} height={32} alt={'Logo'} src={'/favicon-32x32.png'} style={{objectFit: "contain"}}/> */}
+  </div>
+  
     ),
     // ImageResponse options
     {

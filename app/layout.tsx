@@ -64,8 +64,8 @@ export default function RootLayoutFC({
       lang="en"
       className={`min-h-screen  light antialiased ${inter.className} ${dancingScript.variable}`}
     > 
-         {/*  
-          <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+          
+          {/* <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" /> */}
           <meta name="msapplication-TileColor" content="#da532c" />
           <meta name="theme-color" content="#ffffff" />
           <meta property="og:title" content="Le Pari Dance Fitness Center | United States"/>
@@ -77,7 +77,7 @@ export default function RootLayoutFC({
           <meta property="og:image" content="https://static.wixstatic.com/media/450706_74c29be5586e474992220accb2bedc18.png/v1/fill/w_1277,h_825,al_c/450706_74c29be5586e474992220accb2bedc18.png"/>
           <meta property="og:image:width" content="1277"/>
           <meta property="og:image:height" content="825"/>
-          */}
+         
       <body suppressHydrationWarning={true}>
         <Providers>
  

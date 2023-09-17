@@ -1,15 +1,9 @@
 // 'use client';
 import Image from 'next/image';
-// import { getServerSession } from 'next-auth';
-import { authOptions } from './api/auth/[...nextauth]/route';
-import Head from 'next/head';
 import Link from 'next/link';
 import { PageWrapper } from '@/components/page-wrapper';
 
 export default async function Home() {
-  // const session = await getServerSession(authOptions);
-  // console.log(session);
-
   let departmentsArray = [
     {
       name: 'Wedding Dance',

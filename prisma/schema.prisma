@@ -19,13 +19,34 @@ model User {
   emailVerified DateTime?  
   password String? 
   telephone String?  
-  role String @default("User")
+  role String @default("Student")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   sessions Session[]
   accounts Account[]
 }
-
+model Event {
+  id Int @id @default(autoincrement())
+  eventtype EventType @default(Group)
+  length Int
+  color String?
+  price Decimal?
+  image String?
+  tag String
+  title String?
+  date DateTime
+  location String?
+  description String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  teachersid Int[]
+  studentsid Int[]
+}
+enum EventType {
+  Private
+  Group
+  Party
+}
 model Account {
   id Int @id @default(autoincrement())
   userId             Int   

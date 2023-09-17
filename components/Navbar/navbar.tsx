@@ -26,7 +26,7 @@ const Navbar = ({ navbarLinks, path, locale, children }: Props) => {
   const router = useRouter();
   const { changeTheme, darkMode } = useContext(SettingsContext) as ScreenSettingsContextType;
   const { data: session } = useSession();
-  console.log('Client role', session?.user); 
+  // console.log('Client role', session?.user); 
   useEffect(() => {
     if (window.innerWidth < 768) {
       let items = document.querySelectorAll('.navbar__item');
