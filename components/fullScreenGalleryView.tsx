@@ -39,7 +39,7 @@ const FullScreenGalleryView = ({pictures, onReturn}: Props) => {
             <div  className="relative h-full w-full"
           >
       <button
-        className={`absolute top-0 right-0 m-4 origin-center cursor-pointer z-10 hover:scale-125 `}
+        className={`absolute top-12 md:top-24 left-[50%]  cursor-pointer hover:scale-125 `} style={{transform: 'translate(-50%, -50%)', zIndex:'50'}}
         onClick={() => {
             setIsVisible(false);
           onReturn();

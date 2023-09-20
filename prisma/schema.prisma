@@ -30,13 +30,14 @@ model Event {
   eventtype EventType @default(Group)
   length Int
   color String?
-  price Decimal?
+  price Float
   image String?
   tag String
   title String?
   date DateTime
   location String?
   description String?
+  visible Boolean
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   teachersid Int[]

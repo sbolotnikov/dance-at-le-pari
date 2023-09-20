@@ -17,6 +17,7 @@ export default async function Home() {
       link: '/competition',
     },
     { name: 'Studio Rentals', path: '/images/ballroom.jpg', link: '/rentals' },
+    { name: 'Calendar', path: '/images/calendar.jpg', link: '/calendar' },
   ];
   return (
     <PageWrapper className="absolute inset-0 flex flex-col justify-start mt-14 items-center">

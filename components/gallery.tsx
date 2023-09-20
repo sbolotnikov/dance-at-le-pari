@@ -62,18 +62,17 @@ const Gallery = ({ pictures, auto, seconds, width, height }: Props) => {
     } else setFirstTime(false);
   }, [nextActivePic]);
   return (
-    <div className={` relative  h-[${height}] w-[${width}] rounded-md overflow-hidden flex justify-between items-center `}>
+    <div className={` relative  h-[${height}] w-[${width}] rounded-md overflow-hidden flex justify-between items-center `} style={{zIndex:300}}>
       <button
         id="prevButton"
-        className={` origin-center cursor-pointer z-10 hover:scale-125 ${
-          auto ? 'hidden' : ''
-        }`}
+        className={` absolute top-1/2 left-0 cursor-pointer z-10 hover:scale-125 ${
+          auto ? 'hidden' : ''}`} style={{transform: 'translate(0%, -50%)'}}
         onClick={() => {
           if (activePic > 0) setNextActivePic(activePic - 1);
           else setNextActivePic(pictures.length - 1);
         }}
       >
-                <div className="ml-2 h-8 w-8 md:h-16 md:w-16  fill-darkMainColor stroke-darkMainColor">
+                <div className="ml-1 h-8 w-8 md:h-16 md:w-16  fill-darkMainColor stroke-darkMainColor">
           <ShowIcon icon={'ArrowLeft'} stroke={'.1'} />
         </div>
       </button>
@@ -91,7 +90,7 @@ const Gallery = ({ pictures, auto, seconds, width, height }: Props) => {
           />
           <h2
             id={'text_' + index}
-            className={`w-full text-center absolute bottom-0 right-0 z-100 bg-lightMainBG/70 dark:bg-darkMainBG/70 ${
+            className={`w-full mb-12 text-center absolute bottom-0 right-0 z-100 bg-lightMainBG/70 dark:bg-darkMainBG/70 ${
               index !== activePic ? 'opacity-0' : 'opacity-100'
             }`}
           >
@@ -101,9 +100,8 @@ const Gallery = ({ pictures, auto, seconds, width, height }: Props) => {
       ))}
       <button
         id="nextButton"
-        className={` origin-center cursor-pointer z-10 hover:scale-125 ${
-          auto ? 'hidden' : ''
-        }`}
+        className={` absolute top-1/2 right-0 cursor-pointer z-10 hover:scale-125 ${
+          auto ? 'hidden' : ''}`} style={{transform: 'translate(0%, -50%)'}}
         onClick={() => {
           if (activePic < pictures.length - 1) setNextActivePic(activePic + 1);
           else setNextActivePic(0);

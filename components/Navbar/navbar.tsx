@@ -1,7 +1,6 @@
 'use client';
 import { useState, useEffect, useContext } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import NavItem from './navItem';
 import Burger from './burger';
 import { useSession } from 'next-auth/react';
@@ -14,19 +13,16 @@ import Logo from '../svg/logo';
   
 
 type Props = {
-  navbarLinks: { url: string; title: string; icon: string }[];
   path: string;
   locale?: string | undefined;
   children?: React.ReactNode;
 };
 
-const Navbar = ({ navbarLinks, path, locale, children }: Props) => {
+const Navbar = ({  path, locale, children }: Props) => {
   const [style1, setStyle1] = useState({ display: 'none' }); 
   const [burgerState, setBurgerState] = useState(false);
-  const router = useRouter();
   const { changeTheme, darkMode } = useContext(SettingsContext) as ScreenSettingsContextType;
-  const { data: session } = useSession();
-  // console.log('Client role', session?.user); 
+  const { data: session } = useSession(); 
   useEffect(() => {
     if (window.innerWidth < 768) {
       let items = document.querySelectorAll('.navbar__item');
@@ -39,6 +35,95 @@ const Navbar = ({ navbarLinks, path, locale, children }: Props) => {
     }
 
   }, []);
+  const [navbarLinks, setNavbarLinks] = useState([
+    {
+      url: '/',
+      title: 'Home',
+      icon: 'Home',
+    },
+    {
+      url: '/calendar',
+      title: 'Calendar',
+      icon: 'Calendar',
+    },
+    {
+      url: '/rentals',
+      title: 'Studio',
+      icon: 'Home2',
+    } 
+  ]);
+  useEffect(() => {
+    let linksArray=[]
+    if (!session) {
+       linksArray=   [ {
+        url: '/',
+        title: 'Home',
+        icon: 'Home',
+      },
+      {
+        url: '/calendar',
+        title: 'Calendar',
+        icon: 'Calendar',
+      },
+      {
+        url: '/rentals',
+        title: 'Studio',
+        icon: 'Home2',
+      },
+      {
+        url: '/signin',
+        title: 'Register',
+        icon: 'Register'
+      },]
+    } else if (session.user.role=='Admin'){
+      linksArray=   [
+        {
+          url: '/',
+          title: 'Home',
+          icon: 'Home',
+        },
+        {
+          url: '/calendar',
+          title: 'Calendar',
+          icon: 'Calendar',
+        },
+        {
+          url: '/rentals',
+          title: 'Studio',
+          icon: 'Home2',
+        },
+        {
+          url: '/admin/usersscreen',
+          title: 'Users Screen',
+          icon: 'Users',
+        }, 
+        {
+          url: '/mail_page',
+          title: 'Email',
+          icon: 'Email',
+        },      
+      ];
+    } else {
+      linksArray= [
+        {
+          url: '/',
+          title: 'Home',
+          icon: 'Home',
+        },
+        {
+          url: '/calendar',
+          title: 'Calendar',
+          icon: 'Calendar',
+        },
+        {
+          url: '/rentals',
+          title: 'Studio',
+          icon: 'Home2',
+        },   
+      ]
+    }
+    setNavbarLinks(linksArray)
+  }, [session]);
   const changeMenu = () => {
     if (window.innerWidth < 768) {
       if (burgerState) {

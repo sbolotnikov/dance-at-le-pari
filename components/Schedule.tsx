@@ -7,12 +7,15 @@ import { TEventArray } from '@/types/screen-settings';
 import AlertMenu from './alertMenu';
 import { useDate } from '@/hooks/useDate';
 // import CopyPasteModal from './CopyPasteModal';
+type Props = {
+  eventsSet: TEventArray;
+  onReturn: (day:string) => void
+}
 
-
-const Schedule: FC<{ eventsSet:TEventArray }> = ({ eventsSet }) =>{
+const Schedule = ({ eventsSet, onReturn }:Props) =>{
 
   const [nav, setNav] = useState(0);
-  const [clicked, setClicked] = useState<string>();
+  
   const [visCopyPaste, setVisCopyPaste] = useState(false);
   const [events, setEvents] = useState(eventsSet);
   const [revealAlert, setRevealAlert] = useState(false);
@@ -36,8 +39,7 @@ const Schedule: FC<{ eventsSet:TEventArray }> = ({ eventsSet }) =>{
   useEffect(() => {
     setEvents(eventsSet);
   }, [eventsSet]);
-  const eventForDate = (date:string) =>
-    events.find((e) => e.date.split('T')[0] === date);
+  
 
   // const onReturn = async (choice) => {
   //   if (choice == 'Confirm') {
@@ -58,9 +60,8 @@ const Schedule: FC<{ eventsSet:TEventArray }> = ({ eventsSet }) =>{
   //   setRevealAlert(false);
   // };
   return (
-    <div className="w-full ">
+    <div className="w-full flex flex-col overflow-y-auto">
       {/* {revealAlert && <AlertMenu onReturn={onReturn} styling={alertStyle} />}  */}
-        <div>
           <CalendarHeader
             dateDisplay={dateDisplay}
             onNext={() => setNav(nav + 1)}
@@ -88,13 +89,15 @@ const Schedule: FC<{ eventsSet:TEventArray }> = ({ eventsSet }) =>{
                   day={d}
                   onClick={() => {
                     if (d.value !== 'padding') {
-                      setClicked(d.date);
-                      console.log(d.value);
+                      // setClicked(d.date);
+                      let dt = new Date();
+                      dt.setMonth(new Date().getMonth() + nav);
+                      dt.setDate(parseInt(d.value))
+                      onReturn(dt.toISOString());
                     }
                   }}
                 />
               ))}
-          </div>
         </div>
       
       {/* {visCopyPaste && (

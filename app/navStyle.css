@@ -65,7 +65,7 @@ padding: 1.5rem;
   .navbar__list {
     display: flex;
     flex-direction: column;
-    padding: min(40vh, 10rem) 0rem;
+    padding: min(20vh, 10rem) 0rem;
     height: 100vh;
     right:0;
     top:0;
@@ -85,7 +85,7 @@ padding: 1.5rem;
     align-items: center;
     flex: 1;
     border-radius: 0 3rem 3rem 0;
-    margin:1.25rem 0;
+    margin:0.25rem 0;
     z-index: 100;
   }
   .navbar__right_span {

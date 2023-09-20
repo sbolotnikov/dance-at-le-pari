@@ -30,11 +30,7 @@ const page: FC<pageProps> = ({}) => {
       onReturn={()=>{ 
         sleep(1200).then(() => {
           setRevealGallery(false)
-        });  
-        
-        
-      }}/> 
-        }
+        });}}/> }
       <div className="border-0 rounded-md p-4  shadow-2xl w-[90%] max-w-[450px] flex justify-center items-center flex-col  h-[90%] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
         <h2
           className="text-center font-bold uppercase"

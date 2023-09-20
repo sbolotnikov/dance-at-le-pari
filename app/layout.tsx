@@ -3,7 +3,7 @@ import './navStyle.css';
 import './globals.css';
 import { Providers } from './providers';
 import { Inter } from 'next/font/google';
-import localFont from '@next/font/local'
+import localFont from '@next/font/local';
 
 const dancingScript = localFont({
   src: [
@@ -27,24 +27,7 @@ const dancingScript = localFont({
   variable: '--font-DancingScript'
 })
 const inter = Inter({ subsets: ['latin'] });
-let navbarLinks = [
-  {
-    url: '/',
-    title: 'Home',
-    icon: 'Home2',
-  },
-  {
-    url: '/admin/usersscreen',
-    title: 'Users Screen',
-    icon: 'Users',
-  },
-  {
-    url: '/signin',
-    title: 'Register',
-    icon: 'Register'
-  },
 
-];
 export const metadata = {
   title: 'Le Pari Dance Center | In-Studio & Online Dance Lessons, Wedding Dance | Fanwood, NJ',
   description: 'Looking for dance lessons? This is the place! Le Pari Dance Fitness Center is the best dance studio in Fanwood, New Jersey that provides ballroom & latin group and private dance lessons, wedding dance lessons as well as online dance classes.  Dance lessons near me. Dance Studio near me.',
@@ -58,7 +41,10 @@ export default function RootLayoutFC({
   children,
 }: {
   children: React.ReactNode;
-}) {
+})
+
+{
+ 
   return ( 
     <html
       lang="en"
@@ -82,7 +68,7 @@ export default function RootLayoutFC({
         <Providers>
  
           <main id="mainPage" className="fixed w-screen h-[100vh] p-0 m-0 items-center justify-center overflow-hidden text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG">
-            <Navbar navbarLinks={navbarLinks} path={''} locale={'EN'} >
+            <Navbar path={''} locale={'EN'} >
             {children}
             </Navbar>
           </main> 
