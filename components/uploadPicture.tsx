@@ -12,7 +12,7 @@ const UploadPicture  = () => {
             300,
             300,
             'JPEG',
-            100,
+            85,
             0,
             (uri: any) => {
 
@@ -25,7 +25,7 @@ const UploadPicture  = () => {
                 },
                 body: JSON.stringify({
                     file:picture.name,
-                     file_name:uri
+                     file_name:'profile'
                 }),
               }).then(async(res) => {
                 const data = await res.json();

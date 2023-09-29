@@ -21,14 +21,14 @@ import Resizer from 'react-image-file-resizer';
         return (data)})
     }
 
-  const resizeFile = (file: any) =>
+  const resizeFile = (file: any, sizeX:number, sizeY:number) =>
   new Promise((resolve) => {
     Resizer.imageFileResizer(
       file,
-      300,
-      300,
+      sizeX,
+      sizeY,
       'JPEG',
-      100,
+      85,
       0,
       (uri: any) => {
         resolve(uri);
@@ -36,6 +36,8 @@ import Resizer from 'react-image-file-resizer';
       'file'
     );
   });
+
+  
   const fileToBase64 = (file: File | Blob): Promise<string> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -46,15 +48,15 @@ import Resizer from 'react-image-file-resizer';
     reader.readAsDataURL(file);
     reader.onerror = reject;
   });
-  export async function uploadImage(url:any )
+  export async function uploadImage(url:any, sizeX:number, sizeY:number, folder:string)
   
   {
     try {
       const image = (await resizeFile(
-        url
+        url, sizeX, sizeY
       )) as any;
       
-      let filename = uuidv4() + '.jpg';
+      let filename = folder;
       
       const base64Url=await fileToBase64(image)
       const res= await fetch('/api/img_upload', {

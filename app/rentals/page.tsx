@@ -2,7 +2,7 @@
 import { FC,  useState } from 'react';
 import Iframe from 'react-iframe';
 import { PageWrapper } from '@/components/page-wrapper';
-
+import {galeryPictures} from '../../utils/galeryPictures';
 
 import Gallery from '@/components/gallery';
 import FullScreenGalleryView from '@/components/fullScreenGalleryView';
@@ -56,9 +56,9 @@ const page: FC<pageProps> = ({}) => {
         >
           {!revealGallery && (
             <Gallery
-              pictures={picturesArray}
+              pictures={galeryPictures}
               auto={true}
-              seconds={7}
+              seconds={8}
               width={'300px'}
               height={'300px'}
             />

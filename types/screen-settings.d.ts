@@ -31,3 +31,8 @@ export interface IScreenSettings {
     description: string | null;
     visible:boolean;
   }
+  type TPictureWithCapture ={
+    urlData: string;
+    capture: string
+  }
+  type TPicturesArray = TPictureWithCapture[];

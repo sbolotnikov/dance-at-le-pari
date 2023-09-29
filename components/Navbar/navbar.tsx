@@ -96,12 +96,12 @@ const Navbar = ({  path, locale, children }: Props) => {
           url: '/admin/usersscreen',
           title: 'Users Screen',
           icon: 'Users',
-        }, 
-        {
-          url: '/mail_page',
-          title: 'Email',
-          icon: 'Email',
         },      
+        {
+          url: '/admin/eventedit',
+          title: 'Edit events',
+          icon: 'Plus',
+        },   
       ];
     } else {
       linksArray= [

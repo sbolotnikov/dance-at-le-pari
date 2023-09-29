@@ -69,7 +69,7 @@ function AllowScroll(){
 const handleChange =async (e: React.ChangeEvent<HTMLInputElement>)=> {
            e.preventDefault();
  
-           const img=await uploadImage(e.currentTarget.files![0]);
+           const img=await uploadImage(e.currentTarget.files![0], 300, 300, "Profile");
            console.log( img)
           
            if (img!=='Error uploading') props.onReturn(props.styling.button1,img!);

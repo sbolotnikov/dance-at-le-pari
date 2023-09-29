@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Gallery from './gallery';
 import ShowIcon from './svg/showIcon';
+import {galeryPictures} from '../utils/galeryPictures';
 import { AnimatePresence, motion } from 'framer-motion';
 
 type Props = {
@@ -33,13 +34,11 @@ const FullScreenGalleryView = ({pictures, onReturn}: Props) => {
               rotateX: ['0deg', '0deg', '89deg', '89deg', '90deg'],
               x: ['0vw', '0vw', '0vw', '0vw', '-100vw'],
             }}   
-             className="w-[100vw] h-[100vh] absolute flex justify-center items-center bg-slate-500/70 left-0 z-[1001] backdrop-blur-md"
+             className="w-[100vw] h-[100vh] absolute flex flex-col justify-center items-center bg-slate-500/70 left-0 z-[1001] backdrop-blur-md"
             style={{ top: el!.scrollTop }}
           >
-            <div  className="relative h-full w-full"
-          >
       <button
-        className={`absolute top-12 md:top-24 left-[50%]  cursor-pointer hover:scale-125 `} style={{transform: 'translate(-50%, -50%)', zIndex:'50'}}
+        className={` mt-2 md:mt-14 origin-center cursor-pointer z-10 hover:scale-125 `}
         onClick={() => {
             setIsVisible(false);
           onReturn();
@@ -50,13 +49,13 @@ const FullScreenGalleryView = ({pictures, onReturn}: Props) => {
         </div>
       </button>
       <Gallery
-        pictures={pictures}
+        pictures={galeryPictures}
         auto={false}
         seconds={5}
         width={'100vw'}
         height={'100vh'}
+        particles
       />
-      </div>
      </motion.div>
         )}
       </AnimatePresence>
