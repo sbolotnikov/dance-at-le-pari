@@ -12,7 +12,7 @@ export async function GET() {
         JSON.stringify({ message: 'No such event exist',status: 422}),
       );
     }
-  const eventJSON = event1.map((item)=>{return {color:item.color,date:item.date,tag:item.tag, id:item.id}})
+  const eventJSON = event1.map((item)=>{return {date:item.date,tag:item.tag, id:item.id}})
   return new NextResponse(JSON.stringify({eventJSON}), {
     status: 201,
   });

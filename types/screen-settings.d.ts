@@ -6,7 +6,6 @@ export interface IScreenSettings {
     changeTheme: (a:boolean) => void;
   };
   export type TEvent = {
-    color: string;
     date: string;
     tag: string;
     id: number;
