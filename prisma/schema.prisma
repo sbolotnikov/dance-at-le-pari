@@ -25,7 +25,7 @@ model User {
   sessions Session[]
   accounts Account[]
 }
-model Event {
+model EventTemplate {
   id Int @id @default(autoincrement())
   eventtype EventType @default(Group)
   length Int
@@ -34,14 +34,21 @@ model Event {
   image String?
   tag String
   title String?
-  date DateTime
   location String?
   description String?
   visible Boolean
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   teachersid Int[]
-  studentsid Int[]
+  events Event[]
+}
+model Event {
+   id Int @id @default(autoincrement())
+   date DateTime
+   templateID Int
+   tag String
+   eventtype EventType @default(Group)
+   template EventTemplate @relation(fields: [templateID], references: [id] )
 }
 enum EventType {
   Private

@@ -60,9 +60,9 @@ export default function RootLayoutFC({
           <meta property="og:site_name" content="Le Pari Dance Center"/>
           <meta property="og:type" content="website"/>
           <meta name="keywords" content="ballroom dance, dance lessons in NJ, argentine tango dance lessons in nj, salsa, group dance classes, rentals, wedding dance lessons"/>
-          <meta property="og:image" content={process.env.NEXTAUTH_URL+'/logo1.jpg'}/>
-          <meta property="og:image:width" content="1280"/>
-          <meta property="og:image:height" content="713"/>
+          <meta property="og:image" content={process.env.NEXTAUTH_URL+'/logo2.jpg'}/>
+          <meta property="og:image:width" content="750"/>
+          <meta property="og:image:height" content="750"/>
          
       <body suppressHydrationWarning={true}>
         <Providers>

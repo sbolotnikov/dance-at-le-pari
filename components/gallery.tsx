@@ -80,7 +80,6 @@ const Gallery = ({ pictures, auto,particles, seconds, width, height }: Props) =>
     init(context:CanvasRenderingContext2D ){
       context.drawImage(this.image, this.x, this.y) 
       const pixels = context.getImageData(0, 0, this.width, this.height).data;
-      console.log(pixels, this.x, this.y)
       for (let y = 0; y < this.height; y += this.gap){
         for (let x = 0; x < this.width; x += this.gap){
           const index1 = (y*this.width + x) * 4;
@@ -94,7 +93,6 @@ const Gallery = ({ pictures, auto,particles, seconds, width, height }: Props) =>
           }
         }
       }
-      console.log('finish init')
     }
     draw(context:CanvasRenderingContext2D ){
       this.particlesArray.forEach(particle => particle.draw(context));
@@ -126,8 +124,7 @@ const Gallery = ({ pictures, auto,particles, seconds, width, height }: Props) =>
   let counter=0
   const particlesFunc=()=>{
     const canvas = document.getElementById('canvas1') as HTMLCanvasElement 
-    const container = document.getElementById('galleryContainer')
-    console.log(parseInt(height))
+    const container = document.getElementById('galleryContainer');
     const ctx = canvas.getContext('2d');
     function animate(){
       ctx!.clearRect(0, 0, canvas.width, canvas.height);
@@ -144,7 +141,6 @@ const Gallery = ({ pictures, auto,particles, seconds, width, height }: Props) =>
     // gsap.timeline().fromTo(el1, { attr:{opacity: 0}},{ attr:{opacity: 1}, duration: seconds*.05} );
     const effect = new Effect(canvas!.width, canvas!.height, pictures[nextActivePic].urlData );
     effect.init(ctx!);
-      console.log(effect.particlesArray);
     animate(); 
     setActivePic(nextActivePic);
     sleep(seconds*500).then(() => {
@@ -246,7 +242,6 @@ const Gallery = ({ pictures, auto,particles, seconds, width, height }: Props) =>
         className={` absolute top-1/2 right-0 cursor-pointer z-10 hover:scale-125 ${
           auto ? 'hidden' : ''}`} style={{transform: 'translate(0%, -50%)'}}
         onClick={() => {
-          console.log("clicked Next",nextActivePic, pictures.length,  )
           if (activePic < pictures.length - 1) setNextActivePic(activePic + 1);
           else  setNextActivePic(0);
         }}
