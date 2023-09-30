@@ -69,7 +69,7 @@ const FullDayCalendarView = ({ events, onReturn, day }: Props) => {
               return (
                 <Link key={'LinksEvent' + index} href={`/events/${item.id}`}>
                   <div className="m-3 p-2  flex flex-col justify-center items-center text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG    shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2">
-                    <h1 className=" text-2xl  h-full text-center   text-shadow  dark:text-shadow-light " style={{color:item.color}}>
+                    <h1 className=" text-2xl  h-full text-center   text-shadow  dark:text-shadow-light " >
                       {new Date(item.date).toLocaleTimeString('en-US',{timeStyle: 'short'})} {item.tag}
                     </h1>
                     <Image
