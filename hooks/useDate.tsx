@@ -4,6 +4,7 @@ export const useDate = (events: TEventArray, nav:number) => {
   const [dateDisplay, setDateDisplay] = useState('');
   const [days, setDays] = useState<Array<TDay>>();
 
+  // const eventsForDate = (date:string) =>{let date1= new Date(date); return events.filter(e => ((new Date(e.date)> date1)&&(new Date(e.date)< new Date(date1.setDate(date1.getDate() + 1)))));}
   const eventsForDate = (date:string) =>events.filter(e => e.date.split('T')[0] === date);
   useEffect(() => {
     const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];

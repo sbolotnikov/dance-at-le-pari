@@ -5,9 +5,12 @@ import ShowIcon from './svg/showIcon';
 import ChoosePicture from './ChoosePicture';
 import AlertMenu from './alertMenu';
 
-type Props = {};
+type Props = {
 
-const EventTemplateEditingForm = (props: Props) => {
+  onReturn: () => void;
+};
+
+const EventTemplateEditingForm = ({onReturn}: Props) => {
   const [eventtype, setEventType] = useState('Group');
   const [location, setEventTypeLocation] = useState('Main ballroom');
   const [description, setDescription] = useState('');
@@ -40,10 +43,6 @@ const EventTemplateEditingForm = (props: Props) => {
     if (decision1 == 'Return') {
       setDescription("");
       setImage("");
-      // lengthRef.current!.value ='';
-      // priceRef.current!.value ='';
-      // titleRef.current!.value ='';
-      // tagRef.current!.value ='';
     }
   };
   const handleSubmit = (event: React.SyntheticEvent) => {
@@ -136,17 +135,19 @@ const EventTemplateEditingForm = (props: Props) => {
           )}
       <div
         className="border-0 rounded-md p-4  shadow-2xl w-[90%]  max-w-[450px] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md"
-        // style={{ boxShadow: '0 0 150px rgb(113, 113, 109 / 50%),inset 0 0 20px #242422' }}
       >
-        <h2
-          className="text-center font-bold uppercase"
-          style={{ letterSpacing: '1px' }}
-        >
-          Event Editing
-        </h2>
 
-        <div className="border rounded-md border-lightMainColor dark:border-darkMainColor p-1">
-        
+        <div className="border rounded-md border-lightMainColor dark:border-darkMainColor p-1 relative">
+        <button
+              className=" outline-none border-none fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor rounded-full  absolute p-1 top-0 right-0 w-8 h-8"
+              onClick={(e) => {
+                e.preventDefault();
+                onReturn();
+                return;
+              }}
+            >
+              <ShowIcon icon={'Exchange'} stroke={''} />
+            </button>
           <h2
           className="text-center font-bold uppercase"
           style={{ letterSpacing: '1px' }}
@@ -193,10 +194,10 @@ const EventTemplateEditingForm = (props: Props) => {
               <option value="Private">Coaching</option>
             </select>
           </label>
-          <label className="flex flex-row justify-between items-center">
+          <label className="flex flex-col justify-between items-center">
             Location
             <select
-              className="bg-main-bg m-2 rounded-md bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor"
+              className="bg-main-bg mb-2 rounded-md text-ellipsis bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor"
               value={location}
               onChange={(e) => {
                 setEventTypeLocation(e.target.value);
@@ -217,7 +218,7 @@ const EventTemplateEditingForm = (props: Props) => {
             <label className="flex flex-row justify-between items-center mb-1">
               Length in min.
               <input
-                className="flex-1 outline-none border-none rounded-md   text-lightMainColor p-0.5 mx-1"
+                className=" outline-none border-none rounded-md  w-1/2 text-lightMainColor p-0.5 mx-1"
                 id="length1"
                 name="length1" 
                 type="number" 
@@ -227,7 +228,7 @@ const EventTemplateEditingForm = (props: Props) => {
             <label className="flex flex-row justify-between items-center mb-1">
               Price
               <input
-                className="flex-1 outline-none border-none rounded-md   text-lightMainColor p-0.5 mx-1"
+                className=" outline-none border-none rounded-md w-1/2  text-lightMainColor p-0.5 mx-1"
                 id="price"
                 name="price"
                 type="number" 
@@ -237,7 +238,7 @@ const EventTemplateEditingForm = (props: Props) => {
             <label className="flex flex-row justify-between items-center mb-1">
               Title
               <input
-                className="flex-1 outline-none border-none rounded-md   text-lightMainColor p-0.5 mx-1"
+                className=" outline-none border-none rounded-md w-3/4  text-lightMainColor p-0.5 mx-1"
                 id="title"
                 name="title"
                 type="text"  
@@ -246,7 +247,7 @@ const EventTemplateEditingForm = (props: Props) => {
             <label className="flex flex-row justify-between items-center mb-1">
               Event Tag
               <input
-                className="flex-1 outline-none border-none rounded-md   text-lightMainColor p-0.5 mx-1"
+                className=" outline-none border-none rounded-md  w-3/4 text-lightMainColor p-0.5 mx-1"
                 id="tag"
                 name="tag"
                 type="text" 

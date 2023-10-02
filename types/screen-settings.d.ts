@@ -29,6 +29,10 @@ export interface IScreenSettings {
     location: string | null;
     description: string | null;
     visible:boolean;
+    teacher:string | null;
+    bio:string | null;
+    teacher_img:string | null;
+
   }
   type TPictureWithCapture ={
     urlData: string;
@@ -38,4 +42,10 @@ export interface IScreenSettings {
   type TImage ={
     file:string;
     id:string;
+  }
+  type TTemplateSmall ={
+  tag:string;
+  eventtype:string,
+  templateID:number;
+   image:string;
   }

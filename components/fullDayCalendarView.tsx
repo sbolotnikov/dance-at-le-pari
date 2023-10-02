@@ -4,6 +4,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { TEventArray } from '@/types/screen-settings';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useSession } from 'next-auth/react';
+import AlertMenu from './alertMenu';
 type Props = {
   events: TEventArray | undefined;
   onReturn: () => void;
@@ -11,10 +13,41 @@ type Props = {
 };
 
 const FullDayCalendarView = ({ events, onReturn, day }: Props) => {
+  const [revealAlert, setRevealAlert] = useState(false);
+  const [eventID, setEventID] = useState(-1)
+  const [alertStyle, setAlertStyle] = useState({
+    variantHead: '',
+    heading: '',
+    text: ``,
+    color1: '',
+    button1: '',
+    color2: '',
+    button2: '',
+    inputField: '',
+  });
   const [isVisible, setIsVisible] = useState(true);
+  const { data: session } = useSession();
   let el = document.querySelector('#mainPage');
-  console.log(day, events);
+  const onReturnAlert = async (decision1: string) => {
+    setRevealAlert(false);
+    if (decision1 == 'Cancel') {
+    }
+    if (decision1 == 'Delete') {
+      fetch('/api/admin/del_event', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: eventID,
+        }),
+      }).then(() => {
+        window.location.reload();
+      });
+    }
 
+  };
+  console.log(day, events);
   return (
     <AnimatePresence>
       {isVisible && (
@@ -38,53 +71,89 @@ const FullDayCalendarView = ({ events, onReturn, day }: Props) => {
           className="w-[100vw] h-[100vh] absolute flex flex-col justify-center items-center bg-slate-500/70 left-0 z-[1001] backdrop-blur-md"
           style={{ top: el!.scrollTop }}
         >
-            
-            <button
-              className={` mt-2 md:mt-14 origin-center cursor-pointer z-10 hover:scale-125 `}
-              onClick={() => {
-                setIsVisible(false);
-                onReturn();
-              }}
-            >
-              <div className=" h-8 w-8 md:h-12 md:w-12   fill-darkMainColor stroke-darkMainColor">
-                <ShowIcon icon={'Close'} stroke={'2'} />
-              </div>
-            </button> 
+          {revealAlert && (
+            <AlertMenu onReturn={onReturnAlert} styling={alertStyle} />
+          )}
+          <button
+            className={` mt-2 md:mt-14 origin-center cursor-pointer z-10 hover:scale-125 `}
+            onClick={() => {
+              setIsVisible(false);
+              onReturn();
+            }}
+          >
+            <div className=" h-8 w-8 md:h-12 md:w-12   fill-darkMainColor stroke-darkMainColor">
+              <ShowIcon icon={'Close'} stroke={'2'} />
+            </div>
+          </button>
 
-            <div className="font-semibold text-md text-center  text-shadow  dark:text-shadow-light text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG mt-4 p-3 shadow-2xl  rounded-md border-2">
-            <span className="font-extrabold text-xl text-left  text-shadow  dark:text-shadow-light text-lightMainColor  dark:text-darkMainColor ">Schedule for:</span>
- {new Date(day!).toLocaleDateString('en-us', {
+          <div className="font-semibold text-md text-center  text-shadow  dark:text-shadow-light text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG mt-4 p-3 shadow-2xl  rounded-md border-2">
+            <span className="font-extrabold text-xl text-left  text-shadow  dark:text-shadow-light text-lightMainColor  dark:text-darkMainColor ">
+              Schedule for:
+            </span>
+            {new Date(day!).toLocaleDateString('en-us', {
               weekday: 'long',
               year: 'numeric',
               month: 'long',
               day: 'numeric',
-            })}</div>
-          <div className="w-full h-full relative  overflow-y-auto ">
-          <div className="absolute top-0 left-0 w-full min-h-full pb-10 flex flex-col justify-center items-center md:flex-row">
-            {events && events.sort((a, b) => {
-                  if (a.date > b.date) return 1
-                  else if (a.date < b.date) return -1
-                  else return 0
-                }) .map((item, index) => {
-              return (
-                <Link key={'LinksEvent' + index} href={`/events/${item.id}`}>
-                  <div className="m-3 p-2  flex flex-col justify-center items-center text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG    shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2">
-                    <h1 className=" text-2xl  h-full text-center   text-shadow  dark:text-shadow-light " >
-                      {new Date(item.date).toLocaleTimeString('en-US',{timeStyle: 'short'})} {item.tag}
-                    </h1>
-                    <Image
-                      className="rounded-md overflow-hidden "
-                      src={'/images/calendar.jpg'}
-                      width={300}
-                      height={300}
-                      alt="Logo"
-                    />
-                  </div>
-                </Link>
-              );
             })}
           </div>
-        </div>
+          <div className="w-full h-full relative  overflow-y-auto ">
+            <div className="absolute top-0 left-0 w-full min-h-full pb-10 flex flex-col justify-center items-center md:flex-row">
+              {events &&
+                events
+                  .sort((a, b) => {
+                    if (a.date > b.date) return 1;
+                    else if (a.date < b.date) return -1;
+                    else return 0;
+                  })
+                  .map((item, index) => {
+                    return (
+                      <Link
+                        key={'LinksEvent' + index}
+                        href={`/events/${item.id}`}
+                      >
+                        <div className="m-3 p-2  flex flex-col justify-center items-center relative text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG    shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2">
+                          {session?.user.role=="Admin"&&<button
+                            className=" outline-none border-none fill-alertcolor  stroke-alertcolor  rounded-md border-alertcolor absolute p-1 -top-1 -right-4 w-10 h-10"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setAlertStyle({
+                                variantHead: 'danger',
+                                heading: 'Warning',
+                                text: 'You are about to Delete Event!',
+                                color1: 'danger',
+                                button1: 'Delete',
+                                color2: 'secondary',
+                                button2: 'Cancel',
+                                inputField: '',
+                              });
+                              setEventID(item.id);
+                              setRevealAlert(!revealAlert);
+                              return;
+                            }}
+                          >
+                            <ShowIcon icon={'Close'} stroke={'2'} />
+                          </button>}
+
+                          <h1 className=" text-2xl  h-full text-center   text-shadow  dark:text-shadow-light ">
+                            {new Date(item.date).toLocaleTimeString('en-US', {
+                              timeStyle: 'short',
+                            })}{' '}
+                            {item.tag}
+                          </h1>
+                          <Image
+                            className="rounded-md overflow-hidden "
+                            src={'/images/calendar.jpg'}
+                            width={300}
+                            height={300}
+                            alt="Logo"
+                          />
+                        </div>
+                      </Link>
+                    );
+                  })}
+            </div>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>

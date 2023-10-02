@@ -18,7 +18,8 @@ model User {
   email String @unique
   emailVerified DateTime?  
   password String? 
-  telephone String?  
+  telephone String?
+  bio String?  
   role String @default("Student")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -44,7 +45,7 @@ model EventTemplate {
 }
 model Event {
    id Int @id @default(autoincrement())
-   date DateTime
+   date String
    templateID Int
    tag String
    eventtype EventType @default(Group)
