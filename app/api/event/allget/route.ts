@@ -17,5 +17,5 @@ export async function GET() {
     status: 201,
   });
 }
-
+export const dynamic = 'force-dynamic'
 // {color:"#e09c6b",date:'2023-09-09T19:00:00',tag:"Party", id:0}
