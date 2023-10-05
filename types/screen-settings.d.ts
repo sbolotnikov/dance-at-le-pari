@@ -49,3 +49,8 @@ export interface IScreenSettings {
   templateID:number;
    image:string;
   }
+  type TTeacherInfo = {
+    id: number;
+    image: string;
+    name: string;
+  };

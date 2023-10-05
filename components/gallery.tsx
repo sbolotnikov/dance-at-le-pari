@@ -123,9 +123,12 @@ const Gallery = ({ pictures, auto,particles, seconds, width, height }: Props) =>
   }, []);
   let counter=0
   const particlesFunc=()=>{
-    const canvas = document.getElementById('canvas1') as HTMLCanvasElement 
+    const canvas = document.getElementById('canvas1') as HTMLCanvasElement
+    let el1 = document.getElementById('particleBGImg');
     const container = document.getElementById('galleryContainer');
     const ctx = canvas.getContext('2d');
+    el1!.style.opacity="0";
+    console.log("got canva's context")
     function animate(){
       ctx!.clearRect(0, 0, canvas.width, canvas.height);
       effect.draw(ctx!);
@@ -136,21 +139,20 @@ const Gallery = ({ pictures, auto,particles, seconds, width, height }: Props) =>
     }
     canvas.width = container!.offsetWidth; 
     canvas.height = container!.offsetHeight; 
-    let el1 = document.getElementById('particleBGImg');
-    if (el1) el1.style.display="none";
+    
+    
     // gsap.timeline().fromTo(el1, { attr:{opacity: 0}},{ attr:{opacity: 1}, duration: seconds*.05} );
     const effect = new Effect(canvas!.width, canvas!.height, pictures[nextActivePic].urlData );
     effect.init(ctx!);
     animate(); 
     setActivePic(nextActivePic);
     sleep(seconds*500).then(() => {
-    if (el1) el1.style.display="block";
-    })
+     
+      el1!.style.opacity="1"
+  })
   }
   useEffect(() => {
-    if (particles){
-      particlesFunc()
-    }else if (!firstTime) {
+    if((!particles)&&(!firstTime)) {
       let el = document.getElementById('turbulence');
       let imgEl = document.getElementById(`image${activePic}`);
       if (imgEl) {
@@ -201,19 +203,20 @@ const Gallery = ({ pictures, auto,particles, seconds, width, height }: Props) =>
           <ShowIcon icon={'ArrowLeft'} stroke={'.1'} />
         </div>
       </button>
+      <canvas id ="canvas1" className='m-auto ' style={{objectFit: "contain"}}></canvas>
       {(particles==true) &&
           <img id="particleBGImg"
             src={pictures[nextActivePic].urlData} 
-            
             style={{objectFit: "contain"}}
-            className={`absolute inset-0 m-auto `}
+            className="absolute inset-0 m-auto opacity-0"
+            onLoad={() => {console.log('image loaded'); particlesFunc()}}
           />}
           {(particles==true) &&<h2
             className={`w-full mb-12 text-center absolute bottom-0 right-0 z-100 bg-lightMainBG/70 dark:bg-darkMainBG/70 `}
           >
             {pictures[nextActivePic].capture}
           </h2>}
-      <canvas id ="canvas1" className='m-auto ' style={{objectFit: "contain"}}></canvas>
+      
 
       {(particles!==true) && pictures.map((item, index) => (
         <div key={'img' + index}>

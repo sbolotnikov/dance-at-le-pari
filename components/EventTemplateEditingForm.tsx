@@ -4,19 +4,22 @@ import ImgFromDb from './ImgFromDb';
 import ShowIcon from './svg/showIcon';
 import ChoosePicture from './ChoosePicture';
 import AlertMenu from './alertMenu';
+import ChooseTeacher from './ChooseTeacher';
+import { TTeacherInfo } from '@/types/screen-settings';
 
 type Props = {
-
   onReturn: () => void;
 };
 
-const EventTemplateEditingForm = ({onReturn}: Props) => {
+const EventTemplateEditingForm = ({ onReturn }: Props) => {
   const [eventtype, setEventType] = useState('Group');
   const [location, setEventTypeLocation] = useState('Main ballroom');
   const [description, setDescription] = useState('');
   const [revealCloud, setRevealCloud] = useState(false);
+  const [revealCloud2, setRevealCloud2] = useState(false);
   const [image, setImage] = useState('');
-  const [loading, setLoading] = useState(false); 
+  const [teacher, setTeacher] = useState<TTeacherInfo | null>();
+  const [loading, setLoading] = useState(false);
   const [revealAlert, setRevealAlert] = useState(false);
   const [alertStyle, setAlertStyle] = useState({
     variantHead: '',
@@ -38,11 +41,25 @@ const EventTemplateEditingForm = ({onReturn}: Props) => {
       setImage(fileLink);
     }
   };
+  const onReturnTeacher = (
+    decision1: string,
+    fileLink: TTeacherInfo | null
+  ) => {
+    setRevealCloud2(false);
+    if (decision1 == 'Close') {
+      setTeacher(null);
+      console.log(decision1);
+    }
+    if (decision1 == 'Confirm') {
+      console.log('file link', fileLink);
+      setTeacher(fileLink!);
+    }
+  };
   const onReturnAlert = async (decision1: string) => {
-    setRevealAlert(false); 
+    setRevealAlert(false);
     if (decision1 == 'Return') {
-      setDescription("");
-      setImage("");
+      setDescription('');
+      setImage('');
     }
   };
   const handleSubmit = (event: React.SyntheticEvent) => {
@@ -59,7 +76,7 @@ const EventTemplateEditingForm = ({onReturn}: Props) => {
     const title = target1.title.value;
     const tag = target1.tag.value;
     const description = target1.description.value;
-     console.log(length1, price, title, tag, description)
+    console.log(length1, price, title, tag, description);
     let validationError = '';
     document.querySelector('#length1')!.classList.remove('invalid_input');
     document.querySelector('#price')!.classList.remove('invalid_input');
@@ -67,19 +84,19 @@ const EventTemplateEditingForm = ({onReturn}: Props) => {
     document.querySelector('#tag')!.classList.remove('invalid_input');
     document.querySelector('#description')!.classList.remove('invalid_input');
     // submitting profile updated information
-    if ((length1 < 30)||(length1 > 360)) {
+    if (length1 < 30 || length1 > 360) {
       validationError = 'Enter length in range 30 min to 6 hours';
       // make name input red
       document.querySelector('#length1')!.classList.add('invalid_input');
-    } else if ((price < 0)||(price > 10000)) {
+    } else if (price < 0 || price > 10000) {
       validationError = 'Enter price in range $0 to $10000';
       // make name input red
-      document.querySelector('#price')!.classList.add('invalid_input');} 
-      else if (tag.length > 30 || tag.length < 2) {
+      document.querySelector('#price')!.classList.add('invalid_input');
+    } else if (tag.length > 30 || tag.length < 2) {
       validationError = 'Enter tag in range of 3 to 30 symbols';
       // make message input red
       document.querySelector('#tag')!.classList.add('invalid_input');
-    } 
+    }
     if (validationError > '') {
       setAlertStyle({
         variantHead: 'danger',
@@ -90,6 +107,7 @@ const EventTemplateEditingForm = ({onReturn}: Props) => {
         color2: '',
         button2: '',
         inputField: '',
+
       });
       setRevealAlert(true);
       return;
@@ -104,11 +122,18 @@ const EventTemplateEditingForm = ({onReturn}: Props) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        eventtype,length:length1, price, image, tag, title, location, description
-         
-      }), 
-    }).then(async (res) => {
-       
+        eventtype,
+        length: length1,
+        price,
+        image,
+        tag,
+        title,
+        location,
+        description,
+        teachersid:(teacher!==null && teacher!==undefined) ?[teacher?.id]:[]
+      }),
+    })
+      .then(async (res) => {
         setLoading(false);
         setAlertStyle({
           variantHead: 'info',
@@ -123,23 +148,31 @@ const EventTemplateEditingForm = ({onReturn}: Props) => {
 
         setRevealAlert(true);
         console.log(res);
-      
-    }).catch(error => {console.log(error);});
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
     <>
       {revealCloud && <ChoosePicture onReturn={onReturnPicture} />}
+      {revealCloud2 && <ChooseTeacher onReturn={onReturnTeacher} />}
       {revealAlert && (
-            <AlertMenu onReturn={onReturnAlert} styling={alertStyle} />
-          )}
-      <div
-        className="border-0 rounded-md p-4  shadow-2xl w-[90%]  max-w-[450px] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md"
-      >
+        <AlertMenu onReturn={onReturnAlert} styling={alertStyle} />
+      )}
+      <div className="border-0 rounded-md p-4  shadow-2xl w-[90%]  max-w-[450px] md:w-full h-[90vh] my-auto bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md ">
+        <div className="border rounded-md border-lightMainColor dark:border-darkMainColor p-1 w-full h-full  flex  justify-center items-center overflow-scroll relative ">
 
-        <div className="border rounded-md border-lightMainColor dark:border-darkMainColor p-1 relative">
-        <button
-              className=" outline-none border-none fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor rounded-full  absolute p-1 top-0 right-0 w-8 h-8"
+          <div className="  min-w-full   flex flex-col flex-wrap items-center justify-center relative ">
+          <h2
+            className="text-center w-full font-bold uppercase"
+            style={{ letterSpacing: '1px' }}
+          >
+            Template Editing Form
+          </h2>
+            <button
+              className=" outline-none border-none cursor-pointer fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor rounded-full  fixed p-1 top-6 right-6 w-8 h-8"
               onClick={(e) => {
                 e.preventDefault();
                 onReturn();
@@ -148,135 +181,158 @@ const EventTemplateEditingForm = ({onReturn}: Props) => {
             >
               <ShowIcon icon={'Exchange'} stroke={''} />
             </button>
-          <h2
-          className="text-center font-bold uppercase"
-          style={{ letterSpacing: '1px' }}
-        >
-          Template Editing Form
-        </h2>
 
-          <div className="relative flex justify-center items-center outline-none border border-lightMainColor dark:border-darkMainColor rounded-md w-24 my-6 mx-auto">
-            {image !== null && image !== '' && image !== undefined ? (
-              <ImgFromDb
-                url={image}
-                stylings="object-contain"
-                alt="Event Picture"
-              />
-            ) : (
-              <div className=" h-8 w-8 md:h-10 md:w-10 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
-                <ShowIcon icon={'Calendar'} stroke={'2'} />
-              </div>
-            )}
+            <div className="relative flex justify-center items-center outline-none border border-lightMainColor dark:border-darkMainColor rounded-md w-24 my-6 mx-auto">
+              {image !== null && image !== '' && image !== undefined ? (
+                <ImgFromDb
+                  url={image}
+                  stylings="object-contain"
+                  alt="Event Picture"
+                />
+              ) : (
+                <div className=" h-8 w-8 md:h-10 md:w-10 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
+                  <ShowIcon icon={'Calendar'} stroke={'2'} />
+                </div>
+              )}
 
-            <button
-              className=" outline-none border-none fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor rounded-md  absolute p-1 -top-3 -right-3 w-8 h-8"
-              onClick={(e) => {
-                e.preventDefault();
-                setRevealCloud(!revealCloud);
-                return;
-              }}
-            >
-              <ShowIcon icon={'Exchange'} stroke={''} />
-            </button>
-          </div>
-
-          <label className="flex flex-row justify-between items-center">
-            Event type
-            <select
-              className="bg-main-bg m-2 rounded-md bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor"
-              value={eventtype}
-              onChange={(e) => {
-                setEventType(e.target.value);
-              }}
-            >
-              <option value="Party">Party</option>
-              <option value="Group">Group</option>
-              <option value="Private">Coaching</option>
-            </select>
-          </label>
-          <label className="flex flex-col justify-between items-center">
-            Location
-            <select
-              className="bg-main-bg mb-2 rounded-md text-ellipsis bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor"
-              value={location}
-              onChange={(e) => {
-                setEventTypeLocation(e.target.value);
-              }}
-            >
-              <option value="Fitness Room (Studio A)">
-                Fitness Room (Studio A)
-              </option>
-              <option value="Front Room (Studio B)">
-                Front Room (Studio B)
-              </option>
-              <option value="Main ballroom">Main ballroom</option>
-              <option value="Whole studio">Whole studio</option>
-            </select>
-          </label>
-
-          <form onSubmit={handleSubmit}>
-            <label className="flex flex-row justify-between items-center mb-1">
-              Length in min.
-              <input
-                className=" outline-none border-none rounded-md  w-1/2 text-lightMainColor p-0.5 mx-1"
-                id="length1"
-                name="length1" 
-                type="number" 
-                required
-              />
-            </label>
-            <label className="flex flex-row justify-between items-center mb-1">
-              Price
-              <input
-                className=" outline-none border-none rounded-md w-1/2  text-lightMainColor p-0.5 mx-1"
-                id="price"
-                name="price"
-                type="number" 
-                required
-              />
-            </label>
-            <label className="flex flex-row justify-between items-center mb-1">
-              Title
-              <input
-                className=" outline-none border-none rounded-md w-3/4  text-lightMainColor p-0.5 mx-1"
-                id="title"
-                name="title"
-                type="text"  
-              />
-            </label>
-            <label className="flex flex-row justify-between items-center mb-1">
-              Event Tag
-              <input
-                className=" outline-none border-none rounded-md  w-3/4 text-lightMainColor p-0.5 mx-1"
-                id="tag"
-                name="tag"
-                type="text" 
-                required
-              />
-            </label>
-            <label className="flex flex-col justify-between items-start mb-1">
-              Description
-              <textarea
-                name="description"
-                id="description"
-                value={description}
-                onChange={(e) => {
-                  setDescription(e.target.value);
+              <button
+                className=" outline-none border-none fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor rounded-md  absolute p-1 -top-3 -right-3 w-8 h-8"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setRevealCloud(!revealCloud);
+                  return;
                 }}
-                className="w-full rounded text-lightteal"
-                placeholder="Event description"
-                rows={4}
-                minLength={5}
-              />
+              >
+                <ShowIcon icon={'Exchange'} stroke={''} />
+              </button>
+            </div>
+            <div className="relative flex justify-center items-center outline-none border border-lightMainColor dark:border-darkMainColor rounded-md w-24 my-6 mx-auto">
+              {teacher?.image !== null &&
+              teacher?.image !== '' &&
+              teacher?.image !== undefined ? (
+                <div>
+                  <ImgFromDb
+                    url={teacher?.image!}
+                    stylings="object-contain"
+                    alt="Event Picture"
+                  />
+                  <h2 className="text-center">{teacher.name}</h2>
+                </div>
+              ) : (
+                <div className=" h-8 w-8 md:h-10 md:w-10 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
+                  <ShowIcon icon={'DefaultUser'} stroke={'2'} />
+                </div>
+              )}
+
+              <button
+                className=" outline-none border-none fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor rounded-md  absolute p-1 -top-3 -right-3 w-8 h-8"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setRevealCloud2(!revealCloud2);
+                  return;
+                }}
+              >
+                <ShowIcon icon={'Exchange'} stroke={''} />
+              </button>
+            </div>
+            <label className="flex flex-row m-auto justify-between items-center">
+              Event type
+              <select
+                className="bg-main-bg m-2 rounded-md bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor"
+                value={eventtype}
+                onChange={(e) => {
+                  setEventType(e.target.value);
+                }}
+              >
+                <option value="Party">Party</option>
+                <option value="Group">Group</option>
+                <option value="Private">Coaching</option>
+              </select>
             </label>
-            <button
-              className="btnFancy w-[90%]"
-              type="submit"
-              disabled={loading}
-            >
-              {'Submit'}
-            </button>
-          </form>
+            <label className="flex flex-col m-auto justify-between items-center">
+              Location
+              <select
+                className="bg-main-bg mb-2 rounded-md text-ellipsis bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor"
+                value={location}
+                onChange={(e) => {
+                  setEventTypeLocation(e.target.value);
+                }}
+              >
+                <option value="Fitness Room (Studio A)">
+                  Fitness Room (Studio A)
+                </option>
+                <option value="Front Room (Studio B)">
+                  Front Room (Studio B)
+                </option>
+                <option value="Main ballroom">Main ballroom</option>
+                <option value="Whole studio">Whole studio</option>
+              </select>
+            </label>
+
+            <form className=" m-auto" onSubmit={handleSubmit}>
+              <label className="flex flex-row justify-between items-center mb-1">
+                Length in min.
+                <input
+                  className=" outline-none border-none rounded-md  w-1/2 text-lightMainColor p-0.5 mx-1"
+                  id="length1"
+                  name="length1"
+                  type="number"
+                  required
+                />
+              </label>
+              <label className="flex flex-row justify-between items-center mb-1">
+                Price
+                <input
+                  className=" outline-none border-none rounded-md w-1/2  text-lightMainColor p-0.5 mx-1"
+                  id="price"
+                  name="price"
+                  type="number"
+                  required
+                />
+              </label>
+              <label className="flex flex-row justify-between items-center mb-1">
+                Title
+                <input
+                  className=" outline-none border-none rounded-md w-3/4  text-lightMainColor p-0.5 mx-1"
+                  id="title"
+                  name="title"
+                  type="text"
+                />
+              </label>
+              <label className="flex flex-row justify-between items-center mb-1">
+                Event Tag
+                <input
+                  className=" outline-none border-none rounded-md  w-3/4 text-lightMainColor p-0.5 mx-1"
+                  id="tag"
+                  name="tag"
+                  type="text"
+                  required
+                />
+              </label>
+              <label className="flex flex-col justify-between items-start mb-1">
+                Description
+                <textarea
+                  name="description"
+                  id="description"
+                  value={description}
+                  onChange={(e) => {
+                    setDescription(e.target.value);
+                  }}
+                  className="w-full rounded text-lightteal"
+                  placeholder="Event description"
+                  rows={4}
+                  minLength={5}
+                />
+              </label>
+              <button
+                className="btnFancy w-[90%]"
+                type="submit"
+                disabled={loading}
+              >
+                {'Submit'}
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </>
