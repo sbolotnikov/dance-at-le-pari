@@ -1,4 +1,4 @@
-// 'use client';
+'use client';
 import Image from 'next/image';
 import Link from 'next/link';
 import { PageWrapper } from '@/components/page-wrapper';
@@ -27,8 +27,7 @@ export default async function Home() {
           className="text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG p-3 shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2"
         >
           <h1 className="font-bold text-5xl text-franceBlue  text-center font-DancingScript text-shadow  dark:text-shadow-light  ">
-            {' '}
-            {process.env.SITE_NAME}
+            Dance At Le Pari
           </h1>
           <h2 className="text-center font-bold    text-shadow  dark:text-shadow-light ">
             Welcome to Home Page

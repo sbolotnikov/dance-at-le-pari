@@ -5,7 +5,15 @@ export const useDate = (events: TEventArray, nav:number) => {
   const [days, setDays] = useState<Array<TDay>>();
 
   // const eventsForDate = (date:string) =>{let date1= new Date(date); return events.filter(e => ((new Date(e.date)> date1)&&(new Date(e.date)< new Date(date1.setDate(date1.getDate() + 1)))));}
-  const eventsForDate = (date:string) =>events.filter(e => e.date.split('T')[0] === date);
+  const eventsForDate = (date:string) =>{
+    let arr=events.filter(e => e.date.split('T')[0] === date);
+    return arr.sort((a, b) => {
+      if (a.date > b.date) return 1;
+      else if (a.date < b.date) return -1;
+      else return 0;
+    })
+
+};
   useEffect(() => {
     const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     let dt = new Date();

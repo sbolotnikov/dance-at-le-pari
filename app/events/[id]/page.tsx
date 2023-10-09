@@ -35,7 +35,7 @@ export default function Page({ params }: { params: { id: string } }) {
               {new Date(eventData!.date).toLocaleDateString('en-us', {
                 weekday: 'long',
                 year: 'numeric',
-                month: 'numeric',
+                month: 'long',
                 day: 'numeric',
               })}
             </h2>

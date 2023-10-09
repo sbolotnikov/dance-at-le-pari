@@ -9,6 +9,7 @@ import Image from 'next/image';
 import { TTemplateSmall } from '@/types/screen-settings';
 import ImgFromDb from '@/components/ImgFromDb';
 import AlertMenu from '@/components/alertMenu';
+// import  {chargeCreditCard}  from '@/utils/authorise_Charge';
 interface pageProps {}
 
 const page: FC<pageProps> = ({}) => {
@@ -61,13 +62,14 @@ const page: FC<pageProps> = ({}) => {
 
   useEffect(() => {
     refreshTemplates();
+    // chargeCreditCard((res:any)=>console.log(res))
   }, []);
   console.log(displayTemplates);
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
       {revealAlert && <AlertMenu onReturn={onReturn} styling={alertStyle} />}
       {revealTemplateEdit == true ? (
-        <EventTemplateEditingForm onReturn={()=>setRevealTemplateEdit(false)}/>
+        <EventTemplateEditingForm onReturn={()=>setRevealTemplateEdit(false)} template={template1?.templateID}/>
       ) : (
         <div
           className="   shadow-2xl w-[90%]  max-w-[450px] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md border rounded-md border-lightMainColor dark:border-darkMainColor p-1 m-1"
@@ -137,11 +139,14 @@ const page: FC<pageProps> = ({}) => {
                 </div>
               </div>
             </div>
-            <h2 className="flex flex-row justify-center items-center   m-1">
-              {template1 !== undefined
-                ? `${template1?.eventtype} ${template1?.tag}`
-                : ''}
-            </h2>
+            {template1 !== undefined &&<h2 className="flex flex-row justify-center items-center  relative  m-1">
+               {template1?.eventtype+' '+template1?.tag}
+                 <div className="absolute -top-1 right-5 h-6 w-6 md:h-7 md:w-7 fill-green-600 m-auto stroke-lightMainColor dark:fill-green-600 dark:stroke-darkMainColor cursor-pointer " 
+                 onClick={(e)=>{e.preventDefault(); setRevealTemplateEdit(true);}}>
+                <ShowIcon icon={'Edit'} stroke={'0.5'} />
+              </div>
+            </h2>}
+
             {template1 !== undefined ? (
               <ImgFromDb
                 url={template1.image}
@@ -149,7 +154,7 @@ const page: FC<pageProps> = ({}) => {
                 alt="Template Picture"
               />
             ) : (
-              <div className=" h-8 w-8 md:h-10 md:w-10 fill-lightMainColor m-auto stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
+              <div className=" h-8 w-8 md:h-10 md:w-10 mt-1 fill-lightMainColor m-auto stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
                 <ShowIcon icon={'Template'} stroke={'2'} />
               </div>
             )}
@@ -205,7 +210,7 @@ const page: FC<pageProps> = ({}) => {
                     'Content-Type': 'application/json',
                   },
                   body: JSON.stringify({
-                    date:dateTimeRef.current?.value,templateID:template1.templateID, tag:template1.tag, eventtype:template1.eventtype
+                    date:dateTimeRef.current?.value,templateID:template1.templateID, image:template1.image, tag:template1.tag, eventtype:template1.eventtype
                   }), 
                 }).then(async (res) => {
                    

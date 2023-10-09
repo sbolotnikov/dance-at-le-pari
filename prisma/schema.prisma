@@ -48,6 +48,7 @@ model Event {
    date String
    templateID Int
    tag String
+   image String?
    eventtype EventType @default(Group)
    template EventTemplate @relation(fields: [templateID], references: [id] )
 }

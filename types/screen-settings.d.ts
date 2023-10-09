@@ -9,6 +9,8 @@ export interface IScreenSettings {
     date: string;
     tag: string;
     id: number;
+    image: string;
+    eventtype: string;
   }
   type TEventArray = TEvent[];
   type TDay ={

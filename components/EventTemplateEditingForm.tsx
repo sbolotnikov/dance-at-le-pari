@@ -1,5 +1,5 @@
 'use client';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ImgFromDb from './ImgFromDb';
 import ShowIcon from './svg/showIcon';
 import ChoosePicture from './ChoosePicture';
@@ -8,10 +8,11 @@ import ChooseTeacher from './ChooseTeacher';
 import { TTeacherInfo } from '@/types/screen-settings';
 
 type Props = {
+  template: number | undefined;
   onReturn: () => void;
 };
 
-const EventTemplateEditingForm = ({ onReturn }: Props) => {
+const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
   const [eventtype, setEventType] = useState('Group');
   const [location, setEventTypeLocation] = useState('Main ballroom');
   const [description, setDescription] = useState('');
@@ -21,6 +22,10 @@ const EventTemplateEditingForm = ({ onReturn }: Props) => {
   const [teacher, setTeacher] = useState<TTeacherInfo | null>();
   const [loading, setLoading] = useState(false);
   const [revealAlert, setRevealAlert] = useState(false);
+  const [length1, setLength] = useState(0);
+  const [price, setPrice] = useState(0.0);
+  const [title, setTitle] = useState('');
+  const [tag, setTag] = useState('');
   const [alertStyle, setAlertStyle] = useState({
     variantHead: '',
     heading: '',
@@ -31,6 +36,60 @@ const EventTemplateEditingForm = ({ onReturn }: Props) => {
     button2: '',
     inputField: '',
   });
+
+  // const refreshTemplates = () => {
+  //   fetch('/api/admin/get_event_template', {
+  //     method: 'GET',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       console.log(data);
+  //     });
+  // };
+  useEffect(() => {
+    if (template !== undefined && template > -1) {
+      fetch('/api/admin/get_event_template', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: template,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          setEventType(data.template.eventtype);
+          setDescription(data.template.description);
+          setEventTypeLocation(data.template.location);
+          setImage(data.template.image);
+          console.log(data.template.price);
+          setLength(data.template.length);
+          setPrice(data.template.price);
+          setTitle(data.template.title);
+          setTag(data.template.tag);
+          if (data.template.teachersid.length > 0) {
+            fetch('/api/admin/get_teacher_by_id', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                id: data.template.teachersid[0],
+              }),
+            }).then((response) => response.json())
+            .then((data) => {
+              console.log(data);
+              setTeacher(data)
+          })
+          }
+        });
+    }
+  }, []);
   const onReturnPicture = (decision1: string, fileLink: string) => {
     setRevealCloud(false);
     if (decision1 == 'Close') {
@@ -58,24 +117,11 @@ const EventTemplateEditingForm = ({ onReturn }: Props) => {
   const onReturnAlert = async (decision1: string) => {
     setRevealAlert(false);
     if (decision1 == 'Return') {
-      setDescription('');
-      setImage('');
+      window.location.reload(); 
     }
   };
   const handleSubmit = (event: React.SyntheticEvent) => {
     event.preventDefault();
-    const target1 = event.target as typeof event.target & {
-      length1: { value: number };
-      price: { value: number };
-      title: { value: string };
-      tag: { value: string };
-      description: { value: string };
-    };
-    const length1 = target1.length1.value; // typechecks!
-    const price = target1.price.value;
-    const title = target1.title.value;
-    const tag = target1.tag.value;
-    const description = target1.description.value;
     console.log(length1, price, title, tag, description);
     let validationError = '';
     document.querySelector('#length1')!.classList.remove('invalid_input');
@@ -107,7 +153,6 @@ const EventTemplateEditingForm = ({ onReturn }: Props) => {
         color2: '',
         button2: '',
         inputField: '',
-
       });
       setRevealAlert(true);
       return;
@@ -130,7 +175,8 @@ const EventTemplateEditingForm = ({ onReturn }: Props) => {
         title,
         location,
         description,
-        teachersid:(teacher!==null && teacher!==undefined) ?[teacher?.id]:[]
+        teachersid:
+          teacher !== null && teacher !== undefined ? [teacher?.id] : [],
       }),
     })
       .then(async (res) => {
@@ -163,14 +209,13 @@ const EventTemplateEditingForm = ({ onReturn }: Props) => {
       )}
       <div className="border-0 rounded-md p-4  shadow-2xl w-[90%]  max-w-[450px] md:w-full h-[90vh] my-auto bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md ">
         <div className="border rounded-md border-lightMainColor dark:border-darkMainColor p-1 w-full h-full  flex  justify-center items-center overflow-scroll relative ">
-
           <div className="  min-w-full   flex flex-col flex-wrap items-center justify-center relative ">
-          <h2
-            className="text-center w-full font-bold uppercase"
-            style={{ letterSpacing: '1px' }}
-          >
-            Template Editing Form
-          </h2>
+            <h2
+              className="text-center w-full font-bold uppercase"
+              style={{ letterSpacing: '1px' }}
+            >
+              Template Editing Form
+            </h2>
             <button
               className=" outline-none border-none cursor-pointer fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor rounded-full  fixed p-1 top-6 right-6 w-8 h-8"
               onClick={(e) => {
@@ -277,6 +322,10 @@ const EventTemplateEditingForm = ({ onReturn }: Props) => {
                   id="length1"
                   name="length1"
                   type="number"
+                  value={length1}
+                  onChange={(e) => {
+                    setLength(parseInt(e.target.value));
+                  }}
                   required
                 />
               </label>
@@ -287,6 +336,10 @@ const EventTemplateEditingForm = ({ onReturn }: Props) => {
                   id="price"
                   name="price"
                   type="number"
+                  value={price}
+                  onChange={(e) => {
+                    setPrice(parseFloat(e.target.value));
+                  }}
                   required
                 />
               </label>
@@ -297,6 +350,10 @@ const EventTemplateEditingForm = ({ onReturn }: Props) => {
                   id="title"
                   name="title"
                   type="text"
+                  value={title}
+                  onChange={(e) => {
+                    setTitle(e.target.value);
+                  }}
                 />
               </label>
               <label className="flex flex-row justify-between items-center mb-1">
@@ -306,6 +363,10 @@ const EventTemplateEditingForm = ({ onReturn }: Props) => {
                   id="tag"
                   name="tag"
                   type="text"
+                  value={tag}
+                  onChange={(e) => {
+                    setTag(e.target.value);
+                  }}
                   required
                 />
               </label>

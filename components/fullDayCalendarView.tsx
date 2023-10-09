@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import AlertMenu from './alertMenu';
+import ImgFromDb from './ImgFromDb';
 type Props = {
   events: TEventArray | undefined;
   onReturn: () => void;
@@ -48,6 +49,7 @@ const FullDayCalendarView = ({ events, onReturn, day }: Props) => {
 
   };
   console.log(day, events);
+  let date1= new Date(day!+' 07:00:00');
   return (
     <AnimatePresence>
       {isVisible && (
@@ -90,13 +92,15 @@ const FullDayCalendarView = ({ events, onReturn, day }: Props) => {
             <span className="font-extrabold text-xl text-left  text-shadow  dark:text-shadow-light text-lightMainColor  dark:text-darkMainColor ">
               Schedule for:
             </span>
-            {new Date(day!).toLocaleDateString('en-us', {
+            {new Date(date1).toLocaleDateString('en-us', {
               weekday: 'long',
               year: 'numeric',
               month: 'long',
               day: 'numeric',
             })}
+            <h2 className='text-center italic'>{'(for more info click on event)'}</h2>
           </div>
+          
           <div className="w-full h-full relative  overflow-y-auto ">
             <div className="absolute top-0 left-0 w-full min-h-full pb-10 flex flex-col justify-center items-center md:flex-row">
               {events &&
@@ -139,15 +143,20 @@ const FullDayCalendarView = ({ events, onReturn, day }: Props) => {
                             {new Date(item.date).toLocaleTimeString('en-US', {
                               timeStyle: 'short',
                             })}{' '}
-                            {item.tag}
+                            {item.eventtype+' '+item.tag}
                           </h1>
-                          <Image
-                            className="rounded-md overflow-hidden "
-                            src={'/images/calendar.jpg'}
-                            width={300}
-                            height={300}
-                            alt="Logo"
-                          />
+                          {item.image !== undefined ? (
+                          <ImgFromDb
+                url={item.image}
+                stylings="object-contain m-auto"
+                alt="Template Picture"
+              />
+            ) : (
+              <div className=" h-8 w-8 md:h-10 md:w-10 fill-lightMainColor m-auto stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
+                <ShowIcon icon={'Calendar'} stroke={'2'} />
+              </div>
+            )}
+                          
                         </div>
                       </Link>
                     );
