@@ -51,6 +51,13 @@ export interface IScreenSettings {
   templateID:number;
    image:string;
   }
+  type TTemplateFront ={
+    tag:string;
+    eventtype:string,
+    templateID:number;
+     image:string;
+     visibility:boolean;
+    }
   type TTeacherInfo = {
     id: number;
     image: string;

@@ -116,13 +116,13 @@ export default function ChooseTeacher(props: TAlertType) {
                           stylings="object-contain rounded-md"
                           alt="Event Picture"
                         />
-                        <h2 className="text-center flex-wrap">{item.name}</h2>
                       </div>
                     ) : (
                       <div className=" h-8 w-8 md:h-10 md:w-10 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
                         <ShowIcon icon={'DefaultUser'} stroke={'2'} />
                       </div>
                     )}
+                     <h2 className="text-center flex-wrap">{item.name}</h2>
                   </div>
                 ) : (
                   <></>

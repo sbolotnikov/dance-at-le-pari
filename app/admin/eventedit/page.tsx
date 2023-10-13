@@ -9,6 +9,7 @@ import Image from 'next/image';
 import { TTemplateSmall } from '@/types/screen-settings';
 import ImgFromDb from '@/components/ImgFromDb';
 import AlertMenu from '@/components/alertMenu';
+import ChooseTemplates from '@/components/ChooseTemplates';
 // import  {chargeCreditCard}  from '@/utils/authorise_Charge';
 interface pageProps {}
 
@@ -19,6 +20,7 @@ const page: FC<pageProps> = ({}) => {
   const [template1, setTemplate1] = useState<TTemplateSmall>();
   const [delTemplateID, setDelTemplateID] = useState(-1);
   const [revealAlert, setRevealAlert] = useState(false);
+  const [revealFrontTemplates, setRevealFrontTemplates] = useState(false);
   const [loading, setLoading] = useState(false);
   const [alertStyle, setAlertStyle] = useState({
     variantHead: '',
@@ -68,6 +70,7 @@ const page: FC<pageProps> = ({}) => {
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
       {revealAlert && <AlertMenu onReturn={onReturn} styling={alertStyle} />}
+      {revealFrontTemplates && <ChooseTemplates onReturn={()=>setRevealFrontTemplates(false)} />}
       {revealTemplateEdit == true ? (
         <EventTemplateEditingForm onReturn={()=>setRevealTemplateEdit(false)} template={template1?.templateID}/>
       ) : (
@@ -235,6 +238,13 @@ const page: FC<pageProps> = ({}) => {
             >
               Create Event
             </button>
+            <button
+              className="btnFancy w-[90%]"
+              disabled={loading}
+              onClick={(e)=>{
+                e.preventDefault(); setRevealFrontTemplates(true)}}>
+                 Front Page Events 
+                </button>
           </div>
         </div>
       )}

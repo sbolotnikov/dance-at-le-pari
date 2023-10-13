@@ -303,11 +303,11 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
                   setEventTypeLocation(e.target.value);
                 }}
               >
-                <option value="Fitness Room (Studio A)">
-                  Fitness Room (Studio A)
+                <option value="Studio A (Front)">
+                  Studio A (Front)
                 </option>
-                <option value="Front Room (Studio B)">
-                  Front Room (Studio B)
+                <option value="Studio B (Back)">
+                Studio B (Back)
                 </option>
                 <option value="Main ballroom">Main ballroom</option>
                 <option value="Whole studio">Whole studio</option>

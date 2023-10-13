@@ -52,6 +52,12 @@ model Event {
    eventtype EventType @default(Group)
    template EventTemplate @relation(fields: [templateID], references: [id] )
 }
+model SettingVar {
+  id Int @id @default(autoincrement())
+  front_templates_ids Int[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 enum EventType {
   Private
   Group
