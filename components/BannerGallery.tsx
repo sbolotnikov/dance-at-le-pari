@@ -5,7 +5,7 @@ import ImgFromDb from './ImgFromDb';
 import { gsap } from '../utils/gsap';
 import sleep from '@/utils/functions';
 
-type Props = { 
+type Props = {
   seconds: number;
 };
 
@@ -18,9 +18,9 @@ const BannerGallery = ({ seconds }: Props) => {
       },
     });
     const data = await res.json();
-    setEvents(data)
+    setEvents(data);
   };
-  const [events, setEvents] = useState<TEventArray>([])
+  const [events, setEvents] = useState<TEventArray>([]);
   const [firstTime, setFirstTime] = useState(true);
   const [activePic, setActivePic] = useState(0);
   const [nextActivePic, setNextActivePic] = useState(0);
@@ -37,61 +37,57 @@ const BannerGallery = ({ seconds }: Props) => {
   };
 
   useEffect(() => {
-    nextActive(0);
-     getEvents()
-    console.log(events);
+    fetch('/api/get_front_events', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }).then((res) => {
+      res.json().then((data) => {
+        setEvents(data);
+      });
+    });
   }, []);
-  console.log(events);
+  useEffect(() => {
+    console.log(events);
+    if (events.length > 0) {
+      setNextActivePic(0);
+      nextActive(0);
+    }
+  }, [events]);
   let counter = 0;
   useEffect(() => {
     if (!firstTime) {
-      let el = document.getElementById('turbulence');
       let imgEl = document.getElementById(`image${activePic}`);
       if (imgEl) {
-        imgEl.style.filter = 'url(#noise)';
         imgEl.style.opacity = '1';
       }
-      let textEl = document.getElementById(`text_${activePic}`);
       let imgEl1 = document.getElementById(`image${nextActivePic}`);
-      let textEl1 = document.getElementById(`text_${nextActivePic}`);
-      gsap
-        .timeline()
-        .fromTo(
-          el,
-          { attr: { baseFrequency: '0' } },
-          { attr: { baseFrequency: '0.1' }, duration: seconds }
-        );
+      if (imgEl1) {
+        imgEl1.style.opacity = '0';
+        imgEl1.style.display = 'block';
+      }
 
       gsap
         .timeline()
         .to(imgEl, {
           opacity: 0,
-          duration: seconds * 0.8,
-          stagger: seconds * 0.2,
+          duration: seconds * 0.3,
+          stagger: seconds * 0.1,
+        })
+        .then(() => {
+          if (imgEl) imgEl.style.display = 'none';
         });
-      gsap
-        .timeline()
-        .to(textEl, {
-          opacity: 0,
-          duration: seconds * 0.8,
-          stagger: seconds * 0.2,
-        });
-      gsap
-        .timeline()
-        .to(textEl1, {
-          opacity: 1,
-          duration: seconds * 0.8,
-          stagger: seconds * 0.6,
-        });
+
       gsap
         .timeline()
         .to(imgEl1, {
           opacity: 1,
-          duration: seconds * 0.8,
-          stagger: seconds * 0.6,
+          duration: seconds * 0.3,
+          stagger: seconds * 0.2,
         })
         .then(() => {
-          if (imgEl) imgEl.style.filter = '';
+          if (imgEl) imgEl.style.display = 'block';
           setActivePic(nextActivePic);
         });
     } else setFirstTime(false);
@@ -99,20 +95,22 @@ const BannerGallery = ({ seconds }: Props) => {
   return (
     <div
       id="galleryContainer"
-      className=" relative  h-full w-full rounded-md overflow-hidden flex justify-between items-center "
+      className=" h-full w-full relative rounded-md flex flex-col  "
       style={{ zIndex: 300 }}
     >
-      
-
       {events.map((item, index) => (
-        <div key={'img' + index} id={'image' + index} className={`h-full w-full ${ (index !== activePic) ? 'hidden' : ''}`}>
-        
-            <ImgFromDb
-              url={item.image}
-              stylings="object-contain m-auto"
-              alt={"Event Picture"+index}
-            />
-     
+        <div
+          key={'img' + index}
+          id={'image' + index}
+          className={`h-full w-screen absolute top-0 left-0  `}
+          style={{ display: index !== activePic ? 'none' : 'block' }}
+        >
+          <ImgFromDb
+            url={item.image}
+            stylings="object-contain m-auto"
+            alt={'Event Picture' + index}
+          />
+
           <h2
             id={'text_' + index}
             className={`w-full  text-center absolute bottom-0 right-0 z-100 bg-lightMainBG/70 dark:bg-darkMainBG/70 ${
@@ -134,24 +132,7 @@ const BannerGallery = ({ seconds }: Props) => {
           </h2>
         </div>
       ))}
- 
-      <svg className="absolute inset-0 h-full w-full">
-        <filter id="noise" x="0%" y="0%" width="100%" height="100%">
-          <feTurbulence
-            type="fractalNoise"
-            result="NOISE"
-            baseFrequency="0"
-            numOctaves="5"
-            seed="2"
-            id="turbulence"
-          />
-          <feDisplacementMap
-            in="SourceGraphic"
-            in2="NOISE"
-            scale="20"
-          ></feDisplacementMap>
-        </filter>
-      </svg>
+
       <button
         id="nextButton"
         className=" absolute top-1/2 right-0 cursor-pointer hover:scale-125 "
@@ -183,7 +164,7 @@ const BannerGallery = ({ seconds }: Props) => {
         className=" absolute top-10 right-0 cursor-pointer hover:scale-125 "
         style={{ transform: 'translate(0%, -50%)' }}
         onClick={() => {
-          window.location.replace("/events/"+events[activePic].id)
+          window.location.replace('/events/' + events[activePic].id);
         }}
       >
         <div className="mr-2 h-8 w-8 md:h-16 md:w-16 fill-darkMainColor dark:stroke-darkMainColor dark:fill-lightMainColor stroke-lightMainColor">

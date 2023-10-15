@@ -28,6 +28,7 @@ export async function GET() {
     eventsArray.sort((a,b) => (a.date > b.date) ? 1 : ((b.date > a.date) ? -1 : 0))
     let events1=[]
     for (let i=0; i<settings!.front_templates_ids.length;i++){
+      if (eventsArray.filter(item=>item.templateID==settings!.front_templates_ids[i])[0]!=undefined)
        events1.push(eventsArray.filter(item=>item.templateID==settings!.front_templates_ids[i])[0])
     }    
     // date:"2023-10-19T20:00",eventtype:"Party",id: 43, image:"cln5j37qp0000sl0g8xip7j0p",tag:"East Coast Swing" }

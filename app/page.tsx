@@ -26,7 +26,7 @@ export default async function Home() {
     <PageWrapper className="absolute inset-0 flex flex-col justify-start items-center mt-10 md:mt-20 ">
      
       <div className="w-full h-[40rem] relative overflow-auto   rounded-md">    
-        <BannerGallery seconds={8}/>
+        <BannerGallery seconds={10}/>
        
         </div>  
       <div
