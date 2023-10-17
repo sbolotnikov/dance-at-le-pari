@@ -31,17 +31,13 @@ export default async function Home() {
         </div>  
       <div
         id="text"
-        className="text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG p-3 shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2"
+        className="text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG mt-3 shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2"
       >
         <h1 className="font-bold text-5xl text-franceBlue  text-center font-DancingScript text-shadow  dark:text-shadow-light  ">
         Welcome to Dance At Le Pari
         </h1>
       </div>
-      <div className="text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG mt-3 p-3 shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2">
-        <h1 className="font-bold text-mdv text-alertcolor  text-center  text-shadow  dark:text-shadow-light  ">
-          What are you interested in?
-        </h1>
-      </div>
+ 
       <div className="w-full h-full relative  mb-12 overflow-y-auto ">
         <div className="absolute top-0 left-0 w-full min-h-full flex flex-col justify-center items-center md:flex-row">
           {departmentsArray.map((item, index) => {

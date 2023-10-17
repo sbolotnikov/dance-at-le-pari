@@ -1,26 +1,35 @@
-import { TEventArray } from '@/types/screen-settings';
+import { TEvent, TEventArray } from '@/types/screen-settings';
 import React, { useEffect, useState } from 'react';
 import ShowIcon from './svg/showIcon';
 import ImgFromDb from './ImgFromDb';
 import { gsap } from '../utils/gsap';
 import sleep from '@/utils/functions';
 
+ 
 type Props = {
   seconds: number;
 };
 
 const BannerGallery = ({ seconds }: Props) => {
-  const getEvents = async () => {
-    const res = await fetch('/api/get_front_events', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+  function  getEvents() {
+       fetch('/api/get_front_events', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+      setEvents(data)
     });
-    const data = await res.json();
-    setEvents(data);
-  };
-  const [events, setEvents] = useState<TEventArray>([]);
+};
+
+
+
+
+
+  const [events, setEvents] = useState<TEventArray> ([]);
   const [firstTime, setFirstTime] = useState(true);
   const [activePic, setActivePic] = useState(0);
   const [nextActivePic, setNextActivePic] = useState(0);
@@ -37,16 +46,7 @@ const BannerGallery = ({ seconds }: Props) => {
   };
 
   useEffect(() => {
-    fetch('/api/get_front_events', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }).then((res) => {
-      res.json().then((data) => {
-        setEvents(data);
-      });
-    });
+    getEvents();
   }, []);
   useEffect(() => {
     console.log(events);
@@ -54,8 +54,7 @@ const BannerGallery = ({ seconds }: Props) => {
       setNextActivePic(0);
       nextActive(0);
     }
-  }, [events]);
-  let counter = 0;
+  }, [events]); 
   useEffect(() => {
     if (!firstTime) {
       let imgEl = document.getElementById(`image${activePic}`);
@@ -95,14 +94,14 @@ const BannerGallery = ({ seconds }: Props) => {
   return (
     <div
       id="galleryContainer"
-      className=" h-full w-full relative rounded-md flex flex-col  "
+      className=" h-full w-full relative overflow-hidden rounded-md flex flex-col  "
       style={{ zIndex: 300 }}
     >
       {events.map((item, index) => (
         <div
           key={'img' + index}
           id={'image' + index}
-          className={`h-full w-screen absolute top-0 left-0  `}
+          className={`h-full w-screen flex-wrap absolute top-0 left-0  `}
           style={{ display: index !== activePic ? 'none' : 'block' }}
         >
           <ImgFromDb
