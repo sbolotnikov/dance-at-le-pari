@@ -7,7 +7,8 @@ interface ImgFromDbProps {
 }
 
 const ImgFromDb: FC<ImgFromDbProps> = ({url,stylings, alt}) => {
-    const[displayURL, setDisplayURL] =useState('')
+    const[displayURL, setDisplayURL] =useState<string | null>(null)
+    console.log(displayURL)
     useEffect(() => {
         // GET request
         
@@ -31,7 +32,7 @@ const ImgFromDb: FC<ImgFromDbProps> = ({url,stylings, alt}) => {
         }
       }, [url]);
 
-return (displayURL)?<img src={displayURL} className={stylings} alt={alt} />:""
+return (displayURL!=null)?<img src={displayURL} className={stylings} alt={alt} />:""
 
 }
 export default ImgFromDb

@@ -9,8 +9,21 @@ import ChooseTemplates from '@/components/ChooseTemplates';
 import BannerGallery from '@/components/BannerGallery';
 import { TEventArray } from '@/types/screen-settings';
 
-export default async function Home() {
-  
+export default function Home() {
+  const [events, setEvents] = useState<TEventArray | null>(null);
+  useEffect(() => {
+    fetch('/api/get_front_events', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data); 
+        setEvents(data)  
+      }).catch((error) => {console.log(error);})
+  }, []);
   const { data: session } = useSession();
   
   // {date:"2023-10-19T20:00",eventtype:"Party",id: 43, image:"cln5j37qp0000sl0g8xip7j0p",tag:"East Coast Swing" }
@@ -25,10 +38,9 @@ export default async function Home() {
   return (
     <PageWrapper className="absolute inset-0 flex flex-col justify-start items-center mt-10 md:mt-20 ">
      
-      <div className="w-full h-[40rem] relative overflow-auto   rounded-md">    
-        <BannerGallery seconds={10}/>
-       
-        </div>  
+      <div className="w-full h-1/3 relative overflow-auto   rounded-md">    
+        {(events!=null) &&<BannerGallery events={events} seconds={10}/>}
+      </div>  
       <div
         id="text"
         className="text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG mt-3 shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2"
