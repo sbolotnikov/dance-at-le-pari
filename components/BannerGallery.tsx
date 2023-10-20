@@ -91,14 +91,17 @@ const BannerGallery = ({ seconds, events }: Props) => {
             alt={'Event Picture' + index}
           />
          <button 
-        className=" absolute top-8 -right-16  cursor-pointer hover:scale-125 "
+        className=" absolute top-8 -right-16  cursor-pointer  "
         style={{ transform: 'translate(0%, -50%)' }}
         onClick={() => {
           window.location.replace('/events/' + events![activePic].id);
         }}
       >
-        <div className=" text-xl  fill-darkMainColor dark:stroke-darkMainColor dark:fill-lightMainColor stroke-lightMainColor">
-        &#x1F6C8; info
+        <div className="text-lg italic  hover:scale-125  dark:fill-darkMainColor dark:stroke-darkMainColor fill-lightMainColor stroke-lightMainColor flex flex-row justify-between items-center">
+          <div className=" h-4 w-4">
+            <ShowIcon icon={'Info'} stroke={'.5'} />
+          </div>
+        <h2>info</h2> 
         </div>
       </button>
       </div>
@@ -125,14 +128,14 @@ const BannerGallery = ({ seconds, events }: Props) => {
 
       <button
         id="nextButton"
-        className=" absolute top-1/2 right-0 cursor-pointer hover:scale-125 "
+        className=" absolute top-1/2 right-0 cursor-pointer "
         style={{ transform: 'translate(0%, -50%)' }}
         onClick={() => {
           if (activePic < events!.length - 1) setNextActivePic(activePic + 1);
           else setNextActivePic(0);
         }}
       >
-        <div className="mr-2 h-8 w-8 md:h-16 md:w-16 fill-darkMainColor dark:stroke-darkMainColor dark:fill-lightMainColor stroke-lightMainColor">
+        <div className="mr-2 h-8 w-8 md:h-16 md:w-16 fill-darkMainColor dark:stroke-darkMainColor dark:fill-lightMainColor stroke-lightMainColor  hover:scale-125">
           <ShowIcon icon={'ArrowRight'} stroke={'.1'} />
         </div>
       </button>
@@ -145,7 +148,7 @@ const BannerGallery = ({ seconds, events }: Props) => {
           else setNextActivePic(events!.length - 1);
         }}
       >
-        <div className="ml-1 h-8 w-8 md:h-16 md:w-16  fill-darkMainColor dark:stroke-darkMainColor dark:fill-lightMainColor stroke-lightMainColor">
+        <div className="ml-1 h-8 w-8 md:h-16 md:w-16  fill-darkMainColor dark:stroke-darkMainColor dark:fill-lightMainColor stroke-lightMainColor  hover:scale-125">
           <ShowIcon icon={'ArrowLeft'} stroke={'.1'} />
         </div>
       </button>
