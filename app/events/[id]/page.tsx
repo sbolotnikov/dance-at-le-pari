@@ -1,12 +1,15 @@
 'use client';
+import BuyTicketModal from '@/components/BuyTicketModal';
 import ImgFromDb from '@/components/ImgFromDb';
 import { PageWrapper } from '@/components/page-wrapper';
 import ShowIcon from '@/components/svg/showIcon';
 import { TFullEvent } from '@/types/screen-settings';
+import sleep from '@/utils/functions';
 import { useEffect, useState } from 'react';
 
 export default function Page({ params }: { params: { id: string } }) {
   const [eventData, setEventData] = useState<TFullEvent>();
+  const [revealBuyTicketModal, setRevealBuyTicketModal] = useState(false);
   useEffect(() => {
     fetch('/api/event/post', {
       method: 'POST',
@@ -28,9 +31,29 @@ export default function Page({ params }: { params: { id: string } }) {
   }, []);
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
-      <div className="border-0 rounded-md p-4  shadow-2xl w-[90%]  max-w-[450px] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
+      {revealBuyTicketModal && (
+        <BuyTicketModal
+          seatmap={eventData!.seatmap}
+          tables={eventData!.tables}
+          tableName={eventData!.tableName}
+          eventImage={eventData!.image}
+          id={parseInt(params.id)}
+          onReturn={() => {
+            sleep(1200).then(() => {
+              setRevealBuyTicketModal(false);
+            });
+          }}
+        />
+      )}
+      <div className="border-0 rounded-md px-4 pt-4 shadow-2xl w-[90%] max-w-[450px] max-h-[85%] overflow-y-auto md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
         {eventData && (
           <div className="w-full h-full flex flex-col justify-center items-center">
+            <button
+              className="btnFancy w-[90%] "
+              onClick={() => setRevealBuyTicketModal(true)}
+            >
+              Buy tickets
+            </button>
             <h2 className="flex flex-row items-center justify-center">
               {new Date(eventData!.date).toLocaleDateString('en-us', {
                 weekday: 'long',
@@ -113,6 +136,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 </h2>
               </div>
             )}
+            
           </div>
         )}
       </div>

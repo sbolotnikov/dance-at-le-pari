@@ -8,7 +8,6 @@ interface ImgFromDbProps {
 
 const ImgFromDb: FC<ImgFromDbProps> = ({url,stylings, alt}) => {
     const[displayURL, setDisplayURL] =useState<string | null>(null)
-    console.log(displayURL)
     useEffect(() => {
         // GET request
         

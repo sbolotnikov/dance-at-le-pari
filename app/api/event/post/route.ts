@@ -9,24 +9,22 @@ export async function POST(req: Request) {
     const event1 = await prisma.event.findUnique({
         where: {
           id:parseInt(id),
+        },
+        include: {
+          template: true,
         }
       });
-    const template1 = await prisma.eventTemplate.findUnique({
-        where:{
-          id:event1?.templateID
-        }
-    }) 
-
-    if ((template1?.teachersid.length==undefined)||(template1?.teachersid.length==0)){
+    console.log(event1);
+    if ((event1?.template.teachersid.length==undefined)||(event1?.template.teachersid.length==0)){
       await prisma.$disconnect()
-    return new NextResponse(JSON.stringify({date:event1?.date,teacher:"", bio:"", teacher_img:"", ...template1}), {
+    return new NextResponse(JSON.stringify({date:event1?.date,tables:event1?.tables,tableName:event1?.tableName, seatmap:event1?.seatmap,teacher:"", bio:"", teacher_img:"", ...event1?.template}), {
       status: 201,
     });
 
   }
     const teacher1 = await prisma.user.findUnique({
       where:{
-        id:template1?.teachersid[0]
+        id:event1?.template.teachersid[0]
       }
   })
     await prisma.$disconnect()
@@ -36,8 +34,7 @@ export async function POST(req: Request) {
         JSON.stringify({ message: 'No such event exist',status: 422}),
       );
     }
-    
-  return new NextResponse(JSON.stringify({date:event1.date,teacher:teacher1?.name, bio:teacher1?.bio, teacher_img:teacher1?.image, ...template1}), {
+  return new NextResponse(JSON.stringify({date:event1.date,tables:event1.tables, seatmap:event1.seatmap, tableName:event1.tableName, teacher:teacher1?.name, bio:teacher1?.bio, teacher_img:teacher1?.image, ...event1.template}), {
     status: 201,
   });
 }

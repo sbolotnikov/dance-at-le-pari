@@ -34,7 +34,9 @@ export interface IScreenSettings {
     teacher:string | null;
     bio:string | null;
     teacher_img:string | null;
-
+    tables: number[] | null;
+    seatmap: string | null;
+    tableName: string;
   }
   type TPictureWithCapture ={
     urlData: string;
