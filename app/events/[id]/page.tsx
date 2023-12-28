@@ -37,6 +37,7 @@ export default function Page({ params }: { params: { id: string } }) {
           tables={eventData!.tables}
           tableName={eventData!.tableName}
           eventImage={eventData!.image}
+          price={eventData!.price}
           id={parseInt(params.id)}
           onReturn={() => {
             sleep(1200).then(() => {

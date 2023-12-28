@@ -23,7 +23,7 @@ export interface IScreenSettings {
     eventtype: EventType;
     length:number;
     color: string | null;
-    price: float;
+    price: number;
     image: string | null;
     tag: string;
     title: string | null;
@@ -64,4 +64,8 @@ export interface IScreenSettings {
     id: number;
     image: string;
     name: string;
+  };
+  type TableSeat = {
+    table: number;
+    seat: number;
   };
