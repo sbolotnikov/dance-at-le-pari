@@ -7,6 +7,7 @@ export const useDate = (events: TEventArray, nav:number) => {
   // const eventsForDate = (date:string) =>{let date1= new Date(date); return events.filter(e => ((new Date(e.date)> date1)&&(new Date(e.date)< new Date(date1.setDate(date1.getDate() + 1)))));}
   const eventsForDate = (date:string) =>{
     let arr=events.filter(e => e.date.split('T')[0] === date);
+    console.log(date,arr)
     return arr.sort((a, b) => {
       if (a.date > b.date) return 1;
       else if (a.date < b.date) return -1;
@@ -19,7 +20,7 @@ export const useDate = (events: TEventArray, nav:number) => {
     let dt = new Date();
     const day = dt.getDate();
     const monthCur = dt.getMonth();
-    const year = dt.getFullYear();
+    var year = dt.getFullYear();
     dt= new Date(year, monthCur, 1)
     if (nav !== 0) {
       dt.setMonth(new Date().getMonth() + nav);
@@ -37,7 +38,7 @@ export const useDate = (events: TEventArray, nav:number) => {
     setDateDisplay(`${dt.toLocaleDateString('en-us', {month: 'long'})} ${dt.getFullYear()}`);
     const paddingDays = weekdays.indexOf(dateString.split(', ')[0]);
     let daysArr : Array<TDay> = [];
-
+    year=parseInt(firstDayOfMonth.toLocaleDateString('en-us', {year: 'numeric' }))
     for (let i = 1; i <= paddingDays + daysInMonth; i++) {
       const dayString = `${year}-${(month+1<10)?'0':''}${month + 1}-${(i-paddingDays<10)?'0':''}${i - paddingDays}`;
       if (i > paddingDays) {
