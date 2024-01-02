@@ -31,6 +31,7 @@ export default function BuyTicketModal({
   const { data: session } = useSession();
   const [chosenSeats, setChosenSeats] = useState<TableSeat[]>([]);
   const [busySeats, setBusySeats] = useState([]);
+  const [freeSeatPercent, setFreeSeatPercent] = useState <string[]>([]);
   const [currentSeat, setCurrentSeat] = useState(-1);
   const [isVisible, setIsVisible] = useState(true);
   const [chosenTable, setChosenTable] = useState(0);
@@ -92,13 +93,23 @@ export default function BuyTicketModal({
             }
           }
         console.log(arr);
+        let count=[]
         if (arr.length>0) 
         for (let i = 0; i < data.length; i++) {
           let arr2 = arr[data[i].table].split(',');
           ((session!==null )&&(session.user.role == 'Admin')) ? arr2[data[i].seat] = data[i].name:arr2[data[i].seat] = 'Taken';
           arr[data[i].table] = arr2.toString();
         }
+        if (tables!=null)
+        for (let i=0; i<tables?.length; i++){
+          
+          count.push(((arr[i].toString().match(/Free/g) || []).length/ tables[i]*100).toFixed(2));
+         
+           console.log(((arr[i].toString().match(/Free/g) || []).length/ tables[i]*100).toFixed(2))
+        
+        }
         setEventSeatMap(arr);
+        setFreeSeatPercent(count)
         setBusySeats(data);
       })
       .catch((error) => {
@@ -192,7 +203,7 @@ export default function BuyTicketModal({
                   >
                     {tables.map((i, index) => (
                       <option key={'Table' + index} value={index}>
-                        {tableName} {index < 12 ? index + 1 : index + 2}
+                        {tableName} {index < 12 ? index + 1 : index + 2}{' Free '}{freeSeatPercent[index]}{'%'}
                       </option>
                     ))}
                   </select>

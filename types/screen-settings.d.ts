@@ -38,6 +38,18 @@ export interface IScreenSettings {
     seatmap: string | null;
     tableName: string;
   }
+  type TEventAgenda ={
+    date: string,
+description:string | null,
+eventtype:EventType,
+id:number,
+image:string | null,
+length:number,
+price:number,
+tag:string,
+teacher:string | null,
+
+  }
   type TPictureWithCapture ={
     urlData: string;
     capture: string

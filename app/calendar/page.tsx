@@ -23,7 +23,6 @@ const page: FC<pageProps> = ({}) => {
           .then((response) => response.json())
           .then((data) => {
             setEventsSet(data.eventJSON);
-            console.log(data.eventJSON)
           }).catch((error) => {console.log(error);});
       }, []);
 
@@ -37,16 +36,8 @@ const page: FC<pageProps> = ({}) => {
           setRevealDayView(false)
         });}}/> }
       <div
-        className="border-0 rounded-md p-4  shadow-2xl w-[95%] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md"
-        // style={{ boxShadow: '0 0 150px rgb(113, 113, 109 / 50%),inset 0 0 20px #242422' }}
+        className="border-0 rounded-md p-4  shadow-2xl w-[95%] max-w-5xl md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md"
       >
-        {/* <h2
-          className="text-center font-bold uppercase"
-          style={{ letterSpacing: '1px' }}
-        >
-          Calendar
-        </h2> */}
-
         <Schedule eventsSet={eventsSet!} onReturn={(day:string)=>{setClicked(day); setRevealDayView(true)}}/>
       </div>
     </PageWrapper>
