@@ -1,15 +1,50 @@
 'use client';
 import BuyTicketModal from '@/components/BuyTicketModal';
 import ImgFromDb from '@/components/ImgFromDb';
+import AlertMenu from '@/components/alertMenu';
 import { PageWrapper } from '@/components/page-wrapper';
 import ShowIcon from '@/components/svg/showIcon';
 import { TFullEvent } from '@/types/screen-settings';
 import sleep from '@/utils/functions';
+import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 
 export default function Page({ params }: { params: { id: string } }) {
   const [eventData, setEventData] = useState<TFullEvent>();
   const [revealBuyTicketModal, setRevealBuyTicketModal] = useState(false);
+  const [revealAlert, setRevealAlert] = useState(false); 
+  const [alertStyle, setAlertStyle] = useState({
+    variantHead: '',
+    heading: '',
+    text: ``,
+    color1: '',
+    button1: '',
+    color2: '',
+    button2: '',
+    inputField: '',
+  });
+  const [isVisible, setIsVisible] = useState(true);
+  const { data: session } = useSession();
+  const onReturnAlert = async (decision1: string) => {
+    setRevealAlert(false);
+    if (decision1 == 'Cancel') {
+    }
+    if (decision1 == 'Delete') {
+      fetch('/api/admin/del_event', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: parseInt(params.id),
+        }),
+      }).then(() => {
+        window.location.replace('/calendar');
+      });
+    }
+
+  };
+
   useEffect(() => {
     fetch('/api/event/post', {
       method: 'POST',
@@ -46,9 +81,31 @@ export default function Page({ params }: { params: { id: string } }) {
           }}
         />
       )}
+      {revealAlert && (  <AlertMenu onReturn={onReturnAlert} styling={alertStyle} />)}
+
       <div className="border-0 rounded-md px-4 pt-4 shadow-2xl w-[90%] max-w-[450px] max-h-[85%] overflow-y-auto md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
         {eventData && (
           <div className="w-full h-full flex flex-col justify-center items-center">
+                                      {session?.user.role=="Admin"&&<button
+                            className=" outline-none border-none fill-alertcolor  stroke-alertcolor  rounded-md border-alertcolor absolute p-1 -top-1 -right-4 w-10 h-10"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setAlertStyle({
+                                variantHead: 'danger',
+                                heading: 'Warning',
+                                text: 'You are about to Delete Event!',
+                                color1: 'danger',
+                                button1: 'Delete',
+                                color2: 'secondary',
+                                button2: 'Cancel',
+                                inputField: '',
+                              }); 
+                              setRevealAlert(!revealAlert);
+                              return;
+                            }}
+                          >
+                            <ShowIcon icon={'Close'} stroke={'2'} />
+                          </button>}
             <button
               className="btnFancy w-[90%] "
               onClick={() => setRevealBuyTicketModal(true)}

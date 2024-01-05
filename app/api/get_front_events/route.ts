@@ -16,6 +16,9 @@ export async function GET() {
         where: {
             templateID: { in: settings!.front_templates_ids },
             date:{ gt: dateString}
+        },
+        include:{
+          template: true,
         }
     })
     
@@ -27,18 +30,18 @@ export async function GET() {
     }    
     let picsArr:string[] =[];
     let aStr
-    for (let i=0; i<events1.length;i++){
-      aStr = await prisma.picture.findUnique({
-        where: {
-          id:events1[i].image!,
-        },
-      });
-      picsArr[i]=aStr?.file!.toString()!
-    }
+    // for (let i=0; i<events1.length;i++){
+    //   aStr = await prisma.picture.findUnique({
+    //     where: {
+    //       id:events1[i].image!,
+    //     },
+    //   });
+    //   picsArr[i]=aStr?.file!.toString()!
+    // }
     await prisma.$disconnect()
 
 
-    const events=events1.map((event,index)=>{return{date:event.date, eventtype:event.eventtype, id:event.id, image:picsArr[index], tag:event.tag}})
+    const events=events1.map((event,index)=>{return{date:event.date, eventtype:event.eventtype, id:event.id, image:event.image, tag:event.tag}})
     if (settings==null) {
       
       return new NextResponse(

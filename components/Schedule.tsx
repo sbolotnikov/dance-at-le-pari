@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, FC } from 'react';
+import { useState, useEffect } from 'react';
 import { CalendarHeader } from './CalendarHeader';
 import { Day } from './Day';
 import { TEventAgenda, TEventArray } from '@/types/screen-settings';

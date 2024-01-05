@@ -88,8 +88,8 @@ export default function BuyTicketModal({
         if (tables != null)
           for (let i = 0; i < tables.length; i++) {
             for (let j = 0; j < tables[i]; j++) {
-              if (j == 0) arr[i] = 'Free';
-              else arr[i] = arr[i] + ',' + 'Free';
+              if (j == 0) arr[i] = 'Open';
+              else arr[i] = arr[i] + ',' + 'Open';
             }
           }
         console.log(arr);
@@ -97,15 +97,15 @@ export default function BuyTicketModal({
         if (arr.length>0) 
         for (let i = 0; i < data.length; i++) {
           let arr2 = arr[data[i].table].split(',');
-          ((session!==null )&&(session.user.role == 'Admin')) ? arr2[data[i].seat] = data[i].name:arr2[data[i].seat] = 'Taken';
+          ((session!==null )&&(session.user.role == 'Admin')) ? arr2[data[i].seat] = data[i].name:arr2[data[i].seat] = 'Sold';
           arr[data[i].table] = arr2.toString();
         }
         if (tables!=null)
         for (let i=0; i<tables?.length; i++){
           
-          count.push(((arr[i].toString().match(/Free/g) || []).length/ tables[i]*100).toFixed(2));
+          count.push((arr[i].toString().match(/Open/g) || []).length.toString() );
          
-           console.log(((arr[i].toString().match(/Free/g) || []).length/ tables[i]*100).toFixed(2))
+           console.log(((arr[i].toString().match(/Open/g) || []).length/ tables[i]*100).toFixed(2))
         
         }
         setEventSeatMap(arr);
@@ -120,7 +120,7 @@ export default function BuyTicketModal({
     if (currentSeat > -1) {
       console.log('in effect of seat choice' + currentSeat);
       let arr = eventSeatMap[chosenTable].split(',');
-      arr[currentSeat % 1000] = 'Taken';
+      arr[currentSeat % 1000] = 'Sold';
       let seatMapCopy = eventSeatMap;
       seatMapCopy[chosenTable] = arr.toString();
       setEventSeatMap([...seatMapCopy]);
@@ -203,7 +203,7 @@ export default function BuyTicketModal({
                   >
                     {tables.map((i, index) => (
                       <option key={'Table' + index} value={index}>
-                        {tableName} {index < 12 ? index + 1 : index + 2}{' Free '}{freeSeatPercent[index]}{'%'}
+                        {tableName} {index < 12 ? index + 1 : index + 2}{' Open '}{freeSeatPercent[index]}{'seats'}
                       </option>
                     ))}
                   </select>
@@ -216,7 +216,7 @@ export default function BuyTicketModal({
                     onChange={(e) => {
                       // setChosenTable(parseInt(e.target.value));
                       let arr = eventSeatMap[chosenTable].split(',');
-                      if (arr[parseInt(e.target.value)] != 'Free') {
+                      if (arr[parseInt(e.target.value)] != 'Open') {
                         console.log('seat already chosen');
                         setCurrentSeat(-1);
                         return;
@@ -284,7 +284,7 @@ export default function BuyTicketModal({
                                 setChosenSeats([...delArr]);
                                 console.log('item' + i);
                                 let arr = eventSeatMap[item.table].split(',');
-                                arr[item.seat] = 'Free';
+                                arr[item.seat] = 'Open';
                                 let seatMapCopy = eventSeatMap;
                                 seatMapCopy[item.table] = arr.toString();
                                 setEventSeatMap([...seatMapCopy]);

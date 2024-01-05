@@ -2,10 +2,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { PageWrapper } from '@/components/page-wrapper';
-import ShowIcon from '@/components/svg/showIcon';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import ChooseTemplates from '@/components/ChooseTemplates';
 import BannerGallery from '@/components/BannerGallery';
 import { TEventArray } from '@/types/screen-settings';
 
@@ -51,20 +49,20 @@ export default function Home() {
       </div>
  
       <div className="w-full h-full relative  mb-12 overflow-y-auto ">
-        <div className="absolute top-0 left-0 w-full min-h-full flex flex-col justify-center items-center md:flex-row">
+        <div className="absolute top-0 left-0 w-full min-h-full flex flex-col justify-center items-center md:flex-row ">
           {departmentsArray.map((item, index) => {
             return (
               <Link key={'Links' + index} href={item.link}>
                 <div className="m-3 p-2  flex flex-col justify-center items-center text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG    shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2">
-                  <h1 className=" text-2xl   text-center   text-shadow  dark:text-shadow-light ">
+                  <h1 className=" text-2xl  text-center   text-shadow  dark:text-shadow-light ">
                     {item.name}
                   </h1>
-                  <Image
+                  
+                  <Image 
                     className="rounded-md overflow-hidden "
                     src={item.path}
                     width={300}
-                    height={300}
-                    // style={{objectFit: "contain"}}
+                    height={300} 
                     alt="Logo"
                   />
                 </div>

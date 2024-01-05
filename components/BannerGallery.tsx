@@ -3,6 +3,7 @@ import { TEvent, TEventArray } from '@/types/screen-settings';
 import React, { useEffect, useState } from 'react';
 import ShowIcon from './svg/showIcon';
 import { gsap } from '../utils/gsap';
+import ImgFromDb from './ImgFromDb';
 
  
 type Props = {
@@ -85,11 +86,12 @@ const BannerGallery = ({ seconds, events }: Props) => {
           style={{ display: index !== activePic ? 'none' : 'block' }}
         >
           <div className='h-full w-fit m-auto relative'>
-          <img
+         <ImgFromDb stylings={"object-contain h-full"} url={item.image} alt={'Event Picture' + index} />   
+          {/* <img
             src={ item.image}
             className="object-contain h-full"
             alt={'Event Picture' + index}
-          />
+          /> */}
          <button 
         className=" absolute top-8 -right-16  cursor-pointer  "
         style={{ transform: 'translate(0%, -50%)' }}
