@@ -31,6 +31,7 @@ module.exports = {
         lightlavender:"#AFCDCD",
 
         alertcolor:"#a01c1c",
+        editcolor:'#04AA6D',
         menuBGColor:"#0E0C71",
         darkMainColor: '#F3F4F6',
         darkMainBG: '#374151',

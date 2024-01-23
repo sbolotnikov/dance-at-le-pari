@@ -1,13 +1,12 @@
 'use client';
 import { useEffect, useState } from 'react';
 import ShowIcon from './svg/showIcon';
-import { AnimatePresence, motion } from 'framer-motion';
 import ImgFromDb from './ImgFromDb';
 import InputBox from './InputBox';
 import { PaymentForm, CreditCard } from 'react-square-web-payments-sdk';
 import { TableSeat } from '@/types/screen-settings';
 import { useSession } from 'next-auth/react';
-import { table } from 'console';
+import AnimateModalLayout from './AnimateModalLayout';
 
 type Props = {
   seatmap: string | null;
@@ -128,8 +127,8 @@ export default function BuyTicketModal({
     }
   }, [currentSeat]);
   return (
-    <AnimatePresence>
-      {isVisible && (
+    <AnimateModalLayout visibility={isVisible} onReturn={()=>{setIsVisible(false); onReturn(); }} >
+      {/* {isVisible && (
         <motion.div
           initial={{ opacity: 0, x: -600 }}
           transition={{
@@ -160,7 +159,7 @@ export default function BuyTicketModal({
             <div className=" h-8 w-8 md:h-12 md:w-12   fill-darkMainColor stroke-darkMainColor">
               <ShowIcon icon={'Close'} stroke={'2'} />
             </div>
-          </button>
+          </button> */}
           <div className="h-[82%] w-[85%] bg-darkMainColor flex flex-col justify-center items-center">
             <h2 className="w-full text-center">Enter your information</h2>
             {seatmap !== null ? (
@@ -409,8 +408,7 @@ export default function BuyTicketModal({
               <h2>To buy tickets please login or register!</h2>
             )}
           </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+        
+    </AnimateModalLayout>
   );
 }

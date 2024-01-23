@@ -63,6 +63,7 @@ model Ticket {
   seat Int?
   table Int?
   userID Int?
+  personNote String?
   purchasedAt String
   invoice String?
   event Event @relation(fields: [eventID], references: [id] )

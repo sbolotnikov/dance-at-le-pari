@@ -1,12 +1,11 @@
 import { useState } from 'react';
-import ShowIcon from './svg/showIcon';
-import { AnimatePresence, motion } from 'framer-motion';
+import ShowIcon from './svg/showIcon'; 
 import { TEventArray } from '@/types/screen-settings';
-import Link from 'next/link';
-import Image from 'next/image';
+import Link from 'next/link'; 
 import { useSession } from 'next-auth/react';
 import AlertMenu from './alertMenu';
 import ImgFromDb from './ImgFromDb';
+import AnimateModalLayout from './AnimateModalLayout';
 type Props = {
   events: TEventArray | undefined;
   onReturn: () => void;
@@ -51,42 +50,11 @@ const FullDayCalendarView = ({ events, onReturn, day }: Props) => {
   console.log(day, events);
   let date1= new Date(day!+' 07:00:00');
   return (
-    <AnimatePresence>
-      {isVisible && (
-        <motion.div
-          initial={{ opacity: 0, x: -600 }}
-          transition={{
-            ease: 'easeOut',
-            duration: 1,
-            times: [0, 0.2, 0.5, 0.8, 1],
-          }}
-          animate={{
-            opacity: [0, 1, 1, 1, 1],
-            rotateX: ['90deg', '89deg', '89deg', '0deg', '0deg'],
-            x: ['-100vw', '0vw', '0vw', '0vw', '0vw'],
-          }}
-          exit={{
-            opacity: [1, 1, 1, 1, 0],
-            rotateX: ['0deg', '0deg', '89deg', '89deg', '90deg'],
-            x: ['0vw', '0vw', '0vw', '0vw', '-100vw'],
-          }}
-          className="w-[100vw] h-[100vh] absolute flex flex-col justify-center items-center bg-slate-500/70 left-0 z-[1001] backdrop-blur-md"
-          style={{ top: el!.scrollTop }}
-        >
+    <AnimateModalLayout visibility={isVisible} onReturn={()=>{onReturn(); }} >
           {revealAlert && (
             <AlertMenu onReturn={onReturnAlert} styling={alertStyle} />
           )}
-          <button
-            className={` mt-2 md:mt-14 origin-center cursor-pointer z-10 hover:scale-125 `}
-            onClick={() => {
-              setIsVisible(false);
-              onReturn();
-            }}
-          >
-            <div className=" h-8 w-8 md:h-12 md:w-12   fill-darkMainColor stroke-darkMainColor">
-              <ShowIcon icon={'Close'} stroke={'2'} />
-            </div>
-          </button>
+         
 
           <div className="font-semibold text-md text-center  text-shadow  dark:text-shadow-light text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG mt-4 p-3 shadow-2xl  rounded-md border-2">
             <span className="font-extrabold text-xl text-left  text-shadow  dark:text-shadow-light text-lightMainColor  dark:text-darkMainColor ">
@@ -163,9 +131,8 @@ const FullDayCalendarView = ({ events, onReturn, day }: Props) => {
                   })}
             </div>
           </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+         
+    </AnimateModalLayout>
   );
 };
 
