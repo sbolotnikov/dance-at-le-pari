@@ -109,9 +109,7 @@ export default function Page({ params }: { params: { id: string } }) {
     }
   };
   useEffect(() => {
-    sleep(1200).then(() => {
       setLoading(true);
-    });
     fetch('/api/event/post', {
       method: 'POST',
       headers: {
