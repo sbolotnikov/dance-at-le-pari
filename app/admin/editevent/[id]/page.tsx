@@ -31,72 +31,194 @@ export default function Page({ params }: { params: { id: string } }) {
     inputField: '',
   });
   console.log(eventData);
-  const fixTables=(tables:number[])=>{
+  const fixTables = (tables: number[]) => {
     setLoading(true);
     fetch('/api/admin/change_tables', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          id: parseInt(params.id),
-            tables: tables,
-        }),
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: parseInt(params.id),
+        tables: tables,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setLoading(false);
+        console.log(data);
+        if (data.status == 201) {
+          setAlertStyle({
+            variantHead: 'warning',
+            heading: 'Message',
+            text: data.message,
+            color1: 'success',
+            button1: 'Ok',
+            color2: '',
+            button2: '',
+            inputField: '',
+          });
+          sleep(1200).then(() => {
+            setRevealAlert(true);
+          });
+        }
       })
-        .then((response) => response.json())
-        .then((data) => {
-          setLoading(false);
-          console.log(data);
-          if (data.status == 201) {
-            setAlertStyle({
-              variantHead: 'warning',
-              heading: 'Message',
-              text: data.message,
-              color1: 'success',
-              button1: 'Ok',
-              color2: '',
-              button2: '',
-              inputField: '',
-            });
-            sleep(1200).then(() => {
-                setRevealAlert(true);
-            })
-          }
-          
-        })
-        .catch((error) => {
-          setLoading(false);
-          console.log(error);
-         
-        });
-  }
+      .catch((error) => {
+        setLoading(false);
+        console.log(error);
+      });
+  };
+  //   const IsTableBooked= async (table:number)=>{
+  //     fetch('/api/admin/any_seats_booked_tables', {
+  //         method: 'POST',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //         body: JSON.stringify({
+  //           id: parseInt(params.id),
+  //             table: table
+  //         }),
+  //       })
+  //         .then((response) => response.json())
+  //         .then((data) => {
+  //           return parseInt(data);
+
+  //         })
+  //         .catch((error) => {
+  //           return -1
+
+  //         });
+  //   }
   const onReturnAlert = async (decision1: string, val2: string | null) => {
     setRevealAlert(false);
     if (decision1 == 'Cancel') {
     }
     if (decision1 == 'Ok') {
-        window.location.reload();
+      window.location.reload();
     }
     if (decision1 == 'Update Table') {
       let eventDataCopy = eventData;
       if (eventDataCopy?.tables && eventDataCopy?.tables != undefined) {
-
-        eventDataCopy.tables[tableIndex] = parseInt(val2 ? val2 : '0');
-        console.log(tableIndex, val2, 'new table size', eventDataCopy?.tables);
+        if (eventDataCopy.tables[tableIndex] < parseInt(val2 ? val2 : '0')) {
+          eventDataCopy.tables[tableIndex] = parseInt(val2 ? val2 : '0');
+          fixTables(eventDataCopy?.tables);
+          // console.log(tableIndex, val2, 'new table size', eventDataCopy?.tables);
+        } else {
+          console.log('update less seats');
+          setLoading(true);
+          fetch('/api/admin/any_seats_booked_tables', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              id: parseInt(params.id),
+              table: tableIndex,
+            }),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              setLoading(false);
+              if (
+                parseInt(data.booked) == 0 ||
+                (parseInt(data.booked) > 0 &&
+                  parseInt(data.maxSeat) < parseInt(val2 ? val2 : '0'))
+              ) {
+                if (
+                  eventDataCopy?.tables &&
+                  eventDataCopy?.tables != undefined
+                ) {
+                  eventDataCopy.tables[tableIndex] = parseInt(
+                    val2 ? val2 : '0'
+                  );
+                  fixTables(eventDataCopy?.tables);
+                }
+              } else {
+                setAlertStyle({
+                  variantHead: 'danger',
+                  heading: 'Message',
+                  text:
+                    'Table is booked.(Seats:' +
+                    data.booked +
+                    ') Delete or move people before updating table capacity',
+                  color1: 'warning',
+                  button1: 'Ok',
+                  color2: '',
+                  button2: '',
+                  inputField: '',
+                });
+                setRevealAlert(true);
+                console.log(
+                  'table is booked.' +
+                    data.maxSeat +
+                    'delete before updating table capacity'
+                );
+              }
+            })
+            .catch((error) => {
+              setLoading(false);
+              console.log(error);
+            });
+        }
       }
       setEventData(eventDataCopy);
     }
     if (decision1 == 'Eliminate Table') {
       let eventDataCopy = eventData;
-      eventDataCopy?.tables?.splice(tableIndex, 1);
-      setEventData(eventDataCopy);
+      setLoading(true);
+      fetch('/api/admin/any_seats_booked_tables', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: parseInt(params.id),
+          table: tableIndex,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setLoading(false);
+
+          if (parseInt(data.booked) == 0) {
+            if (eventDataCopy?.tables && eventDataCopy?.tables != undefined) {
+              eventDataCopy?.tables?.splice(tableIndex, 1);
+              setEventData(eventDataCopy);
+              fixTables(eventDataCopy?.tables);
+            }
+          } else {
+            setAlertStyle({
+              variantHead: 'danger',
+              heading: 'Message',
+              text:
+                'Table is booked.(Seats:' +
+                data.booked +
+                ') Delete or move people before updating table capacity',
+              color1: 'warning',
+              button1: 'Ok',
+              color2: '',
+              button2: '',
+              inputField: '',
+            });
+            setRevealAlert(true);
+            console.log(
+              'table is booked.' +
+                data.maxSeat +
+                'delete before updating table capacity'
+            );
+          }
+        })
+        .catch((error) => {
+          setLoading(false);
+          console.log(error);
+        });
     }
-    if ((decision1 == 'Create Table')&&(val2 != null)&&(parseInt(val2))) {
+    if (decision1 == 'Create Table' && val2 != null && parseInt(val2)) {
       let eventDataCopy = eventData;
-      eventDataCopy?.tables?.push( parseInt(val2));
-      if ((eventDataCopy?.tables!=null)&&(eventDataCopy?.tables!=undefined)) fixTables(eventDataCopy?.tables)
+      eventDataCopy?.tables?.push(parseInt(val2));
+      if (eventDataCopy?.tables != null && eventDataCopy?.tables != undefined)
+        fixTables(eventDataCopy?.tables);
     }
-   
   };
   const onReturnPicture = (decision1: string, fileLink: string) => {
     setRevealCloud(false);
@@ -109,7 +231,7 @@ export default function Page({ params }: { params: { id: string } }) {
     }
   };
   useEffect(() => {
-      setLoading(true);
+    setLoading(true);
     fetch('/api/event/post', {
       method: 'POST',
       headers: {
@@ -234,18 +356,18 @@ export default function Page({ params }: { params: { id: string } }) {
                   setRevealAlert(!revealAlert);
                 }
                 if (responseData[0] == '301') {
-                    setAlertStyle({
-                      variantHead: 'danger',
-                      heading: 'Warning',
-                      text: responseData[1],
-                      color1: 'warning',
-                      button1: 'Ok',
-                      color2: '',
-                      button2: '',
-                      inputField: '',
-                    });
-                    setRevealAlert(!revealAlert);
-                  }
+                  setAlertStyle({
+                    variantHead: 'danger',
+                    heading: 'Warning',
+                    text: responseData[1],
+                    color1: 'warning',
+                    button1: 'Ok',
+                    color2: '',
+                    button2: '',
+                    inputField: '',
+                  });
+                  setRevealAlert(!revealAlert);
+                }
               }
             }}
           />
