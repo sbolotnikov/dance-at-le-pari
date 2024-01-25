@@ -105,7 +105,7 @@ const page: FC<pageProps> = ({}) => {
       {revealTemplateEdit == true ? (
         <EventTemplateEditingForm
           onReturn={() => setRevealTemplateEdit(false)}
-          template={template1?.templateID}
+          template={template1?.id}
         />
       ) : (
         <div className="   shadow-2xl w-[90%]  max-w-[450px] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md border rounded-md border-lightMainColor dark:border-darkMainColor p-1 m-1">
@@ -121,7 +121,7 @@ const page: FC<pageProps> = ({}) => {
                 {displayTemplates.length > 0 &&
                   displayTemplates.map((item) => (
                     <div
-                      key={item.templateID}
+                      key={item.id}
                       className="m-1 mr-4 flex flex-col items-center justify-center"
                     >
                       <div className="relative h-8 w-8 md:h-10 md:w-10">
@@ -148,7 +148,7 @@ const page: FC<pageProps> = ({}) => {
                               button2: 'Cancel',
                               inputField: '',
                             });
-                            setDelTemplateID(item.templateID);
+                            setDelTemplateID(item.id);
                             setRevealAlert(!revealAlert);
                             return;
                           }}
@@ -373,11 +373,10 @@ const page: FC<pageProps> = ({}) => {
                   });
                   setRevealAlert(!revealAlert);
                   return;
-                }
-                setLoading(true);
+                } 
                 console.log({
                   date: dateTimeRef.current?.value,
-                  templateID: template1.templateID,
+                  templateID: template1.id,
                   tag: template1.tag,
                   eventtype: template1.eventtype,
                 });
@@ -394,20 +393,28 @@ const page: FC<pageProps> = ({}) => {
                   },
                   body: JSON.stringify({
                     date: dateTimeRef.current?.value,
-                    templateID: template1.templateID,
+                    templateID: template1.id,
                     image: template1.image,
                     tag: template1.tag,
                     eventtype: template1.eventtype,
                     tables:(complexEvent)?seatsPerTable:[],
-                    seatmap:(complexEvent)?image:null
+                    seatmap:(complexEvent)?image:null,
+                    length: template1.length,
+                    price: template1.price,
+                    teachersid: template1.teachersid,
+                    title: template1.title,
+                    location: template1.location,
+                    description: template1.description,
+                    visible: template1.visible
                   }),
                 })
                   .then(async (res) => {
                     setLoading(false);
+                    console.log(res)
                     setAlertStyle({
                       variantHead: 'info',
                       heading: 'Message',
-                      text: 'You successfully  create new Event.',
+                      text: 'You successfully  create new Event.'+res.status,
                       color1: 'secondary',
                       button1: 'Ok',
                       color2: '',

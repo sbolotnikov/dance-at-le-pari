@@ -51,6 +51,13 @@ model Event {
    tag String
    image String?
    eventtype EventType @default(Group)
+   length Int
+   price Float
+   teachersid Int[]
+   title String?
+   location String?
+   description String?
+   visible Boolean
    template EventTemplate @relation(fields: [templateID], references: [id] )
    tables Int[]
    tableName String? @default("Table")

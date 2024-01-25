@@ -12,10 +12,10 @@ export  async function POST(
   try {
 
     const data = await req.json();
-    const {date, eventtype, tag, image, templateID, tables,seatmap} = data;
+    const {date, eventtype, tag, image, templateID, tables,seatmap,length,price,teachersid,title,location,description,visible} = data;
     
     const createdTemplate = await prisma.event.create({
-        data:{ date,eventtype, tag, image, templateID:parseInt(templateID), tables,seatmap }
+        data:{ date,eventtype, tag, image, templateID:parseInt(templateID), tables,seatmap,length,price,teachersid,title,location,description,visible }
       })
     await prisma.$disconnect()
     //Send success response

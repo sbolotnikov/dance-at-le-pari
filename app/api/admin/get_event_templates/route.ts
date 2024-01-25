@@ -14,7 +14,7 @@ export async function GET(request: Request) {
         JSON.stringify({ message: 'Not one user exist',status: 422}),
       );
     }
-  return new NextResponse(JSON.stringify(templates.map((item)=>{return{tag:item.tag,eventtype:item.eventtype,templateID:item.id, image:item.image}})), {
+  return new NextResponse(JSON.stringify(templates), {
     status: 201,
   });
 }

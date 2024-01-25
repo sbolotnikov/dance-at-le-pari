@@ -90,7 +90,7 @@ export default function ChooseTemplates(props: TAlertType) {
             {displayTemplates.length > 0 && (displayTemplates>=[]) &&
               displayTemplates.map((item, i) => (
                 <div
-                  key={item.templateID}
+                  key={item.id}
                   className="m-1 mr-4 flex flex-col items-start justify-around"
                 >
                   <div className="relative">
@@ -99,9 +99,9 @@ export default function ChooseTemplates(props: TAlertType) {
                       onClick={(e) => {
                         e.preventDefault();
                         let arr=[...eventsArray]
-                        if (arr.indexOf(item.templateID)>=0){
-                          arr.splice(arr.indexOf(item.templateID), 1)
-                        } else arr.push(item.templateID);
+                        if (arr.indexOf(item.id)>=0){
+                          arr.splice(arr.indexOf(item.id), 1)
+                        } else arr.push(item.id);
                         console.log(arr)
                         setEventsArray(arr); 
 
@@ -123,7 +123,7 @@ export default function ChooseTemplates(props: TAlertType) {
                     </div>
                     <h2 className="max-w-[100px] text-center">{item.tag}</h2>
                      {/* {item.visibility && */}
-                     {(eventsArray.indexOf(item.templateID)>=0) &&
+                     {(eventsArray.indexOf(item.id)>=0) &&
                      <button
                       className=' outline-none border-none  fill-green-500  stroke-green-500  rounded-md border-green-500 absolute p-1 -top-1 -right-9 w-10 h-10' 
                       onClick={(e) => {

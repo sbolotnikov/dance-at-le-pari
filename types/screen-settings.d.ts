@@ -62,8 +62,15 @@ teacher:string | null,
   type TTemplateSmall ={
   tag:string;
   eventtype:string,
-  templateID:number;
+  id:number;
    image:string;
+   length:number;
+   price:number;
+   teachersid:number[];
+   title:string | null;
+   location:string | null;
+   description:string | null;
+   visible:boolean;
   }
   type TTemplateFront ={
     tag:string;
