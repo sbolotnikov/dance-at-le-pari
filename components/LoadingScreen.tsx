@@ -31,7 +31,7 @@ export default function LoadingScreen() {
       style={{ top: el!.scrollTop, zIndex: 101 }}
     >
       <div
-        className="m-auto  max-w-[600px] w-full relative"
+        className="m-auto  max-w-[600px] w-full h-full relative"
         style={{
           animation: 'loader 8s infinite',
           transition: '0.5s ease-in-out',
