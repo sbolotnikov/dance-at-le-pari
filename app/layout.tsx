@@ -3,7 +3,7 @@ import './navStyle.css';
 import './globals.css';
 import { Providers } from './providers';
 import { Inter } from 'next/font/google';
-import localFont from '@next/font/local';
+import localFont from 'next/font/local';
 
 const dancingScript = localFont({
   src: [
