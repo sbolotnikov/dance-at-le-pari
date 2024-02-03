@@ -30,7 +30,7 @@ export default function BuyTicketModal({
   const { data: session } = useSession();
   const [chosenSeats, setChosenSeats] = useState<TableSeat[]>([]);
   const [busySeats, setBusySeats] = useState([]);
-  const [freeSeatPercent, setFreeSeatPercent] = useState <string[]>([]);
+  const [freeSeatPercent, setFreeSeatPercent] = useState<string[]>([]);
   const [currentSeat, setCurrentSeat] = useState(-1);
   const [isVisible, setIsVisible] = useState(true);
   const [chosenTable, setChosenTable] = useState(0);
@@ -92,23 +92,30 @@ export default function BuyTicketModal({
             }
           }
         console.log(arr);
-        let count=[]
-        if (arr.length>0) 
-        for (let i = 0; i < data.length; i++) {
-          let arr2 = arr[data[i].table].split(',');
-          ((session!==null )&&(session.user.role == 'Admin')) ? arr2[data[i].seat] = data[i].name:arr2[data[i].seat] = 'Sold';
-          arr[data[i].table] = arr2.toString();
-        }
-        if (tables!=null)
-        for (let i=0; i<tables?.length; i++){
-          
-          count.push((arr[i].toString().match(/Open/g) || []).length.toString() );
-         
-           console.log(((arr[i].toString().match(/Open/g) || []).length/ tables[i]*100).toFixed(2))
-        
-        }
+        let count = [];
+        if (arr.length > 0)
+          for (let i = 0; i < data.length; i++) {
+            let arr2 = arr[data[i].table].split(',');
+            session !== null && session.user.role == 'Admin'
+              ? (arr2[data[i].seat] = data[i].name)
+              : (arr2[data[i].seat] = 'Sold');
+            arr[data[i].table] = arr2.toString();
+          }
+        if (tables != null)
+          for (let i = 0; i < tables?.length; i++) {
+            count.push(
+              (arr[i].toString().match(/Open/g) || []).length.toString()
+            );
+
+            console.log(
+              (
+                ((arr[i].toString().match(/Open/g) || []).length / tables[i]) *
+                100
+              ).toFixed(2)
+            );
+          }
         setEventSeatMap(arr);
-        setFreeSeatPercent(count)
+        setFreeSeatPercent(count);
         setBusySeats(data);
       })
       .catch((error) => {
@@ -127,257 +134,267 @@ export default function BuyTicketModal({
     }
   }, [currentSeat]);
   return (
-    <AnimateModalLayout visibility={isVisible} onReturn={()=>{setIsVisible(false); onReturn(); }} >
-
-          <div className="h-[82%] w-[85%] bg-darkMainColor flex flex-col justify-center items-center flex-wrap overflow-y-auto">
-            <h2 className="w-full text-center">Enter your information</h2>
-            {seatmap !== null ? (
-              <ImgFromDb
-                url={seatmap}
-                stylings="object-contain p-2 rounded-md"
-                alt="Event Picture"
+    <AnimateModalLayout
+      visibility={isVisible}
+      onReturn={() => {
+        setIsVisible(false);
+        onReturn();
+      }}
+    >
+      <div className="h-[82%] w-[85%] bg-darkMainColor rounded-md relative overflow-y-auto">
+        <div className="absolute top-0 left-0 w-full flex flex-col justify-center items-center">
+          <h2 className="w-full text-center">Enter your information</h2>
+          {seatmap !== null ? (
+            <ImgFromDb
+              url={seatmap}
+              stylings="object-contain p-2 rounded-md"
+              alt="Event Picture"
+            />
+          ) : (
+            <div>
+              <InputBox
+                startValue={0}
+                setWidth={8}
+                increment={1}
+                onChange={(n) => {
+                  setTickets(n);
+                  console.log(n);
+                  let array1: TableSeat[] = [];
+                  for (let i = 0; i < n; i++) {
+                    array1[i] = { table: -1, seat: -1 };
+                  }
+                  setChosenSeats([...array1]);
+                  console.log(array1);
+                }}
               />
-            ) : (
-              <div>
-                <InputBox
-                  startValue={0}
-                  setWidth={8}
-                  increment={1}
-                  onChange={(n) => {
-                    setTickets(n);
-                    console.log(n);
-                    let array1: TableSeat[] = [];
-                    for (let i = 0; i < n; i++){
-                      array1[i]={table:-1,seat:-1};
-                    }
-                    setChosenSeats([...array1])
-                    console.log(array1)
+              <h3>Total:${price * tickets}</h3>
+            </div>
+          )}
+          {tables !== null && tables.length > 0 ? (
+            <div className="w-[97%]">
+              <label className="flex flex-row m-auto justify-between items-center">
+                {'Choose ' + tableName}
+                <select
+                  className="bg-main-bg m-2 rounded-md bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor"
+                  value={chosenTable}
+                  onChange={(e) => {
+                    setChosenTable(parseInt(e.target.value));
+                    console.log(chosenTable);
                   }}
-                />
-                <h3>Total:${price * tickets}</h3>
-              </div>
-            )}
-            {tables !== null && tables.length > 0 ? (
-              <div className="w-[97%]">
-                <label className="flex flex-row m-auto justify-between items-center">
-                  {'Choose ' + tableName}
-                  <select
-                    className="bg-main-bg m-2 rounded-md bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor"
-                    value={chosenTable}
-                    onChange={(e) => {
-                      setChosenTable(parseInt(e.target.value));
-                      console.log(chosenTable);
-                    }}
-                  >
-                    {tables.map((i, index) => (
-                      <option key={'Table' + index} value={index}>
-                        {tableName} {index < 12 ? index + 1 : index + 2}{' Open '}{freeSeatPercent[index]}{'seats'}
+                >
+                  {tables.map((i, index) => (
+                    <option key={'Table' + index} value={index}>
+                      {tableName} {index < 12 ? index + 1 : index + 2}
+                      {' Open '}
+                      {freeSeatPercent[index]}
+                      {'seats'}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="flex flex-row m-auto justify-between items-center">
+                Choose seat
+                <select
+                  className="bg-main-bg m-2 rounded-md bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor"
+                  // value={chosenTable}
+                  onChange={(e) => {
+                    // setChosenTable(parseInt(e.target.value));
+                    let arr = eventSeatMap[chosenTable].split(',');
+                    if (arr[parseInt(e.target.value)] != 'Open') {
+                      console.log('seat already chosen');
+                      setCurrentSeat(-1);
+                      return;
+                    }
+                    setCurrentSeat(
+                      (chosenTable + 1) * 1000 + parseInt(e.target.value)
+                    );
+
+                    let addSeat: TableSeat[] = [
+                      ...chosenSeats,
+                      { table: chosenTable, seat: parseInt(e.target.value) },
+                    ];
+                    console.log('new array ', addSeat);
+
+                    if (
+                      isObjectInArray(
+                        {
+                          table: chosenTable,
+                          seat: parseInt(e.target.value),
+                        },
+                        chosenSeats
+                      ) == false
+                    ) {
+                      setChosenSeats([...addSeat]);
+                      setTickets(addSeat.length);
+                    }
+                  }}
+                >
+                  {eventSeatMap.length &&
+                    eventSeatMap[chosenTable].split(',').map((i, index) => (
+                      <option key={'Seat' + index} value={index}>
+                        {'Seat'} {index < 12 ? index + 1 : index + 2} {`[${i}]`}
                       </option>
                     ))}
-                  </select>
-                </label>
-                <label className="flex flex-row m-auto justify-between items-center">
-                  Choose seat
-                  <select
-                    className="bg-main-bg m-2 rounded-md bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor"
-                    // value={chosenTable}
-                    onChange={(e) => {
-                      // setChosenTable(parseInt(e.target.value));
-                      let arr = eventSeatMap[chosenTable].split(',');
-                      if (arr[parseInt(e.target.value)] != 'Open') {
-                        console.log('seat already chosen');
-                        setCurrentSeat(-1);
-                        return;
-                      }
-                      setCurrentSeat(
-                        (chosenTable + 1) * 1000 + parseInt(e.target.value)
-                      );
-
-                      let addSeat: TableSeat[] = [
-                        ...chosenSeats,
-                        { table: chosenTable, seat: parseInt(e.target.value) },
-                      ];
-                      console.log('new array ', addSeat);
-
-                      if (
-                        isObjectInArray(
-                          {
-                            table: chosenTable,
-                            seat: parseInt(e.target.value),
-                          },
-                          chosenSeats
-                        ) == false
-                      ) {
-                        setChosenSeats([...addSeat]);
-                        setTickets(addSeat.length);
-                      }
-                    }}
-                  >
-                    {eventSeatMap.length &&
-                      eventSeatMap[chosenTable].split(',').map((i, index) => (
-                        <option key={'Seat' + index} value={index}>
-                          {'Seat'} {index < 12 ? index + 1 : index + 2}{' '}
-                          {`[${i}]`}
-                        </option>
-                      ))}
-                  </select>
-                </label>
-                <div className="w-full h-24 relative   overflow-scroll border border-lightMainColor dark:border-darkMainColor rounded-md">
-                  <div className="absolute top-0 left-0  min-w-full  flex flex-wrap items-start justify-start ">
-                    {chosenSeats.length > 0 &&
-                      chosenSeats.map((item, i) => (
-                        <div
-                          key={'ticket' + item.table + ' ' + item.seat}
-                          className="m-1 mr-4 flex flex-col items-center justify-center"
-                        >
-                          <div className="relative h-8 w-8 md:h-10 md:w-10">
-                            <div
-                              className=" h-8 w-8 md:h-10 md:w-10 cursor-pointer fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor "
-                              onClick={(e) => {
-                                e.preventDefault();
-                                // setTemplate1(item);
-                              }}
-                            >
-                              <ShowIcon icon={'Chair'} stroke={'2'} />
-                            </div>
-                            <button
-                              className=" outline-none border-none fill-alertcolor  stroke-alertcolor  rounded-md border-alertcolor absolute p-1 -top-1 -right-9 w-10 h-10"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                let delArr = chosenSeats.filter(
-                                  (e) =>
-                                    e.table != item.table || e.seat != item.seat
-                                );
-                                console.log(delArr);
-                                setChosenSeats([...delArr]);
-                                console.log('item' + i);
-                                let arr = eventSeatMap[item.table].split(',');
-                                arr[item.seat] = 'Open';
-                                let seatMapCopy = eventSeatMap;
-                                seatMapCopy[item.table] = arr.toString();
-                                setEventSeatMap([...seatMapCopy]);
-                                setTickets(delArr.length);
-                                setCurrentSeat(-1);
-                              }}
-                            >
-                              <ShowIcon icon={'Close'} stroke={'2'} />
-                            </button>
+                </select>
+              </label>
+              <div className="w-full h-24 relative   overflow-scroll border border-lightMainColor dark:border-darkMainColor rounded-md">
+                <div className="absolute top-0 left-0  min-w-full  flex flex-wrap items-start justify-start ">
+                  {chosenSeats.length > 0 &&
+                    chosenSeats.map((item, i) => (
+                      <div
+                        key={'ticket' + item.table + ' ' + item.seat}
+                        className="m-1 mr-4 flex flex-col items-center justify-center"
+                      >
+                        <div className="relative h-8 w-8 md:h-10 md:w-10">
+                          <div
+                            className=" h-8 w-8 md:h-10 md:w-10 cursor-pointer fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor "
+                            onClick={(e) => {
+                              e.preventDefault();
+                              // setTemplate1(item);
+                            }}
+                          >
+                            <ShowIcon icon={'Chair'} stroke={'2'} />
                           </div>
-
-                          <h2 className="max-w-[100px] text-center">
-                            {' '}
-                            {tableName + ' '}
-                            {item.table < 12 ? item.table + 1 : item.table + 2}
-                            <br />
-                            {`Seat `}
-                            {item.seat < 12 ? item.seat + 1 : item.seat + 2}
-                          </h2>
+                          <button
+                            className=" outline-none border-none fill-alertcolor  stroke-alertcolor  rounded-md border-alertcolor absolute p-1 -top-1 -right-9 w-10 h-10"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              let delArr = chosenSeats.filter(
+                                (e) =>
+                                  e.table != item.table || e.seat != item.seat
+                              );
+                              console.log(delArr);
+                              setChosenSeats([...delArr]);
+                              console.log('item' + i);
+                              let arr = eventSeatMap[item.table].split(',');
+                              arr[item.seat] = 'Open';
+                              let seatMapCopy = eventSeatMap;
+                              seatMapCopy[item.table] = arr.toString();
+                              setEventSeatMap([...seatMapCopy]);
+                              setTickets(delArr.length);
+                              setCurrentSeat(-1);
+                            }}
+                          >
+                            <ShowIcon icon={'Close'} stroke={'2'} />
+                          </button>
                         </div>
-                      ))}
-                  </div>
+
+                        <h2 className="max-w-[100px] text-center">
+                          {' '}
+                          {tableName + ' '}
+                          {item.table < 12 ? item.table + 1 : item.table + 2}
+                          <br />
+                          {`Seat `}
+                          {item.seat < 12 ? item.seat + 1 : item.seat + 2}
+                        </h2>
+                      </div>
+                    ))}
                 </div>
-                <h3>
-                  Total: ${price}*{tickets}
-                  {chosenSeats.length == 1 ? ' ticket = ' : ' tickets = '}$
-                  {price * tickets}
-                </h3>
               </div>
-            ) : (
-              <></>
-            )}
-            {session ? (
-              <PaymentForm
-                applicationId={process.env.NEXT_PUBLIC_SQUARE_APLICATION_ID!}
-                locationId={process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID!}
-                //  createPaymentRequest={() => ({
-                //   countryCode: "US",
-                //   currencyCode: "USD",
-                //   lineItems: [
-                //     {
-                //       amount: "22.15",
-                //       label: "Item to be purchased",
-                //       id: "SKU-12345",
-                //       imageUrl: "https://url-cdn.com/123ABC",
-                //       pending: true,
-                //       productUrl: "https://my-company.com/product-123ABC"
-                //     }
-                //   ],
-                //   taxLineItems: [
-                //     {
-                //       label: "State Tax",
-                //       amount: "8.95",
-                //       pending: true
-                //     }
-                //   ],
-                //   discounts: [
-                //     {
-                //       label: "Holiday Discount",
-                //       amount: "5.00",
-                //       pending: true
-                //     }
-                //   ],
-                //   requestBillingContact: false,
-                //   requestShippingContact: false,
-                //   shippingOptions: [
-                //     {
-                //       label: "Next Day",
-                //       amount: "15.69",
-                //       id: "1"
-                //     },
-                //     {
-                //       label: "Three Day",
-                //       amount: "2.00",
-                //       id: "2"
-                //     }
-                //   ],
-                //   // pending is only required if it's true.
-                //   total: {
-                //     amount: "41.79",
-                //     label: "Total",
-                //   },
-                // })}
+              <h3>
+                Total: ${price}*{tickets}
+                {chosenSeats.length == 1 ? ' ticket = ' : ' tickets = '}$
+                {price * tickets}
+              </h3>
+            </div>
+          ) : (
+            <></>
+          )}
+          {session ? (
+            <PaymentForm
+              applicationId={process.env.NEXT_PUBLIC_SQUARE_APLICATION_ID!}
+              locationId={process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID!}
+              //  createPaymentRequest={() => ({
+              //   countryCode: "US",
+              //   currencyCode: "USD",
+              //   lineItems: [
+              //     {
+              //       amount: "22.15",
+              //       label: "Item to be purchased",
+              //       id: "SKU-12345",
+              //       imageUrl: "https://url-cdn.com/123ABC",
+              //       pending: true,
+              //       productUrl: "https://my-company.com/product-123ABC"
+              //     }
+              //   ],
+              //   taxLineItems: [
+              //     {
+              //       label: "State Tax",
+              //       amount: "8.95",
+              //       pending: true
+              //     }
+              //   ],
+              //   discounts: [
+              //     {
+              //       label: "Holiday Discount",
+              //       amount: "5.00",
+              //       pending: true
+              //     }
+              //   ],
+              //   requestBillingContact: false,
+              //   requestShippingContact: false,
+              //   shippingOptions: [
+              //     {
+              //       label: "Next Day",
+              //       amount: "15.69",
+              //       id: "1"
+              //     },
+              //     {
+              //       label: "Three Day",
+              //       amount: "2.00",
+              //       id: "2"
+              //     }
+              //   ],
+              //   // pending is only required if it's true.
+              //   total: {
+              //     amount: "41.79",
+              //     label: "Total",
+              //   },
+              // })}
 
-                //  createVerificationDetails={() => ({
-                //   amount: '1.00',
-                //   /* collected from the buyer */
-                //   billingContact: {
-                //     addressLines: ['3040 Edwin Ave', 'Apt #2G'],
-                //     familyName: 'Doe',
-                //     givenName: 'John',
-                //     countryCode: 'US',
-                //     city: 'Fort Lee, NJ',
-                //   },
-                //   currencyCode: 'USD',
-                //   intent: 'CHARGE',
-                // })}
-                cardTokenizeResponseReceived={async (token, verifiedBuyer) => {
-                  const response = await fetch('/api/payment', {
-                    method: 'POST',
-                    headers: {
-                      'Content-type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                      sourceId: token.token,
-                      currency: 'USD',
-                      amount: price * tickets,
-                      seats: chosenSeats,
-                      userID: session.user.id,
-                      eventID: id,
-                    }),
-                  });
+              //  createVerificationDetails={() => ({
+              //   amount: '1.00',
+              //   /* collected from the buyer */
+              //   billingContact: {
+              //     addressLines: ['3040 Edwin Ave', 'Apt #2G'],
+              //     familyName: 'Doe',
+              //     givenName: 'John',
+              //     countryCode: 'US',
+              //     city: 'Fort Lee, NJ',
+              //   },
+              //   currencyCode: 'USD',
+              //   intent: 'CHARGE',
+              // })}
+              cardTokenizeResponseReceived={async (token, verifiedBuyer) => {
+                const response = await fetch('/api/payment', {
+                  method: 'POST',
+                  headers: {
+                    'Content-type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    sourceId: token.token,
+                    currency: 'USD',
+                    amount: price * tickets,
+                    seats: chosenSeats,
+                    userID: session.user.id,
+                    eventID: id,
+                  }),
+                });
 
-                  // eventID Int
+                // eventID Int
 
-                  console.log(await response.json());
-                }}
-              >
-                <CreditCard />
-              </PaymentForm>
-            ) : (
-              <h2>To buy tickets please login or register!</h2>
-            )}
-          </div>
+                console.log(await response.json());
+              }}
+            >
+              <CreditCard />
+            </PaymentForm>
+          ) : (
+            <h2>To buy tickets please login or register!</h2>
+          )}
+          <div className="m-2">{'  '}</div>
+        </div>
         
+      </div>
     </AnimateModalLayout>
   );
 }

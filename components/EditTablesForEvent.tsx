@@ -83,7 +83,7 @@ const EditTablesForEvent = ({ tables, image, onReturn }: Props) => {
                   ))}
                 <div className="m-1 mr-4 flex flex-col items-center justify-center">
                   <div
-                    className=" h-8 w-8 md:h-10 md:w-10 cursor-pointer border  relative pt-0.5 pl-0.5 border-lightMainColor dark:border-darkMainColor rounded-md fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor "
+                    className=" h-8 w-8 md:h-10 md:w-10 cursor-pointer  relative fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor "
                     onClick={(e) => {
                       e.preventDefault();
                       onReturn('Add', 0);

@@ -262,7 +262,9 @@ export default function Page({ params }: { params: { id: string } }) {
       {revealAlert && (
         <AlertMenu onReturn={onReturnAlert} styling={alertStyle} />
       )}
-      {loading && <LoadingScreen />}
+      {loading && 
+      <LoadingScreen />
+       }
       {revealCloud && <ChoosePicture onReturn={onReturnPicture} />}
       <div className="border-0 rounded-md px-4 pt-4 shadow-2xl w-[90%] max-w-[1350px] max-h-[85%] overflow-y-auto md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
         <h2
