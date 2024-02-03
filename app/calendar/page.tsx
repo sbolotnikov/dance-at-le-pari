@@ -29,7 +29,7 @@ const page: FC<pageProps> = ({}) => {
    
     // {color:"#e09c6b",date:'2023-09-09T19:00:00',tag:"Party", id:0},{color:"#612326",date:'2023-09-18T19:00:00',tag:"Group", id:1},{color:"#35da9b",date:'2023-09-18T14:00:00',tag:"early Party", id:2}, {color:"#6123f6",date:'2023-09-18T18:00:00',tag:"Cha-Cha", id:3},{color:"#9c15e4",date:'2023-09-18T15:00:00',tag:"Bachata", id:4}
   return (
-    <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
+    <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center ">
            {revealDayView && <FullDayCalendarView events={eventsSet.filter((e) => e.date.split('T')[0] === clicked!.split('T')[0])} day={clicked}
       onReturn={()=>{ 
         sleep(1200).then(() => {

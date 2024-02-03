@@ -39,7 +39,7 @@ export default function AnimateModalLayout( {visibility,onReturn, children}:Prop
               style={{ top: el!.scrollTop }}
             >
               <button
-                className={`  md:mt-14 origin-center cursor-pointer z-10 hover:scale-125 `}
+                className={` flex flex-col justify-center items-center md:mt-14 origin-center cursor-pointer z-10 hover:scale-125 `}
                 onClick={() => {
                   setIsVisible(false);
                   onReturn();

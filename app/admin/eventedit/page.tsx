@@ -285,7 +285,7 @@ const page: FC<pageProps> = ({}) => {
                               <ShowIcon icon={'Table'} stroke={'0.05'} />
                             </div>
                             <button
-                              className=" outline-none border-none fill-alertcolor  stroke-alertcolor  rounded-md border-alertcolor absolute p-1 -top-1 -right-9 w-10 h-10"
+                              className="flex items-center justify-center outline-none border-none fill-alertcolor  stroke-alertcolor  rounded-md border-alertcolor absolute p-1 -top-1 -right-9 w-10 h-10"
                               onClick={(e) => {
                                 setDelTable(index);
                                 e.preventDefault();
