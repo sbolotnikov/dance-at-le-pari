@@ -35,8 +35,6 @@ export default function LoadingScreen() {
         style={{
           animation: 'loader 8s infinite',
           transition: '0.5s ease-in-out',
-          transform: 'perspective(600px)',
-          transformStyle: 'preserve-3d'
         }}
       >
         <Logo shadow={'0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0'} />
