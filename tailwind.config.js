@@ -1,5 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -41,6 +45,16 @@ module.exports = {
         lightAccentColor: '#3E4754',
         franceBlue:'#0E0C71',
       },
+    },
+  },
+  variants: {
+    extend: {
+      textShadow: ['responsive'],
+      textShadowLight: ['responsive'],
+      textShadowMd: ['responsive'],
+      textShadowMdLight: ['responsive'],
+      textShadowXl: ['responsive'],
+      textShadowNone: ['responsive'],
     },
   },
   plugins: [],
