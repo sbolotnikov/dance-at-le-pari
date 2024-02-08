@@ -47,6 +47,11 @@ const Navbar = ({  path, locale, children }: Props) => {
       icon: 'Calendar',
     },
     {
+      url: '/dancing',
+      title: 'Dancing',
+      icon: 'Activities',
+    },
+    {
       url: '/rentals',
       title: 'Studio',
       icon: 'Home2',
@@ -64,6 +69,11 @@ const Navbar = ({  path, locale, children }: Props) => {
         url: '/calendar',
         title: 'Calendar',
         icon: 'Calendar',
+      },
+      {
+        url: '/dancing',
+        title: 'Dancing',
+        icon: 'Activities',
       },
       {
         url: '/rentals',
@@ -86,6 +96,11 @@ const Navbar = ({  path, locale, children }: Props) => {
           url: '/calendar',
           title: 'Calendar',
           icon: 'Calendar',
+        },
+        {
+          url: '/dancing',
+          title: 'Dancing',
+          icon: 'Activities',
         },
         {
           url: '/rentals',
@@ -114,6 +129,11 @@ const Navbar = ({  path, locale, children }: Props) => {
           url: '/calendar',
           title: 'Calendar',
           icon: 'Calendar',
+        },
+        {
+          url: '/dancing',
+          title: 'Dancing',
+          icon: 'Activities',
         },
         {
           url: '/rentals',
