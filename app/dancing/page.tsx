@@ -7,6 +7,7 @@ interface pageProps {}
 const page: FC<pageProps> = ({}) => {
   const emailRef = useRef<HTMLInputElement>(null);
   const [tabIndex, setTabIndex] = useState(0);
+  const tabsArray = ["Private Lessons","Group Classes","Floor Fees"]
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
       {/* {revealAlert && <AlertMenu onReturn={onReturn} styling={alertStyle} />} */}
@@ -20,12 +21,18 @@ const page: FC<pageProps> = ({}) => {
           onSelect={(index: number) => setTabIndex(index)}
         >
           <TabList className="flex flex-row justify-start items-start flex-wrap rounded-t-lg  dark:bg-lightMainBG  bg-darkMainBG">
-            <Tab className={`mx-2 mt-1 p-2 ${tabIndex != 0 ?"" :'border-0 border-lightMainBG dark:bg-darkMainBG'} rounded-t-lg   text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG`}>
-              Private Lessons
-            </Tab>
-            <Tab className="mx-2 mt-1 p-2 rounded-t-lg border-0 text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG">
-              Floor Fees
-            </Tab>
+            {tabsArray.map((item, index) => {
+              return (
+                <Tab
+                  key={item}
+                  className={`mx-0.5 mt-1 p-2 outline-0 ${
+                    tabIndex != index ? '' : 'border-2 md:border-4 border-yellow-600 text-yellow-600 dark:border-yellow-600 dark:text-yellow-600'
+                  } rounded-t-lg   text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG`}
+                >
+                  {item}
+                </Tab>
+              );
+            })}
           </TabList>
           <TabPanel
             className={`w-full h-[95%] flex justify-center items-center ${tabIndex != 0 ? 'hidden' : ''}`}
@@ -34,6 +41,11 @@ const page: FC<pageProps> = ({}) => {
           </TabPanel>
           <TabPanel
             className={`w-full h-[95%] flex justify-center items-center  ${tabIndex != 1 ? 'hidden' : ''}`}
+          >
+            <div>Group Classes Activities</div>
+          </TabPanel>
+          <TabPanel
+            className={`w-full h-[95%] flex justify-center items-center  ${tabIndex != 2 ? 'hidden' : ''}`}
           >
             <div>Floor fees Activities</div>
           </TabPanel>
