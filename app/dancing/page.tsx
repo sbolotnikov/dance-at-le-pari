@@ -62,7 +62,9 @@ const page: FC<pageProps> = ({}) => {
           <TabPanel
             className={`w-full h-[95%] flex justify-center items-center  ${tabIndex != 1 ? 'hidden' : ''}`}
           >
-            <div>Group Classes Activities</div>
+            {(products.length>0) &&<PaymentPageForm  paymentsArray={products.filter((product) =>product.eventtype=="Group")} role={session?.user.role!}  onReturn={(item, action1 )=>{
+              console.log(action1, item)
+            }}/>}
 
           </TabPanel>
           <TabPanel
