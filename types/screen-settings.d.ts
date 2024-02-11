@@ -88,3 +88,12 @@ teacher:string | null,
     table: number;
     seat: number;
   };
+  type TPaymentType = {
+    id:string | null;
+    tag: string;
+    description: string;    
+    amount: number;
+    price: number;
+    image: string;
+    eventtype: string;
+ }

@@ -1,13 +1,30 @@
 'use client';
-import { FC, useRef, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { PageWrapper } from '@/components/page-wrapper';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import { useSession } from 'next-auth/react';
+import PaymentPageForm from '@/components/PaymentPageForm';
+import { TPaymentType } from '@/types/screen-settings';
 interface pageProps {}
 
 const page: FC<pageProps> = ({}) => {
-  const emailRef = useRef<HTMLInputElement>(null);
+  const { data: session } = useSession();
   const [tabIndex, setTabIndex] = useState(0);
+  const [products, setProducts] = useState<TPaymentType[]>([]);
   const tabsArray = ["Private Lessons","Group Classes","Floor Fees"]
+  useEffect(() => {
+    fetch('/api/get_products', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data); 
+        setProducts(data.products)  
+      }).catch((error) => {console.log(error);})
+  }, []);
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
       {/* {revealAlert && <AlertMenu onReturn={onReturn} styling={alertStyle} />} */}
@@ -35,19 +52,25 @@ const page: FC<pageProps> = ({}) => {
             })}
           </TabList>
           <TabPanel
-            className={`w-full h-[95%] flex justify-center items-center ${tabIndex != 0 ? 'hidden' : ''}`}
+            className={`w-full h-[95%] flex flex-col justify-center items-center ${tabIndex != 0 ? 'hidden' : ''}`}
           >
-            <div>Private lessons Activities</div>
+            {(products.length>0) &&<PaymentPageForm  paymentsArray={products.filter((product) =>product.eventtype=="Private")} role={session?.user.role!}  onReturn={(item, action1 )=>{
+              console.log(action1, item)
+            }}/>}
+           
           </TabPanel>
           <TabPanel
             className={`w-full h-[95%] flex justify-center items-center  ${tabIndex != 1 ? 'hidden' : ''}`}
           >
             <div>Group Classes Activities</div>
+
           </TabPanel>
           <TabPanel
             className={`w-full h-[95%] flex justify-center items-center  ${tabIndex != 2 ? 'hidden' : ''}`}
           >
-            <div>Floor fees Activities</div>
+            {(products.length>0) &&<PaymentPageForm  paymentsArray={products.filter((product) =>product.eventtype=="Floor_Fee")} role={session?.user.role!}  onReturn={(item, action1 )=>{
+              console.log(action1, item)
+            }}/>}
           </TabPanel>
         </Tabs>
       </div>
