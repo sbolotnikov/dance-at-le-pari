@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma';
 
 export async function GET() {
 
-    const product1 = await prisma.product.findMany();
+    const product1 = await prisma.eventTemplate.findMany();
     await prisma.$disconnect()
     if (product1==null) {
       

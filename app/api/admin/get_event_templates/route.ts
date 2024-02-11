@@ -6,7 +6,9 @@ type Data = {
 
 export async function GET(request: Request) {
 
-    const templates = await prisma.eventTemplate.findMany()
+    const templates = await prisma.eventTemplate.findMany({ where: {
+      OR: [{eventtype:'Group'},{ eventtype:'Party' },],
+     },})
     await prisma.$disconnect()
     if (templates==null) {
       

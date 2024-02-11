@@ -36,7 +36,7 @@ const PaymentPageForm = ({ paymentsArray, role, onReturn }: Props) => {
               <p className="w-[45%] text-base text-center">${payment.price}</p>
               <div className="w-[50%] flex flex-col justify-around items-center">
                 <button
-                  className="w-full btnFancy my-1 text-base  dark:text-lightMainBG text-darkMainBG rounded-md"
+                  className="w-full btnFancy my-1 text-base text-center  rounded-md" style={{padding:'0'}}
                   onClick={() => onReturn(payment, 'Book')}
                 >
                   Book

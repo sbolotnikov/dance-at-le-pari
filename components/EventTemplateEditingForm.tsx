@@ -224,7 +224,7 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
                 return;
               }}
             >
-              <ShowIcon icon={'Exchange'} stroke={''} />
+              <ShowIcon icon={'Close'} stroke={''} />
             </button>
 
             <div className="relative flex justify-center items-center outline-none border border-lightMainColor dark:border-darkMainColor rounded-md w-24 my-6 mx-auto">

@@ -31,6 +31,7 @@ model EventTemplate {
   id Int @id @default(autoincrement())
   eventtype EventType @default(Group)
   length Int
+  amount Int @default(1)
   color String?
   price Float
   image String?
@@ -129,13 +130,4 @@ model Picture {
   id        String  @id @default(cuid())
   file      String
   file_name String
-}
-model Product {
-  id          String  @id @default(cuid())
-  tag         String
-  description String    
-  amount      Int
-  price       Float
-  image       String
-  eventtype EventType @default(Private)
 }
