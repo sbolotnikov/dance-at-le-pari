@@ -23,6 +23,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/api/admin/users", "hooks/useDate.tsx", "components/Schedule.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/api/admin/users", "hooks/useDate.tsx", "components/Schedule.tsx", "components/PDF/pdf.tsx"],
   "exclude": ["node_modules"]
 }

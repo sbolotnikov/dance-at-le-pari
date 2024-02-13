@@ -4,13 +4,13 @@ import ImgFromDb from './ImgFromDb';
 type Props = {
   paymentsArray: TPaymentType[];
   role: string;
-  onReturn: (val: TPaymentType | null, callbackType: string) => void;
+  onReturn: (tempID: number, callbackType: string) => void;
 };
 
 const PaymentPageForm = ({ paymentsArray, role, onReturn }: Props) => {
   console.log(paymentsArray);
   return (
-    <div className="w-full h-full overflow-y-auto">
+    <div className="w-full h-full overflow-y-auto mb-20">
       {paymentsArray.map((payment) => {
         return (
           <div
@@ -37,14 +37,14 @@ const PaymentPageForm = ({ paymentsArray, role, onReturn }: Props) => {
               <div className="w-[50%] flex flex-col justify-around items-center">
                 <button
                   className="w-full btnFancy my-1 text-base text-center  rounded-md" style={{padding:'0'}}
-                  onClick={() => onReturn(payment, 'Book')}
+                  onClick={() => onReturn(parseInt(payment.id!), 'Book')}
                 >
                   Book
                 </button>
                 {role == 'Admin' && (
                   <button
                     className="w-full bg-lightMainColor my-1 text-base dark:bg-darkMainColor text-lightMainBG dark:text-darkMainBG rounded-md"
-                    onClick={() => onReturn(payment, 'Edit')}
+                    onClick={() => onReturn(parseInt(payment.id!), 'Edit')}
                   >
                     Edit
                   </button>
@@ -52,7 +52,7 @@ const PaymentPageForm = ({ paymentsArray, role, onReturn }: Props) => {
                 {role == 'Admin' && (
                   <button
                     className="w-full bg-lightMainColor text-base dark:bg-darkMainColor text-lightMainBG dark:text-darkMainBG rounded-md"
-                    onClick={() => onReturn(payment, 'Delete')}
+                    onClick={() => onReturn(parseInt(payment.id!), 'Delete')}
                   >
                     Delete
                   </button>
@@ -62,12 +62,12 @@ const PaymentPageForm = ({ paymentsArray, role, onReturn }: Props) => {
           </div>
         );
       })}
-      <button
-        className="w-full bg-lightMainColor mt-2 mb-12 text-base dark:bg-darkMainColor text-lightMainBG dark:text-darkMainBG rounded-md"
-        onClick={() => onReturn(null,'Add')}
+      {role == 'Admin' && (<button
+        className="w-full bg-lightMainColor mt-2 mb-8 text-base dark:bg-darkMainColor text-lightMainBG dark:text-darkMainBG rounded-md"
+        onClick={() => onReturn(-1,'Add')}
       >
         Add
-      </button>
+      </button>)}
     </div>
   );
 };

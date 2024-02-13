@@ -170,7 +170,7 @@ const page: FC<pageProps> = ({}) => {
                   >
                     <ShowIcon icon={'Plus'} stroke={'2'} />
                   </div>
-                  <h2 className="max-w-[100px] text-center">Add Template</h2>
+                  <h2 className="max-w-[100px] text-center">Add Service</h2>
                 </div>
               </div>
             </div>
