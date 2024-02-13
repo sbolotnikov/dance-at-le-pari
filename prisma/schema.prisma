@@ -64,6 +64,7 @@ model Event {
    tableName String? @default("Table")
    tickets Ticket[]
    seatmap String?
+   specialEvent Boolean @default(false)
 }
 model Ticket {
   id Int @id @default(autoincrement())

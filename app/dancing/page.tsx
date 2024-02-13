@@ -8,6 +8,7 @@ import { TPaymentType } from '@/types/screen-settings';
 import EventTemplateEditingForm from '@/components/EventTemplateEditingForm';
 import AlertMenu from '@/components/alertMenu';
 import PDFDisplay from '@/components/PDFDIsplay';
+import sleep from '@/utils/functions';
 interface pageProps {}
 
 const page: FC<pageProps> = ({}) => {
@@ -16,6 +17,7 @@ const page: FC<pageProps> = ({}) => {
   const [templateID, setTemplateID] = useState(-1);
   const [revealTemplateEdit, setRevealTemplateEdit] = useState(false);
   const [products, setProducts] = useState<TPaymentType[]>([]);
+  const [specialEvents, setSpecialEvents] = useState<TPaymentType[]>([]);
   const [alertStyle, setAlertStyle] = useState({
     variantHead: '',
     heading: '',
@@ -28,12 +30,12 @@ const page: FC<pageProps> = ({}) => {
   });
   const [revealAlert, setRevealAlert] = useState(false);
   const [revealPDF, setRevealPDF] = useState(false);
-  const tabsArray = [
+  const [tabsArray, setTabsArray] = useState([
     'Private Lessons',
     'Group Classes',
     'Floor Fees',
     'Events',
-  ];
+  ]);
   const tabsIndexArray = ['Private', 'Group', 'Floor_Fee', 'Party'];
   const actionTemplateChoice = (action1: string, item: number) => {
     if (action1 == 'Edit') {
@@ -76,7 +78,25 @@ const page: FC<pageProps> = ({}) => {
       });
     }
   };
-
+  useEffect(() => {
+    fetch('/api/get_special_events', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        if ((data.length > 0)&&(tabsArray.indexOf('Special Events')==-1)) {
+          setTabsArray((prev) => [...prev, 'Special Events']);
+          setSpecialEvents(data);
+                    }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);  
   useEffect(() => {
     fetch('/api/get_products', {
       method: 'GET',
@@ -103,7 +123,13 @@ const page: FC<pageProps> = ({}) => {
       {revealPDF && <PDFDisplay onReturn={()=>{setRevealPDF(false)}} />}
       {revealTemplateEdit == true ? (
         <EventTemplateEditingForm
-          onReturn={() => setRevealTemplateEdit(false)}
+        
+          onReturn={() =>{
+            sleep(1200).then(() => {
+              setRevealTemplateEdit(false)
+            }); 
+            
+          }}
           template={templateID}
         />
       ) : (
@@ -163,6 +189,27 @@ const page: FC<pageProps> = ({}) => {
                 </TabPanel>
               );
             })}
+            {(tabsArray.indexOf('Special Events')!=-1)&&
+            <TabPanel className={`w-full h-[95%] flex flex-col justify-center items-center ${
+                    tabIndex != 4 ? 'hidden' : ''
+                  }`}>
+ {specialEvents.length > 0 && (
+                    <PaymentPageForm
+                      paymentsArray={specialEvents}
+                      role={"None"}
+                      onReturn={(item1, action1) => {
+                        window.location.replace('/events/'+item1);
+                      }}
+                    />
+                  )}
+
+
+
+
+
+
+            </TabPanel>
+}
           </Tabs>
         </div>
       )}
