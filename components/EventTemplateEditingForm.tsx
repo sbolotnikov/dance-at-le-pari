@@ -83,11 +83,12 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
               body: JSON.stringify({
                 id: data.template.teachersid[0],
               }),
-            }).then((response) => response.json())
-            .then((data) => {
-              console.log(data);
-              setTeacher(data)
-          })
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                console.log(data);
+                setTeacher(data);
+              });
           }
         });
     }
@@ -119,7 +120,7 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
   const onReturnAlert = async (decision1: string) => {
     setRevealAlert(false);
     if (decision1 == 'Return') {
-      window.location.reload(); 
+      window.location.reload();
     }
   };
   const handleSubmit = (event: React.SyntheticEvent) => {
@@ -180,7 +181,7 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
           visible,
           teachersid:
             teacher !== null && teacher !== undefined ? [teacher?.id] : [],
-            id: template
+          id: template,
         }),
       })
         .then(async (res) => {
@@ -195,7 +196,7 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
             button2: '',
             inputField: '',
           });
-  
+
           setRevealAlert(true);
           console.log(res);
         })
@@ -203,45 +204,45 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
           console.log(error);
         });
     } else
-    fetch('/api/admin/create_event_template', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json, text/plain, */*',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        eventtype,
-        length: length1,
-        price,
-        image,
-        tag,
-        title,
-        location,
-        description,
-        visible,
-        teachersid:
-          teacher !== null && teacher !== undefined ? [teacher?.id] : [],
-      }),
-    })
-      .then(async (res) => {
-        setLoading(false);
-        setAlertStyle({
-          variantHead: 'info',
-          heading: 'Message',
-          text: 'You successfully  create new template.',
-          color1: 'secondary',
-          button1: 'Return',
-          color2: '',
-          button2: '',
-          inputField: '',
-        });
-
-        setRevealAlert(true);
-        console.log(res);
+      fetch('/api/admin/create_event_template', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json, text/plain, */*',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          eventtype,
+          length: length1,
+          price,
+          image,
+          tag,
+          title,
+          location,
+          description,
+          visible,
+          teachersid:
+            teacher !== null && teacher !== undefined ? [teacher?.id] : [],
+        }),
       })
-      .catch((error) => {
-        console.log(error);
-      });
+        .then(async (res) => {
+          setLoading(false);
+          setAlertStyle({
+            variantHead: 'info',
+            heading: 'Message',
+            text: 'You successfully  create new template.',
+            color1: 'secondary',
+            button1: 'Return',
+            color2: '',
+            button2: '',
+            inputField: '',
+          });
+
+          setRevealAlert(true);
+          console.log(res);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
   };
 
   return (
@@ -253,6 +254,16 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
       )}
       <div className="border-0 rounded-md p-4  shadow-2xl w-[90%]  max-w-[450px] md:w-full h-[90vh] my-auto bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md ">
         <div className="border rounded-md border-lightMainColor dark:border-darkMainColor p-1 w-full h-full  flex  justify-center items-center overflow-y-scroll relative ">
+          <button
+            className=" outline-none border-none cursor-pointer fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor rounded-full  fixed p-1 top-6 right-6 w-8 h-8"
+            onClick={(e) => {
+              e.preventDefault();
+              onReturn();
+              return;
+            }}
+          >
+            <ShowIcon icon={'Close'} stroke={''} />
+          </button>
           <div className="  min-w-full   flex flex-col flex-wrap items-center justify-center absolute top-0 right-0 ">
             <h2
               className="text-center w-full font-bold uppercase"
@@ -260,17 +271,6 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
             >
               Activity Editing Form
             </h2>
-            <button
-              className=" outline-none border-none cursor-pointer fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor rounded-full  fixed p-1 top-6 right-6 w-8 h-8"
-              onClick={(e) => {
-                e.preventDefault();
-                onReturn();
-                return;
-              }}
-            >
-              <ShowIcon icon={'Close'} stroke={''} />
-            </button>
-
             <div className="relative flex justify-center items-center outline-none border border-lightMainColor dark:border-darkMainColor rounded-md w-24 my-6 mx-auto">
               {image !== null && image !== '' && image !== undefined ? (
                 <ImgFromDb
@@ -349,12 +349,8 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
                   setEventTypeLocation(e.target.value);
                 }}
               >
-                <option value="Studio A (Front)">
-                  Studio A (Front)
-                </option>
-                <option value="Studio B (Back)">
-                Studio B (Back)
-                </option>
+                <option value="Studio A (Front)">Studio A (Front)</option>
+                <option value="Studio B (Back)">Studio B (Back)</option>
                 <option value="Main ballroom">Main ballroom</option>
                 <option value="Whole studio">Whole studio</option>
               </select>
@@ -445,7 +441,7 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
                 />
               </label>
               <button
-                className="btnFancy w-[90%]"
+                className="btnFancy w-[90%] mb-10"
                 type="submit"
                 disabled={loading}
               >
