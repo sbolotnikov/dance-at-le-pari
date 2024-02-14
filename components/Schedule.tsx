@@ -2,8 +2,6 @@ import { useState, useEffect } from 'react';
 import { CalendarHeader } from './CalendarHeader';
 import { Day } from './Day';
 import { TEventAgenda, TEventArray } from '@/types/screen-settings';
-// import { NewEventModal } from './NewEventModal';
-// import { EditEventModal } from './EditEventModal';
 import AlertMenu from './alertMenu';
 import { useDate } from '@/hooks/useDate';
 import Link from 'next/link';
@@ -17,7 +15,6 @@ type Props = {
 const Schedule = ({ eventsSet, onReturn }: Props) => {
   const [nav, setNav] = useState(0);
   const [agendaEvents, setAgendaEvents] = useState<TEventAgenda[]>([]);
-  const [visCopyPaste, setVisCopyPaste] = useState(false);
   const [events, setEvents] = useState(eventsSet);
   const [revealAlert, setRevealAlert] = useState(false);
   const [agendaView, setAgendaView] = useState(false);

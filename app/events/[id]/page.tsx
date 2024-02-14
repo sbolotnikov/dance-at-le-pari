@@ -1,6 +1,5 @@
 'use client';
 import BuyTicketModal from '@/components/BuyTicketModal';
-import EditEventModal from '@/components/EditEventModal';
 import ImgFromDb from '@/components/ImgFromDb';
 import AlertMenu from '@/components/alertMenu';
 import { PageWrapper } from '@/components/page-wrapper';
@@ -13,7 +12,6 @@ import { useEffect, useState } from 'react';
 export default function Page({ params }: { params: { id: string } }) {
   const [eventData, setEventData] = useState<TFullEvent>();
   const [revealBuyTicketModal, setRevealBuyTicketModal] = useState(false);
-  const [revealEditEventModal, setRevealEditEventModal] = useState(false);
   const [revealAlert, setRevealAlert] = useState(false);
   const [alertStyle, setAlertStyle] = useState({
     variantHead: '',
@@ -85,16 +83,7 @@ export default function Page({ params }: { params: { id: string } }) {
       {revealAlert && (
         <AlertMenu onReturn={onReturnAlert} styling={alertStyle} />
       )}
-      {revealEditEventModal && (
-        <EditEventModal
-          visibility={revealEditEventModal}
-          onReturn={() => {
-            sleep(1200).then(() => {
-              setRevealEditEventModal(false);
-            });
-          }}
-        />
-      )}
+
       <div className="border-0 rounded-md px-4 pt-4 shadow-2xl w-[90%] max-w-[450px] max-h-[85%] overflow-y-auto md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
         {eventData && (
           <div className="w-full h-full flex flex-col justify-center items-center">
@@ -127,7 +116,6 @@ export default function Page({ params }: { params: { id: string } }) {
                   onClick={(e) => {
                     e.preventDefault();
                     window.location.replace('/admin/editevent/' + params.id);
-                    // setRevealEditEventModal(!revealEditEventModal)
                     return;
                   }}
                 >

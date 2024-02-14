@@ -147,7 +147,7 @@ const page: FC<pageProps> = ({}) => {
                 return (
                   <Tab
                     key={item}
-                    className={`mx-0.5 mt-1 p-2 outline-0 ${
+                    className={`mx-0.5 mt-1 p-2 cursor-pointer outline-0 ${
                       tabIndex != index
                         ? ''
                         : 'border-2 md:border-4 border-yellow-600 text-yellow-600 dark:border-yellow-600 dark:text-yellow-600'

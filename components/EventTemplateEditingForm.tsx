@@ -258,7 +258,7 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
               className="text-center w-full font-bold uppercase"
               style={{ letterSpacing: '1px' }}
             >
-              Service Editing Form
+              Activity Editing Form
             </h2>
             <button
               className=" outline-none border-none cursor-pointer fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor rounded-full  fixed p-1 top-6 right-6 w-8 h-8"
