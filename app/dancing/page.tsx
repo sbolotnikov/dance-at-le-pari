@@ -34,7 +34,7 @@ const page: FC<pageProps> = ({}) => {
     'Private Lessons',
     'Group Classes',
     'Floor Fees',
-    'Events',
+    'Dance Parties',
   ]);
   const tabsIndexArray = ['Private', 'Group', 'Floor_Fee', 'Party'];
   const actionTemplateChoice = (action1: string, item: number) => {
