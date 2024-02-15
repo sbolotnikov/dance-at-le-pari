@@ -10,6 +10,7 @@ import ImgFromDb from '../ImgFromDb';
 import { SettingsContext } from '@/hooks/useSettings';
 import { ScreenSettingsContextType } from '@/types/screen-settings';
 import Logo from '../svg/logo';
+import { useDimensions } from '@/hooks/useDimensions';
   
 
 type Props = {
@@ -23,8 +24,10 @@ const Navbar = ({  path, locale, children }: Props) => {
   const [burgerState, setBurgerState] = useState(false);
   const { changeTheme, darkMode } = useContext(SettingsContext) as ScreenSettingsContextType;
   const { data: session } = useSession(); 
+  const windowSize  = useDimensions();
   useEffect(() => {
-    if (window.innerWidth < 768) {
+    setBurgerState(false);
+    if ((windowSize.width!==undefined)&&(windowSize.width! < 768)) {
       let items = document.querySelectorAll('.navbar__item');
       for (let i = 0; i < items.length; i++) {
         items[i].classList.add('translate-x-80');
@@ -34,7 +37,7 @@ const Navbar = ({  path, locale, children }: Props) => {
       document.getElementById('profile-toggle')?.classList.add('hidden');
     }
     changeMenu()
-  }, []);
+  }, [windowSize.width]);
   const [navbarLinks, setNavbarLinks] = useState([
     {
       url: '/',
@@ -147,7 +150,7 @@ const Navbar = ({  path, locale, children }: Props) => {
   const changeMenu = () => {
     let items = document.querySelectorAll('.navbar__item');
 
-    if (window.innerWidth < 768) {
+    if (windowSize.width! < 768) {
       if (burgerState) {
         document
           .getElementsByClassName('navbar__list')[0]
@@ -183,7 +186,7 @@ const Navbar = ({  path, locale, children }: Props) => {
 
       setBurgerState(!burgerState);
     }
-    if (window.innerHeight < 760) {
+    if (windowSize.height! < 760) {
       for (let i = 0; i < items.length; i++) {
         if (burgerState) {
           items[i].classList.add('-translate-y-80');
@@ -343,7 +346,7 @@ const Navbar = ({  path, locale, children }: Props) => {
 
           <button
             id="burger-toggle"
-            className={`relative m-1 flex cursor-pointer p-1.5  outline-none rounded-md hover:ring-2 hover:ring-lightAccentColor focus:ring-lightAccentColor dark:hover:ring-darkAccentColor dark:focus:ring-darkAccentColor ${((window.innerHeight<760)||(window.innerWidth<768)) ?"":"hidden"}`}           
+            className={`relative m-1 flex cursor-pointer p-1.5  outline-none rounded-md hover:ring-2 hover:ring-lightAccentColor focus:ring-lightAccentColor dark:hover:ring-darkAccentColor dark:focus:ring-darkAccentColor ${((windowSize.height!<760)||(windowSize.width!<768)) ?"":"hidden"}`}           
             onClick={() => changeMenu()}
           >
             <Burger status={burgerState} />
