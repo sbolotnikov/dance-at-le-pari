@@ -180,7 +180,7 @@ const page: FC<pageProps> = () => {
   return (
     <PageWrapper className="absolute inset-0 ">
         <div className="w-full h-full relative  mb-12 overflow-y-auto ">
-          <div className="absolute top-0 left-0 w-full min-h-full flex flex-col justify-center items-center ">
+          <div className="absolute top-0 left-0 mt-4 w-full min-h-full flex flex-col justify-center items-center ">
             {revealAlert && (
               <AlertMenu onReturn={onReturn} styling={alertStyle} />
             )}

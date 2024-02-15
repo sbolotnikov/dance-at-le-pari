@@ -26,8 +26,8 @@ const Navbar = ({  path, locale, children }: Props) => {
   const { data: session } = useSession(); 
   const windowSize  = useDimensions();
   useEffect(() => {
-    setBurgerState(false);
-    if ((windowSize.width!==undefined)&&(windowSize.width! < 768)) {
+    if (windowSize.width!==undefined) {
+    if (windowSize.width! < 768) {
       let items = document.querySelectorAll('.navbar__item');
       for (let i = 0; i < items.length; i++) {
         items[i].classList.add('translate-x-80');
@@ -36,7 +36,10 @@ const Navbar = ({  path, locale, children }: Props) => {
       document.getElementById('locale-toggle')?.classList.add('hidden');
       document.getElementById('profile-toggle')?.classList.add('hidden');
     }
-    changeMenu()
+    changeMenu(true)
+  
+    console.log("width"+windowSize.width+'burgerstate '+ burgerState)
+  }
   }, [windowSize.width]);
   const [navbarLinks, setNavbarLinks] = useState([
     {
@@ -147,10 +150,11 @@ const Navbar = ({  path, locale, children }: Props) => {
     }
     setNavbarLinks(linksArray)
   }, [session]);
-  const changeMenu = () => {
+  const changeMenu = (isChangeOrientation:boolean) => {
     let items = document.querySelectorAll('.navbar__item');
 
-    if (windowSize.width! < 768) {
+    if ((windowSize.width! < 768)&&(!isChangeOrientation)) {
+     
       if (burgerState) {
         document
           .getElementsByClassName('navbar__list')[0]
@@ -183,10 +187,15 @@ const Navbar = ({  path, locale, children }: Props) => {
       burgerState
         ? document.getElementById('locale-toggle')?.classList.add('hidden')
         : document.getElementById('locale-toggle')?.classList.remove('hidden');
-
-      setBurgerState(!burgerState);
+        setBurgerState(!burgerState);
     }
-    if (windowSize.height! < 760) {
+    if ((windowSize.height! < 760)&&(!isChangeOrientation)) {
+      document
+          .getElementsByClassName('navbar__list')[0]
+          .classList.remove('translate-x-80');
+        document
+          .getElementsByClassName('navbar__list')[0]
+          .classList.remove('delay-600');
       for (let i = 0; i < items.length; i++) {
         if (burgerState) {
           items[i].classList.add('-translate-y-80');
@@ -205,10 +214,28 @@ const Navbar = ({  path, locale, children }: Props) => {
       burgerState
         ? document.getElementById('locale-toggle')?.classList.add('hidden')
         : document.getElementById('locale-toggle')?.classList.remove('hidden');
+        setBurgerState(!burgerState);
+     
 
-      setBurgerState(!burgerState);
-
-
+    }
+    if((isChangeOrientation)&&((windowSize.height! < 760)||(windowSize.width! < 768))){
+      for (let i = 0; i < items.length; i++) {
+          items[i].classList.remove('-translate-y-80');
+          items[i].classList.remove('translate-x-80');
+          if (windowSize.height! < 760) items[i].classList.add('-translate-y-80');
+          if (windowSize.width! < 768) document
+          .getElementsByClassName('navbar__list')[0]
+          .classList.add('translate-x-80');
+        document
+          .getElementsByClassName('navbar__list')[0]
+          .classList.add('delay-600'); 
+        }
+      
+ 
+        document.getElementById('theme-toggle')?.classList.add('hidden')
+        document.getElementById('profile-toggle')?.classList.add('hidden')
+        document.getElementById('locale-toggle')?.classList.add('hidden')
+        setBurgerState(false)
     }
   };
   let barArray=[
@@ -259,7 +286,7 @@ const Navbar = ({  path, locale, children }: Props) => {
                 className={` navbar__item transition duration-300 ease-in-out`}
                 style={{ transitionDelay: `${100 + index * 100}ms` }}
                 key={index}
-                onClick={() => changeMenu()}
+                onClick={() => changeMenu(false)}
               >
                 <NavItem title={item.title} icon={item.icon} url={item.url} />
               </li>
@@ -290,7 +317,7 @@ const Navbar = ({  path, locale, children }: Props) => {
               type="button"
               className="  rounded-full h-full  mr-3 md:mr-6 outline-none "
               onClick={() => {
-                burgerState ? changeMenu() : {};
+                burgerState ? changeMenu(false) : {};
               }}
             >
               <Link href={'/profile'}>
@@ -347,7 +374,7 @@ const Navbar = ({  path, locale, children }: Props) => {
           <button
             id="burger-toggle"
             className={`relative m-1 flex cursor-pointer p-1.5  outline-none rounded-md hover:ring-2 hover:ring-lightAccentColor focus:ring-lightAccentColor dark:hover:ring-darkAccentColor dark:focus:ring-darkAccentColor ${((windowSize.height!<760)||(windowSize.width!<768)) ?"":"hidden"}`}           
-            onClick={() => changeMenu()}
+            onClick={() => changeMenu(false)}
           >
             <Burger status={burgerState} />
           </button>

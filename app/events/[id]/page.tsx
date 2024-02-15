@@ -164,153 +164,6 @@ export default function Page({ params }: { params: { id: string } }) {
                 <ShowIcon icon={'Template'} stroke={'2'} />
               </div>
             )}
-
-
-
-{/* <div className="relative flex justify-center items-center outline-none border border-lightMainColor dark:border-darkMainColor rounded-md w-24 my-6 mx-auto">
-              {teacher?.image !== null &&
-              teacher?.image !== '' &&
-              teacher?.image !== undefined ? (
-                <div>
-                  <ImgFromDb
-                    url={teacher?.image!}
-                    stylings="object-contain"
-                    alt="Event Picture"
-                  />
-                  <h2 className="text-center">{teacher.name}</h2>
-                </div>
-              ) : (
-                <div className=" h-8 w-8 md:h-10 md:w-10 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
-                  <ShowIcon icon={'DefaultUser'} stroke={'2'} />
-                </div>
-              )}
-
-              <button
-                className=" outline-none border-none fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor rounded-md  absolute p-1 -top-3 -right-3 w-8 h-8"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setRevealCloud2(!revealCloud2);
-                  return;
-                }}
-              >
-                <ShowIcon icon={'Exchange'} stroke={''} />
-              </button>
-            </div>
-            <label className="flex flex-row m-auto justify-between items-center">
-              Event type
-              <select
-                className="bg-main-bg m-2 rounded-md bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor"
-                value={eventtype}
-                onChange={(e) => {
-                  setEventType(e.target.value);
-                }}
-              >
-                <option value="Party">Party</option>
-                <option value="Group">Group</option>
-                <option value="Private">Coaching</option>
-              </select>
-            </label>
-            <label className="flex flex-col m-auto justify-between items-center">
-              Location
-              <select
-                className="bg-main-bg mb-2 rounded-md text-ellipsis bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor"
-                value={location}
-                onChange={(e) => {
-                  setEventTypeLocation(e.target.value);
-                }}
-              >
-                <option value="Studio A (Front)">
-                  Studio A (Front)
-                </option>
-                <option value="Studio B (Back)">
-                Studio B (Back)
-                </option>
-                <option value="Main ballroom">Main ballroom</option>
-                <option value="Whole studio">Whole studio</option>
-              </select>
-            </label>
-
-            <form className=" m-auto" onSubmit={handleSubmit}>
-              <label className="flex flex-row justify-between items-center mb-1">
-                Length in min.
-                <input
-                  className=" outline-none border-none rounded-md  w-1/2 text-lightMainColor p-0.5 mx-1"
-                  id="length1"
-                  name="length1"
-                  type="number"
-                  value={length1}
-                  onChange={(e) => {
-                    setLength(parseInt(e.target.value));
-                  }}
-                  required
-                />
-              </label>
-              <label className="flex flex-row justify-between items-center mb-1">
-                Price
-                <input
-                  className=" outline-none border-none rounded-md w-1/2  text-lightMainColor p-0.5 mx-1"
-                  id="price"
-                  name="price"
-                  type="number"
-                  value={price}
-                  onChange={(e) => {
-                    setPrice(parseFloat(e.target.value));
-                  }}
-                  required
-                />
-              </label>
-              <label className="flex flex-row justify-between items-center mb-1">
-                Title
-                <input
-                  className=" outline-none border-none rounded-md w-3/4  text-lightMainColor p-0.5 mx-1"
-                  id="title"
-                  name="title"
-                  type="text"
-                  value={title}
-                  onChange={(e) => {
-                    setTitle(e.target.value);
-                  }}
-                />
-              </label>
-              <label className="flex flex-row justify-between items-center mb-1">
-                Event Tag
-                <input
-                  className=" outline-none border-none rounded-md  w-3/4 text-lightMainColor p-0.5 mx-1"
-                  id="tag"
-                  name="tag"
-                  type="text"
-                  value={tag}
-                  onChange={(e) => {
-                    setTag(e.target.value);
-                  }}
-                  required
-                />
-              </label>
-              <label className="flex flex-col justify-between items-start mb-1">
-                Description
-                <textarea
-                  name="description"
-                  id="description"
-                  value={description}
-                  onChange={(e) => {
-                    setDescription(e.target.value);
-                  }}
-                  className="w-full rounded text-lightteal"
-                  placeholder="Event description"
-                  rows={4}
-                  minLength={5}
-                />
-              </label>
-              <button
-                className="btnFancy w-[90%]"
-                type="submit"
-                disabled={loading}
-              >
-                {'Submit'}
-              </button>
-            </form> */}
-
-
             <h2 className="w-full text-left">
               {'Description:'}&nbsp;{eventData!.description}
             </h2>
@@ -329,9 +182,9 @@ export default function Page({ params }: { params: { id: string } }) {
               {Math.floor(eventData!.length / 60) > 1 ? 's ' : ' '}
               &nbsp;{(eventData!.length % 60) + ' minutes'}
             </h2>
-            <hr className="w-3/4  border-2 border-double border-lightMainColor dark:border-darkMainColor rounded-full" />
+            <hr className={"w-3/4 border-4 border-double border-lightMainColor dark:border-darkMainColor rounded-full"+(eventData!.teacher == null )?'mb-6':'mb-2' }/>
             {eventData!.teacher !== null && eventData!.teacher.length > 0 && (
-              <div className="w-full  mt-3">
+              <div className="w-full  mt-3 mb-6">
                 <div className="w-full mb-2">
                   {eventData!.teacher_img !== null &&
                   eventData!.teacher_img !== undefined ? (
