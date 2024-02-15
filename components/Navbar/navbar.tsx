@@ -33,7 +33,7 @@ const Navbar = ({  path, locale, children }: Props) => {
       document.getElementById('locale-toggle')?.classList.add('hidden');
       document.getElementById('profile-toggle')?.classList.add('hidden');
     }
-
+    changeMenu()
   }, []);
   const [navbarLinks, setNavbarLinks] = useState([
     {
@@ -145,6 +145,8 @@ const Navbar = ({  path, locale, children }: Props) => {
     setNavbarLinks(linksArray)
   }, [session]);
   const changeMenu = () => {
+    let items = document.querySelectorAll('.navbar__item');
+
     if (window.innerWidth < 768) {
       if (burgerState) {
         document
@@ -161,7 +163,7 @@ const Navbar = ({  path, locale, children }: Props) => {
           .getElementsByClassName('navbar__list')[0]
           .classList.remove('delay-600');
       }
-      let items = document.querySelectorAll('.navbar__item');
+     
       for (let i = 0; i < items.length; i++) {
         if (burgerState) {
           items[i].classList.add('translate-x-80');
@@ -180,6 +182,30 @@ const Navbar = ({  path, locale, children }: Props) => {
         : document.getElementById('locale-toggle')?.classList.remove('hidden');
 
       setBurgerState(!burgerState);
+    }
+    if (window.innerHeight < 760) {
+      for (let i = 0; i < items.length; i++) {
+        if (burgerState) {
+          items[i].classList.add('-translate-y-80');
+        } else {
+          items[i].classList.remove('-translate-y-80');
+        }
+      }
+
+
+      burgerState
+        ? document.getElementById('theme-toggle')?.classList.add('hidden')
+        : document.getElementById('theme-toggle')?.classList.remove('hidden');
+      burgerState
+        ? document.getElementById('profile-toggle')?.classList.add('hidden')
+        : document.getElementById('profile-toggle')?.classList.remove('hidden');
+      burgerState
+        ? document.getElementById('locale-toggle')?.classList.add('hidden')
+        : document.getElementById('locale-toggle')?.classList.remove('hidden');
+
+      setBurgerState(!burgerState);
+
+
     }
   };
   let barArray=[
@@ -316,7 +342,8 @@ const Navbar = ({  path, locale, children }: Props) => {
           </button>
 
           <button
-            className="relative m-1 flex cursor-pointer p-1.5  outline-none rounded-md hover:ring-2 hover:ring-lightAccentColor focus:ring-lightAccentColor dark:hover:ring-darkAccentColor dark:focus:ring-darkAccentColor md:hidden"
+            id="burger-toggle"
+            className={`relative m-1 flex cursor-pointer p-1.5  outline-none rounded-md hover:ring-2 hover:ring-lightAccentColor focus:ring-lightAccentColor dark:hover:ring-darkAccentColor dark:focus:ring-darkAccentColor ${((window.innerHeight<760)||(window.innerWidth<768)) ?"":"hidden"}`}           
             onClick={() => changeMenu()}
           >
             <Burger status={burgerState} />
