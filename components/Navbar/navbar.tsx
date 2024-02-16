@@ -239,7 +239,7 @@ const Navbar = ({  path, locale, children }: Props) => {
     {link:'https://www.tiktok.com/@dance_at_lepari',additionalStyle:'fill-darkMainColor',icon:'Tiktok', stroke:'1.5',text:''},
   ]
   return (
-    <nav className="navbar w-screen h-[100vh] overflow-hidden">
+    <nav className="navbar w-screen h-[100svh] overflow-hidden">
               <div className=" absolute inset-0 flex flex-col items-center justify-center "> 
           <Logo shadow={darkMode?'0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0':'0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0'} />
         </div>

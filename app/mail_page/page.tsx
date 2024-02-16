@@ -123,7 +123,7 @@ const page: FC<pageProps> = () => {
     <PageWrapper className="flex min-h-screen flex-col items-center justify-center py-2  dark:text-light">
        
         {revealAlert && <AlertMenu onReturn={onReturn} styling={alertStyle} />}
-        <div className="absolute top-0 left-0 h-[100vh] w-[100vw] flex justify-center  items-center">
+        <div className="absolute top-0 left-0 h-[100svh] w-[100vw] flex justify-center  items-center">
           <form
             onSubmit={handleSubmit}
             className="w-[80%] h-[80%] max-w-[700px] shadow-2xl max-h-[700px] rounded-md flex flex-col justify-between  items-center p-2 bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md "

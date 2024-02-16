@@ -123,7 +123,7 @@ const Schedule = ({ eventsSet, onReturn }: Props) => {
             ))}
         </div>
       ) : (
-        <div className="w-full h-[75vh] flex flex-col overflow-y-auto relative">
+        <div className="w-full h-[75svh] flex flex-col overflow-y-auto relative">
           <div className="w-full h-full absolute top-0 right-0">
             {agendaEvents.map((item, index) => (
               <div

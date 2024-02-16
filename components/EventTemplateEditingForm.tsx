@@ -252,7 +252,7 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
       {revealAlert && (
         <AlertMenu onReturn={onReturnAlert} styling={alertStyle} />
       )}
-      <div className="border-0 rounded-md p-1  shadow-2xl w-[90%]  max-w-[450px] md:w-full h-[70vh] md:h-[85%] my-auto bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md ">
+      <div className="border-0 rounded-md p-1  shadow-2xl w-[90%]  max-w-[450px] md:w-full h-[70svh] md:h-[85%] my-auto bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md ">
         <div className="border rounded-md border-lightMainColor dark:border-darkMainColor p-1 w-full h-full  flex  justify-center items-center overflow-y-scroll relative ">
           <button
             className=" outline-none border-none cursor-pointer fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor rounded-full  absolute p-1 top-2 right-2 w-8 h-8"

@@ -20,7 +20,7 @@ const FullScreenGalleryView = ({pictures, onReturn}: Props) => {
         auto={false}
         seconds={5}
         width={'100vw'}
-        height={'100vh'}
+        height={'100svh'}
         particles
       />
      </AnimateModalLayout> 

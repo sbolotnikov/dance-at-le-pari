@@ -35,7 +35,7 @@ export default function AnimateModalLayout( {visibility,onReturn, children}:Prop
                 rotateX: ['0deg', '0deg', '89deg', '89deg', '90deg'],
                 x: ['0vw', '0vw', '0vw', '0vw', '-100vw'],
               }}
-              className="w-[100vw] h-[100vh] absolute flex flex-col justify-center items-center bg-slate-500/70 left-0 z-[1001] backdrop-blur-md"
+              className="w-[100vw] h-[100svh] absolute flex flex-col justify-center items-center bg-slate-500/70 left-0 z-[1001] backdrop-blur-md"
               style={{ top: el!.scrollTop }}
             >
               <button

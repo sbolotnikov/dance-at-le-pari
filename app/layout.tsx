@@ -67,7 +67,7 @@ export default function RootLayoutFC({
       <body suppressHydrationWarning={true}>
         <Providers>
  
-          <main id="mainPage" className="fixed w-screen h-[100vh] p-0 m-0 items-center justify-center overflow-hidden text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG">
+          <main id="mainPage" className="fixed w-screen h-[100svh] p-0 m-0 items-center justify-center overflow-hidden text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG">
             <Navbar path={''} locale={'EN'} >
             {children}
             </Navbar>
