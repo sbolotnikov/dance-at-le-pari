@@ -134,7 +134,7 @@ const page: FC<pageProps> = ({}) => {
         />
       ) : (
         <div
-          className="border-0 rounded-md p-4  shadow-2xl w-[95%] h-[70vh] md:h-[90%] max-w-5xl md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md"
+          className="border-0 rounded-md p-4  shadow-2xl w-[95%] h-[70vh] md:h-[85%] max-w-5xl md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md"
           // style={{ boxShadow: '0 0 150px rgb(113, 113, 109 / 50%),inset 0 0 20px #242422' }}
         >
           <Tabs

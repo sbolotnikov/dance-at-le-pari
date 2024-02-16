@@ -144,7 +144,7 @@ function page() {
           <div
             id="userContainer"
             className="w-[95%] border-2 rounded-md overflow-y-scroll"
-            style={{ height: `${dimensions.height - 177}px` }}
+            style={{ height: `${dimensions.height - 200}px` }}
           >
             {usersDisplay &&
               usersDisplay.map((item, index) => {

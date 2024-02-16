@@ -176,8 +176,8 @@ const Navbar = ({  path, locale, children }: Props) => {
         ? document.getElementById('profile-toggle')?.classList.add('hidden')
         : document.getElementById('profile-toggle')?.classList.remove('hidden');
       burgerState
-        ? document.getElementById('locale-toggle')?.classList.add('hidden')
-        : document.getElementById('locale-toggle')?.classList.remove('hidden');
+        ? document.getElementById('cart-toggle')?.classList.add('hidden')
+        : document.getElementById('cart-toggle')?.classList.remove('hidden');
         setBurgerState(!burgerState);
     }
     if ((windowSize.height! < 760)&&(!isChangeOrientation)) {
@@ -203,8 +203,8 @@ const Navbar = ({  path, locale, children }: Props) => {
         ? document.getElementById('profile-toggle')?.classList.add('hidden')
         : document.getElementById('profile-toggle')?.classList.remove('hidden');
       burgerState
-        ? document.getElementById('locale-toggle')?.classList.add('hidden')
-        : document.getElementById('locale-toggle')?.classList.remove('hidden');
+        ? document.getElementById('cart-toggle')?.classList.add('hidden')
+        : document.getElementById('cart-toggle')?.classList.remove('hidden');
         setBurgerState(!burgerState);
      
 
@@ -225,7 +225,7 @@ const Navbar = ({  path, locale, children }: Props) => {
  
         document.getElementById('theme-toggle')?.classList.add('hidden')
         document.getElementById('profile-toggle')?.classList.add('hidden')
-        document.getElementById('locale-toggle')?.classList.add('hidden')
+        document.getElementById('cart-toggle')?.classList.add('hidden')
         setBurgerState(false)
     }
   };
@@ -361,7 +361,25 @@ const Navbar = ({  path, locale, children }: Props) => {
               </p>
             </div>
           </button>
-
+          <button
+            id="cart-toggle"
+            type="button"
+            onClick={() => { 
+              console.log("Shopping Cart pressed");
+            }}
+            className=" h-6 w-6 md:h-8 md:w-8  mr-3 md:mr-6 rounded-sm outline-none"
+          >
+            <div className="group flex  cursor-pointer  hover:scale-110  flex-col items-center ">
+              <div className="  h-6 w-6 md:h-8 md:w-8  group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
+                <div className=" h-6 w-6 md:h-8 md:w-8 mr-2  fill-none stroke-lightMainColor dark:stroke-darkMainColor ">
+                    <ShowIcon icon={'ShoppingCart'} stroke={'1'} />
+                </div>
+              </div>
+              <p className="hidden tracking-widest mx-3 transition duration-300 ease-in-out opacity-100 group-hover:inline-flex md:block md:opacity-0 md:group-hover:opacity-100 ">
+                Cart
+              </p>
+            </div>
+          </button>
           <button
             id="burger-toggle"
             className={`relative m-1 flex cursor-pointer p-1.5  outline-none rounded-md hover:ring-2 hover:ring-lightAccentColor focus:ring-lightAccentColor dark:hover:ring-darkAccentColor dark:focus:ring-darkAccentColor ${((windowSize.height!<760)||(windowSize.width!<768)) ?"":"hidden"}`}           
