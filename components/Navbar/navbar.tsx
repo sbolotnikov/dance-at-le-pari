@@ -152,23 +152,14 @@ const Navbar = ({  path, locale, children }: Props) => {
   }, [session]);
   const changeMenu = (isChangeOrientation:boolean) => {
     let items = document.querySelectorAll('.navbar__item');
-
-    if ((windowSize.width! < 768)&&(!isChangeOrientation)) {
-     
+    console.log(document.getElementById('navBarContainer'))
+    if ((windowSize.width! < 768)&&(!isChangeOrientation)) { 
       if (burgerState) {
-        document
-          .getElementsByClassName('navbar__list')[0]
-          .classList.add('translate-x-80');
-        document
-          .getElementsByClassName('navbar__list')[0]
-          .classList.add('delay-600');
+        document.getElementById('navBarContainer')?.classList.add('translate-x-80');
+        document.getElementById('navBarContainer')?.classList.add('delay-600');
       } else {
-        document
-          .getElementsByClassName('navbar__list')[0]
-          .classList.remove('translate-x-80');
-        document
-          .getElementsByClassName('navbar__list')[0]
-          .classList.remove('delay-600');
+        document.getElementById('navBarContainer')?.classList.remove('translate-x-80');
+        document.getElementById('navBarContainer')?.classList.remove('delay-600');
       }
      
       for (let i = 0; i < items.length; i++) {
@@ -190,12 +181,12 @@ const Navbar = ({  path, locale, children }: Props) => {
         setBurgerState(!burgerState);
     }
     if ((windowSize.height! < 760)&&(!isChangeOrientation)) {
-      document
-          .getElementsByClassName('navbar__list')[0]
-          .classList.remove('translate-x-80');
-        document
-          .getElementsByClassName('navbar__list')[0]
-          .classList.remove('delay-600');
+      // document
+      //     .getElementsByClassName('navbar__list')[0]
+      //     .classList.remove('translate-x-80');
+      //   document
+      //     .getElementsByClassName('navbar__list')[0]
+      //     .classList.remove('delay-600');
       for (let i = 0; i < items.length; i++) {
         if (burgerState) {
           items[i].classList.add('-translate-y-80');
@@ -218,7 +209,7 @@ const Navbar = ({  path, locale, children }: Props) => {
      
 
     }
-    if((isChangeOrientation)&&((windowSize.height! < 760)||(windowSize.width! < 768))){
+    if((isChangeOrientation)&&((windowSize.height! < 680)||(windowSize.width! < 768))){
       for (let i = 0; i < items.length; i++) {
           items[i].classList.remove('-translate-y-80');
           items[i].classList.remove('translate-x-80');
@@ -279,7 +270,7 @@ const Navbar = ({  path, locale, children }: Props) => {
           }
  
         </div>
-        <ul className="navbar__list bg-darkMainBG/25 translate-x-80 backdrop-blur-md md:dark:bg-transparent md:bg-transparent dark:bg-lightMainBG/25 md:translate-x-0  md:backdrop-filter-none transition  duration-1000 ease-in-out">
+        <ul id="navBarContainer" className="navbar__list bg-darkMainBG/25 translate-x-80 backdrop-blur-md md:dark:bg-transparent md:bg-transparent dark:bg-lightMainBG/25 md:translate-x-0  md:backdrop-filter-none transition  duration-1000 ease-in-out">
           {navbarLinks.map((item, index) => {
             return (
               <li

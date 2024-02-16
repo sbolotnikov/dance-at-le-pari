@@ -134,7 +134,7 @@ const page: FC<pageProps> = ({}) => {
         />
       ) : (
         <div
-          className="border-0 rounded-md p-4  shadow-2xl w-[95%] h-[85vh] max-w-5xl md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md"
+          className="border-0 rounded-md p-4  shadow-2xl w-[95%] h-[70vh] md:h-[90%] max-w-5xl md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md"
           // style={{ boxShadow: '0 0 150px rgb(113, 113, 109 / 50%),inset 0 0 20px #242422' }}
         >
           <Tabs
@@ -147,9 +147,9 @@ const page: FC<pageProps> = ({}) => {
                 return (
                   <Tab
                     key={item}
-                    className={`mx-0.5 mt-1 p-2 cursor-pointer outline-0 ${
+                    className={` mt-1 p-1 cursor-pointer outline-0 ${
                       tabIndex != index
-                        ? ''
+                        ? 'w-12 truncate'
                         : 'border-2 md:border-4 border-yellow-600 text-yellow-600 dark:border-yellow-600 dark:text-yellow-600'
                     } rounded-t-lg   text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG`}
                   >
