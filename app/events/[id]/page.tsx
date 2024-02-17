@@ -84,10 +84,16 @@ export default function Page({ params }: { params: { id: string } }) {
         <AlertMenu onReturn={onReturnAlert} styling={alertStyle} />
       )}
 
-      <div className="border-0 rounded-md px-4 pt-4 shadow-2xl w-[90%] max-w-[450px] max-h-[85%] overflow-y-auto md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
+      <div className="border-0 rounded-md p-2 shadow-2xl w-[90%] max-w-[450px] max-h-[85%] overflow-y-auto md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
         {eventData && (
-          <div className="w-full h-full flex flex-col justify-center items-center">
+          <div className="w-full h-full flex flex-col justify-center items-center border rounded-md border-lightMainColor dark:border-darkMainColor relative p-2 overflow-y-scroll">
             <div className="w-full flex flex-row justify-end">
+            <h2
+              className="text-center font-bold uppercase mx-auto"
+              style={{ letterSpacing: '1px' }}
+            >
+              Event:
+            </h2>
               {session?.user.role == 'Admin' && (
                 <button
                   className=" outline-none border-none fill-alertcolor  stroke-alertcolor  rounded-md border-alertcolor mt-2  w-8 h-8"
@@ -182,7 +188,14 @@ export default function Page({ params }: { params: { id: string } }) {
               {Math.floor(eventData!.length / 60) > 1 ? 's ' : ' '}
               &nbsp;{(eventData!.length % 60) + ' minutes'}
             </h2>
-            <hr className={"w-3/4 border-4 border-double border-lightMainColor dark:border-darkMainColor rounded-full"+(eventData!.teacher == null )?'mb-6':'mb-2' }/>
+            <hr
+              className={
+                'w-3/4 border-4 border-double border-lightMainColor dark:border-darkMainColor rounded-full' +
+                (eventData!.teacher == null)
+                  ? 'mb-6'
+                  : 'mb-2'
+              }
+            />
             {eventData!.teacher !== null && eventData!.teacher.length > 0 && (
               <div className="w-full  mt-3 mb-6">
                 <div className="w-full mb-2">

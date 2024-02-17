@@ -11,6 +11,8 @@ import { SettingsContext } from '@/hooks/useSettings';
 import { ScreenSettingsContextType } from '@/types/screen-settings';
 import Logo from '../svg/logo';
 import { useDimensions } from '@/hooks/useDimensions';
+import { useSelector } from "react-redux"
+import { selectItems } from "../../slices/cartSlice";
   
 
 type Props = {
@@ -25,6 +27,8 @@ const Navbar = ({  path, locale, children }: Props) => {
   const { changeTheme, darkMode } = useContext(SettingsContext) as ScreenSettingsContextType;
   const { data: session } = useSession(); 
   const windowSize  = useDimensions();
+  const items = useSelector(selectItems);
+
   useEffect(() => {
     if (windowSize.width!==undefined) {
     if (windowSize.width! < 768) {
@@ -373,6 +377,8 @@ const Navbar = ({  path, locale, children }: Props) => {
               <div className="  h-6 w-6 md:h-8 md:w-8  group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
                 <div className=" h-6 w-6 md:h-8 md:w-8 mr-2  fill-none stroke-lightMainColor dark:stroke-darkMainColor ">
                     <ShowIcon icon={'ShoppingCart'} stroke={'1'} />
+                    <span className="absolute top-0 right-0 md:right-10 h-4 w-4 bg-yellow-400 text-center rounded-full text-black font-bold">{items?items.length:0}</span>
+
                 </div>
               </div>
               <p className="hidden tracking-widest mx-3 transition duration-300 ease-in-out opacity-100 group-hover:inline-flex md:block md:opacity-0 md:group-hover:opacity-100 ">

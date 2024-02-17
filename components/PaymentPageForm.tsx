@@ -39,7 +39,7 @@ const PaymentPageForm = ({ paymentsArray, role, onReturn }: Props) => {
                   className="w-full btnFancy my-1 text-base text-center  rounded-md" style={{padding:'0'}}
                   onClick={() => onReturn(parseInt(payment.id!), 'Book')}
                 >
-                  Book
+                  Add to Cart
                 </button>
                 {role == 'Admin' && (
                   <button

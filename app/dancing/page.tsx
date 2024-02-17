@@ -8,6 +8,8 @@ import { TPaymentType } from '@/types/screen-settings';
 import EventTemplateEditingForm from '@/components/EventTemplateEditingForm';
 import AlertMenu from '@/components/alertMenu';
 import PDFDisplay from '@/components/PDFDIsplay';
+import { useDispatch} from "react-redux"
+import { addItem } from "../../slices/cartSlice";
 import sleep from '@/utils/functions';
 interface pageProps {}
 
@@ -36,6 +38,7 @@ const page: FC<pageProps> = ({}) => {
     'Floor Fees',
     'Dance Parties',
   ]);
+  const dispatch = useDispatch();
   const tabsIndexArray = ['Private', 'Group', 'Floor_Fee', 'Party'];
   const actionTemplateChoice = (action1: string, item: number) => {
     if (action1 == 'Edit') {
@@ -45,6 +48,21 @@ const page: FC<pageProps> = ({}) => {
     if (action1 == 'Add') {
       setTemplateID(item);
       setRevealTemplateEdit(true);
+    }
+    if (action1 == 'Book') {
+      console.log(item, products)
+      const productToCart= products.find((product)=>product.id === item.toString())
+        const p1 = {
+          id:item,
+          image:productToCart?.image?productToCart?.image:'',
+          eventtype:productToCart?.eventtype?productToCart?.eventtype:'',
+          tag:productToCart?.tag?productToCart?.tag:'',
+          price:productToCart?.price?productToCart?.price:0,
+          amount:productToCart?.amount?productToCart?.amount:0,
+        }
+        dispatch(addItem(p1));
+    
+      
     }
     if (action1 == 'Delete') {
       setTemplateID(item);
@@ -134,15 +152,15 @@ const page: FC<pageProps> = ({}) => {
         />
       ) : (
         <div
-          className="border-0 rounded-md p-4  shadow-2xl w-[95%] h-[70svh] md:h-[85%] max-w-5xl md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md"
+          className="border-0 rounded-md p-2  shadow-2xl w-[95%] h-[70svh] md:h-[85%] max-w-5xl md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md"
           // style={{ boxShadow: '0 0 150px rgb(113, 113, 109 / 50%),inset 0 0 20px #242422' }}
         >
           <Tabs
             selectedIndex={tabIndex}
-            className="w-full h-full border rounded-lg"
+            className="w-full h-full border rounded-md border-lightMainColor dark:border-darkMainColor"
             onSelect={(index: number) => setTabIndex(index)}
           >
-            <TabList className="flex flex-row justify-start items-start flex-wrap rounded-t-lg  dark:bg-lightMainBG  bg-darkMainBG">
+            <TabList className="flex flex-row justify-start items-start flex-wrap rounded-t-md  dark:bg-lightMainBG  bg-darkMainBG">
               {tabsArray.map((item, index) => {
                 return (
                   <Tab

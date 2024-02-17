@@ -23,6 +23,7 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
   const [loading, setLoading] = useState(false);
   const [revealAlert, setRevealAlert] = useState(false);
   const [length1, setLength] = useState(0);
+  const [amount, setAmount] = useState(1);
   const [price, setPrice] = useState(0.0);
   const [title, setTitle] = useState('');
   const [tag, setTag] = useState('');
@@ -71,6 +72,7 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
           console.log(data.template.price);
           setLength(data.template.length);
           setPrice(data.template.price);
+          setAmount(data.template.amount);
           setTitle(data.template.title);
           setTag(data.template.tag);
           setVisible(data.template.visible);
@@ -178,6 +180,7 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
           title,
           location,
           description,
+          amount,
           visible,
           teachersid:
             teacher !== null && teacher !== undefined ? [teacher?.id] : [],
@@ -214,6 +217,7 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
           eventtype,
           length: length1,
           price,
+          amount,
           image,
           tag,
           title,
@@ -282,7 +286,7 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
                 />
               ) : (
                 <div className=" h-8 w-8 md:h-10 md:w-10 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
-                  <ShowIcon icon={'Calendar'} stroke={'2'} />
+                  <ShowIcon icon={'Image'} stroke={'0.5'} />
                 </div>
               )}
 
@@ -383,6 +387,21 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
                   value={price}
                   onChange={(e) => {
                     setPrice(parseFloat(e.target.value));
+                  }}
+                  required
+                />
+              </label>
+              <label className="flex flex-row justify-between items-center mb-1">
+                Amount
+                <input
+                  className=" outline-none border-none rounded-md w-1/2  text-lightMainColor p-0.5 mx-1"
+                  id="price"
+                  name="price"
+                  type="number"
+                  value={amount}
+                  min={1}
+                  onChange={(e) => {
+                    setAmount(parseInt(e.target.value));
                   }}
                   required
                 />

@@ -178,146 +178,143 @@ const page: FC<pageProps> = () => {
     });
   };
   return (
-    <PageWrapper className="absolute inset-0 ">
-      <div className="w-full h-full relative  mb-12 overflow-y-auto ">
-        <div className="absolute top-0 left-0 mt-4 w-full min-h-full flex flex-col justify-center items-center ">
-          {revealAlert && (
-            <AlertMenu onReturn={onReturn} styling={alertStyle} />
-          )}
-          {revealCloud && (
-            <ChooseAvatar onReturn={onReturnAvatar} styling={alertStyle} />
-          )}
-          {loading && <Loading />}
-          <div className="border-0 rounded-md relative  shadow-2xl max-w-[450px] w-[95%] m-3 p-1 landscape:mb-12 landscape:md:mb-0 bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
-            <div className="flex flex-col items-center justify-center border rounded-md border-lightMainColor dark:border-darkMainColor w-full h-full ">
+    <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
+      {revealAlert && <AlertMenu onReturn={onReturn} styling={alertStyle} />}
+      {revealCloud && (
+        <ChooseAvatar onReturn={onReturnAvatar} styling={alertStyle} />
+      )}
+      {loading && <Loading />}
+      <div className="   shadow-2xl w-[90%]  max-w-[450px] md:w-full h-[70svh] md:h-[90%] bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md border-0 rounded-md  p-2 mt-6">
+        <div className="border rounded-md border-lightMainColor dark:border-darkMainColor w-full h-full relative  p-1 flex  overflow-y-scroll">
+          <div className="flex flex-col w-full p-1 justify-center items-center absolute top-0 left-0">
+            <button
+              type="button"
+              className="absolute top-0 right-0 mt-2 h-6 w-6 mr-5 md:mr-6 md:h-8 md:w-8 rounded-sm outline-none "
+              onClick={() => {
+                signOut();
+              }}
+            >
+              <div className="group flex  cursor-pointer  hover:scale-110  flex-col items-center ">
+                <div className=" h-6 w-6 md:h-8 md:w-8 fill-none group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
+                  <ShowIcon icon={'Logout'} stroke={'2'} />
+                </div>
+                <p className=" tracking-widest mx-3  group-hover:inline-flex ">
+                  {'Logout'}
+                </p>
+              </div>
+            </button>
+            <h2
+              className="text-center font-bold uppercase"
+              style={{ letterSpacing: '1px' }}
+            >
+              Your's {session?.user.role} Profile
+            </h2>
+            <div className="relative flex justify-center items-center outline-none border rounded-md w-24 my-6 mx-auto">
+              {userURL !== null && userURL !== undefined ? (
+                <ImgFromDb
+                  url={userURL}
+                  stylings="object-contain"
+                  alt="User Picture"
+                />
+              ) : (
+                <div className=" h-8 w-8 md:h-10 md:w-10 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
+                  <ShowIcon icon={'DefaultUser'} stroke={'2'} />
+                </div>
+              )}
+
               <button
-                type="button"
-                className="absolute top-0 right-0 mt-2 h-6 w-6 mr-5 md:mr-6 md:h-8 md:w-8 rounded-sm outline-none"
-                onClick={() => {
-                  signOut();
+                className=" outline-none border-none fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor rounded-md  absolute p-1 -top-3 -right-3 w-8 h-8"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setAlertStyle({
+                    variantHead: 'danger',
+                    heading: 'Warning',
+                    text: 'You are about to Upload New Avatar Image',
+                    color1: 'info',
+                    button1: 'Upload',
+                    color2: 'secondary',
+                    button2: 'Cancel',
+                    inputField: '',
+                  });
+                  setRevealCloud(!revealCloud);
+                  return;
                 }}
               >
-                <div className="group flex  cursor-pointer  hover:scale-110  flex-col items-center ">
-                  <div className=" h-6 w-6 md:h-8 md:w-8 fill-none group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
-                    <ShowIcon icon={'Logout'} stroke={'2'} />
-                  </div>
-                  <p className=" tracking-widest mx-3  group-hover:inline-flex ">
-                    {'Logout'}
-                  </p>
-                </div>
+                <ShowIcon icon={'Exchange'} stroke={'0.5'} />
               </button>
-              <h2
-                className="text-center font-bold text-uppercase"
-                style={{ letterSpacing: '1px' }}
-              >
-                Your's {session?.user.role} Profile
-                <div className="relative flex justify-center items-center outline-none border rounded-md w-24 my-6 mx-auto">
-                  {userURL !== null && userURL !== undefined ? (
-                    <ImgFromDb
-                      url={userURL}
-                      stylings="object-contain"
-                      alt="User Picture"
-                    />
-                  ) : (
-                    <div className=" h-8 w-8 md:h-10 md:w-10 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
-                      <ShowIcon icon={'DefaultUser'} stroke={'2'} />
-                    </div>
-                  )}
-
-                  <button
-                    className=" outline-none border-none fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor rounded-md  absolute p-1 -top-3 -right-3 w-8 h-8"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setAlertStyle({
-                        variantHead: 'danger',
-                        heading: 'Warning',
-                        text: 'You are about to Upload New Avatar Image',
-                        color1: 'info',
-                        button1: 'Upload',
-                        color2: 'secondary',
-                        button2: 'Cancel',
-                        inputField: '',
-                      });
-                      setRevealCloud(!revealCloud);
-                      return;
-                    }}
-                  >
-                    <ShowIcon icon={'Plus'} stroke={'2'} />
-                  </button>
-                </div>
-              </h2>
-              <form onSubmit={handleSubmit}>
-                <label className="flex flex-col items-center p-1 rounded-t-md bottom-0">
-                  Your Name:
-                  <input
-                    name="user_name"
-                    id="user_name"
-                    className="flex-1 outline-none bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor border-none rounded-md p-0.5 mx-1 my-1"
-                    type="text"
-                    placeholder="Enter Name"
-                    ref={userNameRef}
-                  />
-                </label>
-
-                <label className="flex flex-col items-center p-1  rounded-t-md bottom-0">
-                  Email Address
-                  <input
-                    name="user_email"
-                    id="user_email"
-                    className="flex-1 outline-none bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor border-none rounded-md -bg p-0.5 mx-1 my-1"
-                    type="email"
-                    ref={emailRef}
-                    required
-                  />
-                </label>
-                <label className="flex flex-col items-center p-1  rounded-t-md bottom-0">
-                  Password
-                  <input
-                    className="flex-1 outline-none bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor border-none rounded-md  p-0.5 mx-1 my-1"
-                    name="password"
-                    id="password"
-                    type="password"
-                    ref={passwordRef}
-                    placeholder="leave blank if not needed to change"
-                  />
-                </label>
-                <label className="flex flex-col items-center p-1  rounded-t-md bottom-0">
-                  Confirm Password
-                  <input
-                    className="flex-1 outline-none bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor border-none rounded-md  p-0.5 mx-1 my-1"
-                    name="passwordConfirm"
-                    id="passwordConfirm"
-                    type="password"
-                    ref={passwordConfirmRef}
-                    placeholder="leave blank if not needed to change"
-                  />
-                </label>
-                <label className="flex flex-col items-center p-1  rounded-t-md bottom-0">
-                  Telephone:
-                  <input
-                    className="flex-1 outline-none bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor border-none rounded-md bg-main-bg p-0.5 mx-1 my-1"
-                    name="telephone"
-                    id="telephone"
-                    type="tel"
-                    placeholder="1234567890"
-                    required
-                    minLength={13}
-                    maxLength={13}
-                    onChange={(e) => {
-                      setPhone(e.target.value.slice(3));
-                    }}
-                    value={'+1 ' + phone}
-                  />
-                </label>
-                <button
-                  disabled={loading}
-                  className="btnFancy w-[90%]"
-                  type="submit"
-                >
-                  Update
-                </button>
-              </form>
             </div>
+
+            <form onSubmit={handleSubmit}>
+              <label className="flex flex-col items-center p-1 rounded-t-md bottom-0">
+                Your Name:
+                <input
+                  name="user_name"
+                  id="user_name"
+                  className="flex-1 outline-none bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor border-none rounded-md p-0.5 mx-1 my-1"
+                  type="text"
+                  placeholder="Enter Name"
+                  ref={userNameRef}
+                />
+              </label>
+
+              <label className="flex flex-col items-center p-1  rounded-t-md bottom-0">
+                Email Address
+                <input
+                  name="user_email"
+                  id="user_email"
+                  className="flex-1 outline-none bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor border-none rounded-md -bg p-0.5 mx-1 my-1"
+                  type="email"
+                  ref={emailRef}
+                  required
+                />
+              </label>
+              <label className="flex flex-col items-center p-1  rounded-t-md bottom-0">
+                Password
+                <input
+                  className="flex-1 outline-none bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor border-none rounded-md  p-0.5 mx-1 my-1"
+                  name="password"
+                  id="password"
+                  type="password"
+                  ref={passwordRef}
+                  placeholder="leave blank if not needed to change"
+                />
+              </label>
+              <label className="flex flex-col items-center p-1  rounded-t-md bottom-0">
+                Confirm Password
+                <input
+                  className="flex-1 outline-none bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor border-none rounded-md  p-0.5 mx-1 my-1"
+                  name="passwordConfirm"
+                  id="passwordConfirm"
+                  type="password"
+                  ref={passwordConfirmRef}
+                  placeholder="leave blank if not needed to change"
+                />
+              </label>
+              <label className="flex flex-col items-center p-1  rounded-t-md bottom-0">
+                Telephone:
+                <input
+                  className="flex-1 outline-none bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor border-none rounded-md bg-main-bg p-0.5 mx-1 my-1"
+                  name="telephone"
+                  id="telephone"
+                  type="tel"
+                  placeholder="1234567890"
+                  required
+                  minLength={13}
+                  maxLength={13}
+                  onChange={(e) => {
+                    setPhone(e.target.value.slice(3));
+                  }}
+                  value={'+1 ' + phone}
+                />
+              </label>
+              <button
+                disabled={loading}
+                className="btnFancy w-[90%]"
+                type="submit"
+              >
+                Update
+              </button>
+            </form>
           </div>
         </div>
       </div>
