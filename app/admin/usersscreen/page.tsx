@@ -90,74 +90,76 @@ function page() {
     <PageWrapper className="absolute top-0 left-0 w-full flex justify-center items-center">
       {revealAlert && <AlertMenu onReturn={onReturn} styling={alertStyle} />}
 
-      <div className="w-full max-w-[1000px] flex flex-row mt-12 md:mt-20 justify-center items-center flex-wrap bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
-        <h3 className="w-full xs:text-md sm:text-xl phone:text-2xl tablet:text-3xl text-center">
-          Table of project Users's Roles
-        </h3>
-        <h5 className="w-full xs:text-md sm:text-lg phone:text-xl tablet:text-2xl text-center">
-          {' '}
-          filter:
-          <div
-            className="relative cursor-pointer"
-            onMouseEnter={(e) => {
-              setStyle1({ display: 'block' });
-            }}
-            onMouseLeave={(e) => {
-              setStyle1({ display: 'none' });
-            }}
-          >
-            {usersType}
+      <div className="w-full max-w-[1000px] border-0 flex flex-row mt-12 md:mt-20 justify-center items-center flex-wrap bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
+        <div className="flex flex-col items-center justify-center border rounded-md border-lightMainColor dark:border-darkMainColor w-full h-full ">
+          <h3 className="w-full xs:text-md sm:text-xl phone:text-2xl tablet:text-3xl text-center">
+            Table of project Users's Roles
+          </h3>
+          <h5 className="w-full xs:text-md sm:text-lg phone:text-xl tablet:text-2xl text-center">
+            {' '}
+            filter:
             <div
-              style={style1}
-              className="absolute top-8 right-0 bg-menuBGColor   border rounded-md z-[1000] w-[98%] shadow-inner flex flex-col justify-center items-center flex-wrap "
+              className="relative cursor-pointer"
+              onMouseEnter={(e) => {
+                setStyle1({ display: 'block' });
+              }}
+              onMouseLeave={(e) => {
+                setStyle1({ display: 'none' });
+              }}
             >
-              <div className="w-auto  p-0.5 m-1">
-                {filtersArray.map((item, index) => {
-                  return (
-                    <h3
-                      key={`usertype__${index}`}
-                      data-id={item[1]}
-                      onClick={(e: React.SyntheticEvent<EventTarget>) => {
-                        e.preventDefault();
-                        if (!(e.target instanceof HTMLElement)) {
-                          return;
-                        }
-                        console.log(e.target.innerHTML);
-                        setUsersType(e.target.innerHTML);
-                        let groupID = e.target.dataset.id;
-                        if (groupID == '') setUsersDisplay(users);
-                        else
-                          setUsersDisplay(
-                            users.filter((user) => user.role == groupID)
-                          );
-                      }}
-                    >
-                      {item[0]}
-                    </h3>
-                  );
-                })}
+              {usersType}
+              <div
+                style={style1}
+                className="absolute top-8 right-0 bg-menuBGColor   border rounded-md z-[1000] w-[98%] shadow-inner flex flex-col justify-center items-center flex-wrap "
+              >
+                <div className="w-auto  p-0.5 m-1">
+                  {filtersArray.map((item, index) => {
+                    return (
+                      <h3
+                        key={`usertype__${index}`}
+                        data-id={item[1]}
+                        onClick={(e: React.SyntheticEvent<EventTarget>) => {
+                          e.preventDefault();
+                          if (!(e.target instanceof HTMLElement)) {
+                            return;
+                          }
+                          console.log(e.target.innerHTML);
+                          setUsersType(e.target.innerHTML);
+                          let groupID = e.target.dataset.id;
+                          if (groupID == '') setUsersDisplay(users);
+                          else
+                            setUsersDisplay(
+                              users.filter((user) => user.role == groupID)
+                            );
+                        }}
+                      >
+                        {item[0]}
+                      </h3>
+                    );
+                  })}
+                </div>
               </div>
             </div>
-          </div>
-        </h5>
-        {dimensions.height && (
-          <div
-            id="userContainer"
-            className="w-[95%] border-2 rounded-md overflow-y-scroll"
-            style={{ height: `${dimensions.height - 200}px` }}
-          >
-            {usersDisplay &&
-              usersDisplay.map((item, index) => {
-                return (
-                  <UserForm
-                    key={'userN' + index}
-                    user={item}
-                    delUser={handleDelete}
-                  />
-                );
-              })}
-          </div>
-        )}
+          </h5>
+          {dimensions.height && (
+            <div
+              id="userContainer"
+              className="w-[95%] border-2 rounded-md overflow-y-scroll"
+              style={{ height: `${dimensions.height - 200}px` }}
+            >
+              {usersDisplay &&
+                usersDisplay.map((item, index) => {
+                  return (
+                    <UserForm
+                      key={'userN' + index}
+                      user={item}
+                      delUser={handleDelete}
+                    />
+                  );
+                })}
+            </div>
+          )}
+        </div>
       </div>
     </PageWrapper>
   );

@@ -179,18 +179,17 @@ const page: FC<pageProps> = () => {
   };
   return (
     <PageWrapper className="absolute inset-0 ">
-        <div className="w-full h-full relative  mb-12 overflow-y-auto ">
-          <div className="absolute top-0 left-0 mt-4 w-full min-h-full flex flex-col justify-center items-center ">
-            {revealAlert && (
-              <AlertMenu onReturn={onReturn} styling={alertStyle} />
-            )}
-            {revealCloud && (
-              <ChooseAvatar onReturn={onReturnAvatar} styling={alertStyle} />
-            )}
-            {loading && <Loading />}
-            <div
-              className="border-0 rounded-md relative  shadow-2xl max-w-[450px] w-[95%] m-3 landscape:mb-12 landscape:md:mb-0 bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md"
-            >
+      <div className="w-full h-full relative  mb-12 overflow-y-auto ">
+        <div className="absolute top-0 left-0 mt-4 w-full min-h-full flex flex-col justify-center items-center ">
+          {revealAlert && (
+            <AlertMenu onReturn={onReturn} styling={alertStyle} />
+          )}
+          {revealCloud && (
+            <ChooseAvatar onReturn={onReturnAvatar} styling={alertStyle} />
+          )}
+          {loading && <Loading />}
+          <div className="border-0 rounded-md relative  shadow-2xl max-w-[450px] w-[95%] m-3 p-1 landscape:mb-12 landscape:md:mb-0 bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
+            <div className="flex flex-col items-center justify-center border rounded-md border-lightMainColor dark:border-darkMainColor w-full h-full ">
               <button
                 type="button"
                 className="absolute top-0 right-0 mt-2 h-6 w-6 mr-5 md:mr-6 md:h-8 md:w-8 rounded-sm outline-none"
@@ -321,6 +320,7 @@ const page: FC<pageProps> = () => {
             </div>
           </div>
         </div>
+      </div>
     </PageWrapper>
   );
 };
