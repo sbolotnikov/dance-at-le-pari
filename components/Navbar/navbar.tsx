@@ -152,7 +152,7 @@ const Navbar = ({  path, locale, children }: Props) => {
   }, [session]);
   const changeMenu = (isChangeOrientation:boolean) => {
     let items = document.querySelectorAll('.navbar__item');
-    console.log(document.getElementById('navBarContainer'))
+    console.log(windowSize)
     if ((windowSize.width! < 768)&&(!isChangeOrientation)) { 
       if (burgerState) {
         document.getElementById('navBarContainer')?.classList.add('translate-x-80');
