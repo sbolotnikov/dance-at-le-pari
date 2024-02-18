@@ -43,7 +43,7 @@ module.exports = {
         lightMainBG: '#F1F5F9',
         lightMainColor: '#3E4754',
         lightAccentColor: '#3E4754',
-        franceBlue:'#0E0C71',
+        franceBlue:'#504deb',
       },
     },
   },

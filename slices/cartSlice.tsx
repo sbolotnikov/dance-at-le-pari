@@ -8,8 +8,9 @@ interface CartState {
     tag: string;
     price: number;
     amount: number;
-    // seat: number | null;
-    // table: number | null; 
+    seat: number | null;
+    table: number | null; 
+    date: string | null;
   }[];
 }
 
@@ -21,7 +22,7 @@ const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
-    addItem(state, action: PayloadAction<{ id:number; image: string; tag:string; eventtype:string; price: number; amount: number; }>) {
+    addItem(state, action: PayloadAction<{ id:number; image: string; tag:string; eventtype:string; price: number; amount: number;seat: number | null; table: number | null; date: string | null; }>) {
       const item = state.items.find(item => item.id === action.payload.id);
       if (item) {
         item.amount=item.amount+action.payload.amount;
@@ -50,6 +51,5 @@ const cartSlice = createSlice({
 
 export const { addItem, removeItem, clearCart } = cartSlice.actions;
 export const selectItems = (state: CartState) => state.items;
-console.log(selectItems)
 export const selectTotal =(state: CartState) => state.items.reduce((total, item) => total + item.price, 0);
 export default cartSlice.reducer;

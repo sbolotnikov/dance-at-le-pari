@@ -11,47 +11,45 @@ import { SettingsContext } from '@/hooks/useSettings';
 import { ScreenSettingsContextType } from '@/types/screen-settings';
 import Logo from '../svg/logo';
 import { useDimensions } from '@/hooks/useDimensions';
-import { useSelector } from "react-redux"
+import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store/store';
-  
 
 type Props = {
   path: string;
   locale?: string | undefined;
   children?: React.ReactNode;
 };
-type CartItem ={
-  id:number;
+type CartItem = {
+  id: number;
   image: string;
-  eventtype:string;
+  eventtype: string;
   tag: string;
   price: number;
   amount: number;
-}
+};
 
-const Navbar = ({  path, locale, children }: Props) => {
-  const [style1, setStyle1] = useState({ display: 'none' }); 
+const Navbar = ({ path, locale, children }: Props) => {
+  const [style1, setStyle1] = useState({ display: 'none' });
   const [burgerState, setBurgerState] = useState(false);
-  const { changeTheme, darkMode } = useContext(SettingsContext) as ScreenSettingsContextType;
-  const { data: session } = useSession(); 
-  const windowSize  = useDimensions();
-  const {items} = useSelector((state:RootState) => state.cart ) ;
-  console.log(items)
+  const { changeTheme, darkMode } = useContext(
+    SettingsContext
+  ) as ScreenSettingsContextType;
+  const { data: session } = useSession();
+  const windowSize = useDimensions();
+  const { items } = useSelector((state: RootState) => state.cart);
   useEffect(() => {
-    if (windowSize.width!==undefined) {
-    if (windowSize.width! < 768) {
-      let items = document.querySelectorAll('.navbar__item');
-      for (let i = 0; i < items.length; i++) {
-        items[i].classList.add('translate-x-80');
+    if (windowSize.width !== undefined) {
+      if (windowSize.width! < 768) {
+        let items = document.querySelectorAll('.navbar__item');
+        for (let i = 0; i < items.length; i++) {
+          items[i].classList.add('translate-x-80');
+        }
+        document.getElementById('theme-toggle')?.classList.add('hidden');
+        document.getElementById('locale-toggle')?.classList.add('hidden');
+        document.getElementById('profile-toggle')?.classList.add('hidden');
       }
-      document.getElementById('theme-toggle')?.classList.add('hidden');
-      document.getElementById('locale-toggle')?.classList.add('hidden');
-      document.getElementById('profile-toggle')?.classList.add('hidden');
+      changeMenu(true);
     }
-    changeMenu(true)
-  
-    console.log("width"+windowSize.width+'burgerstate '+ burgerState)
-  }
   }, [windowSize.width]);
   const [navbarLinks, setNavbarLinks] = useState([
     {
@@ -73,38 +71,40 @@ const Navbar = ({  path, locale, children }: Props) => {
       url: '/rentals',
       title: 'Studio',
       icon: 'Home2',
-    } 
+    },
   ]);
   useEffect(() => {
-    let linksArray=[]
+    let linksArray = [];
     if (!session) {
-       linksArray=   [ {
-        url: '/',
-        title: 'Home',
-        icon: 'Home',
-      },
-      {
-        url: '/calendar',
-        title: 'Calendar',
-        icon: 'Calendar',
-      },
-      {
-        url: '/dancing',
-        title: 'Dancing',
-        icon: 'Activities',
-      },
-      {
-        url: '/rentals',
-        title: 'Studio',
-        icon: 'Home2',
-      },
-      {
-        url: '/signin',
-        title: 'Register',
-        icon: 'Register'
-      },]
-    } else if (session.user.role=='Admin'){
-      linksArray=   [
+      linksArray = [
+        {
+          url: '/',
+          title: 'Home',
+          icon: 'Home',
+        },
+        {
+          url: '/calendar',
+          title: 'Calendar',
+          icon: 'Calendar',
+        },
+        {
+          url: '/dancing',
+          title: 'Dancing',
+          icon: 'Activities',
+        },
+        {
+          url: '/rentals',
+          title: 'Studio',
+          icon: 'Home2',
+        },
+        {
+          url: '/signin',
+          title: 'Register',
+          icon: 'Register',
+        },
+      ];
+    } else if (session.user.role == 'Admin') {
+      linksArray = [
         {
           url: '/',
           title: 'Home',
@@ -129,15 +129,15 @@ const Navbar = ({  path, locale, children }: Props) => {
           url: '/admin/usersscreen',
           title: 'Users Screen',
           icon: 'Users',
-        },      
+        },
         {
           url: '/admin/eventedit',
           title: 'Edit events',
           icon: 'Plus',
-        },   
+        },
       ];
     } else {
-      linksArray= [
+      linksArray = [
         {
           url: '/',
           title: 'Home',
@@ -157,23 +157,28 @@ const Navbar = ({  path, locale, children }: Props) => {
           url: '/rentals',
           title: 'Studio',
           icon: 'Home2',
-        },   
-      ]
+        },
+      ];
     }
-    setNavbarLinks(linksArray)
+    setNavbarLinks(linksArray);
   }, [session]);
-  const changeMenu = (isChangeOrientation:boolean) => {
+  const changeMenu = (isChangeOrientation: boolean) => {
     let items = document.querySelectorAll('.navbar__item');
-    console.log(windowSize)
-    if ((windowSize.width! < 768)&&(!isChangeOrientation)) { 
+    if (windowSize.width! < 768 && !isChangeOrientation) {
       if (burgerState) {
-        document.getElementById('navBarContainer')?.classList.add('translate-x-80');
+        document
+          .getElementById('navBarContainer')
+          ?.classList.add('translate-x-80');
         document.getElementById('navBarContainer')?.classList.add('delay-600');
       } else {
-        document.getElementById('navBarContainer')?.classList.remove('translate-x-80');
-        document.getElementById('navBarContainer')?.classList.remove('delay-600');
+        document
+          .getElementById('navBarContainer')
+          ?.classList.remove('translate-x-80');
+        document
+          .getElementById('navBarContainer')
+          ?.classList.remove('delay-600');
       }
-     
+
       for (let i = 0; i < items.length; i++) {
         if (burgerState) {
           items[i].classList.add('translate-x-80');
@@ -190,9 +195,9 @@ const Navbar = ({  path, locale, children }: Props) => {
       burgerState
         ? document.getElementById('cart-toggle')?.classList.add('hidden')
         : document.getElementById('cart-toggle')?.classList.remove('hidden');
-        setBurgerState(!burgerState);
+      setBurgerState(!burgerState);
     }
-    if ((windowSize.height! < 760)&&(!isChangeOrientation)) {
+    if (windowSize.height! < 760 && !isChangeOrientation) {
       // document
       //     .getElementsByClassName('navbar__list')[0]
       //     .classList.remove('translate-x-80');
@@ -207,7 +212,6 @@ const Navbar = ({  path, locale, children }: Props) => {
         }
       }
 
-
       burgerState
         ? document.getElementById('theme-toggle')?.classList.add('hidden')
         : document.getElementById('theme-toggle')?.classList.remove('hidden');
@@ -217,72 +221,124 @@ const Navbar = ({  path, locale, children }: Props) => {
       burgerState
         ? document.getElementById('cart-toggle')?.classList.add('hidden')
         : document.getElementById('cart-toggle')?.classList.remove('hidden');
-        setBurgerState(!burgerState);
-     
-
+      setBurgerState(!burgerState);
     }
-    if((isChangeOrientation)&&((windowSize.height! < 680)||(windowSize.width! < 768))){
+    if (
+      isChangeOrientation &&
+      (windowSize.height! < 680 || windowSize.width! < 768)
+    ) {
       for (let i = 0; i < items.length; i++) {
-          items[i].classList.remove('-translate-y-80');
-          items[i].classList.remove('translate-x-80');
-          if (windowSize.height! < 760) items[i].classList.add('-translate-y-80');
-          if (windowSize.width! < 768) document
-          .getElementsByClassName('navbar__list')[0]
-          .classList.add('translate-x-80');
+        items[i].classList.remove('-translate-y-80');
+        items[i].classList.remove('translate-x-80');
+        if (windowSize.height! < 760) items[i].classList.add('-translate-y-80');
+        if (windowSize.width! < 768)
+          document
+            .getElementsByClassName('navbar__list')[0]
+            .classList.add('translate-x-80');
         document
           .getElementsByClassName('navbar__list')[0]
-          .classList.add('delay-600'); 
-        }
-      
- 
-        document.getElementById('theme-toggle')?.classList.add('hidden')
-        document.getElementById('profile-toggle')?.classList.add('hidden')
-        document.getElementById('cart-toggle')?.classList.add('hidden')
-        setBurgerState(false)
+          .classList.add('delay-600');
+      }
+
+      document.getElementById('theme-toggle')?.classList.add('hidden');
+      document.getElementById('profile-toggle')?.classList.add('hidden');
+      document.getElementById('cart-toggle')?.classList.add('hidden');
+      setBurgerState(false);
     }
   };
-  let barArray=[
-    {link:'tel:1-8482440512',additionalStyle:'',icon:'Phone', stroke:'2',text:'(848)244-0512'},
-    {link:'/mail_page',additionalStyle:'fill-darkMainColor',icon:'Email', stroke:'0.5',text:'lepari34@gmail.com'},
-    { additionalStyle:'',icon:'GMaps', stroke:'1',text:'34 South Ave., Fanwood, NJ 07023', link:'https://www.google.com/maps/place/Le+Pari+Dance+Fitness+Center/@40.6355598,-74.3933059,17z/data=!3m1!4b1!4m5!3m4!1s0x89c3b097b4d07caf:0x3c77409024a4ea95!8m2!3d40.6355598!4d-74.3911172'},
-    {link:'https://www.facebook.com/LEPARIDANCENTER',additionalStyle:'fill-darkMainColor',icon:'Facebook', stroke:'5',text:''},
-    {link:'https://www.instagram.com/lepari34/',additionalStyle:'',icon:'Instagram', stroke:'1.5',text:''},
-    {link:'https://www.youtube.com/channel/UCPC1HL3l6zTTScOZ3qkC8cw',additionalStyle:'',icon:'Youtube', stroke:'1.5',text:''},
-    {link:'https://www.tiktok.com/@dance_at_lepari',additionalStyle:'fill-darkMainColor',icon:'Tiktok', stroke:'1.5',text:''},
-  ]
+  let barArray = [
+    {
+      link: 'tel:1-8482440512',
+      additionalStyle: '',
+      icon: 'Phone',
+      stroke: '2',
+      text: '(848)244-0512',
+    },
+    {
+      link: '/mail_page',
+      additionalStyle: 'fill-darkMainColor',
+      icon: 'Email',
+      stroke: '0.5',
+      text: 'lepari34@gmail.com',
+    },
+    {
+      additionalStyle: '',
+      icon: 'GMaps',
+      stroke: '1',
+      text: '34 South Ave., Fanwood, NJ 07023',
+      link: 'https://www.google.com/maps/place/Le+Pari+Dance+Fitness+Center/@40.6355598,-74.3933059,17z/data=!3m1!4b1!4m5!3m4!1s0x89c3b097b4d07caf:0x3c77409024a4ea95!8m2!3d40.6355598!4d-74.3911172',
+    },
+    {
+      link: 'https://www.facebook.com/LEPARIDANCENTER',
+      additionalStyle: 'fill-darkMainColor',
+      icon: 'Facebook',
+      stroke: '5',
+      text: '',
+    },
+    {
+      link: 'https://www.instagram.com/lepari34/',
+      additionalStyle: '',
+      icon: 'Instagram',
+      stroke: '1.5',
+      text: '',
+    },
+    {
+      link: 'https://www.youtube.com/channel/UCPC1HL3l6zTTScOZ3qkC8cw',
+      additionalStyle: '',
+      icon: 'Youtube',
+      stroke: '1.5',
+      text: '',
+    },
+    {
+      link: 'https://www.tiktok.com/@dance_at_lepari',
+      additionalStyle: 'fill-darkMainColor',
+      icon: 'Tiktok',
+      stroke: '1.5',
+      text: '',
+    },
+  ];
   return (
     <nav className="navbar w-screen h-[100svh] overflow-hidden">
-              <div className=" absolute inset-0 flex flex-col items-center justify-center "> 
-          <Logo shadow={darkMode?'0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0':'0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0'} />
-        </div>
+      <div className=" absolute inset-0 flex flex-col items-center justify-center ">
+        <Logo
+          shadow={
+            darkMode
+              ? '0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'
+              : '0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0'
+          }
+        />
+      </div>
       {children}
 
-      <div className=" w-full  flex-row justify-end md:justify-between " style={{height:'100%'}}>
+      <div
+        className=" w-full  flex-row justify-end md:justify-between "
+        style={{ height: '100%' }}
+      >
         <div className="fixed bottom-0 right-0 w-screen bg-franceBlue h-12 md:h-8 flex justify-between px-3 items-center md:relative md:flex-1 md:justify-around">
           {barArray.map((item, index) => {
             return (
               <Link
-              href={item.link}
-              key={'link'+index}
-              className="flex-row flex items-center"
-            >
-              <button
-                type="button"
-                className={`cursor-pointer h-8 w-8 md:h-6 md:w-6 hover:animate-bounce hover:scale-110 stroke-darkMainColor ${item.additionalStyle}`}
+                href={item.link}
+                key={'link' + index}
+                className="flex-row flex items-center"
               >
-                <ShowIcon icon={item.icon} stroke={item.stroke} />
-              </button>
-              <h3 className=" text-darkMainColor hidden md:block ml-1">
-                {item.text}
-              </h3>
-            </Link>
+                <button
+                  type="button"
+                  className={`cursor-pointer h-8 w-8 md:h-6 md:w-6 hover:animate-bounce hover:scale-110 stroke-darkMainColor ${item.additionalStyle}`}
+                >
+                  <ShowIcon icon={item.icon} stroke={item.stroke} />
+                </button>
+                <h3 className=" text-darkMainColor hidden md:block ml-1">
+                  {item.text}
+                </h3>
+              </Link>
             );
-          })
-
-          }
- 
+          })}
         </div>
-        <ul id="navBarContainer" className="navbar__list bg-darkMainBG/25 translate-x-80 backdrop-blur-md md:dark:bg-transparent md:bg-transparent dark:bg-lightMainBG/25 md:translate-x-0  md:backdrop-filter-none transition  duration-1000 ease-in-out">
+        <ul
+          id="navBarContainer"
+          className="navbar__list bg-darkMainBG/25 translate-x-80 backdrop-blur-md md:dark:bg-transparent md:bg-transparent dark:bg-lightMainBG/25 md:translate-x-0  md:backdrop-filter-none transition  duration-1000 ease-in-out"
+        >
           {navbarLinks.map((item, index) => {
             return (
               <li
@@ -298,22 +354,24 @@ const Navbar = ({  path, locale, children }: Props) => {
         </ul>
 
         <div className="navbar__right_span md:top-7 ">
-        {!session &&<button
-            type="button"
-            className="  h-6 w-6 mr-3 md:mr-6 md:h-8 md:w-8 rounded-sm outline-none"
-            onClick={() => {
-               signIn();
-            }}
-          >
-            <div className="group flex  cursor-pointer  hover:scale-110  flex-col items-center ">
-              <div className=" h-6 w-6 md:h-8 md:w-8 fill-none group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
-                <ShowIcon icon={'Login'} stroke={'2'} />
+          {!session && (
+            <button
+              type="button"
+              className="  h-6 w-6 mr-3 md:mr-6 md:h-8 md:w-8 rounded-sm outline-none"
+              onClick={() => {
+                signIn();
+              }}
+            >
+              <div className="group flex  cursor-pointer  hover:scale-110  flex-col items-center ">
+                <div className=" h-6 w-6 md:h-8 md:w-8 fill-none group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
+                  <ShowIcon icon={'Login'} stroke={'2'} />
+                </div>
+                <p className="hidden tracking-widest mx-3   opacity-100 group-hover:inline-flex md:block md:opacity-0 md:group-hover:opacity-100 ">
+                  {'Login'}
+                </p>
               </div>
-              <p className="hidden tracking-widest mx-3   opacity-100 group-hover:inline-flex md:block md:opacity-0 md:group-hover:opacity-100 ">
-                {'Login'}
-              </p>
-            </div>
-          </button>}
+            </button>
+          )}
           {session && (
             <button
               id="profile-toggle"
@@ -348,7 +406,7 @@ const Navbar = ({  path, locale, children }: Props) => {
           <button
             id="theme-toggle"
             type="button"
-            onClick={() => { 
+            onClick={() => {
               changeTheme(!darkMode);
               !darkMode
                 ? document.getElementsByTagName('body')[0].classList.add('dark')
@@ -376,27 +434,34 @@ const Navbar = ({  path, locale, children }: Props) => {
           <button
             id="cart-toggle"
             type="button"
-            onClick={() => { 
-              console.log("Shopping Cart pressed");
+            onClick={() => {
+              console.log('Shopping Cart pressed');
             }}
             className=" h-6 w-6 md:h-8 md:w-8  mr-3 md:mr-6 rounded-sm outline-none"
           >
-            <div className="group flex  cursor-pointer  hover:scale-110  flex-col items-center ">
-              <div className="  h-6 w-6 md:h-8 md:w-8  group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
-                <div className=" h-6 w-6 md:h-8 md:w-8 mr-2 relative fill-none stroke-lightMainColor dark:stroke-darkMainColor ">
+            <Link href={'/shopping'}>
+              <div className="group flex  cursor-pointer  hover:scale-110  flex-col items-center ">
+                <div className="  h-6 w-6 md:h-8 md:w-8 relative group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
+                  <div className=" h-6 w-6 md:h-8 md:w-8 mr-2 fill-none stroke-lightMainColor dark:stroke-darkMainColor ">
                     <ShowIcon icon={'ShoppingCart'} stroke={'1'} />
-                    <span className="absolute -top-3 -right-3 md:right-10 h-5 w-5 pt-0.5 bg-yellow-600 text-center text-xs rounded-full  font-bold">{items?items.length:0}</span>
-
+                  </div>
+                  <span className="absolute -top-3 -right-3 h-5 w-5 pt-1 bg-yellow-600 text-center text-xs rounded-full  font-bold">
+                      {items ? items.length : 0}
+                  </span>
                 </div>
+                <p className="hidden tracking-widest mx-3 transition duration-300 ease-in-out opacity-100 group-hover:inline-flex md:block md:opacity-0 md:group-hover:opacity-100 ">
+                  Cart
+                </p>
               </div>
-              <p className="hidden tracking-widest mx-3 transition duration-300 ease-in-out opacity-100 group-hover:inline-flex md:block md:opacity-0 md:group-hover:opacity-100 ">
-                Cart
-              </p>
-            </div>
+            </Link>
           </button>
           <button
             id="burger-toggle"
-            className={`relative m-1 flex cursor-pointer p-1.5  outline-none rounded-md hover:ring-2 hover:ring-lightAccentColor focus:ring-lightAccentColor dark:hover:ring-darkAccentColor dark:focus:ring-darkAccentColor ${((windowSize.height!<760)||(windowSize.width!<768)) ?"":"hidden"}`}           
+            className={`relative m-1 flex cursor-pointer p-1.5  outline-none rounded-md hover:ring-2 hover:ring-lightAccentColor focus:ring-lightAccentColor dark:hover:ring-darkAccentColor dark:focus:ring-darkAccentColor ${
+              windowSize.height! < 760 || windowSize.width! < 768
+                ? ''
+                : 'hidden'
+            }`}
             onClick={() => changeMenu(false)}
           >
             <Burger status={burgerState} />

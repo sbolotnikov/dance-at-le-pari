@@ -59,6 +59,9 @@ const page: FC<pageProps> = ({}) => {
           tag:productToCart?.tag?productToCart?.tag:'',
           price:productToCart?.price?productToCart?.price:0,
           amount:productToCart?.amount?productToCart?.amount:0,
+          seat: null,
+          table: null,
+          date: null
         }
         dispatch(addItem(p1));
     
