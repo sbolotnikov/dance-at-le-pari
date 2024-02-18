@@ -3,7 +3,7 @@
 import { SettingsProvider } from '@/hooks/useSettings';
 import { SessionProvider } from 'next-auth/react';
 import { Provider } from 'react-redux';
-import { store } from '../app/store';
+import { store } from './store/store';
 type Props = {
   children?: React.ReactNode;
 };

@@ -89,7 +89,7 @@ teacher:string | null,
     seat: number;
   };
   type TPaymentType = {
-    id:string | null;
+    id:number | null;
     tag: string;
     description: string;    
     amount: number;

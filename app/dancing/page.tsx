@@ -51,7 +51,7 @@ const page: FC<pageProps> = ({}) => {
     }
     if (action1 == 'Book') {
       console.log(item, products)
-      const productToCart= products.find((product)=>product.id === item.toString())
+      const productToCart= products.find((product)=>product.id === item)
         const p1 = {
           id:item,
           image:productToCart?.image?productToCart?.image:'',
@@ -199,6 +199,7 @@ const page: FC<pageProps> = ({}) => {
                         (product) => product.eventtype == item
                       )}
                       role={session?.user.role!}
+                      specialEvent={false}
                       onReturn={(item1, action1) => {
                         actionTemplateChoice(action1, item1);
                       }}
@@ -215,6 +216,7 @@ const page: FC<pageProps> = ({}) => {
                     <PaymentPageForm
                       paymentsArray={specialEvents}
                       role={"None"}
+                      specialEvent={true}
                       onReturn={(item1, action1) => {
                         window.location.replace('/events/'+item1);
                       }}

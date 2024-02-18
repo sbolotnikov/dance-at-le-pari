@@ -12,7 +12,7 @@ import { ScreenSettingsContextType } from '@/types/screen-settings';
 import Logo from '../svg/logo';
 import { useDimensions } from '@/hooks/useDimensions';
 import { useSelector } from "react-redux"
-import { selectItems } from "../../slices/cartSlice";
+import { RootState } from '@/app/store/store';
   
 
 type Props = {
@@ -20,6 +20,14 @@ type Props = {
   locale?: string | undefined;
   children?: React.ReactNode;
 };
+type CartItem ={
+  id:number;
+  image: string;
+  eventtype:string;
+  tag: string;
+  price: number;
+  amount: number;
+}
 
 const Navbar = ({  path, locale, children }: Props) => {
   const [style1, setStyle1] = useState({ display: 'none' }); 
@@ -27,8 +35,8 @@ const Navbar = ({  path, locale, children }: Props) => {
   const { changeTheme, darkMode } = useContext(SettingsContext) as ScreenSettingsContextType;
   const { data: session } = useSession(); 
   const windowSize  = useDimensions();
-  const items = useSelector(selectItems);
-
+  const {items} = useSelector((state:RootState) => state.cart ) ;
+  console.log(items)
   useEffect(() => {
     if (windowSize.width!==undefined) {
     if (windowSize.width! < 768) {
@@ -375,9 +383,9 @@ const Navbar = ({  path, locale, children }: Props) => {
           >
             <div className="group flex  cursor-pointer  hover:scale-110  flex-col items-center ">
               <div className="  h-6 w-6 md:h-8 md:w-8  group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
-                <div className=" h-6 w-6 md:h-8 md:w-8 mr-2  fill-none stroke-lightMainColor dark:stroke-darkMainColor ">
+                <div className=" h-6 w-6 md:h-8 md:w-8 mr-2 relative fill-none stroke-lightMainColor dark:stroke-darkMainColor ">
                     <ShowIcon icon={'ShoppingCart'} stroke={'1'} />
-                    <span className="absolute top-0 right-0 md:right-10 h-4 w-4 bg-yellow-400 text-center rounded-full text-black font-bold">{items?items.length:0}</span>
+                    <span className="absolute -top-3 -right-3 md:right-10 h-5 w-5 pt-0.5 bg-yellow-600 text-center text-xs rounded-full  font-bold">{items?items.length:0}</span>
 
                 </div>
               </div>

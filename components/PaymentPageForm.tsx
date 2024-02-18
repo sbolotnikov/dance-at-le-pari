@@ -4,10 +4,11 @@ import ImgFromDb from './ImgFromDb';
 type Props = {
   paymentsArray: TPaymentType[];
   role: string;
+  specialEvent: boolean
   onReturn: (tempID: number, callbackType: string) => void;
 };
 
-const PaymentPageForm = ({ paymentsArray, role, onReturn }: Props) => {
+const PaymentPageForm = ({ paymentsArray, role, specialEvent, onReturn }: Props) => {
   console.log(paymentsArray);
   return (
     <div className="w-full h-full overflow-y-auto mb-20">
@@ -37,14 +38,14 @@ const PaymentPageForm = ({ paymentsArray, role, onReturn }: Props) => {
               <div className="w-[50%] flex flex-col justify-around items-center">
                 <button
                   className="w-full btnFancy my-1 text-base text-center  rounded-md" style={{padding:'0'}}
-                  onClick={() => onReturn(parseInt(payment.id!), 'Book')}
+                  onClick={() => onReturn(payment.id!, 'Book')}
                 >
-                  Add to Cart
+                  {specialEvent?"Check Event":'Add to Cart'}
                 </button>
                 {role == 'Admin' && (
                   <button
                     className="w-full bg-lightMainColor my-1 text-base dark:bg-darkMainColor text-lightMainBG dark:text-darkMainBG rounded-md"
-                    onClick={() => onReturn(parseInt(payment.id!), 'Edit')}
+                    onClick={() => onReturn(payment.id!, 'Edit')}
                   >
                     Edit
                   </button>
@@ -52,7 +53,7 @@ const PaymentPageForm = ({ paymentsArray, role, onReturn }: Props) => {
                 {role == 'Admin' && (
                   <button
                     className="w-full bg-lightMainColor text-base dark:bg-darkMainColor text-lightMainBG dark:text-darkMainBG rounded-md"
-                    onClick={() => onReturn(parseInt(payment.id!), 'Delete')}
+                    onClick={() => onReturn(payment.id!, 'Delete')}
                   >
                     Delete
                   </button>
