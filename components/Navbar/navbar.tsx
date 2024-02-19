@@ -314,8 +314,8 @@ const Navbar = ({ path, locale, children }: Props) => {
         className=" w-full  flex-row justify-end md:justify-between"
         style={{ height: '100%' }}
       >
-        <div className={`fixed bottom-0 right-0 w-screen bg-franceBlue  flex justify-between px-3 items-center md:relative md:flex-1 md:justify-around ${burgerState?"md:h-0":"md:h-8"} h-12 `
-        // +burgerState?"h-0":""
+        <div className={`fixed bottom-0 right-0 w-screen bg-franceBlue  flex justify-between px-3 items-center md:relative md:flex-1 md:justify-around ${burgerState?"md:h-0 md:-translate-y-8 md:transition  md:duration-1000 md:ease-in-out":"md:h-8"} h-12  `
+        // md:-translate-y-8 md:transition  md:duration-1000 md:ease-in-out
         }>
           {barArray.map((item, index) => {
             return (
