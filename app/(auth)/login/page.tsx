@@ -51,104 +51,104 @@ const page: FC<pageProps> = ({}) => {
 
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
-      <div
-        className="border-0 rounded-md p-1  shadow-2xl w-[90%]  max-w-[450px] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md"
-      >
-        <div className="flex flex-col items-center justify-center border rounded-md border-lightMainColor dark:border-darkMainColor w-full h-full ">
-          <h2
-            className="text-center font-bold uppercase"
-            style={{ letterSpacing: '1px' }}
-          >
-            login
-          </h2>
-          <div className=" h-14 w-14 md:h-20 md:w-20 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor m-auto">
-            <ShowIcon icon={'Login'} stroke={'0.1'} />
-          </div>
-          <form
-            className="flex flex-col items-center   p-3 bottom-0"
-            onSubmit={handleSubmit}
-          >
-            {error && (
-              <label className="text-center text-red-600 italic font-bold">
-                {error}
+      <div className="border-0 rounded-md p-1 mt-4 shadow-2xl w-[90%]   max-w-[450px] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md h-[70svh] md:h-[85svh] relative overflow-y-auto">
+        <div className="w-full h-full border rounded-md border-lightMainColor dark:border-darkMainColor relative overflow-y-auto">
+          <div className={`absolute top-0 left-0 flex flex-col items-center justify-between  w-full `}>
+            <h2
+              className="text-center font-bold uppercase"
+              style={{ letterSpacing: '1px' }}
+            >
+              login
+            </h2>
+            <div className=" h-20 w-20 md:h-28 md:w-28 mb-6 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor m-auto">
+              <ShowIcon icon={'Login'} stroke={'0.1'} />
+            </div>
+            <form
+              className="flex flex-col items-center   p-3 bottom-0"
+              onSubmit={handleSubmit}
+            >
+              {error && (
+                <label className="text-center text-red-600 italic font-bold">
+                  {error}
+                </label>
+              )}
+              <label className="flex flex-col items-center">
+                Email
+                <input
+                  className="flex-1 outline-none border-none rounded-md   text-lightMainColor p-0.5 mx-1"
+                  id="email"
+                  type="email"
+                  ref={emailRef}
+                  required
+                />
               </label>
-            )}
-            <label className="flex flex-col items-center">
-              Email
-              <input
-                className="flex-1 outline-none border-none rounded-md   text-lightMainColor p-0.5 mx-1"
-                id="email"
-                type="email"
-                ref={emailRef}
-                required
-              />
-            </label>
-            <label className="flex flex-col items-center">
-              Password
-              <input
-                className="flex-1 outline-none border-none rounded-md   text-lightMainColor p-0.5 mx-1"
-                id="password"
-                type="password"
-                ref={passwordRef}
-                defaultValue={''}
-                required
-              />
-            </label>
+              <label className="flex flex-col items-center">
+                Password
+                <input
+                  className="flex-1 outline-none border-none rounded-md   text-lightMainColor p-0.5 mx-1"
+                  id="password"
+                  type="password"
+                  ref={passwordRef}
+                  defaultValue={''}
+                  required
+                />
+              </label>
 
-            <button
-              className="btnBlue1 p-2 max-w-xs"
-              disabled={loading}
-              type="submit"
-            >
-              Submit
-            </button>
-          </form>
-          <label className="flex flex-col items-center    border-t-2">
-            Use Google to signin or login
-            <button
-              type="button"
-              className={`cursor-pointer h-12 w-12 mb-1 md:h-10 md:w-10 hover:animate-bounce hover:scale-110 `}
-              onClick={() => signIn('google')}
-            >
-              <ShowIcon icon={'Google'} stroke={'1'} />
-            </button>
-          </label>
-          <label className="flex flex-col items-center justify-center  mx-auto border-t-2">
-            {' '}
-            Forgot your password
-            <label className="flex flex-col items-center ">
-              Email
-              <input
-                className="flex-1 outline-none border-none rounded-md   text-lightMainColor p-0.5 mx-1"
-                id="email2"
-                type="email"
-                ref={email2Ref}
-                required
-              />
               <button
                 className="btnBlue1 p-2 max-w-xs"
                 disabled={loading}
-                onClick={async () => {
-                  if (
-                    email2Ref.current?.value &&
-                    isEmailValid(email2Ref.current?.value)
-                  ) {
-                    const res = await signIn('email', {
-                      email: email2Ref.current?.value,
-                      redirect: false,
-                    });
-                    console.log(res);
-                    if (res?.status == 200)
-                      setError(
-                        'Please check your email. Link was send from Dance At Le Pari'
-                      );
-                  } else setError('Please enter a valid email address');
-                }}
+                type="submit"
               >
                 Submit
               </button>
+            </form>
+            <label className="flex flex-col items-center    border-t-2">
+              Use Google to signin or login
+              <button
+                type="button"
+                className={`cursor-pointer h-12 w-12 mb-1 md:h-10 md:w-10 hover:animate-bounce hover:scale-110 `}
+                onClick={() => signIn('google')}
+              >
+                <ShowIcon icon={'Google'} stroke={'1'} />
+              </button>
             </label>
-          </label>
+            <label className="flex flex-col items-center justify-center  mx-auto border-t-2">
+              {' '}
+              Forgot your password
+              <label className="flex flex-col items-center ">
+                Email
+                <input
+                  className="flex-1 outline-none border-none rounded-md   text-lightMainColor p-0.5 mx-1"
+                  id="email2"
+                  type="email"
+                  ref={email2Ref}
+                  required
+                />
+                <button
+                  className="btnBlue1 p-2 max-w-xs"
+                  disabled={loading}
+                  onClick={async () => {
+                    if (
+                      email2Ref.current?.value &&
+                      isEmailValid(email2Ref.current?.value)
+                    ) {
+                      const res = await signIn('email', {
+                        email: email2Ref.current?.value,
+                        redirect: false,
+                      });
+                      console.log(res);
+                      if (res?.status == 200)
+                        setError(
+                          'Please check your email. Link was send from Dance At Le Pari'
+                        );
+                    } else setError('Please enter a valid email address');
+                  }}
+                >
+                  Submit
+                </button>
+              </label>
+            </label>
+          </div>
         </div>
       </div>
     </PageWrapper>

@@ -50,79 +50,83 @@ const page: FC<pageProps> = ({}) => {
   };
 
   return (
-    <PageWrapper className="absolute inset-0  w-full h-screen flex items-center justify-center">
-      <div className="border-0 rounded-md p-1  shadow-2xl w-[90%]  max-w-[450px] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
-        <div className="flex flex-col items-center justify-center border rounded-md border-lightMainColor dark:border-darkMainColor w-full h-full">
-          <h2
-            className="text-center font-bold uppercase"
-            style={{ letterSpacing: '1px' }}
+    <PageWrapper className="absolute inset-0  w-full h-screen flex items-center justify-center ">
+      <div className="border-0 rounded-md p-1 mt-4 shadow-2xl w-[90%]   max-w-[450px] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md h-[70svh] md:h-[85svh] relative overflow-y-auto">
+        <div className="w-full h-full border rounded-md border-lightMainColor dark:border-darkMainColor relative overflow-y-auto">
+          <div
+            className={`absolute top-0 left-0 flex flex-col items-center justify-between  w-full `}
           >
-            Register New User
-          </h2>
-          <div className=" h-14 w-14 md:h-20 md:w-20 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor m-auto">
-            <ShowIcon icon={'Register'} stroke={'0.1'} />
-          </div>
-          <form
-            className="flex flex-col items-center   p-3 bottom-0"
-            onSubmit={handleSubmit}
-          >
-            {error && (
-              <label className="text-center text-red-600 italic font-bold">
-                {error}
+            <h2
+              className="text-center font-bold uppercase"
+              style={{ letterSpacing: '1px' }}
+            >
+              Register New User
+            </h2>
+            <div className=" h-20 w-20 md:h-28 md:w-28 mb-6 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor m-auto">
+              <ShowIcon icon={'Register'} stroke={'0.1'} />
+            </div>
+            <form
+              className="flex flex-col items-center   p-3 bottom-0"
+              onSubmit={handleSubmit}
+            >
+              {error && (
+                <label className="text-center text-red-600 italic font-bold">
+                  {error}
+                </label>
+              )}
+              <label className="flex flex-col items-center">
+                Email
+                <input
+                  className="flex-1 outline-none border-none rounded-md   text-lightMainColor p-0.5 mx-1"
+                  id="email"
+                  type="email"
+                  ref={emailRef}
+                  required
+                />
               </label>
-            )}
-            <label className="flex flex-col items-center">
-              Email
-              <input
-                className="flex-1 outline-none border-none rounded-md   text-lightMainColor p-0.5 mx-1"
-                id="email"
-                type="email"
-                ref={emailRef}
-                required
-              />
+              <label className="flex flex-col items-center">
+                Password
+                <input
+                  className="flex-1 outline-none border-none rounded-md   text-lightMainColor p-0.5 mx-1"
+                  id="password"
+                  type="password"
+                  ref={passwordRef}
+                  defaultValue={''}
+                  required
+                />
+              </label>
+              <label className="flex flex-col items-center    ">
+                Password Confirmation
+                <input
+                  className="flex-1 outline-none border-none rounded-md  p-0.5 mx-1 mb-2"
+                  id="password-confirm"
+                  type="password"
+                  defaultValue={''}
+                  ref={passwordConfirmRef}
+                  required
+                />
+              </label>
+              <button
+                className="btnBlue1 p-2 max-w-xs"
+                disabled={loading}
+                type="submit"
+              >
+                Submit
+              </button>
+            </form>
+            <label className="flex flex-col items-center justify-center  mx-auto">
+              {' '}
+              Already have an account?
+              <button
+                className="btnBlue1 p-2 max-w-xs"
+                onClick={() => {
+                  router.replace('/login');
+                }}
+              >
+                Login
+              </button>
             </label>
-            <label className="flex flex-col items-center">
-              Password
-              <input
-                className="flex-1 outline-none border-none rounded-md   text-lightMainColor p-0.5 mx-1"
-                id="password"
-                type="password"
-                ref={passwordRef}
-                defaultValue={''}
-                required
-              />
-            </label>
-            <label className="flex flex-col items-center    ">
-              Password Confirmation
-              <input
-                className="flex-1 outline-none border-none rounded-md  p-0.5 mx-1 mb-2"
-                id="password-confirm"
-                type="password"
-                defaultValue={''}
-                ref={passwordConfirmRef}
-                required
-              />
-            </label>
-            <button
-              className="btnBlue1 p-2 max-w-xs"
-              disabled={loading}
-              type="submit"
-            >
-              Submit
-            </button>
-          </form>
-          <label className="flex flex-col items-center justify-center  mx-auto">
-            {' '}
-            Already have an account?
-            <button
-              className="btnBlue1 p-2 max-w-xs"
-              onClick={() => {
-                router.replace('/login');
-              }}
-            >
-              Login
-            </button>
-          </label>
+          </div>
         </div>
       </div>
     </PageWrapper>

@@ -314,7 +314,7 @@ const Navbar = ({ path, locale, children }: Props) => {
         className=" w-full  flex-row justify-end md:justify-between"
         style={{ height: '100%' }}
       >
-        <div className={"fixed bottom-0 right-0 w-screen bg-franceBlue h-12 md:h-8 flex justify-between px-3 items-center md:relative md:flex-1 md:justify-around"
+        <div className={`fixed bottom-0 right-0 w-screen bg-franceBlue  flex justify-between px-3 items-center md:relative md:flex-1 md:justify-around ${burgerState?"md:h-0":"md:h-8"} h-12 `
         // +burgerState?"h-0":""
         }>
           {barArray.map((item, index) => {
@@ -355,7 +355,7 @@ const Navbar = ({ path, locale, children }: Props) => {
           })}
         </ul>
 
-        <div className="navbar__right_span md:top-7 ">
+        <div className={`navbar__right_span ${burgerState?"md:top-0":"md:top-7"}`}>
           {!session && (
             <button
               type="button"

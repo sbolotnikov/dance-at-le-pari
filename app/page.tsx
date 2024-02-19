@@ -49,7 +49,7 @@ export default function Home() {
       </div>
  
       <div className="w-full h-full relative  mb-12 overflow-y-auto ">
-        <div className="absolute top-0 left-0 w-full min-h-full flex flex-col justify-center items-center md:flex-row ">
+        <div className="absolute top-0 left-0 w-full min-h-full  flex flex-col justify-center items-center md:flex-row ">
           {departmentsArray.map((item, index) => {
             return (
               <Link key={'Links' + index} href={item.link}>
