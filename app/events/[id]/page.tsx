@@ -8,6 +8,8 @@ import { TFullEvent } from '@/types/screen-settings';
 import sleep from '@/utils/functions';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
+import { useDispatch} from "react-redux"
+import { addItem } from "@/slices/cartSlice";
 
 export default function Page({ params }: { params: { id: string } }) {
   const [eventData, setEventData] = useState<TFullEvent>();
@@ -23,8 +25,9 @@ export default function Page({ params }: { params: { id: string } }) {
     button2: '',
     inputField: '',
   });
-  const [isVisible, setIsVisible] = useState(true);
+  const [templateID, setTemplateID] = useState(-1);
   const { data: session } = useSession();
+  const dispatch = useDispatch();
   const onReturnAlert = async (decision1: string) => {
     setRevealAlert(false);
     if (decision1 == 'Cancel') {
@@ -57,7 +60,7 @@ export default function Page({ params }: { params: { id: string } }) {
       .then((response) => response.json())
       .then((data) => {
         setEventData(data);
-        console.log(data);
+        setTemplateID(data.templateID);
       })
       .catch((error) => {
         console.log(error);
@@ -73,7 +76,42 @@ export default function Page({ params }: { params: { id: string } }) {
           eventImage={eventData!.image}
           price={eventData!.price}
           id={parseInt(params.id)}
-          onReturn={() => {
+          onReturn={(seatsArray) => {
+            console.log(seatsArray);
+            if (seatsArray.length>0){
+              if (eventData!.tables!.length>0){
+                for (let i = 0; i < seatsArray.length; i++) {
+                  console.log(seatsArray[i].seat, seatsArray[i].table, eventData!.date, eventData!.image, eventData!.eventtype, eventData!.tag, eventData!.price, seatsArray.length, -parseInt(params.id));
+                dispatch(addItem({
+                  id: -parseInt(params.id),
+                  image: eventData!.image!, 
+                  eventtype: eventData!.eventtype,
+                  tag: eventData!.tag,
+                  price: eventData!.price,
+                  amount: 1,
+                  seat: seatsArray[i].seat,
+                  table: seatsArray[i].table,
+                  date:eventData!.date,
+                           
+              }))
+            }
+              }else{
+                dispatch(addItem({
+                  id: templateID,
+                  image: eventData!.image!, 
+                  eventtype: eventData!.eventtype,
+                  tag: eventData!.tag,
+                  price: eventData!.price*seatsArray.length,
+                  amount: seatsArray.length,
+                  seat: null,
+                  table: null,
+                  date:null,
+                           
+              }))
+              }
+
+            
+          }
             sleep(1200).then(() => {
               setRevealBuyTicketModal(false);
             });
@@ -133,7 +171,7 @@ export default function Page({ params }: { params: { id: string } }) {
               className="btnFancy w-[90%] "
               onClick={() => setRevealBuyTicketModal(true)}
             >
-              Buy tickets
+              Choose tickets
             </button>
             <h2 className="flex flex-row items-center justify-center">
               {new Date(eventData!.date).toLocaleDateString('en-us', {

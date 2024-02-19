@@ -28,7 +28,7 @@ const page: FC<pageProps> = ({}) => {
             </h2>
 
             <div className="w-full h-full overflow-y-auto mb-20">
-             {items.map((item) => {
+             {items.map((item, index) => {
               return (
               <div key={item.id} className="w-full flex flex-row justify-around items-center border-b-2 border-lightMainColor dark:border-darkMainColor" >
                 <div className="w-1/2 flex flex-row justify-center items-center">
@@ -37,12 +37,18 @@ const page: FC<pageProps> = ({}) => {
                     <p className="w-full text-xl font-semibold text-left">
                      {item.tag}
                     </p>
+                    {(item.seat!>0) &&<p className="w-full text-sm italic text-left">
+                    Table:{item.table} Seat:{item.seat} Date:{new Date(item.date!).toLocaleDateString('en-us', { month: 'long', day: 'numeric',year: 'numeric' })} {new Date(item.date!).toLocaleTimeString('en-US', {
+                  timeStyle: 'short',
+                })}
+
+                    </p>}
                   </div>
                 </div>
                 <div className="w-[49%] flex flex-row justify-around items-center">
-                  <p className="w-[45%] text-base text-center">${item.price}</p>
+                <p className="w-[45%] text-base text-center">${(item.price/item.amount).toFixed(2)}*{item.amount} = ${item.price}</p>
                   <div className="w-[50%] flex flex-col justify-around items-center">
-                    <button  className="w-full btnFancy my-1 text-base text-center  rounded-md" style={{padding:'0'}} onClick={() =>  dispatch(removeItem(item.id))}>
+                    <button  className="w-full btnFancy my-1 text-base text-center  rounded-md" style={{padding:'0'}} onClick={() =>  dispatch(removeItem(index))}>
                       {'Remove from Cart'}
                     </button>
                   </div>

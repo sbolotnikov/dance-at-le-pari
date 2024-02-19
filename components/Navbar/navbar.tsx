@@ -311,10 +311,12 @@ const Navbar = ({ path, locale, children }: Props) => {
       {children}
 
       <div
-        className=" w-full  flex-row justify-end md:justify-between "
+        className=" w-full  flex-row justify-end md:justify-between"
         style={{ height: '100%' }}
       >
-        <div className="fixed bottom-0 right-0 w-screen bg-franceBlue h-12 md:h-8 flex justify-between px-3 items-center md:relative md:flex-1 md:justify-around">
+        <div className={"fixed bottom-0 right-0 w-screen bg-franceBlue h-12 md:h-8 flex justify-between px-3 items-center md:relative md:flex-1 md:justify-around"
+        // +burgerState?"h-0":""
+        }>
           {barArray.map((item, index) => {
             return (
               <Link

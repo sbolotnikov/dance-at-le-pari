@@ -24,24 +24,17 @@ const cartSlice = createSlice({
   reducers: {
     addItem(state, action: PayloadAction<{ id:number; image: string; tag:string; eventtype:string; price: number; amount: number;seat: number | null; table: number | null; date: string | null; }>) {
       const item = state.items.find(item => item.id === action.payload.id);
-      if (item) {
+      if ((item)&&(item.date==null)) {
+        console.log(item)
         item.amount=item.amount+action.payload.amount;
+        item.price=item.price+action.payload.price;
       } else {
-        state.items = [...state.items, action.payload]
-        // state.items.push({
-        //   id: action.payload.id,
-        //   image: action.payload.image,
-        //   tag: action.payload.tag,
-        //   eventtype:action.payload.eventtype,
-        //   price: action.payload.price,
-        //   amount: action.payload.amount,
-        // });
-        
+        state.items = [...state.items, action.payload]       
       }
       
     },
     removeItem(state, action: PayloadAction<number>) {
-      state.items = state.items.filter(item => item.id !== action.payload);
+      state.items = state.items.filter((item, i) => i !== action.payload);
     },
     clearCart(state) {
       state.items = [];

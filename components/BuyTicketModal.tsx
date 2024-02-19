@@ -15,7 +15,7 @@ type Props = {
   id: number;
   price: number;
   eventImage: string | null;
-  onReturn: () => void;
+  onReturn: (seats:TableSeat[]) => void;
 };
 
 export default function BuyTicketModal({
@@ -138,20 +138,24 @@ export default function BuyTicketModal({
       visibility={isVisible}
       onReturn={() => {
         setIsVisible(false);
-        onReturn();
+        onReturn([]);
       }}
     >
-      <div className="h-[82%] w-[85%] bg-darkMainColor rounded-md relative overflow-y-auto">
+      <div className="h-[73%] w-[75%] md:w-[50%] bg-darkMainColor rounded-md relative overflow-y-auto ">
         <div className="absolute top-0 left-0 w-full flex flex-col justify-center items-center">
-          <h2 className="w-full text-center">Enter your information</h2>
+          
           {seatmap !== null ? (
+            <div>
+            <h2 className="w-full text-center">Choose your seats</h2>
             <ImgFromDb
               url={seatmap}
               stylings="object-contain p-2 rounded-md"
               alt="Event Picture"
             />
+            </div>
           ) : (
-            <div>
+            <div className="w-full h-full flex flex-col justify-center items-center">
+               <h2 className="w-full text-center">Enter your ticket amount</h2>
               <InputBox
                 startValue={0}
                 setWidth={8}
@@ -168,6 +172,14 @@ export default function BuyTicketModal({
                 }}
               />
               <h3>Total:${price * tickets}</h3>
+              <button
+                  className="w-[50%] btnFancy my-1 text-base text-center  rounded-md" style={{padding:'0'}}
+                  onClick={() => {
+                     setIsVisible(false);
+                     onReturn(chosenSeats)}}
+                >
+                  {'Add to Cart'}
+                </button>
             </div>
           )}
           {tables !== null && tables.length > 0 ? (
@@ -296,105 +308,123 @@ export default function BuyTicketModal({
                 {chosenSeats.length == 1 ? ' ticket = ' : ' tickets = '}$
                 {price * tickets}
               </h3>
+              <button
+                  className="w-[50%] btnFancy my-1 text-base text-center  rounded-md" style={{padding:'0'}}
+                  onClick={() => {
+                     setIsVisible(false);
+                     onReturn(chosenSeats)}}
+                >
+                  {'Add to Cart'}
+                </button>
             </div>
           ) : (
             <></>
           )}
-          {session ? (
-            <PaymentForm
-              applicationId={process.env.NEXT_PUBLIC_SQUARE_APLICATION_ID!}
-              locationId={process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID!}
-              //  createPaymentRequest={() => ({
-              //   countryCode: "US",
-              //   currencyCode: "USD",
-              //   lineItems: [
-              //     {
-              //       amount: "22.15",
-              //       label: "Item to be purchased",
-              //       id: "SKU-12345",
-              //       imageUrl: "https://url-cdn.com/123ABC",
-              //       pending: true,
-              //       productUrl: "https://my-company.com/product-123ABC"
-              //     }
-              //   ],
-              //   taxLineItems: [
-              //     {
-              //       label: "State Tax",
-              //       amount: "8.95",
-              //       pending: true
-              //     }
-              //   ],
-              //   discounts: [
-              //     {
-              //       label: "Holiday Discount",
-              //       amount: "5.00",
-              //       pending: true
-              //     }
-              //   ],
-              //   requestBillingContact: false,
-              //   requestShippingContact: false,
-              //   shippingOptions: [
-              //     {
-              //       label: "Next Day",
-              //       amount: "15.69",
-              //       id: "1"
-              //     },
-              //     {
-              //       label: "Three Day",
-              //       amount: "2.00",
-              //       id: "2"
-              //     }
-              //   ],
-              //   // pending is only required if it's true.
-              //   total: {
-              //     amount: "41.79",
-              //     label: "Total",
-              //   },
-              // })}
-
-              //  createVerificationDetails={() => ({
-              //   amount: '1.00',
-              //   /* collected from the buyer */
-              //   billingContact: {
-              //     addressLines: ['3040 Edwin Ave', 'Apt #2G'],
-              //     familyName: 'Doe',
-              //     givenName: 'John',
-              //     countryCode: 'US',
-              //     city: 'Fort Lee, NJ',
-              //   },
-              //   currencyCode: 'USD',
-              //   intent: 'CHARGE',
-              // })}
-              cardTokenizeResponseReceived={async (token, verifiedBuyer) => {
-                const response = await fetch('/api/payment', {
-                  method: 'POST',
-                  headers: {
-                    'Content-type': 'application/json',
-                  },
-                  body: JSON.stringify({
-                    sourceId: token.token,
-                    currency: 'USD',
-                    amount: price * tickets,
-                    seats: chosenSeats,
-                    userID: session.user.id,
-                    eventID: id,
-                  }),
-                });
-
-                // eventID Int
-
-                console.log(await response.json());
-              }}
-            >
-              <CreditCard />
-            </PaymentForm>
-          ) : (
-            <h2>To buy tickets please login or register!</h2>
-          )}
-          <div className="m-2">{'  '}</div>
-        </div>
-        
+        </div>   
       </div>
     </AnimateModalLayout>
   );
 }
+
+
+// {session ? (
+//   <PaymentForm
+//     applicationId={process.env.NEXT_PUBLIC_SQUARE_APLICATION_ID!}
+//     locationId={process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID!} 
+    
+    
+    
+    
+    
+//      createPaymentRequest={() => ({
+//       countryCode: "US",
+//       currencyCode: "USD",
+//       lineItems: [
+//         {
+//           amount: "22.15",
+//           label: "Item to be purchased",
+//           id: "SKU-12345",
+//           imageUrl: "https://url-cdn.com/123ABC",
+//           pending: true,
+//           productUrl: "https://my-company.com/product-123ABC"
+//         }
+//       ],
+//       taxLineItems: [
+//         {
+//           label: "State Tax",
+//           amount: "8.95",
+//           pending: true
+//         }
+//       ],
+//       discounts: [
+//         {
+//           label: "Holiday Discount",
+//           amount: "5.00",
+//           pending: true
+//         }
+//       ],
+//       requestBillingContact: false,
+//       requestShippingContact: false,
+//       shippingOptions: [
+//         {
+//           label: "Next Day",
+//           amount: "15.69",
+//           id: "1"
+//         },
+//         {
+//           label: "Three Day",
+//           amount: "2.00",
+//           id: "2"
+//         }
+//       ],
+//       // pending is only required if it's true.
+//       total: {
+//         amount: "41.79",
+//         label: "Total",
+//       },
+//     })}
+
+//      createVerificationDetails={() => ({
+//       amount: '1.00',
+//       /* collected from the buyer */
+//       billingContact: {
+//         addressLines: ['3040 Edwin Ave', 'Apt #2G'],
+//         familyName: 'Doe',
+//         givenName: 'John',
+//         countryCode: 'US',
+//         city: 'Fort Lee, NJ',
+//       },
+//       currencyCode: 'USD',
+//       intent: 'CHARGE',
+//     })}
+
+
+
+
+//     cardTokenizeResponseReceived={async (token, verifiedBuyer) => {
+//       const response = await fetch('/api/payment', {
+//         method: 'POST',
+//         headers: {
+//           'Content-type': 'application/json',
+//         },
+//         body: JSON.stringify({
+//           sourceId: token.token,
+//           currency: 'USD',
+//           amount: price * tickets,
+//           seats: chosenSeats,
+//           userID: session.user.id,
+//           eventID: id,
+//         }),
+//       });
+
+//       // eventID Int
+
+//       console.log(await response.json());
+//     }}
+//    >
+//      <CreditCard />
+//    </PaymentForm>
+//  ) : (
+//    <h2>To buy tickets please login or register!</h2>
+//  )
+// <div className="m-2">{'  '}</div>
