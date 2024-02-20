@@ -115,8 +115,11 @@ const page: FC<pageProps> = ({}) => {
                 className="text-center font-bold uppercase"
                 style={{ letterSpacing: '1px' }}
               >
-                Event Editing
+                Add Events
               </h2>
+              <div className="  h-20 w-20 md:h-28 md:w-28 mb-6 m-auto">
+              <ShowIcon icon={'Plus'} stroke={'0.1'} />
+            </div>
               <div className="w-full h-28 relative   overflow-scroll border border-lightMainColor dark:border-darkMainColor rounded-md">
                 <div className="absolute top-0 left-0  min-w-full  flex flex-wrap items-start justify-start ">
                   {displayTemplates.length > 0 &&

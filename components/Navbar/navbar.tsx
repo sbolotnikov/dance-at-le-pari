@@ -132,7 +132,7 @@ const Navbar = ({ path, locale, children }: Props) => {
         },
         {
           url: '/admin/eventedit',
-          title: 'Edit events',
+          title: 'Add events',
           icon: 'Plus',
         },
       ];
