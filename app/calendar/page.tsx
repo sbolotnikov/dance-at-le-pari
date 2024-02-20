@@ -5,6 +5,7 @@ import Schedule from '@/components/Schedule';
 import FullDayCalendarView from '@/components/fullDayCalendarView';
 import sleep from '@/utils/functions';
 import { TEventArray } from '@/types/screen-settings';
+import ShowIcon from '@/components/svg/showIcon';
 interface pageProps {}
 
 const page: FC<pageProps> = ({}) => {
@@ -54,6 +55,9 @@ const page: FC<pageProps> = ({}) => {
             >
              Calendar
             </h2>
+            <div className=" h-20 w-20 md:h-28 md:w-28 mb-6 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor m-auto">
+              <ShowIcon icon={'Calendar'} stroke={'0.1'} />
+            </div>
             <Schedule
               eventsSet={eventsSet!}
               onReturn={(day: string) => {

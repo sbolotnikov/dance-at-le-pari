@@ -10,7 +10,9 @@ import AlertMenu from '@/components/alertMenu';
 import PDFDisplay from '@/components/PDFDIsplay';
 import { useDispatch} from "react-redux"
 import { addItem } from "../../slices/cartSlice";
+import { useDimensions } from '@/hooks/useDimensions';
 import sleep from '@/utils/functions';
+import ShowIcon from '@/components/svg/showIcon';
 interface pageProps {}
 
 const page: FC<pageProps> = ({}) => {
@@ -39,6 +41,7 @@ const page: FC<pageProps> = ({}) => {
     'Dance Parties',
   ]);
   const dispatch = useDispatch();
+  const windowSize = useDimensions();
   const tabsIndexArray = ['Private', 'Group', 'Floor_Fee', 'Party'];
   const actionTemplateChoice = (action1: string, item: number) => {
     if (action1 == 'Edit') {
@@ -111,7 +114,11 @@ const page: FC<pageProps> = ({}) => {
         console.log(data);
         if ((data.length > 0)&&(tabsArray.indexOf('Special Events')==-1)) {
           setTabsArray((prev) => [...prev, 'Special Events']);
-          setSpecialEvents(data);
+          setSpecialEvents(data.sort((a:any , b:any) => {
+            if (a.price > b.price) return 1;
+            else if (a.price < b.price) return -1;
+            else return 0;
+          }));
                     }
       })
       .catch((error) => {
@@ -128,11 +135,16 @@ const page: FC<pageProps> = ({}) => {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
+        let prodArr=[]
         if (session?.user.role !== 'Admin') {
-          setProducts(
-            data.products.filter((product: any) => product.visible == true)
-          );
-        } else setProducts(data.products);
+          prodArr = data.products.filter((product: any) => product.visible == true);
+        } else prodArr =data.products;
+        prodArr.sort((a:any , b:any) => {
+          if (a.price > b.price) return 1;
+          else if (a.price < b.price) return -1;
+          else return 0;
+        })
+        setProducts(prodArr);
       })
       .catch((error) => {
         console.log(error);
@@ -155,31 +167,26 @@ const page: FC<pageProps> = ({}) => {
         />
       ) : (
         <div
-          className="border-0 rounded-md p-2  shadow-2xl w-[95%] h-[70svh] md:h-[85%] max-w-5xl md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md"
-          // style={{ boxShadow: '0 0 150px rgb(113, 113, 109 / 50%),inset 0 0 20px #242422' }}
+          className="border-0 rounded-md p-2  shadow-2xl w-[95%] h-[70svh] md:h-[85%] max-w-5xl md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md "
+         
         >
+           
           <Tabs
             selectedIndex={tabIndex}
-            className="w-full h-full border rounded-md border-lightMainColor dark:border-darkMainColor"
+            className="w-full h-full flex flex-col border rounded-md border-lightMainColor dark:border-darkMainColor"
             onSelect={(index: number) => setTabIndex(index)}
           >
-            <TabList className="flex flex-row justify-start items-start flex-wrap rounded-t-md  dark:bg-lightMainBG  bg-darkMainBG">
-              {tabsArray.map((item, index) => {
-                return (
-                  <Tab
-                    key={item}
-                    className={` mt-1 p-1 cursor-pointer outline-0 ${
-                      tabIndex != index
-                        ? 'w-12 truncate'
-                        : 'border-2 md:border-4 border-yellow-600 text-yellow-600 dark:border-yellow-600 dark:text-yellow-600'
-                    } rounded-t-lg   text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG`}
-                  >
-                    {item}
-                  </Tab>
-                );
-              })}
-            </TabList>
-            <div className="w-full flex justify-center items-center">
+                       <h2
+              className="text-center font-bold uppercase"
+              style={{ letterSpacing: '1px' }}
+            >
+              Activities
+            </h2>
+            <div className=" h-16 w-16 m-auto">
+              <ShowIcon icon={'Activities'} stroke={'0.1'} />
+            </div>
+            <div className="w-full  flex justify-center items-center">
+
               <button
                 className=" btnFancy mx-auto text-base text-center  rounded-md"
                 style={{ padding: '0' }}
@@ -188,13 +195,32 @@ const page: FC<pageProps> = ({}) => {
                 Terms & Conditions here:
               </button>
             </div>
+            <TabList className="h-[2.43rem] w-full flex flex-row justify-start items-start flex-wrap rounded-t-md  dark:bg-lightMainBG  bg-darkMainBG">
+              {tabsArray.map((item, index) => {
+                return (
+                  <Tab
+                    key={item}
+                    className={` mt-1 p-1 cursor-pointer outline-0 border ${
+                      tabIndex != index
+                        ? ` truncate ${
+                          windowSize.width! < 640 ? 'w-12' : ''
+                        }`
+                        : 'border-2 md:border-4 border-yellow-600 text-yellow-600 dark:border-yellow-600 dark:text-yellow-600'
+                    } rounded-t-lg   text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG`}
+                  >
+                    {item}
+                  </Tab>
+                );
+              })}
+            </TabList>
             {tabsIndexArray.map((item, index) => {
               return (
                 <TabPanel
                 key={item+index}
-                  className={`w-full h-[95%] flex flex-col justify-center items-center ${
+                  className={`w-full  flex relative overflow-y-scroll ${
                     tabIndex != index ? 'hidden' : ''
-                  }`}
+                  }`} 
+                  style={{ flex: '1 1 100%'}}
                 >
                   {products.length > 0 && (
                     <PaymentPageForm
@@ -212,9 +238,11 @@ const page: FC<pageProps> = ({}) => {
               );
             })}
             {(tabsArray.indexOf('Special Events')!=-1)&&
-            <TabPanel className={`w-full h-[95%] flex flex-col justify-center items-center ${
+            <TabPanel className={`w-full  flex relative overflow-y-scroll ${
                     tabIndex != 4 ? 'hidden' : ''
-                  }`}>
+                  }`}
+                  style={{ flex: '1 1 100%'}}
+                  >
  {specialEvents.length > 0 && (
                     <PaymentPageForm
                       paymentsArray={specialEvents}

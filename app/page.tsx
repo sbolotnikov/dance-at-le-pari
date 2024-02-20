@@ -27,7 +27,7 @@ export default function Home() {
   // {date:"2023-10-19T20:00",eventtype:"Party",id: 43, image:"cln5j37qp0000sl0g8xip7j0p",tag:"East Coast Swing" }
   let departmentsArray = [
     { name: 'Calendar', path: '/images/calendar.jpg', link: '/calendar' },
-    { name: 'Dancing', path: '/images/social.jpg', link: '/dancing' },
+    { name: 'Activities', path: '/images/social.jpg', link: '/dancing' },
     {name: 'Wedding Dance', path: '/images/weddingcouple.jpg', link: '/wedding',}, 
     { name: 'Studio', path: '/images/ballroom.jpg', link: '/rentals' },     
     { name: 'Competitive Dance', path: '/images/competitive.jpg', link: '/competition',}, 

@@ -11,7 +11,7 @@ type Props = {
 const PaymentPageForm = ({ paymentsArray, role, specialEvent, onReturn }: Props) => {
   console.log(paymentsArray);
   return (
-    <div className="w-full h-full overflow-y-auto mb-20">
+    <div className="w-full absolute top-0 left-0  mb-20">
       {paymentsArray.map((payment) => {
         return (
           <div

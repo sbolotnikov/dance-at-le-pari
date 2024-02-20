@@ -6,6 +6,7 @@ import { RootState } from '@/app/store/store';
 import ImgFromDb from '@/components/ImgFromDb';
 import { useDispatch} from "react-redux"
 import { removeItem } from "../../slices/cartSlice";
+import ShowIcon from '@/components/svg/showIcon';
 
 interface pageProps {}
 
@@ -26,7 +27,9 @@ const page: FC<pageProps> = ({}) => {
             >
               Shopping Cart
             </h2>
-
+            <div className=" h-20 w-20 md:h-28 md:w-28 mb-6 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor m-auto">
+              <ShowIcon icon={'ShoppingCart'} stroke={'0.1'} />
+            </div>
             <div className="w-full h-full overflow-y-auto mb-20">
              {items.map((item, index) => {
               return (
