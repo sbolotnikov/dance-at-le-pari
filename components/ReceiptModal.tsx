@@ -8,6 +8,7 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
 import AnimateModalLayout from './AnimateModalLayout';
+import Image from 'next/image';
 import ImgFromDb from './ImgFromDb';
 
 type Props = {
@@ -28,10 +29,14 @@ export default function ReceiptModal({ visibility, invoice, onReturn }: Props) {
     // setLoader(true);
     html2canvas(capture).then((canvas)=>{
       const imgData = canvas.toDataURL('img/jpg');
-      const doc = new jsPDF('p', 'mm', 'a4');
+      const doc = new jsPDF({
+        orientation: (1.9+0.75*items.length>4)?"portrait":"landscape",
+        unit: "in",
+        format: [4, 1.9+0.75*items.length]
+      });
       const componentWidth = doc.internal.pageSize.getWidth();
       const componentHeight = doc.internal.pageSize.getHeight();
-      doc.addImage(imgData, 'PNG', 0, 0, componentWidth, componentHeight);
+      doc.addImage(imgData, 'JPG', 0, 0, componentWidth, componentHeight);
       // setLoader(false);
       doc.save('receipt.pdf');
     })
@@ -52,13 +57,26 @@ export default function ReceiptModal({ visibility, invoice, onReturn }: Props) {
             </button>
         <div className="w-full h-full relative  p-1 flex  overflow-y-scroll border border-lightMainColor dark:border-darkMainColor rounded-md">
           <div className="actual-receipt flex flex-col w-full p-1 justify-center items-center absolute top-0 left-0">
-            <h2>Receipt for Invoice # : {invoice} </h2>
+          <div className="w-full flex flex-col justify-center items-center h-48">
           
+                    <img 
+                    src={'/logo.png'}
+                    width={80}
+                    height={80} 
+                    alt="Logo"
+                  />
+                  
+              <h1 className="font-bold text-xl text-franceBlue  text-center font-DancingScript text-shadow  dark:text-shadow-light  ">
+        Dance At Le Pari
+        </h1>
+             </div>
+            <h2 className='text-center'>Receipt for Invoice # : {invoice} </h2>
+
             {items.map((item, index) => {
               return (
                 <div
                   key={index}
-                  className="w-full flex flex-row justify-around items-center p-2 border-b-2 border-lightMainColor dark:border-darkMainColor"
+                  className="w-full h-[250px] flex flex-row justify-around items-center p-2 border-b-2 border-lightMainColor dark:border-darkMainColor"
                 >
                   <div className="w-1/2 flex flex-row justify-center items-center">
                     <ImgFromDb
@@ -90,7 +108,7 @@ export default function ReceiptModal({ visibility, invoice, onReturn }: Props) {
                       ${(item.price / item.amount).toFixed(2)}*{item.amount} = $
                       {item.price}
                     </p>
-                    {item.seat! > 0 && (
+                    {item.seat! > 0 ? (
                       <div className="w-[50%] flex flex-col justify-around items-center">
                         <div className="h-auto w-full max-w-24 my-1 mx-auto">
                           <QRCode
@@ -105,7 +123,7 @@ export default function ReceiptModal({ visibility, invoice, onReturn }: Props) {
                           />
                         </div>
                       </div>
-                    )}
+                    ):(<p className="w-[250px] h-[250px] flex flex-col justify-around items-center"></p>)}
                   </div>
                 </div>
               );
