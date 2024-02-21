@@ -1,23 +1,26 @@
 'use client';
 import { FC, useState } from 'react';
 import { PageWrapper } from '@/components/page-wrapper';
-import { useSelector } from "react-redux"
+import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store/store';
 import ImgFromDb from '@/components/ImgFromDb';
-import { useDispatch} from "react-redux"
-import { removeItem } from "../../slices/cartSlice";
+import { useDispatch } from 'react-redux';
+import { removeItem } from '../../slices/cartSlice';
 import ShowIcon from '@/components/svg/showIcon';
+import { PaymentForm, CreditCard } from 'react-square-web-payments-sdk';
+import ReceiptModal from '@/components/ReceiptModal';
 
 interface pageProps {}
 
 const page: FC<pageProps> = ({}) => {
-    const {items} = useSelector((state:RootState) => state.cart ) ;
-    const dispatch = useDispatch();
-    console.log(items)
+  const { items } = useSelector((state: RootState) => state.cart);
+  const [visibleModal, setVisibleModal] = useState(false);
+  const dispatch = useDispatch();
+  console.log(items);
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
-      {/* {revealAlert && <AlertMenu onReturn={onReturn} styling={alertStyle} />} */}
-      
+      {visibleModal && <ReceiptModal invoice={'loXKofSizxcr7JTzWlkRbso7AX9YY'} visibility={visibleModal} onReturn={()=>{setVisibleModal(false)}}  />}
+
       <div className="border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-5xl  flex justify-center items-center flex-col  h-[70svh] md:h-[85svh] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
         <div className="w-full h-full relative  p-1 flex  overflow-y-scroll border border-lightMainColor dark:border-darkMainColor rounded-md">
           <div className="flex flex-col w-full p-1 justify-center items-center absolute top-0 left-0">
@@ -31,40 +34,170 @@ const page: FC<pageProps> = ({}) => {
               <ShowIcon icon={'ShoppingCart'} stroke={'0.1'} />
             </div>
             <div className="w-full h-full overflow-y-auto mb-20">
-             {items.map((item, index) => {
-              return (
-              <div key={item.id} className="w-full flex flex-row justify-around items-center border-b-2 border-lightMainColor dark:border-darkMainColor" >
-                <div className="w-1/2 flex flex-row justify-center items-center">
-                  <ImgFromDb url={item.image} stylings="object-contain hidden md:block md:h-20 md:w-20 m-2 rounded-full" alt="Product Picture"/>
-                  <div className="w-full flex flex-col justify-center items-center">
-                    <p className="w-full text-xl font-semibold text-left">
-                     {item.tag}
-                    </p>
-                    {(item.seat!>0) &&<p className="w-full text-sm italic text-left">
-                    Table:{item.table} Seat:{item.seat} Date:{new Date(item.date!).toLocaleDateString('en-us', { month: 'long', day: 'numeric',year: 'numeric' })} {new Date(item.date!).toLocaleTimeString('en-US', {
-                  timeStyle: 'short',
-                })}
+              {items.map((item, index) => {
+                return (
+                  <div
+                    key={index}
+                    className="w-full flex flex-row justify-around items-center border-b-2 border-lightMainColor dark:border-darkMainColor"
+                  >
+                    <div className="w-1/2 flex flex-row justify-center items-center">
+                      <ImgFromDb
+                        url={item.image}
+                        stylings="object-contain hidden md:block md:h-20 md:w-20 m-2 rounded-full"
+                        alt="Product Picture"
+                      />
+                      <div className="w-full flex flex-col justify-center items-center">
+                        <p className="w-full text-xl font-semibold text-left">
+                          {item.tag}
+                        </p>
+                        {item.seat! > 0 && (
+                          <p className="w-full text-sm italic text-left">
+                            Table:{item.table} Seat:{item.seat} Date:
+                            {new Date(item.date!).toLocaleDateString('en-us', {
+                              month: 'long',
+                              day: 'numeric',
+                              year: 'numeric',
+                            })}{' '}
+                            {new Date(item.date!).toLocaleTimeString('en-US', {
+                              timeStyle: 'short',
+                            })}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <div className="w-[49%] flex flex-row justify-around items-center">
+                      <p className="w-[45%] text-base text-center">
+                        ${(item.price / item.amount).toFixed(2)}*{item.amount} =
+                        ${item.price}
+                      </p>
+                      <div className="w-[50%] flex flex-col justify-around items-center">
+                        <button
+                          className="w-full btnFancy my-1 text-base text-center  rounded-md"
+                          style={{ padding: '0' }}
+                          onClick={() => dispatch(removeItem(index))}
+                        >
+                          {'Remove from Cart'}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
 
-                    </p>}
-                  </div>
-                </div>
-                <div className="w-[49%] flex flex-row justify-around items-center">
-                <p className="w-[45%] text-base text-center">${(item.price/item.amount).toFixed(2)}*{item.amount} = ${item.price}</p>
-                  <div className="w-[50%] flex flex-col justify-around items-center">
-                    <button  className="w-full btnFancy my-1 text-base text-center  rounded-md" style={{padding:'0'}} onClick={() =>  dispatch(removeItem(index))}>
-                      {'Remove from Cart'}
-                    </button>
-                  </div>
+              <div className="w-full flex flex-row justify-around items-center">
+                <p className="w-[45%] text-base text-center">Total</p>
+                <div className="w-[50%] flex flex-col justify-around items-center">
+                  $
+                  {items.reduce(function (acc, item) {
+                    return acc + item.price;
+                  }, 0)}
                 </div>
               </div>
-             )})}
+            </div>
+            <button
+                  className="w-full btnFancy my-1 text-base text-center  rounded-md" style={{padding:'0'}}
+                  onClick={() => setVisibleModal(true)}
+                >Receipt
+            </button>
+   <PaymentForm
+     applicationId={process.env.NEXT_PUBLIC_SQUARE_APLICATION_ID!}
+     locationId={process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID!}
 
-             <div className="w-full flex flex-row justify-around items-center">
-                <p className="w-[45%] text-base text-center">Total</p>
-                <div className="w-[50%] flex flex-col justify-around items-center">${items.reduce(function (acc, item) { return acc + item.price;} , 0)}</div>
-             </div>
-            </div>
-            </div>
+//      createPaymentRequest={() => ({
+//       countryCode: "US",
+//       currencyCode: "USD",
+//       lineItems: [
+//         {
+//           amount: "22.15",
+//           label: "Item to be purchased",
+//           id: "SKU-12345",
+//           imageUrl: "https://url-cdn.com/123ABC",
+//           pending: true,
+//           productUrl: "https://my-company.com/product-123ABC"
+//         }
+//       ],
+//       taxLineItems: [
+//         {
+//           label: "State Tax",
+//           amount: "8.95",
+//           pending: true
+//         }
+//       ],
+//       discounts: [
+//         {
+//           label: "Holiday Discount",
+//           amount: "5.00",
+//           pending: true
+//         }
+//       ],
+//       requestBillingContact: false,
+//       requestShippingContact: false,
+//       shippingOptions: [
+//         {
+//           label: "Next Day",
+//           amount: "15.69",
+//           id: "1"
+//         },
+//         {
+//           label: "Three Day",
+//           amount: "2.00",
+//           id: "2"
+//         }
+//       ],
+//       // pending is only required if it's true.
+//       total: {
+//         amount: "41.79",
+//         label: "Total",
+//       },
+//     })}
+
+//      createVerificationDetails={() => ({
+//       amount: '1.00',
+//       /* collected from the buyer */
+//       billingContact: {
+//         addressLines: ['3040 Edwin Ave', 'Apt #2G'],
+//         familyName: 'Doe',
+//         givenName: 'John',
+//         countryCode: 'US',
+//         city: 'Fort Lee, NJ',
+//       },
+//       currencyCode: 'USD',
+//       intent: 'CHARGE',
+//     })}
+
+     cardTokenizeResponseReceived={async (token, verifiedBuyer) => {
+       const response = await fetch('/api/payment', {
+         method: 'POST',
+         headers: {
+           'Content-type': 'application/json',
+         },
+         body: JSON.stringify({
+           sourceId: token.token,
+           currency: 'USD',
+           items: items,
+           amount:items.reduce(function (acc, item) {return acc + item.price;}, 0)
+         }),
+       });
+
+      // eventID Int
+
+       console.log(await response.json());
+     }}
+    >
+      <CreditCard />
+    </PaymentForm>
+
+ <div className="m-2">{'  '}</div>
+
+
+
+
+
+
+
+
+
+          </div>
         </div>
       </div>
     </PageWrapper>

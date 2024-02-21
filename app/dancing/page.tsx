@@ -249,7 +249,7 @@ const page: FC<pageProps> = ({}) => {
                       role={"None"}
                       specialEvent={true}
                       onReturn={(item1, action1) => {
-                        window.location.replace('/events/'+item1);
+                        window.location.href='/events/'+item1;
                       }}
                     />
                   )}

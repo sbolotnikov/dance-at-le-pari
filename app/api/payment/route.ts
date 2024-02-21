@@ -18,7 +18,7 @@ export  async function POST(
   try {
 
     const data = await req.json();
-    const {currency, amount, sourceId, seats, userID, eventID} = data;
+    const {currency, sourceId, items, amount} = data;
     if (req.method === 'POST') {
             const { result } = await paymentsApi.createPayment({
               idempotencyKey: randomUUID(),
@@ -29,14 +29,14 @@ export  async function POST(
               }
             })
             let arrayOfTickets:{eventID:number,userID:number, purchasedAt:string, invoice:string | undefined,seat:number | null,table:number | null}[]=[]
-            
-            for(let i=0;i<seats.length;i++){
-              arrayOfTickets.push({eventID:parseInt(eventID),userID:parseInt(userID), purchasedAt:result.payment?.createdAt!, invoice:result.payment?.id,seat:seats[i].seat,table:seats[i].table})
-            }
-            console.log(seats,arrayOfTickets)
-              const createdTickets = await prisma.ticket.createMany({
-                data: arrayOfTickets
-            }) 
+            console.log(items, result.payment?.id)
+            // for(let i=0;i<seats.length;i++){
+            //   arrayOfTickets.push({eventID:parseInt(eventID),userID:parseInt(userID), purchasedAt:result.payment?.createdAt!, invoice:result.payment?.id,seat:seats[i].seat,table:seats[i].table})
+            // }
+            // console.log(seats,arrayOfTickets)
+            //   const createdTickets = await prisma.ticket.createMany({
+            //     data: arrayOfTickets
+            // }) 
                  
               await prisma.$disconnect()
               //Send success response
@@ -46,7 +46,7 @@ export  async function POST(
 
             return new NextResponse(
                 JSON.stringify({ message: 'Success' , status: 200,result,
-                createdTickets
+                // createdTickets
               }),
               );
           } 
