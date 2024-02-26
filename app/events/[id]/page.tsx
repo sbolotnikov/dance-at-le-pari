@@ -76,24 +76,49 @@ export default function Page({ params }: { params: { id: string } }) {
           eventImage={eventData!.image}
           price={eventData!.price}
           id={parseInt(params.id)}
-          onReturn={(seatsArray) => {
+          onReturn={async(seatsArray) => {
             console.log(seatsArray);
             if (seatsArray.length>0){
               if (eventData!.tables!.length>0){
                 for (let i = 0; i < seatsArray.length; i++) {
                   console.log(seatsArray[i].seat, seatsArray[i].table, eventData!.date, eventData!.image, eventData!.eventtype, eventData!.tag, eventData!.price, seatsArray.length, -parseInt(params.id));
-                dispatch(addItem({
-                  id: -parseInt(params.id),
+                
+               fetch('/api/purchase_block', {
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json, text/plain, */*',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  activityID: -parseInt(params.id),
                   image: eventData!.image!, 
                   eventtype: eventData!.eventtype,
                   tag: eventData!.tag,
                   price: eventData!.price,
-                  amount: 1,
+                  invoice:"None",
+                  purchasedAt: "None",
                   seat: seatsArray[i].seat,
                   table: seatsArray[i].table,
                   date:eventData!.date,
-                           
-              }))
+                  userID: session?.user.id,  
+                }),
+              }).then(res => res.json())
+              .then((data) => {
+              console.log(data);
+              if (data.status!==422)
+              dispatch(addItem({
+                id: -parseInt(params.id),
+                image: eventData!.image!, 
+                eventtype: eventData!.eventtype,
+                tag: eventData!.tag,
+                price: eventData!.price,
+                amount: 1,
+                seat: seatsArray[i].seat,
+                table: seatsArray[i].table,
+                date:eventData!.date,
+                         
+            }));
+              })
             }
               }else{
                 dispatch(addItem({

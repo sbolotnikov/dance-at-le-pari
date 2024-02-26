@@ -365,10 +365,10 @@ const Navbar = ({ path, locale, children }: Props) => {
               }}
             >
               <div className="group flex  cursor-pointer  hover:scale-110  flex-col items-center ">
-                <div className=" h-6 w-6 md:h-8 md:w-8 fill-none group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
+                <div className=" h-6 w-6 md:h-8 md:w-8 fill-none rounded-full bg-lightMainBG dark:bg-lightMainColor p-1 group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
                   <ShowIcon icon={'Login'} stroke={'2'} />
                 </div>
-                <p className="hidden tracking-widest mx-3   opacity-100 group-hover:inline-flex md:block md:opacity-0 md:group-hover:opacity-100 ">
+                <p className="hidden tracking-widest mx-3 rounded-md text-darkMainColor md:bg-lightMainBG md:dark:bg-lightMainColor md:dark:text-darkMainColor md:text-lightMainColor  opacity-100 group-hover:inline-flex md:block md:opacity-0 md:group-hover:opacity-100 ">
                   {'Login'}
                 </p>
               </div>
@@ -393,12 +393,12 @@ const Navbar = ({ path, locale, children }: Props) => {
                         alt="profile picture"
                       />
                     ) : (
-                      <div className=" h-6 w-6 md:h-8 md:w-8 fill-none stroke-lightMainColor dark:stroke-darkMainColor ">
+                      <div className=" h-6 w-6 md:h-8 md:w-8 fill-none rounded-full bg-lightMainBG dark:bg-lightMainColor  stroke-lightMainColor dark:stroke-darkMainColor ">
                         <ShowIcon icon={'DefaultUser'} stroke={'2'} />
                       </div>
                     )}
                   </div>
-                  <p className="hidden tracking-widest mx-3 transition duration-300 ease-in-out opacity-100 group-hover:inline-flex md:block md:opacity-0 md:group-hover:opacity-100 ">
+                  <p className="hidden tracking-widest mx-3 transition duration-300 ease-in-out opacity-100 rounded-md text-darkMainColor md:bg-lightMainBG md:dark:bg-lightMainColor md:dark:text-darkMainColor md:text-lightMainColor group-hover:inline-flex md:block md:opacity-0 md:group-hover:opacity-100 ">
                     {'Profile'}
                   </p>
                 </div>
@@ -420,7 +420,7 @@ const Navbar = ({ path, locale, children }: Props) => {
           >
             <div className="group flex  cursor-pointer  hover:scale-110  flex-col items-center ">
               <div className="  h-6 w-6 md:h-8 md:w-8  group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
-                <div className=" h-6 w-6 md:h-8 md:w-8 mr-2  fill-none stroke-lightMainColor dark:stroke-darkMainColor ">
+                <div className=" h-6 w-6 md:h-8 md:w-8 mr-2  fill-none rounded-full bg-lightMainBG dark:bg-lightMainColor p-1 stroke-lightMainColor dark:stroke-darkMainColor ">
                   {darkMode ? (
                     <ShowIcon icon={'LightTheme'} stroke={'2'} />
                   ) : (
@@ -428,7 +428,7 @@ const Navbar = ({ path, locale, children }: Props) => {
                   )}
                 </div>
               </div>
-              <p className="hidden tracking-widest mx-3 transition duration-300 ease-in-out opacity-100 group-hover:inline-flex md:block md:opacity-0 md:group-hover:opacity-100 ">
+              <p className="hidden tracking-widest mx-3 transition duration-300 ease-in-out rounded-md text-darkMainColor md:bg-lightMainBG md:dark:bg-lightMainColor md:dark:text-darkMainColor md:text-lightMainColor opacity-100 group-hover:inline-flex md:block md:opacity-0 md:group-hover:opacity-100 ">
                 {darkMode ? 'Light' : 'Dark'}
               </p>
             </div>
@@ -444,14 +444,14 @@ const Navbar = ({ path, locale, children }: Props) => {
             <Link href={'/shopping'}>
               <div className="group flex  cursor-pointer  hover:scale-110  flex-col items-center ">
                 <div className="  h-6 w-6 md:h-8 md:w-8 relative group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
-                  <div className=" h-6 w-6 md:h-8 md:w-8 mr-2 fill-none stroke-lightMainColor dark:stroke-darkMainColor ">
+                  <div className=" h-6 w-6 md:h-8 md:w-8 mr-2  rounded-full bg-lightMainBG dark:bg-lightMainColor p-1 fill-none  stroke-lightMainColor dark:stroke-darkMainColor ">
                     <ShowIcon icon={'ShoppingCart'} stroke={'1'} />
                   </div>
                   <span className="absolute -top-3 -right-3 h-5 w-5 pt-1 bg-yellow-600 text-center text-xs rounded-full  font-bold">
                       {items ? items.length : 0}
                   </span>
                 </div>
-                <p className="hidden tracking-widest mx-3 transition duration-300 ease-in-out opacity-100 group-hover:inline-flex md:block md:opacity-0 md:group-hover:opacity-100 ">
+                <p className="hidden tracking-widest mx-3 transition duration-300 ease-in-out opacity-100 rounded-md text-darkMainColor md:bg-lightMainBG md:dark:bg-lightMainColor md:dark:text-darkMainColor md:text-lightMainColor group-hover:inline-flex md:block md:opacity-0 md:group-hover:opacity-100 ">
                   Cart
                 </p>
               </div>

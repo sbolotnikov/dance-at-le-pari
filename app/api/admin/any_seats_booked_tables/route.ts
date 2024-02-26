@@ -6,8 +6,8 @@ export async function POST(req: Request) {
     try {
         const data1 = await req.json();
         const { id, table } = data1;
-    const blockedSeats = await prisma.ticket.findMany({ where: {
-        eventID:id,
+    const blockedSeats = await prisma.purchase.findMany({ where: {
+        activityID:id,
           table:table,
        },})
     await prisma.$disconnect()

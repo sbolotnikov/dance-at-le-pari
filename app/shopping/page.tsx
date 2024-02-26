@@ -9,12 +9,14 @@ import { removeItem } from '../../slices/cartSlice';
 import ShowIcon from '@/components/svg/showIcon';
 import { PaymentForm, CreditCard } from 'react-square-web-payments-sdk';
 import ReceiptModal from '@/components/ReceiptModal';
+import { useSession } from 'next-auth/react';
 
 interface pageProps {}
 
 const page: FC<pageProps> = ({}) => {
   const { items } = useSelector((state: RootState) => state.cart);
   const [visibleModal, setVisibleModal] = useState(false);
+  const { data: session } = useSession();
   const dispatch = useDispatch();
   console.log(items);
   return (
@@ -50,9 +52,9 @@ const page: FC<pageProps> = ({}) => {
                         <p className="w-full text-xl font-semibold text-left">
                           {item.tag}
                         </p>
-                        {item.seat! > 0 && (
+                        {(item.seat!==null && item.table !== null) && (
                           <p className="w-full text-sm italic text-left">
-                            Table:{item.table} Seat:{item.seat} Date:
+                            Table:{(item.table < 12) ? item.table + 1 : item.table + 2} Seat:{(item.seat < 12) ? item.seat + 1 : item.seat + 2} Date:
                             {new Date(item.date!).toLocaleDateString('en-us', {
                               month: 'long',
                               day: 'numeric',
@@ -175,6 +177,7 @@ const page: FC<pageProps> = ({}) => {
            sourceId: token.token,
            currency: 'USD',
            items: items,
+           userID: session?.user.id,
            amount:items.reduce(function (acc, item) {return acc + item.price;}, 0)
          }),
        });

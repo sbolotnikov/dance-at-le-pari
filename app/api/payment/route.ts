@@ -18,8 +18,15 @@ export  async function POST(
   try {
 
     const data = await req.json();
-    const {currency, sourceId, items, amount} = data;
+    const {currency, sourceId, items, amount, userID} = data;
     if (req.method === 'POST') {
+            
+
+
+
+
+
+
             const { result } = await paymentsApi.createPayment({
               idempotencyKey: randomUUID(),
               sourceId: sourceId,
@@ -28,15 +35,34 @@ export  async function POST(
                 amount: amount*100  as any,
               }
             })
-            let arrayOfTickets:{eventID:number,userID:number, purchasedAt:string, invoice:string | undefined,seat:number | null,table:number | null}[]=[]
+
+           
+            
+            let arrayOfTickets:{activityID:number,userID:number | undefined, purchasedAt:string, invoice:any,seat:number | null,table:number | null, image: string,eventtype:any,tag:string,price:number, amount:number,date:string | null, status:any}[] = [];
             console.log(items, result.payment?.id)
-            // for(let i=0;i<seats.length;i++){
-            //   arrayOfTickets.push({eventID:parseInt(eventID),userID:parseInt(userID), purchasedAt:result.payment?.createdAt!, invoice:result.payment?.id,seat:seats[i].seat,table:seats[i].table})
-            // }
+            for(let i=0;i<items.length;i++){
+              if ((items[i].id>0)||((items[i].id<0)&&(items[i].seat==null))) {
+                 arrayOfTickets.push({activityID:items[i].id,image:items[i].image,eventtype:items[i].eventtype,userID:userID,tag:items[i].tag,price:items[i].price,amount:items[i].amount,invoice:result.payment?.id,purchasedAt:result.payment?.createdAt!, seat: null, table: null, date:null,status:"Purchased"});
+              }else{
+                const updateTicket = await prisma.purchase.updateMany({
+                  where: {
+                    activityID: items[i].id,
+                    seat: items[i].seat,
+                    table: items[i].table
+                  },
+                  data:{
+                    status:"Purchased", purchasedAt:result.payment?.createdAt!, invoice:result.payment?.id,
+                  },
+                })
+
+
+                console.log(updateTicket)
+              }
+            }
             // console.log(seats,arrayOfTickets)
-            //   const createdTickets = await prisma.ticket.createMany({
-            //     data: arrayOfTickets
-            // }) 
+              const createdTickets = await prisma.purchase.createMany({
+                data: arrayOfTickets
+            }) 
                  
               await prisma.$disconnect()
               //Send success response

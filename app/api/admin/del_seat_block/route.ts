@@ -11,18 +11,18 @@ export  async function POST(
     const data1 = await req.json();
     const {id, oldPlace } = data1;
     console.log(oldPlace,id);
-    const ticketToDelete = await prisma.ticket.findFirst({
+    const ticketToDelete = await prisma.purchase.findFirst({
         where: {
-            eventID:parseInt(id),
+            activityID:parseInt(id),
           table:oldPlace.table, seat:oldPlace.seat
         },
       })
       console.log(ticketToDelete)
-      if (ticketToDelete?.invoice!=null) return new NextResponse(
+      if (ticketToDelete?.invoice!="00000") return new NextResponse(
         JSON.stringify({ message: 'Can not remove bought ticket only move!',status: 301,
         }),
       );
-    const deleteSeat = await prisma.ticket.delete({
+    const deleteSeat = await prisma.purchase.delete({
         where: {
           id:ticketToDelete?.id
         },

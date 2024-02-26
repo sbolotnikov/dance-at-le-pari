@@ -6,10 +6,15 @@ import { useSession } from 'next-auth/react';
 type Props = {
   id: number;
   tables: number[];
+  image: string;
+  eventtype: string;
+  tag: string;
+  price:number;
+  date:string;
   onReturn: (style: string, text: string) => void;
 };
 
-const EditSeatsForEvent = ({ id, tables, onReturn }: Props) => {
+const EditSeatsForEvent = ({ id,image,  eventtype, tag,price,date, tables, onReturn }: Props) => {
   const [eventSeatMap, setEventSeatMap] = useState<string[]>([]);
   const [name, setName] = useState<string | undefined>('');
   const [editedInput, setEditedInput] = useState<string>('');
@@ -53,6 +58,7 @@ const EditSeatsForEvent = ({ id, tables, onReturn }: Props) => {
             data[i].personNote != null && data[i].personNote != ''
               ? (arr2[data[i].seat] = data[i].personNote)
               : (arr2[data[i].seat] = data[i].name);
+            if (data[i].personNote == null && data[i].name == null) (arr2[data[i].seat] = 'Unknown purcahser');
             arr[data[i].table] = arr2.toString();
           }
 
@@ -221,6 +227,11 @@ const EditSeatsForEvent = ({ id, tables, onReturn }: Props) => {
                                         },
                                         userID: session?.user.id,
                                         note: editedInput,
+                                        image,
+                                        eventtype,
+                                        tag,
+                                        price, 
+                                        date
                                       }),
                                     })
                                       .then((response) => response.json())

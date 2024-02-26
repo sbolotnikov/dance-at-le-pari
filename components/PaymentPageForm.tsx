@@ -1,6 +1,7 @@
 import { TPaymentType } from '@/types/screen-settings';
 import React from 'react';
 import ImgFromDb from './ImgFromDb';
+import Link from 'next/link';
 type Props = {
   paymentsArray: TPaymentType[];
   role: string;
@@ -36,12 +37,22 @@ const PaymentPageForm = ({ paymentsArray, role, specialEvent, onReturn }: Props)
             <div className="w-[49%] flex flex-row justify-around items-center">
               <p className="w-[45%] text-base text-center">${payment.price}</p>
               <div className="w-[50%] flex flex-col justify-around items-center">
-                <button
+                {specialEvent?(
+                  <Link href={`/events/${payment.id}`} >
+                    <div
                   className="w-full btnFancy my-1 text-base text-center  rounded-md" style={{padding:'0'}}
                   onClick={() => onReturn(payment.id!, 'Book')}
                 >
-                  {specialEvent?"Check Event":'Add to Cart'}
-                </button>
+                  {"Check Event"}
+                </div>
+                  </Link>
+                ):(<div
+                  className="w-full btnFancy my-1 text-base text-center  rounded-md" style={{padding:'0'}}
+                  onClick={() => onReturn(payment.id!, 'Book')}
+                >
+                  {'Add to Cart'}
+                </div>)}
+                
                 {role == 'Admin' && (
                   <button
                     className="w-full bg-lightMainColor my-1 text-base dark:bg-darkMainColor text-lightMainBG dark:text-darkMainBG rounded-md"

@@ -5,16 +5,24 @@ import { NextResponse } from 'next/server';
 export async function POST(req: Request) {
   try {
     const data1 = await req.json();
-    const { id, oldPlace,userID, note } = data1;
+    const { id, oldPlace,userID, note, image, eventtype, tag, price,date } = data1;
 
-    const createSeat = await prisma.ticket.create({
+    const createSeat = await prisma.purchase.create({
       data: {
         personNote: note,
-        eventID: parseInt(id),
+        activityID: parseInt(id),
         seat: oldPlace.seat,
         table: oldPlace.table,
         userID: parseInt(userID),
         purchasedAt: new Date().toISOString(),
+        status: 'Purchased',
+        invoice:"00000",
+        amount:1,
+        image,
+        eventtype,
+        tag,
+        price,      
+        date
       },
     });
     console.log(createSeat);

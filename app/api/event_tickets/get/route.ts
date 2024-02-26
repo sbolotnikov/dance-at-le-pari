@@ -5,10 +5,10 @@ import { prisma } from '@/lib/prisma';
 export async function POST(req: Request) {
     const data = await req.json();
     const {id} = data;
-
-    const tickets = await prisma.ticket.findMany({
+    console.log(id)
+    const tickets = await prisma.purchase.findMany({
         where: {
-          eventID:id,
+          activityID:-1*id,
         },
         include:{user:true}
       });

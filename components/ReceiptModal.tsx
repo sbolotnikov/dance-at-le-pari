@@ -88,9 +88,9 @@ export default function ReceiptModal({ visibility, invoice, onReturn }: Props) {
                       <p className="w-full text-xl font-semibold text-left">
                         {item.tag}
                       </p>
-                      {item.seat! > 0 && (
-                        <p className="w-full text-sm italic text-left">
-                          Table:{item.table} Seat:{item.seat} Date:
+                      {(item.seat!==null && item.table !== null) && (
+                          <p className="w-full text-sm italic text-left">
+                            Table:{(item.table < 12) ? item.table + 1 : item.table + 2} Seat:{(item.seat < 12) ? item.seat + 1 : item.seat + 2} Date:
                           {new Date(item.date!).toLocaleDateString('en-us', {
                             month: 'long',
                             day: 'numeric',
@@ -108,7 +108,7 @@ export default function ReceiptModal({ visibility, invoice, onReturn }: Props) {
                       ${(item.price / item.amount).toFixed(2)}*{item.amount} = $
                       {item.price}
                     </p>
-                    {item.seat! > 0 ? (
+                    {item.seat! >= 0 ? (
                       <div className="w-[50%] flex flex-col justify-around items-center">
                         <div className="h-auto w-full max-w-24 my-1 mx-auto">
                           <QRCode

@@ -10,14 +10,14 @@ export  async function PUT(
 
     const data1 = await req.json();
     const {id, oldPlace, newSeat,newTable } = data1;
-    const ticketToUpdate = await prisma.ticket.findFirst({
+    const ticketToUpdate = await prisma.purchase.findFirst({
         where: {
-            eventID:parseInt(id),
+            activityID:parseInt(id),
           table:oldPlace.table, seat:oldPlace.seat
         },
       })
       console.log(ticketToUpdate)
-    const updateSeat = await prisma.ticket.update({
+    const updateSeat = await prisma.purchase.update({
         where: {
           id:ticketToUpdate?.id
         },

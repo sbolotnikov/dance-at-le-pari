@@ -96,9 +96,10 @@ export default function BuyTicketModal({
         if (arr.length > 0)
           for (let i = 0; i < data.length; i++) {
             let arr2 = arr[data[i].table].split(',');
-            session !== null && session.user.role == 'Admin'
-              ? (arr2[data[i].seat] = data[i].name)
-              : (arr2[data[i].seat] = 'Sold');
+            if (session !== null && session.user.role == 'Admin') {
+              if (data[i].name != null) arr2[data[i].seat] = data[i].name;
+              else arr2[data[i].seat] = 'Unknown buyer';
+            } else arr2[data[i].seat] = 'Sold';
             arr[data[i].table] = arr2.toString();
           }
         if (tables != null)
@@ -337,5 +338,3 @@ export default function BuyTicketModal({
     </AnimateModalLayout>
   );
 }
-
-

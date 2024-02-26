@@ -216,20 +216,18 @@ export default function Page({ params }: { params: { id: string } }) {
     }
   };
   const onReturnPicture = (decision1: string, fileLink: string) => {
-
     if (decision1 == 'Close') {
       setRevealCloud1(false);
       setRevealCloud(false);
     }
     if (decision1 == 'Upload') {
       console.log('file link', fileLink);
-      if (revealCloud==true){
+      if (revealCloud == true) {
         setRevealCloud(false);
         setImage(fileLink);
-      }else{
+      } else {
         setRevealCloud1(false);
         setSeatmap(fileLink);
-
       }
     }
   };
@@ -266,7 +264,11 @@ export default function Page({ params }: { params: { id: string } }) {
         setEventType(data.eventtype);
         setEventTypeLocation(data.location);
         setDescription(data.description);
-        setTeacher({id:data.teachersid[0],name:data.teacher,image:data.teacher_img});
+        setTeacher({
+          id: data.teachersid[0],
+          name: data.teacher,
+          image: data.teacher_img,
+        });
         setLength(data.length);
         setPrice(data.price);
         setTitle(data.title);
@@ -326,55 +328,60 @@ export default function Page({ params }: { params: { id: string } }) {
     }
 
     setLoading(true);
-      fetch('/api/admin/update_event', {
-        method: 'PUT',
-        headers: {
-          Accept: 'application/json, text/plain, */*',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          eventtype,
-          length: length1,
-          price,
-          image,
-          seatmap,
-          tag,
-          title,
-          location,
-          description,
-          specialEvent,
-          date:eventDateTime,
-          // visible,
-          teachersid: (teacher?.id !== null && teacher?.id !== undefined) ? [teacher?.id] : [],
-          id: parseInt(params.id),
-        }),
-      })
-        .then(async (res) => {
-          setLoading(false);
-          setAlertStyle({
-            variantHead: 'info',
-            heading: 'Message',
-            text: 'You successfully  update existing event.',
-            color1: 'secondary',
-            button1: 'Return',
-            color2: '',
-            button2: '',
-            inputField: '',
-          });
-  
-          setRevealAlert(true);
-          console.log(res);
-        })
-        .catch((error) => {
-          console.log(error);
+    fetch('/api/admin/update_event', {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json, text/plain, */*',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        eventtype,
+        length: length1,
+        price,
+        image,
+        seatmap,
+        tag,
+        title,
+        location,
+        description,
+        specialEvent,
+        date: eventDateTime,
+        // visible,
+        teachersid:
+          teacher?.id !== null && teacher?.id !== undefined
+            ? [teacher?.id]
+            : [],
+        id: parseInt(params.id),
+      }),
+    })
+      .then(async (res) => {
+        setLoading(false);
+        setAlertStyle({
+          variantHead: 'info',
+          heading: 'Message',
+          text: 'You successfully  update existing event.',
+          color1: 'secondary',
+          button1: 'Return',
+          color2: '',
+          button2: '',
+          inputField: '',
         });
+
+        setRevealAlert(true);
+        console.log(res);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
       {revealAlert && (
         <AlertMenu onReturn={onReturnAlert} styling={alertStyle} />
       )}
-           {(revealCloud || revealCloud1) && <ChoosePicture onReturn={onReturnPicture} />}
+      {(revealCloud || revealCloud1) && (
+        <ChoosePicture onReturn={onReturnPicture} />
+      )}
       {revealCloud2 && <ChooseTeacher onReturn={onReturnTeacher} />}
       {revealAlert && (
         <AlertMenu onReturn={onReturnAlert} styling={alertStyle} />
@@ -388,7 +395,6 @@ export default function Page({ params }: { params: { id: string } }) {
           >
             Event Editing Form
           </h2>
-
 
           <div className="relative flex justify-center items-center outline-none border border-lightMainColor dark:border-darkMainColor rounded-md w-24 my-6 mx-auto">
             {image !== null && image !== '' && image !== undefined ? (
@@ -496,17 +502,17 @@ export default function Page({ params }: { params: { id: string } }) {
             </select>
           </label>
           <label className="flex flex-row justify-between items-center">
-              Day Time
-              <input
-                className="flex-1 outline-none border-none rounded-md   text-lightMainColor p-0.5 mx-1"
-                value={eventDateTime}
-                onChange={(e) => {
-                  setEventDateTime(e.target.value);
-                }}
-                type="datetime-local"
-                required
-              />
-            </label>
+            Day Time
+            <input
+              className="flex-1 outline-none border-none rounded-md   text-lightMainColor p-0.5 mx-1"
+              value={eventDateTime}
+              onChange={(e) => {
+                setEventDateTime(e.target.value);
+              }}
+              type="datetime-local"
+              required
+            />
+          </label>
           <form className=" m-auto" onSubmit={handleSubmit}>
             <label className="flex flex-row justify-between items-center mb-1">
               Length in min.
@@ -668,6 +674,11 @@ export default function Page({ params }: { params: { id: string } }) {
           {eventData?.tables != null && eventData?.tables != undefined && (
             <EditSeatsForEvent
               id={parseInt(params.id)}
+              image={image}
+              eventtype={eventtype}
+              tag={tag}
+              price={price}
+              date={eventDateTime}
               tables={eventData?.tables!}
               onReturn={(style1: string, text1: string) => {
                 if (style1 == 'Loading' && text1 == 'Finish') {

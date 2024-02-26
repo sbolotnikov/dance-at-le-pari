@@ -25,7 +25,7 @@ model User {
   updatedAt DateTime @updatedAt
   sessions Session[]
   accounts Account[]
-  ticket Ticket[]
+  purchases Purchase[]
 }
 model EventTemplate {
   id Int @id @default(autoincrement())
@@ -62,23 +62,29 @@ model Event {
    template EventTemplate @relation(fields: [templateID], references: [id] )
    tables Int[]
    tableName String? @default("Table")
-   tickets Ticket[]
    seatmap String?
    specialEvent Boolean @default(false)
 }
-model Ticket {
-  id Int @id @default(autoincrement())
-  eventID Int 
-  seat Int?
-  table Int?
-  userID Int?
-  personNote String?
-  purchasedAt String
-  invoice String?
-  event Event @relation(fields: [eventID], references: [id] )
-  user User? @relation(fields: [userID], references: [id] )
-}
 
+model Purchase {
+id Int @id @default(autoincrement())
+activityID Int
+status StatusType
+seat Int?
+table Int?
+userID Int?
+personNote String?
+invoice String
+createdAt DateTime @default(now())
+purchasedAt String
+image String
+eventtype EventType @default(Group)
+tag String
+price Float
+amount Int @default (1)
+date String?
+user User? @relation(fields: [userID], references: [id] )
+}
 model SettingVar {
   id Int @id @default(autoincrement())
   front_templates_ids Int[]
@@ -90,6 +96,11 @@ enum EventType {
   Group
   Party
   Floor_Fee
+}
+enum StatusType {
+  Purchased
+  Used
+  Pending
 }
 model Account {
   id Int @id @default(autoincrement())
