@@ -108,7 +108,7 @@ export default function ReceiptModal({ visibility, invoice, onReturn }: Props) {
                       ${(item.price / item.amount).toFixed(2)}*{item.amount} = $
                       {item.price}
                     </p>
-                    {item.seat! >= 0 ? (
+                    {((item.seat!=null)&&(item.seat! >= 0)) ? (
                       <div className="w-[50%] flex flex-col justify-around items-center">
                         <div className="h-auto w-full max-w-24 my-1 mx-auto">
                           <QRCode

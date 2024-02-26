@@ -5,24 +5,27 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store/store';
 import ImgFromDb from '@/components/ImgFromDb';
 import { useDispatch } from 'react-redux';
-import { removeItem } from '../../slices/cartSlice';
+import { clearCart, removeItem } from '../../slices/cartSlice';
 import ShowIcon from '@/components/svg/showIcon';
 import { PaymentForm, CreditCard } from 'react-square-web-payments-sdk';
 import ReceiptModal from '@/components/ReceiptModal';
 import { useSession } from 'next-auth/react';
+import LoadingScreen from '@/components/LoadingScreen';
 
 interface pageProps {}
 
 const page: FC<pageProps> = ({}) => {
   const { items } = useSelector((state: RootState) => state.cart);
   const [visibleModal, setVisibleModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [transactionID, setTransactionID] = useState("");
   const { data: session } = useSession();
   const dispatch = useDispatch();
   console.log(items);
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
-      {visibleModal && <ReceiptModal invoice={'loXKofSizxcr7JTzWlkRbso7AX9YY'} visibility={visibleModal} onReturn={()=>{setVisibleModal(false)}}  />}
-
+      {visibleModal && <ReceiptModal invoice={transactionID} visibility={visibleModal} onReturn={()=>{setVisibleModal(false); dispatch(clearCart());}}  />}
+      {loading && <LoadingScreen />}
       <div className="border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-5xl  flex justify-center items-center flex-col  h-[70svh] md:h-[85svh] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
         <div className="w-full h-full relative  p-1 flex  overflow-y-scroll border border-lightMainColor dark:border-darkMainColor rounded-md">
           <div className="flex flex-col w-full p-1 justify-center items-center absolute top-0 left-0">
@@ -96,11 +99,6 @@ const page: FC<pageProps> = ({}) => {
                 </div>
               </div>
             </div>
-            <button
-                  className="w-full btnFancy my-1 text-base text-center  rounded-md" style={{padding:'0'}}
-                  onClick={() => setVisibleModal(true)}
-                >Receipt
-            </button>
    <PaymentForm
      applicationId={process.env.NEXT_PUBLIC_SQUARE_APLICATION_ID!}
      locationId={process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID!}
@@ -168,6 +166,7 @@ const page: FC<pageProps> = ({}) => {
 //     })}
 
      cardTokenizeResponseReceived={async (token, verifiedBuyer) => {
+       setLoading(true);
        const response = await fetch('/api/payment', {
          method: 'POST',
          headers: {
@@ -181,10 +180,11 @@ const page: FC<pageProps> = ({}) => {
            amount:items.reduce(function (acc, item) {return acc + item.price;}, 0)
          }),
        });
-
+       setLoading(false);
       // eventID Int
-
-       console.log(await response.json());
+       const res=await response.json()
+       setTransactionID(res.result.payment?.id);
+       setVisibleModal(true)
      }}
     >
       <CreditCard />
