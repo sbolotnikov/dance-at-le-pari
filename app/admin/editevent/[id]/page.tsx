@@ -12,6 +12,7 @@ import sleep from '@/utils/functions';
 import { useEffect, useState } from 'react';
 import ChooseTeacher from '@/components/ChooseTeacher';
 import { TTeacherInfo } from '@/types/screen-settings';
+import { useDimensions } from '@/hooks/useDimensions';
 
 export default function Page({ params }: { params: { id: string } }) {
   const [eventData, setEventData] = useState<TFullEvent>();
@@ -33,7 +34,7 @@ export default function Page({ params }: { params: { id: string } }) {
   const [title, setTitle] = useState('');
   const [tag, setTag] = useState('');
   const [specialEvent, setSpecialEvent] = useState(false);
-  // const [visible, setVisible] = useState(false);
+  const windowSize = useDimensions();
   const [eventDateTime, setEventDateTime] = useState('');
   const [alertStyle, setAlertStyle] = useState({
     variantHead: '',
@@ -388,7 +389,7 @@ export default function Page({ params }: { params: { id: string } }) {
       )}
       {loading && <LoadingScreen />}
       <div className="border-0 rounded-md px-4 pt-4 shadow-2xl w-[90%] max-w-[1350px] h-[85%] overflow-y-auto md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
-        <div className="  min-w-full   flex flex-col flex-wrap items-center justify-center absolute top-0 right-0 ">
+        <div className={`  min-w-full   flex flex-col flex-wrap items-center justify-center absolute top-0 right-0 `}>
           <h2
             className="text-center w-full font-bold uppercase"
             style={{ letterSpacing: '1px' }}

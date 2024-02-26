@@ -35,8 +35,14 @@ export  async function PUT(
         },
       })
     console.log(updateSeat);
+    await prisma.$disconnect()}
+    else {
+      await prisma.$disconnect()
+      return new NextResponse(
+        JSON.stringify({ message: 'Seat already taken',status: 301,
+        }),
+      );
     }
-    await prisma.$disconnect()
     //Send success response
     return new NextResponse(
       JSON.stringify({ message: 'Seat updated',status: 201,

@@ -86,8 +86,8 @@ const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElemen
         <button className='px-1 py-2 border-2 border-solid border-transparent rounded-sm w-full m-1 text-center text-white' style={button1Color} 
         onClick={() => {
           AllowScroll();
-          const input = document.querySelector("#inputField") as HTMLInputElement | null;
-          props.onReturn(props.styling.button1, (input != null)?input.value:null) 
+          const input1 = document.querySelector("#inputField") as HTMLTextAreaElement | null;
+          props.onReturn(props.styling.button1, (value != null)?value:null) 
           }}>
           {props.styling.button1}
         </button>}

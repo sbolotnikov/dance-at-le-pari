@@ -58,7 +58,7 @@ const EditSeatsForEvent = ({ id,image,  eventtype, tag,price,date, tables, onRet
             data[i].personNote != null && data[i].personNote != ''
               ? (arr2[data[i].seat] = data[i].personNote)
               : (arr2[data[i].seat] = data[i].name);
-            if (data[i].personNote == null && data[i].name == null) (arr2[data[i].seat] = 'Unknown purcahser');
+            if (((data[i].personNote == null)||(data[i].personNote == "")) && data[i].name == null) (arr2[data[i].seat] = 'Unknown purcahser');
             arr[data[i].table] = arr2.toString();
           }
 
