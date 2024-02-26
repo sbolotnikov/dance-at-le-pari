@@ -10,7 +10,7 @@ export async function POST(req: Request) {
     const createSeat = await prisma.purchase.create({
       data: {
         personNote: note,
-        activityID: parseInt(id),
+        activityID: -parseInt(id),
         seat: oldPlace.seat,
         table: oldPlace.table,
         userID: parseInt(userID),

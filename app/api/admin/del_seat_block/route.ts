@@ -13,7 +13,7 @@ export  async function POST(
     console.log(oldPlace,id);
     const ticketToDelete = await prisma.purchase.findFirst({
         where: {
-            activityID:parseInt(id),
+            activityID:-parseInt(id),
           table:oldPlace.table, seat:oldPlace.seat
         },
       })

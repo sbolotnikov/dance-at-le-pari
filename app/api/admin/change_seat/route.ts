@@ -12,11 +12,20 @@ export  async function PUT(
     const {id, oldPlace, newSeat,newTable } = data1;
     const ticketToUpdate = await prisma.purchase.findFirst({
         where: {
-            activityID:parseInt(id),
+            activityID:-parseInt(id),
           table:oldPlace.table, seat:oldPlace.seat
         },
       })
       console.log(ticketToUpdate)
+      const ticketCheck = await prisma.purchase.findFirst({
+        where: {
+            activityID:-parseInt(id),
+          table:newTable, seat:newSeat
+        },
+      })
+      console.log(ticketCheck)
+    if (ticketCheck==undefined) 
+    { 
     const updateSeat = await prisma.purchase.update({
         where: {
           id:ticketToUpdate?.id
@@ -25,7 +34,8 @@ export  async function PUT(
             seat: newSeat, table:newTable
         },
       })
-    console.log(updateSeat)
+    console.log(updateSeat);
+    }
     await prisma.$disconnect()
     //Send success response
     return new NextResponse(
