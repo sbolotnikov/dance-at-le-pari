@@ -83,14 +83,12 @@ export function html_receipt( items, invoice, total ) {
               ${(item.price / item.amount).toFixed(2)}*${item.amount} = $ ${item.price}
             </p>
             ${((item.seat != null) && (item.seat >= 0)) ? (
-              `<div style="width:50%; ">
-                <div style="height:auto;width:100%;max-width:24rem;margin:0.25rem auto;">
+              `<div style="width:50%;height:100% ">
                   <img
                     src="cid:qrImage${index}"
                     alt="QR Code"
-                    style="height:100%;width:auto"
+                    style="height:100%;width:auto;max-width:24rem;display: block;margin-left: auto;margin-right: auto;"
                   />
-                </div>
               </div>`
             ) : (
               `<p style="width:250px;height:250px;"></p>`
