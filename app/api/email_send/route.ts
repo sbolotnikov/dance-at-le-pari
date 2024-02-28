@@ -13,6 +13,7 @@ export async function POST(req: Request) {
     subject: `Special request from ${name} <${email}>`,
     text: message,
     html: `<b>${message}</b>`,
+    attachments: undefined
   })
   
  return new NextResponse( JSON.stringify(res));

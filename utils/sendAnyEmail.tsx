@@ -5,6 +5,8 @@ interface MailData {
   subject: string;
   text: string;
   html: string;
+  attachments: { filename: string, path:string, cid:string}[] | undefined //same cid value as in the html img src
+
 }
 interface ReturnValue {
   status: string;
@@ -40,6 +42,7 @@ export const sendAnyEmail = async (mailData: MailData) => {
         subject: mailData.subject,
         text: mailData.text,
         html: mailData.html,
+        attachments: mailData.attachments ? mailData.attachments : undefined
       },
       (err: any, info: any) => {
         if (err) {
