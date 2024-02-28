@@ -8,7 +8,7 @@ export async function POST(req: Request) {
   console.log( html_receipt(items, invoice, total))
   let attachments = [{
     filename: 'logo.png',
-    path: process.env.NEXTAUTH_URL!+'logo.png',
+    path: process.env.NEXTAUTH_URL!+'/logo.png',
     cid: 'logo' //same cid value as in the html img src
 },];
    for(let i=0; i<qrCodes.length;i++){
