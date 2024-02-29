@@ -43,9 +43,7 @@ const page: FC<pageProps> = ({}) => {
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
        {loading && <LoadingScreen />}
       {visibleModal && <ReceiptModal invoice={transactionID} visibility={visibleModal} onReturn={(loadStatus, finished, emailSent)=>{
-      {revealAlert && (
-        <AlertMenu onReturn={onReturnAlert} styling={alertStyle} />
-      )}
+      
       (loadStatus) ? setLoading(true): setLoading(false);
         if (finished) {setVisibleModal(false); 
           
@@ -66,7 +64,9 @@ const page: FC<pageProps> = ({}) => {
         dispatch(clearCart());
       }        
         }}  />}
-     
+     {revealAlert && (
+        <AlertMenu onReturn={onReturnAlert} styling={alertStyle} />
+      )}
       <div className="border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-5xl  flex justify-center items-center flex-col  h-[70svh] md:h-[85svh] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
         <div className="w-full h-full relative  p-1 flex  overflow-y-scroll border border-lightMainColor dark:border-darkMainColor rounded-md">
           <div className="flex flex-col w-full p-1 justify-center items-center absolute top-0 left-0">
