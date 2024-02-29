@@ -3,6 +3,8 @@ import { NextResponse } from 'next/server';
 import { Client } from 'square';
 import { randomUUID } from 'crypto';
 import { prisma } from '@/lib/prisma';
+import { sendAnyEmail } from '@/utils/sendAnyEmail';
+import { html_receipt, text_receipt } from '@/utils/htmlEmail';
 
 (BigInt.prototype as any).toJSON = function () {
     return this.toString();
@@ -64,11 +66,42 @@ export  async function POST(
                 data: arrayOfTickets
             }) 
                  
+              
+              if (userID) {
+                const user = await prisma.user.findUnique({
+                  where: {
+                    id: userID
+                  }
+                });
+              //Send email notification
+              const res1 = await sendAnyEmail({
+                email2: process.env.EMAIL_SERVER_USER ? process.env.EMAIL_SERVER_USER : '',
+                email1: process.env.EMAIL_SERVER_USER ? process.env.EMAIL_SERVER_USER : '',
+                subject: `New Purchase from ${user?.name} email ${user?.email} invoice# ${result.payment?.id}`,
+                text: text_receipt(items, result.payment?.id, amount),
+                html: html_receipt(items,result.payment?.id, amount),
+                attachments:[{
+                  filename: 'logo.png',
+                  path: process.env.NEXTAUTH_URL!+'/logo.png',
+                  cid: 'logo' //same cid value as in the html img src
+              },]   
+              }) 
+            } else{
+              const res1 = await sendAnyEmail({
+                email2: process.env.EMAIL_SERVER_USER ? process.env.EMAIL_SERVER_USER : '',
+                email1: process.env.EMAIL_SERVER_USER ? process.env.EMAIL_SERVER_USER : '',
+                subject: `New Purchase from unknown user invoice# ${result.payment?.id}`,
+                text: text_receipt(items, result.payment?.id, amount),
+                html: html_receipt(items,result.payment?.id, amount),
+                attachments:[{
+                  filename: 'logo.png',
+                  path: process.env.NEXTAUTH_URL!+'/logo.png',
+                  cid: 'logo' //same cid value as in the html img src
+              },]   
+              })
+            }
               await prisma.$disconnect()
               //Send success response
-
-              
-            console.log(result);
 
             return new NextResponse(
                 JSON.stringify({ message: 'Success' , status: 200,result,

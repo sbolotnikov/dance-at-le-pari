@@ -23,12 +23,13 @@ export default function LoadingScreen() {
 
   useEffect(() => {
     // setup buttons style on load
+    console.log('Loading...');
     StopScroll();
   }, []);
   return (
     <div
       className="w-[100vw] h-[100svh] absolute flex justify-center items-center bg-slate-500/70 left-0 z-[1001] backdrop-blur-md"
-      style={{ top: el!.scrollTop, zIndex: 101 }}
+      style={{ top: el!.scrollTop, zIndex: 2011 }}
     >
       <div
         className="m-auto  max-w-[600px] w-full h-full relative"

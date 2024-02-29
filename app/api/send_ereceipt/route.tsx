@@ -21,11 +21,9 @@ export async function POST(req: Request) {
     subject: `Purchase receipt for ${invoice}`,
     text: text_receipt(items, invoice, total),
     html: html_receipt(items, invoice, total),
-    attachments:attachments
-    
+    attachments:attachments   
   })
+ 
   
  return new NextResponse( JSON.stringify(res));
 }
-// qrCodes.map(qr => ({filename:qr, path:`./public/qr_codes/${qr}`, cid:qr}))
-// process.env.NEXTAUTH_URL!

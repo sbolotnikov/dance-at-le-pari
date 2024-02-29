@@ -2,24 +2,26 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store/store';
-import ShowIcon from './svg/showIcon';
 import QRCode from 'react-qr-code';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import * as htmlToImage from 'html-to-image';
 import AnimateModalLayout from './AnimateModalLayout';
-import Image from 'next/image';
 import ImgFromDb from './ImgFromDb';
+import { useSession } from 'next-auth/react';
 
 type Props = {
   visibility: boolean;
   invoice: string;
-  onReturn: () => void;
+  onReturn: (loadStatus:boolean, finished:boolean, emailSent:string | null) => void;
 };
 
 export default function ReceiptModal({ visibility, invoice, onReturn }: Props) {
   const [isVisible, setIsVisible] = useState(visibility);
+  const { data: session } = useSession();
   const [images, setImages] = useState<string[]>([]);
+  const [email, setEmail] = useState('');
+  const [emailValid, setEmailValid] = useState(false);
   const { items } = useSelector((state: RootState) => state.cart);
   useEffect(() => {
     console.log(isVisible);
@@ -38,7 +40,11 @@ export default function ReceiptModal({ visibility, invoice, onReturn }: Props) {
                     setImages(imgArray);
                   });
               } 
-            } 
+            }
+            if (session?.user) {
+              setEmail(session!.user.email)
+            }
+          //  console.log(session!.user.email);
   }, []);
 
   const downloadPDF = () => {
@@ -58,13 +64,21 @@ export default function ReceiptModal({ visibility, invoice, onReturn }: Props) {
       doc.save('receipt.pdf');
     });
   };
-
+  useEffect(() => {
+     if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email!)){
+      console.log("invalid email");
+      setEmailValid(false,);
+     }else{
+       console.log("email passed validation")
+       setEmailValid(true);
+     }
+  }, [email]);
   return (
     <AnimateModalLayout
       visibility={isVisible}
       onReturn={() => {
         setIsVisible(false);
-        onReturn();
+        onReturn(false, true, null);
       }}
     >
       <div className="border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-5xl  flex justify-center items-center flex-col  h-[70svh] md:h-[85svh] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
@@ -75,18 +89,28 @@ export default function ReceiptModal({ visibility, invoice, onReturn }: Props) {
         >
           Download Receipt
         </button>
+        {!(session?.user) &&<label className="flex flex-row items-center w-full ">
+                Email
+                <input
+                  className="flex-1 outline-none border-none rounded-md text-center text-lightMainColor p-0.5 ml-2"
+                  id="email"
+                  type="email" 
+                  onChange={(e)=>setEmail(e.target.value)}
+                />
+              </label>}
         <button
-          className="w-full btnFancy my-1 text-base text-center  rounded-md"
+          className={`w-full  my-1 text-base text-center  rounded-md ${(emailValid?"btnFancy":" ")}`}
           style={{ padding: '0' }}
+          disabled={!emailValid}
           onClick={() => {
-            
+              onReturn(true,false, null)
               fetch('/api/send_ereceipt', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                  email:"serge.bolotnikov@gmail.com",
+                  email:email,
                   items, 
                   qrCodes:images, 
                   invoice, 
@@ -97,7 +121,7 @@ export default function ReceiptModal({ visibility, invoice, onReturn }: Props) {
                   response.json()
                   )
                 .then((data) => {
-                  console.log(data);
+                  onReturn(false, true, data.accepted[0]);
                 })
                 .catch((error) => {
                   console.log(error);
