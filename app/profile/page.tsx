@@ -11,6 +11,7 @@ import ChooseAvatar from '@/components/chooseAvatar';
 import { deleteImage } from '@/utils/picturemanipulation';
 import ImgFromDb from '@/components/ImgFromDb';
 import { PageWrapper } from '@/components/page-wrapper';
+import Link from 'next/link';
 
 interface pageProps {}
 
@@ -245,6 +246,17 @@ const page: FC<pageProps> = () => {
             </div>
 
             <form onSubmit={handleSubmit}>
+              <Link href={'/purchases'}>
+                <button
+                  className="btnFancy w-[90%]"
+                  // onClick={(e)=>{
+                  //   e.preventDefault();
+                  //   handleSubmit();
+                  // }}
+                >
+                  Purchases
+                </button>
+              </Link>
               <label className="flex flex-col items-center p-1 rounded-t-md bottom-0">
                 Your Name:
                 <input
