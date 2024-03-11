@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import ShowIcon from './svg/showIcon';
 type Props = {
   dateDisplay: string;
+  defaultView:boolean;
   onNext: () => void;
   onBack: () => void;
   onStyle: (n: boolean) => void;
@@ -11,9 +12,11 @@ export const CalendarHeader = ({
   onBack,
   onStyle,
   dateDisplay,
+  defaultView
 }: Props) => {
   const [agendaView, setAgendaView] = useState(true);
   useEffect(() => {
+    if (defaultView === false){
     let agendaViewGet = JSON.parse(localStorage.getItem('AgendaView')!);
     console.log(agendaViewGet);
     if (agendaViewGet !== null) {
@@ -22,10 +25,11 @@ export const CalendarHeader = ({
     }else{
       onStyle(true)
     }
+  }
   }, []);
   return (
-    <div className="w-full flex justify-center item-end flex-row md:mt-6">
-      <button
+    <div className="w-full flex justify-center item-end flex-row">
+      {!defaultView &&<button
         className="group flex shadow-lg pointer border-0 relative outline-none rounded cursor-pointer items-center md:group-hover:scale-125 md:m-3 justify-center  md:w-14 flex-col md:items-center "
         onClick={(e) => {
           e.preventDefault();
@@ -45,19 +49,19 @@ export const CalendarHeader = ({
         <p className=" tracking-widest  absolute bottom-0 right-0  flex-wrap  rounded-md  text-xs  group-hover:inline-flex bg-transparent dark:text-darkMainColor text-lightMainColor md:group-hover:block z-10 hidden ">
           {!agendaView ? 'Agenda' : 'Classic'}
         </p>
-      </button>
+      </button>}
 
-      {!agendaView && (
-        <div className="mx-3 font-bold  text-base md:text-4xl my-2 md:mb-0 text-franceBlue dark:text-darkMainColor  md:font-DancingScript">
+      {(!agendaView || defaultView )&& (
+        <div className=" font-bold  text-base md:text-4xl mt-4 md:my-2 md:mx-3 text-franceBlue dark:text-darkMainColor  md:font-DancingScript">
           {dateDisplay}
         </div>
       )}
-       {agendaView && (
+       {(agendaView && !defaultView ) && (
         <div className="mx-3 font-bold text-base md:text-4xl flex items-center my-2 md:mb-0 text-franceBlue dark:text-darkMainColor  md:font-DancingScript">
           {"Agenda"}
         </div>
       )}
-      {!agendaView && (<button
+      {(!agendaView || defaultView ) && (<button
         className="shadow-lg pointer border-0 outline-none rounded"
         onClick={onBack}
         style={{ padding: '5px 5px', margin: '10px 10px' }}
@@ -66,7 +70,7 @@ export const CalendarHeader = ({
         Previous
       </button>
       )}
-      {!agendaView && (<button
+      {(!agendaView || defaultView ) && (<button
         className="shadow-lg pointer border-0 outline-none rounded"
         onClick={onNext}
         style={{ padding: '5px 5px', margin: '10px 10px' }}

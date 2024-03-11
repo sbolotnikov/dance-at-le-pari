@@ -74,6 +74,7 @@ const Schedule = ({ eventsSet, onReturn }: Props) => {
     <div className="w-full h-full  flex flex-col ">
       <CalendarHeader
         dateDisplay={dateDisplay}
+        defaultView={false}
         onNext={() => setNav(nav + 1)}
         onBack={() => setNav(nav - 1)}
         onStyle={(n) => setAgendaView(n)}
