@@ -4,6 +4,7 @@ import LoadingScreen from '../../components/LoadingScreen';
 import { PageWrapper } from '../../components/page-wrapper';
 import ImgFromDb from '@/components/ImgFromDb';
 import { useSession } from 'next-auth/react';
+import AlertMenu from '@/components/alertMenu';
 interface pageProps {}
 type Purchase = {
   activityID: number;
@@ -38,6 +39,23 @@ const page: FC<pageProps> = ({}) => {
       email: string;
     }[]
   >([]);
+  const [revealAlert, setRevealAlert] = useState(false);
+  const [alertStyle, setAlertStyle] = useState({
+    variantHead: '',
+    heading: '',
+    text: ``,
+    color1: '',
+    button1: '',
+    color2: '',
+    button2: '',
+    inputField: '',
+  });
+  const onReturnAlert = (decision1: string, inputValue: string | null) => {
+    setRevealAlert(false);
+    console.log(decision1, inputValue);
+    window.location.reload();
+  };
+  const statuses = ['Purchased', 'Used', 'Pending'];
   const { data: session } = useSession();
   useEffect(() => {
     if (session) {
@@ -63,6 +81,7 @@ const page: FC<pageProps> = ({}) => {
                 role: string;
                 email: string;
               }[] = [];
+              
               for (let i = 0; i < data.purchases.length; i++) {
                 if (data.purchases[i].userID !== null) {
                   if (!users.includes(data.purchases[i].userID)) {
@@ -87,12 +106,23 @@ const page: FC<pageProps> = ({}) => {
                 else return 0;
               });
               setUsers([...usersArray]);
+              console.log(usersArray);
             }
           }
         });
       });
     }
   }, [session]);
+  useEffect(() => {
+  let lastID = JSON.parse(localStorage.getItem('last_UserID')!);
+  if (((lastID) ||(lastID==null))&&(users.length>0)) {
+    let lastID_Position=users.findIndex((user:any)=>user.id==lastID);
+    console.log(lastID_Position, users, lastID);
+    setChoosenUser(lastID_Position);
+    filterByUser(lastID);
+    console.log('lastID', lastID);
+  }
+}, [users]);
   const filterByUser = (id: number | null) => {
     let filteredPurchases: Purchase[] = [];
     for (let i = 0; i < allPurchases.length; i++) {
@@ -102,9 +132,13 @@ const page: FC<pageProps> = ({}) => {
     }
     setPurchases(filteredPurchases);
   };
+
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
       {loading && <LoadingScreen />}
+      {revealAlert && (
+        <AlertMenu onReturn={onReturnAlert} styling={alertStyle} />
+      )}
       <div className="   shadow-2xl w-[90%]  max-w-[1000px] md:w-full h-[70svh] md:h-[90%] bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md border-0 rounded-md  p-2 mt-6">
         <div className="border rounded-md border-lightMainColor dark:border-darkMainColor w-full h-full relative  p-1 flex  overflow-y-scroll">
           <div className="flex flex-col w-[900px] p-1 justify-center items-center absolute top-0 left-0">
@@ -115,10 +149,9 @@ const page: FC<pageProps> = ({}) => {
               <div className="w-full flex flex-col justify-start items-start p-1 relative">
                 {users.length > 0 && (
                   <button
-                    onClick={() => {setRevalUsersList(true)
-                    
-                    }
-                    }
+                    onClick={() => {
+                      setRevalUsersList(true);
+                    }}
                     className="bg-lightMainBG dark:bg-darkMainBG/70 text-lightMainColor dark:text-darkMainColor border border-lightMainColor dark:border-darkMainColor rounded-md min-w-fit flex flex-row justify-center items-center m-1 p-1"
                   >
                     <ImgFromDb
@@ -135,15 +168,19 @@ const page: FC<pageProps> = ({}) => {
                     </h3>
                   </button>
                 )}
-                <div className={`w-full flex flex-col justify-start items-start absolute left-0 top-24 ${(revalUsersList)?"":"hidden"}`}>
+                <div
+                  className={`w-full flex flex-col justify-start items-start absolute left-0 top-24 ${
+                    revalUsersList ? '' : 'hidden'
+                  }`}
+                >
                   {users.map((user, index) => (
                     <button
                       key={index}
-                      onClick={() =>{ 
+                      onClick={() => {
                         filterByUser(user.id);
-                        setRevalUsersList(false)
-                        setChoosenUser(index)
-                    }}
+                        setRevalUsersList(false);
+                        setChoosenUser(index);
+                      }}
                       className="bg-lightMainBG dark:bg-darkMainBG/70 text-lightMainColor dark:text-darkMainColor border border-lightMainColor dark:border-darkMainColor rounded-md min-w-fit flex flex-row justify-center items-center m-1 p-1"
                     >
                       <ImgFromDb
@@ -233,10 +270,71 @@ const page: FC<pageProps> = ({}) => {
                         Invoice: {purchase.invoice}{' '}
                       </p>
                       <p className="text-center">
-                        Price & Quantity: {purchase.amount} x ${(purchase.eventtype=="Party")?purchase.price:(purchase.price/purchase.amount).toFixed(2)}{' '}
-                        = ${(purchase.eventtype=="Party")?purchase.amount * purchase.price:purchase.price}
+                        Price & Quantity: {purchase.amount} x $
+                        {purchase.eventtype == 'Party'
+                          ? purchase.price
+                          : (purchase.price / purchase.amount).toFixed(2)}{' '}
+                        = $
+                        {purchase.eventtype == 'Party'
+                          ? purchase.amount * purchase.price
+                          : purchase.price}
                       </p>
-                      <p className="text-center">Status: {purchase.status} </p>
+                      {session?.user.role == 'Admin' ? (
+                        <div>
+                          <select
+                            className="bg-main-bg m-2 rounded-md bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor"
+                            value={purchase.status}
+                            onChange={(e) => {
+                              e.preventDefault();
+                              console.log(statuses[parseInt(e.target.value)]);
+                              console.log(purchase)
+                              localStorage.setItem('last_UserID', JSON.stringify(purchase.userID));
+                              console.log(purchase.id)
+                              fetch('/api/admin/update_purchase_status', {
+                                method: 'PUT',
+                                headers: {
+                                  'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                  id: purchase.id,
+                                  status: e.target.value,
+                                }),
+                              })
+                                .then((response) => response.json())
+                                .then((data) => {
+                                  console.log(data);
+                                  setAlertStyle({
+                                    variantHead: 'info',
+                                    heading: 'Information',
+                                    text: "Successfully update the purchase status!",
+                                    color1: 'success',
+                                    button1: 'Return',
+                                    color2: '',
+                                    button2: '',
+                                    inputField: '',
+                                  });
+                                  setRevealAlert(true);
+                                  // if (data.status == 201) {
+                                  //   let purchases1=purchases
+                                  //   purchases1.filter(p => p.id == purchase.id)[0].status = e.target.value
+                                  //   setPurchases(purchases1)
+
+                                  // }
+                            })
+                          }}
+                          >
+                            {statuses.map((option, index) => (
+                              <option key={'Status' + index} value={option} >
+                                {option}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      ) : (
+                        <p className="text-center">
+                          Status: {purchase.status}{' '}
+                        </p>
+                      )}
                       <p className="text-center">
                         Purchased at:{' '}
                         {purchase.purchasedAt
