@@ -17,7 +17,7 @@ export  async function POST(
       return res.status(405).end();
     }
     const data = await req.json();
-    const {name, id, image,email,phone, password} = data;
+    const {name, id, image,email,phone, password, bio, color} = data;
 
 
     //Connect with database
@@ -41,6 +41,8 @@ export  async function POST(
    if (user?.name!==name) obj.name = name;
    if (user?.image!==image) obj.image = image;
    if (user?.telephone!==phone) obj.telephone = phone;
+   if (user?.bio!==bio) obj.bio = bio;
+   if (user?.color!==color) obj.color = color;
    if (user?.email!==email) {obj.email = email; obj.emailVerified=null}
    if (password.length>0){
     //Hash password  process.env.BCRYPT_SALT

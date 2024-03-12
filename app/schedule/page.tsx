@@ -6,23 +6,19 @@ import ImgFromDb from '@/components/ImgFromDb';
 import { useSession } from 'next-auth/react';
 import AlertMenu from '@/components/alertMenu';
 import { CalendarHeader } from '@/components/CalendarHeader';
-import { Day } from '@/components/Day';
-import { TEventArray } from '@/types/screen-settings';
-import { useDate } from '@/hooks/useDate';
+import { TEventScheduleArray } from '@/types/screen-settings';
 import ShowIcon from '@/components/svg/showIcon';
-// import CopyPasteModal from './CopyPasteModal';
-// type Props = {
-//   eventsSet: TEventArray;
-//   onReturn: (day: string) => void;
-// };
+import { DaySchedule } from '@/components/DaySchedule';
+import { useScheduleDate } from '@/hooks/useScheduleDate';
+import EditScheduleModal from '@/components/EditScheduleModal';
 
-// const Schedule = ({ eventsSet, onReturn }: Props) => {
 
 interface pageProps {}
 
 const page: FC<pageProps> = ({}) => {
   const [loading, setLoading] = useState(false);
   const [revealAlert, setRevealAlert] = useState(false);
+  const [revealModal, setRevealModal] = useState(false);
   const [alertStyle, setAlertStyle] = useState({
     variantHead: '',
     heading: '',
@@ -34,8 +30,9 @@ const page: FC<pageProps> = ({}) => {
     inputField: '',
   });
   const [nav, setNav] = useState(0);
-  const [events, setEvents] = useState([] as TEventArray);
-  const { days, dateDisplay } = useDate(events, nav);
+  const [events, setEvents] = useState([] as TEventScheduleArray);
+  const [users, setUsers] = useState<{id: number,name:string, color:string |null}[]>([])
+  const { days, dateDisplay } = useScheduleDate(events, nav);
   const weekdayName = [
     'Sunday',
     'Monday',
@@ -68,7 +65,34 @@ const page: FC<pageProps> = ({}) => {
     window.location.reload();
   };
   const { data: session } = useSession();
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (session) {
+      setLoading(true);
+      fetch('/api/schedule', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          setEvents(data);
+          fetch('/api/users_info_color', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              console.log(data);
+              setUsers(data);
+              setLoading(false);
+            });
+        });
+    }
+  }, [session]);
 
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
@@ -76,17 +100,22 @@ const page: FC<pageProps> = ({}) => {
       {revealAlert && (
         <AlertMenu onReturn={onReturnAlert} styling={alertStyle} />
       )}
+      {revealModal && (
+        <EditScheduleModal visibility={revealModal} onReturn={()=>{console.log("Return fromedit modal");setRevealModal(false)}}/>
+
+      )}
+
       <div className="   shadow-2xl w-[90%]  max-w-[1000px] md:w-full h-[70svh] md:h-[90%] bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md border-0 rounded-md  p-2 mt-6">
         <div className="border rounded-md border-lightMainColor dark:border-darkMainColor w-full h-full relative  p-1 flex  overflow-y-scroll">
           <div className="flex flex-col w-full p-1 justify-center items-center absolute top-0 left-0">
-          <h2
+            <h2
               className="text-center font-bold uppercase"
               style={{ letterSpacing: '1px' }}
             >
               Scheduling Tool
             </h2>
             <div className=" h-20 w-20 md:h-28 md:w-28 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor m-auto">
-              <ShowIcon icon={'Calendar'} stroke={'0.1'} />
+              <ShowIcon icon={'Schedule'} stroke={'0.1'} />
             </div>
             <CalendarHeader
               dateDisplay={dateDisplay}
@@ -97,8 +126,16 @@ const page: FC<pageProps> = ({}) => {
             />
             <div
               id="weekdays"
-              className="w-full flex text-lightMainBG bg-franceBlue dark:text-franceBlue dark:bg-lightMainBG"
-            >
+              className="w-full flex text-lightMainBG bg-franceBlue dark:text-franceBlue dark:bg-lightMainBG relative"
+            > 
+             <div className="cursor-pointer h-8 w-8 md:h-10 md:w-10 border-2 rounded-md md:-top-12 bg-editcolor m-auto absolute right-1 -top-10"
+             onClick={(e)=>{
+                e.preventDefault();
+                setRevealModal(true);
+            }}
+             >
+              <ShowIcon icon={'Plus'} stroke={'0.1'} />
+            </div>
               {weekdayName.map((item, i) => {
                 return (
                   <div
@@ -113,9 +150,10 @@ const page: FC<pageProps> = ({}) => {
             <div id="calendar" className="w-full m-auto flex flex-wrap">
               {days &&
                 days.map((d, index) => (
-                  <Day
+                  <DaySchedule
                     key={index}
                     day={d}
+                    users={users}
                     onClick={() => {
                       if (d.value !== 'padding') {
                         let dt = new Date();

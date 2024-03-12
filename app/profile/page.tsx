@@ -6,12 +6,12 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import AlertMenu from '../../components/alertMenu';
 import ShowIcon from '@/components/svg/showIcon';
-import Loading from '@/components/Loading';
 import ChooseAvatar from '@/components/chooseAvatar';
 import { deleteImage } from '@/utils/picturemanipulation';
 import ImgFromDb from '@/components/ImgFromDb';
 import { PageWrapper } from '@/components/page-wrapper';
 import Link from 'next/link';
+import LoadingScreen from '@/components/LoadingScreen';
 
 interface pageProps {}
 
@@ -44,12 +44,30 @@ const page: FC<pageProps> = () => {
     if (session?.user.name) userNameRef.current!.value = session?.user.name;
     if (session?.user.telephone) setPhone(session?.user.telephone);
     if (session?.user.email) emailRef.current!.value = session?.user.email;
+    if (session?.user.role == 'Admin' || session?.user.role == 'Teacher') {
+      fetch('/api/user_info', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: session?.user.id }),
+      })
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          console.log(data);
+          data.bio == null ? setBio('') : setBio(data.bio);
+          data.color == null ? setColor('#e66465') : setColor(data.color);
+        });
+    }
   }, [session]);
   const [userURL, setUserURL] = useState(session?.user.image);
   const [phone, setPhone] = useState(
     session?.user.telephone ? session?.user.telephone : ''
   );
-
+  const [color, setColor] = useState('');
+  const [bio, setBio] = useState('');
   const onReturn = (decision1: string) => {
     setRevealAlert(false);
     if (decision1 == 'Close') {
@@ -144,6 +162,8 @@ const page: FC<pageProps> = () => {
         email: emailRef.current?.value,
         phone,
         password: passwordRef.current?.value,
+        color, 
+        bio
       }),
     }).then(async (res) => {
       let dbStoragePath =
@@ -184,7 +204,7 @@ const page: FC<pageProps> = () => {
       {revealCloud && (
         <ChooseAvatar onReturn={onReturnAvatar} styling={alertStyle} />
       )}
-      {loading && <Loading />}
+      {loading && <LoadingScreen />}
       <div className="   shadow-2xl w-[90%]  max-w-[450px] md:w-full h-[70svh] md:h-[90%] bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md border-0 rounded-md  p-2 mt-6">
         <div className="border rounded-md border-lightMainColor dark:border-darkMainColor w-full h-full relative  p-1 flex  overflow-y-scroll">
           <div className="flex flex-col w-full p-1 justify-center items-center absolute top-0 left-0">
@@ -319,6 +339,42 @@ const page: FC<pageProps> = () => {
                   value={'+1 ' + phone}
                 />
               </label>
+              {(session?.user.role == 'Admin' ||
+                session?.user.role == 'Teacher') && (
+                <label className="flex flex-col items-center justify-center w-full p-1  rounded-t-md bottom-0">
+                  Color:
+                  <div className="h-8 w-8 rounded-full overflow-hidden border-none relative">
+                    <input
+                      className=" outline-none h-10 w-10  absolute -top-1 -left-1  border-none "
+                      name="color"
+                      id="color"
+                      type="color"
+                      value={color}
+                      onChange={(e) => {
+                        setColor(e.target.value);
+                      }}
+                    />
+                  </div>
+                </label>
+              )}
+              {(session?.user.role == 'Admin' ||
+                session?.user.role == 'Teacher') && (
+                <label className="flex flex-col items-center p-1  rounded-t-md bottom-0">
+                  Bio:
+                  <textarea
+                    className="flex-1 outline-none bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor border-none rounded-md bg-main-bg p-0.5 mx-1 my-1"
+                    name="bio"
+                    id="bio"
+                    placeholder="Enter your bio here"
+                    rows={5}
+                    cols={33}
+                    onChange={(e) => {
+                      setBio(e.target.value);
+                    }}
+                    value={bio}
+                  />
+                </label>
+              )}
               <button
                 disabled={loading}
                 className="btnFancy w-[90%]"

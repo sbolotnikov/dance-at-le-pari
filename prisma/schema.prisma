@@ -19,6 +19,7 @@ model User {
   emailVerified DateTime?  
   password String? 
   telephone String?
+  color String?
   bio String?  
   role String @default("Student")
   createdAt DateTime @default(now())
@@ -66,6 +67,19 @@ model Event {
    specialEvent Boolean @default(false)
 }
 
+model ScheduleEvent {
+   id Int @id @default(autoincrement())
+   date String
+   tag String @default("")
+   eventtype EventType @default(Group)
+   length Int
+   teachersid Int[]
+   studentid Int[]
+   location String?
+   repeating Boolean @default(false)
+   interval Int?
+   until String?
+}
 model Purchase {
 id Int @id @default(autoincrement())
 activityID Int

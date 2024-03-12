@@ -19,6 +19,27 @@ export interface IScreenSettings {
     isCurrentDay: boolean,
     date: string,
   }
+  export type TEventSchedule = {
+    date: string;
+    tag: string;
+    id: number;
+    image: string;
+    eventtype: string;
+    interval:number |null;
+    length:number;
+    location:string | null;
+    repeating: boolean;
+    studentid: number[];
+    teachersid: number[];
+   until: string | null;
+  }
+  type TEventScheduleArray = TEventSchedule[];
+  type TDaySchedule ={
+    value: string,
+    event: TEventScheduleArray | null;
+    isCurrentDay: boolean,
+    date: string,
+  }
   type TFullEvent = {
     eventtype: EventType;
     length:number;
