@@ -16,6 +16,7 @@ interface pageProps {}
 
 const page: FC<pageProps> = ({}) => {
   const [loading, setLoading] = useState(false);
+  const { data: session } = useSession();
   const [revealAlert, setRevealAlert] = useState(false);
   const [revealModal, setRevealModal] = useState(false);
   const [alertStyle, setAlertStyle] = useState({
@@ -72,7 +73,6 @@ const page: FC<pageProps> = ({}) => {
     console.log(decision1, inputValue);
     window.location.reload();
   };
-  const { data: session } = useSession();
   useEffect(() => {
     if (session) {
       setLoading(true);
@@ -108,16 +108,16 @@ const page: FC<pageProps> = ({}) => {
       {revealAlert && (
         <AlertMenu onReturn={onReturnAlert} styling={alertStyle} />
       )}
-      {revealModal && (
+      {(revealModal && ((session?.user.role === 'Admin') || session?.user.role === 'Teacher')) && (
         <EditScheduleModal
           visibility={revealModal}
           event={selectedEvent}
           users={users}
-          onReturn={(n) => {
-            console.log(n);
+          onReturn={async (n, del) => {
             setRevealModal(false);
             let dateArr = [] as string[];
             if (n !== null) {
+              setLoading(true);
               let newScheduleArr = [];
               if (n.repeating == true && n.interval! > 0) {
                 let dateObj = Date.parse(n.date);
@@ -171,20 +171,48 @@ const page: FC<pageProps> = ({}) => {
                   studentid: n.studentid,
                   location: n.location,
                 });
+              } else {
+                const res = await fetch('/api/teacher/schedule_event/edit', {
+                  method: 'PUT',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    id: n.id,
+                    data: {
+                      date: n.date,
+                      tag: n.tag,
+                      eventtype: n.eventtype,
+                      length: n.length,
+                      teachersid: n.teachersid,
+                      studentid: n.studentid,
+                      location: n.location,
+                    },
+                  }),
+                });
+                console.log(res);
               }
-
-              fetch('/api/teacher/schedule_event/create', {
+              if (newScheduleArr.length > 0) {
+                const res1 = await fetch('/api/teacher/schedule_event/create', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify([...newScheduleArr]),
+                });
+              }
+              window.location.reload();
+            }
+            if (del!==null){
+                setLoading(true);
+                const res = await fetch('/api/teacher/schedule_event/delete', {
                 method: 'POST',
                 headers: {
-                  'Content-Type': 'application/json',
+                  'Content-Type': 'application/json'
                 },
-                body: JSON.stringify([...newScheduleArr]),
-              })
-                .then((response) => response.json())
-                .then((data) => {
-                  console.log(data);
-                  window.location.reload();
-                });
+                body: JSON.stringify({id: del.id})
+              });
+              window.location.reload();
             }
           }}
         />
@@ -213,7 +241,7 @@ const page: FC<pageProps> = ({}) => {
               id="weekdays"
               className="w-full flex text-lightMainBG bg-franceBlue dark:text-franceBlue dark:bg-lightMainBG relative"
             >
-              <div
+              { ((session?.user.role === 'Admin') || session?.user.role === 'Teacher') &&<div
                 className="cursor-pointer h-8 w-8 md:h-10 md:w-10 border-2 rounded-md md:-top-12 bg-editcolor m-auto absolute right-1 -top-10"
                 onClick={(e) => {
                   e.preventDefault();
@@ -222,7 +250,7 @@ const page: FC<pageProps> = ({}) => {
                 }}
               >
                 <ShowIcon icon={'Plus'} stroke={'0.1'} />
-              </div>
+              </div>}
               {weekdayName.map((item, i) => {
                 return (
                   <div

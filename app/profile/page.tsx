@@ -269,12 +269,15 @@ const page: FC<pageProps> = () => {
               <Link href={'/purchases'}>
                 <button
                   className="btnFancy w-[90%]"
-                  // onClick={(e)=>{
-                  //   e.preventDefault();
-                  //   handleSubmit();
-                  // }}
                 >
                   Purchases
+                </button>
+              </Link>
+              <Link href={'/schedule'}>
+                <button
+                  className="btnFancy w-[90%]"
+                >
+                  Schedule Tool
                 </button>
               </Link>
               <label className="flex flex-col items-center p-1 rounded-t-md bottom-0">

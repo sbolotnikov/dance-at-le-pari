@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 
 import AnimateModalLayout from './AnimateModalLayout';
 import ImgFromDb from './ImgFromDb';
-import { useSession } from 'next-auth/react';
 import { TEventSchedule, TTeacherInfo } from '@/types/screen-settings';
 import ShowIcon from './svg/showIcon';
 import ChooseUsersQuick from './ChooseUsersQuick';
@@ -19,7 +18,7 @@ type Props = {
     role: string;
     color: string | null;
   }[];
-  onReturn: (n:TEventSchedule |null) => void;
+  onReturn: (n: TEventSchedule | null, del:{s:string, id:number} | null) => void;
 };
 
 export default function EditScheduleModal({
@@ -29,7 +28,6 @@ export default function EditScheduleModal({
   onReturn,
 }: Props) {
   const [isVisible, setIsVisible] = useState(visibility);
-  const { data: session } = useSession();
   const [eventType, setEventType] = useState('Private');
   const [location, setLocation] = useState('Main ballroom');
   const [eventDateTime1, setEventDateTime1] = useState('');
@@ -66,14 +64,14 @@ export default function EditScheduleModal({
         dt.toLocaleString('es-CL').split(' ')[1].slice(0, -3)
     );
     setEventDateTimeEnd(
-        dt.toLocaleDateString('sv-SE', {
-          year: 'numeric',
-          month: 'numeric',
-          day: 'numeric',
-        }) +
-          'T' +
-          dt.toLocaleString('es-CL').split(' ')[1].slice(0, -3)
-      );
+      dt.toLocaleDateString('sv-SE', {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+      }) +
+        'T' +
+        dt.toLocaleString('es-CL').split(' ')[1].slice(0, -3)
+    );
     dt.setMinutes(dt.getMinutes() + length1); // timestamp
     dt = new Date(dt);
     setEventDateTime2(
@@ -88,18 +86,17 @@ export default function EditScheduleModal({
         })
     );
     if (event.id !== undefined) {
-        setEventType(event.eventtype);
-        setTag(event.tag);
-        setLocation(event.location!);
-        setEventDateTime1(event.date);
-        setEventDateTimeEnd(event.date);
-        setLength(event.length);
-        if (event.teachersid.length===1){
-             let user1=users.filter(user=>user.id==event.teachersid[0])[0];
-             setTeacher({id:user1.id, name:user1.name, image:user1.image!});
-        }
-        setStudentid(event.studentid)
-        
+      setEventType(event.eventtype);
+      setTag(event.tag);
+      setLocation(event.location!);
+      setEventDateTime1(event.date);
+      setEventDateTimeEnd(event.date);
+      setLength(event.length);
+      if (event.teachersid.length === 1) {
+        let user1 = users.filter((user) => user.id == event.teachersid[0])[0];
+        setTeacher({ id: user1.id, name: user1.name, image: user1.image! });
+      }
+      setStudentid(event.studentid);
     }
     console.log(event);
   }, []);
@@ -133,6 +130,16 @@ export default function EditScheduleModal({
     }
   };
   const onReturnAlert = (decision1: string, inputValue: string | null) => {
+    if (decision1 == 'Cancel') {
+      setRevealAlert(false);
+      return;
+    }
+    if (decision1 == 'Confirm') {
+      setRevealAlert(false);
+      setIsVisible(false);
+      onReturn(null, {s:"Delete", id: event.id});
+
+    }
     setRevealAlert(false);
   };
   return (
@@ -140,10 +147,10 @@ export default function EditScheduleModal({
       visibility={isVisible}
       onReturn={() => {
         setIsVisible(false);
-        onReturn(null);
+        onReturn(null, null);
       }}
     >
-        {revealAlert && (
+      {revealAlert && (
         <AlertMenu onReturn={onReturnAlert} styling={alertStyle} />
       )}
       {revealCloud1 && (
@@ -163,11 +170,9 @@ export default function EditScheduleModal({
       <div className="border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-5xl  flex justify-center items-center flex-col  h-[70svh] md:h-[85svh] md:w-full bg-lightMainBG dark:bg-darkMainBG backdrop-blur-md">
         <div className="w-full h-full relative  p-1 flex  overflow-y-scroll border border-lightMainColor dark:border-darkMainColor rounded-md">
           <div className=" flex flex-col w-full p-1 justify-center items-center absolute top-0 left-0">
-            <h2 className="w-full text-center capitalize">
-              Edit/ Add Schedule
-            </h2>
+            <h2 className="w-full text-center uppercase">Edit/Add Schedule</h2>
             <label className="flex flex-col justify-between items-center mb-1">
-              Choose Teacher
+              Choose Instructor
               <div className="relative flex justify-center items-center outline-none border border-lightMainColor dark:border-darkMainColor rounded-md w-24 my-6 mx-auto">
                 {teacher?.image !== null &&
                 teacher?.image !== '' &&
@@ -230,9 +235,12 @@ export default function EditScheduleModal({
                               // setTemplate1(item);
                             }}
                           >
-                            {users.filter((user) => user.id == item)[0].image == null ||
-                            users.filter((user) => user.id == item)[0].image == '' ||
-                            users.filter((user) => user.id == item)[0].image == undefined ? (
+                            {users.filter((user) => user.id == item)[0].image ==
+                              null ||
+                            users.filter((user) => user.id == item)[0].image ==
+                              '' ||
+                            users.filter((user) => user.id == item)[0].image ==
+                              undefined ? (
                               <ShowIcon icon={'DefaultUser'} stroke={'2'} />
                             ) : (
                               <ImgFromDb
@@ -329,7 +337,8 @@ export default function EditScheduleModal({
                         timeStyle: 'short',
                       })
                   );
-                  if (eventDateTimeEnd<e.target.value) setEventDateTimeEnd(e.target.value);
+                  if (eventDateTimeEnd < e.target.value)
+                    setEventDateTimeEnd(e.target.value);
 
                   setEventDateTime1(e.target.value);
                 }}
@@ -383,72 +392,94 @@ export default function EditScheduleModal({
                 }}
               />
             </label>
-            {repeating && <label className="flex flex-row m-auto justify-between items-center">
-              Interval of repeating
-              <select
-                className="bg-main-bg m-2 rounded-md bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor"
-                value={repeatInterval}
-                onChange={(e) => {
-                  setRepeatInterval(parseInt(e.target.value));
-                }}
-              >
-                <option value={0}>None</option>
-                <option value={24 * 3600000}>Every Day</option>
-                <option value={24 * 3600000 * 7}>Every Week</option>
-                <option value={24 * 3600000 * 14}>Every 2 Week</option>
-              </select>
-            </label>}
-            {repeating && <label className="flex flex-row justify-between items-center">
-              End of interval date
-              <input
-                className="flex-1 outline-none border-none rounded-md   text-lightMainColor p-0.5 mx-1"
-                value={eventDateTimeEnd} 
-                onChange={(e) => { 
-                  if (e.target.value>=eventDateTime1)  setEventDateTimeEnd(e.target.value);
-                }}
-                type="datetime-local"
-                required
-              />
-            </label>}
-            <button
-                  className="w-[50%] btnFancy text-base text-center  rounded-md"
-                  style={{ padding: '0' }}
-                  onClick={() => {
-                    if (teacher?.id==undefined) {
-                        setAlertStyle({
-                            variantHead: 'danger',
-                            heading: 'Warning',
-                            text: 'Please select a instructor before saving the event',
-                            color1: '',
-                            button1: '',
-                            color2: 'secondary',
-                            button2: 'Cancel',
-                            inputField: '',
-                          });
-                          setRevealAlert(!revealAlert);
-                        
-                        
-                        return;
-                    }
-                    setIsVisible(false);
-                    onReturn(
-                      {eventtype: eventType,
-                       tag:tag, 
-                      location: location,
-                      date: eventDateTime1,
-                      length: length1,
-                      teachersid: teacher?.id == undefined?[]:[teacher?.id],
-                      studentid: studentid,
-                      repeating: repeating,
-                      interval: repeatInterval,
-                        until: eventDateTimeEnd,
-                        id: event.id==undefined?-1:event.id,
-                      });
+            {repeating && (
+              <label className="flex flex-row m-auto justify-between items-center">
+                Interval of repeating
+                <select
+                  className="bg-main-bg m-2 rounded-md bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor"
+                  value={repeatInterval}
+                  onChange={(e) => {
+                    setRepeatInterval(parseInt(e.target.value));
                   }}
-
                 >
-                  {'Create Event'}
+                  <option value={0}>None</option>
+                  <option value={24 * 3600000}>Every Day</option>
+                  <option value={24 * 3600000 * 7}>Every Week</option>
+                  <option value={24 * 3600000 * 14}>Every 2 Week</option>
+                </select>
+              </label>
+            )}
+            {repeating && (
+              <label className="flex flex-row justify-between items-center">
+                End of interval date
+                <input
+                  className="flex-1 outline-none border-none rounded-md   text-lightMainColor p-0.5 mx-1"
+                  value={eventDateTimeEnd}
+                  onChange={(e) => {
+                    if (e.target.value >= eventDateTime1)
+                      setEventDateTimeEnd(e.target.value);
+                  }}
+                  type="datetime-local"
+                  required
+                />
+              </label>
+            )}
+            <button
+              className="w-[50%] btnFancy text-base text-center  rounded-md"
+              style={{ padding: '0' }}
+              onClick={() => {
+                if (teacher?.id == undefined) {
+                  setAlertStyle({
+                    variantHead: 'danger',
+                    heading: 'Warning',
+                    text: 'Please select a instructor before saving the event',
+                    color1: '',
+                    button1: '',
+                    color2: 'secondary',
+                    button2: 'Cancel',
+                    inputField: '',
+                  });
+                  setRevealAlert(!revealAlert);
+
+                  return;
+                }
+                setIsVisible(false);
+                onReturn({
+                  eventtype: eventType,
+                  tag: tag,
+                  location: location,
+                  date: eventDateTime1,
+                  length: length1,
+                  teachersid: teacher?.id == undefined ? [] : [teacher?.id],
+                  studentid: studentid,
+                  repeating: repeating,
+                  interval: repeatInterval,
+                  until: eventDateTimeEnd,
+                  id: event.id == undefined ? -1 : event.id,
+                }, null);
+              }}
+            >
+              {`${event.id ? 'Edit' : 'Create'} Event`}
             </button>
+            {(event.id !== undefined) && <button
+              className="w-[50%] btnFancy text-base text-center  rounded-md"
+              style={{ padding: '0' }}
+              onClick={() => {
+                setAlertStyle({
+                  variantHead: 'danger',
+                  heading: 'Warning',
+                  text: 'Are you sure you want to delete this event?',
+                  color1: 'danger',
+                  button1: 'Confirm',
+                  color2: 'secondary',
+                  button2: 'Cancel',
+                  inputField: '',
+                });
+                setRevealAlert(!revealAlert);
+              }}
+            >
+              {`Delete Event`}
+            </button>}
           </div>
         </div>
       </div>
