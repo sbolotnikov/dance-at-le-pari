@@ -9,5 +9,9 @@ export async function middleware(req:NextRequest) {
 
     
   }
- 
+  if (req.nextUrl.pathname.includes("/teacher")) {
+    if ((!session)||((session.role=='User')||(session.role=='Student'))) return NextResponse.redirect(process.env.NEXTAUTH_URL!);
+
+    
+  }
 }

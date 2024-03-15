@@ -12,6 +12,6 @@ export async function GET(req: Request) {
         JSON.stringify({ message: 'No  users exist',status: 422}),
       );
     }
-    const info=users.map((user)=>{return {id:user.id, color:user.color, name:user.name}})
+    const info=users.map((user)=>{return {id:user.id, color:user.color,role:user.role, image:user.image, name:user.name}})
   return new NextResponse(JSON.stringify(info), {status: 201});
 }

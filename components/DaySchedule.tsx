@@ -3,9 +3,9 @@ import Link from 'next/link';
 type Props = {
   day: TDaySchedule;
   users: { id: number; name: string; color: string | null }[];
-  onClick: () => void;
+  onClick: () => void; onEventClick: (n:number) => void;
 };
-export const DaySchedule = ({ day, users, onClick }: Props) => {
+export const DaySchedule = ({ day, users, onClick, onEventClick }: Props) => {
   const className = `day ${day.value === 'padding' ? 'padding' : ''} ${
     day.isCurrentDay ? ' border-red-800 border-2 rounded-md' : ''
   }`;
@@ -51,7 +51,7 @@ export const DaySchedule = ({ day, users, onClick }: Props) => {
                 key={day.value + 'day' + index}
                 className="text-xs cursor-pointer flex flex-row justify-start items-center m-0.5 rounded-md truncate"
                 style={{ backgroundColor: getColor(event.teachersid[0]) }}
-                onClick={(e)=>{e.preventDefault(); console.log("EventID:"+event.id)}}
+                onClick={(e)=>{e.preventDefault(); onEventClick(event.id)}}
               >
                 <span className="text-xs hidden md:block md:m-1">
                   {new Date(event.date).toLocaleTimeString('en-US', {

@@ -9,9 +9,11 @@ import { TTeacherInfo } from '@/types/screen-settings';
 
 type TAlertType = {
   onReturn: (val: string, val2: TTeacherInfo | null) => void;
+  group: string;
+  title:string;
 };
 
-export default function ChooseTeacher(props: TAlertType) {
+export default function ChooseUsersQuick(props: TAlertType) {
   // main popup alert component
   // DO NOT FORGET TO NAME main tag id="mainPage"
   const [revealAlert, setRevealAlert] = useState(false);
@@ -50,11 +52,12 @@ export default function ChooseTeacher(props: TAlertType) {
     }
   };
   const refreshTeachers = () => {
-    fetch('/api/admin/get_all_teachers', {
-      method: 'GET',
+    fetch('/api/get_users_group', {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
+      body: props.group,
     })
       .then((response) => response.json())
       .then((data) => {
@@ -76,7 +79,7 @@ export default function ChooseTeacher(props: TAlertType) {
       )}
       <div className="m-auto  max-w-[600px] bg-gray-200 border-2 border-solid border-gray-400 rounded-md w-[97%] p-2 flex flex-col content-evenly">
         <label className="px-1 py-2 border-2 border-solid border-transparent rounded-sm w-full m-1 text-center">
-          Available teachers
+          {"Choose "+props.title}
         </label>
         <h5
           className="px-1 py-2 border-2 border-solid border-transparent text-light rounded-sm w-full m-1 text-center"
@@ -86,16 +89,16 @@ export default function ChooseTeacher(props: TAlertType) {
           <div className="absolute top-0 left-0  min-w-full   flex flex-wrap items-start justify-start ">
             {displayTeachers.length > 0 &&
               displayTeachers.map((item, index) =>
-                item.image !== null && item.image !== undefined ? (
+                
                   <div
-                    key={"Teacher"+index}
+                    key={'Teacher' + index}
                     className="m-1 mr-4 relative cursor-pointer flex flex-col justify-center items-center "
                     onClick={(e) => {
                       e.preventDefault();
                       setAlertStyle({
                         variantHead: 'info',
                         heading: 'Warning',
-                        text: `Would you like to choose ${item.name} as Instructor?`,
+                        text: `Would you like to choose ${item.name} as ${props.title}?`,
                         color1: 'info',
                         button1: 'Confirm',
                         color2: 'secondary',
@@ -107,9 +110,15 @@ export default function ChooseTeacher(props: TAlertType) {
                       return;
                     }}
                   >
-                    {item.image !== null &&
-                    item.image !== '' &&
-                    item.image !== undefined ? (
+                    {(
+                      item.image == null ||
+                      item.image == '' ||
+                      item.image == undefined
+                    ) ? (
+                      <div className=" h-12 w-12 md:h-16 md:w-16 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
+                        <ShowIcon icon={'DefaultUser'} stroke={'2'} />
+                      </div>
+                    ) : (
                       <div className=" h-12 w-12 md:h-16 md:w-16 rounded-xl overflow-hidden">
                         <ImgFromDb
                           url={item.image}
@@ -117,16 +126,12 @@ export default function ChooseTeacher(props: TAlertType) {
                           alt="Event Picture"
                         />
                       </div>
-                    ) : (
-                      <div className=" h-12 w-12 md:h-16 md:w-16 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
-                        <ShowIcon icon={'DefaultUser'} stroke={'2'} />
-                      </div>
                     )}
-                     <h2 className="text-center flex-wrap truncate  w-12 md:w-16">{item.name}</h2>
+                    <h2 className="text-center flex-wrap truncate  w-12 md:w-16">
+                      {item.name}
+                    </h2>
                   </div>
-                ) : (
-                  <div key={"Teacher"+index} ></div>
-                )
+               
               )}
           </div>
         </div>

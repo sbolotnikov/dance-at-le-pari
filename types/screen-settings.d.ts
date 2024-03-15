@@ -23,7 +23,6 @@ export interface IScreenSettings {
     date: string;
     tag: string;
     id: number;
-    image: string;
     eventtype: string;
     interval:number |null;
     length:number;

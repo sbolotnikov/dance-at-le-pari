@@ -6,12 +6,11 @@ import ImgFromDb from '@/components/ImgFromDb';
 import { useSession } from 'next-auth/react';
 import AlertMenu from '@/components/alertMenu';
 import { CalendarHeader } from '@/components/CalendarHeader';
-import { TEventScheduleArray } from '@/types/screen-settings';
+import { TEventSchedule, TEventScheduleArray } from '@/types/screen-settings';
 import ShowIcon from '@/components/svg/showIcon';
 import { DaySchedule } from '@/components/DaySchedule';
 import { useScheduleDate } from '@/hooks/useScheduleDate';
 import EditScheduleModal from '@/components/EditScheduleModal';
-
 
 interface pageProps {}
 
@@ -31,7 +30,16 @@ const page: FC<pageProps> = ({}) => {
   });
   const [nav, setNav] = useState(0);
   const [events, setEvents] = useState([] as TEventScheduleArray);
-  const [users, setUsers] = useState<{id: number,name:string, color:string |null}[]>([])
+  const [selectedEvent, setSelectedEvent] = useState({} as TEventSchedule);
+  const [users, setUsers] = useState<
+    {
+      id: number;
+      name: string;
+      image: string | null;
+      role: string;
+      color: string | null;
+    }[]
+  >([]);
   const { days, dateDisplay } = useScheduleDate(events, nav);
   const weekdayName = [
     'Sunday',
@@ -101,8 +109,85 @@ const page: FC<pageProps> = ({}) => {
         <AlertMenu onReturn={onReturnAlert} styling={alertStyle} />
       )}
       {revealModal && (
-        <EditScheduleModal visibility={revealModal} onReturn={()=>{console.log("Return fromedit modal");setRevealModal(false)}}/>
+        <EditScheduleModal
+          visibility={revealModal}
+          event={selectedEvent}
+          users={users}
+          onReturn={(n) => {
+            console.log(n);
+            setRevealModal(false);
+            let dateArr = [] as string[];
+            if (n !== null) {
+              let newScheduleArr = [];
+              if (n.repeating == true && n.interval! > 0) {
+                let dateObj = Date.parse(n.date);
+                let newDateOBJ = new Date(dateObj + n.interval!);
+                let d =
+                  newDateOBJ.toLocaleDateString('sv-SE', {
+                    year: 'numeric',
+                    month: 'numeric',
+                    day: 'numeric',
+                  }) +
+                  'T' +
+                  newDateOBJ.toLocaleString('es-CL').split(' ')[1].slice(0, -3);
+                let i = 2;
+                while (d <= n.until!) {
+                  dateArr.push(d);
+                  newDateOBJ = new Date(dateObj + i * n.interval!);
+                  d =
+                    newDateOBJ.toLocaleDateString('sv-SE', {
+                      year: 'numeric',
+                      month: 'numeric',
+                      day: 'numeric',
+                    }) +
+                    'T' +
+                    newDateOBJ
+                      .toLocaleString('es-CL')
+                      .split(' ')[1]
+                      .slice(0, -3);
+                  i++;
+                }
+                console.log(dateArr);
 
+                for (let i = 0; i < dateArr.length; i++) {
+                  newScheduleArr.push({
+                    date: dateArr[i],
+                    tag: n.tag,
+                    eventtype: n.eventtype,
+                    length: n.length,
+                    teachersid: n.teachersid,
+                    studentid: n.studentid,
+                    location: n.location,
+                  });
+                }
+              }
+              if (n.id == -1) {
+                newScheduleArr.push({
+                  date: n.date,
+                  tag: n.tag,
+                  eventtype: n.eventtype,
+                  length: n.length,
+                  teachersid: n.teachersid,
+                  studentid: n.studentid,
+                  location: n.location,
+                });
+              }
+
+              fetch('/api/teacher/schedule_event/create', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify([...newScheduleArr]),
+              })
+                .then((response) => response.json())
+                .then((data) => {
+                  console.log(data);
+                  window.location.reload();
+                });
+            }
+          }}
+        />
       )}
 
       <div className="   shadow-2xl w-[90%]  max-w-[1000px] md:w-full h-[70svh] md:h-[90%] bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md border-0 rounded-md  p-2 mt-6">
@@ -127,15 +212,17 @@ const page: FC<pageProps> = ({}) => {
             <div
               id="weekdays"
               className="w-full flex text-lightMainBG bg-franceBlue dark:text-franceBlue dark:bg-lightMainBG relative"
-            > 
-             <div className="cursor-pointer h-8 w-8 md:h-10 md:w-10 border-2 rounded-md md:-top-12 bg-editcolor m-auto absolute right-1 -top-10"
-             onClick={(e)=>{
-                e.preventDefault();
-                setRevealModal(true);
-            }}
-             >
-              <ShowIcon icon={'Plus'} stroke={'0.1'} />
-            </div>
+            >
+              <div
+                className="cursor-pointer h-8 w-8 md:h-10 md:w-10 border-2 rounded-md md:-top-12 bg-editcolor m-auto absolute right-1 -top-10"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setSelectedEvent({} as TEventSchedule);
+                  setRevealModal(true);
+                }}
+              >
+                <ShowIcon icon={'Plus'} stroke={'0.1'} />
+              </div>
               {weekdayName.map((item, i) => {
                 return (
                   <div
@@ -168,6 +255,12 @@ const page: FC<pageProps> = ({}) => {
                           : (dayStr += d.value);
                         console.log(dayStr);
                       }
+                    }}
+                    onEventClick={(e) => {
+                      setRevealModal(true);
+                      setSelectedEvent(
+                        events.filter((event) => event.id == e)[0]
+                      );
                     }}
                   />
                 ))}

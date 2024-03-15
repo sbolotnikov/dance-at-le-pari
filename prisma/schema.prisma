@@ -76,9 +76,6 @@ model ScheduleEvent {
    teachersid Int[]
    studentid Int[]
    location String?
-   repeating Boolean @default(false)
-   interval Int?
-   until String?
 }
 model Purchase {
 id Int @id @default(autoincrement())
