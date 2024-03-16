@@ -238,21 +238,23 @@ const page: FC<pageProps> = () => {
               </div>
             </button>
             </h2>
-            <div className="relative flex justify-center items-center outline-none   w-24 my-6 mx-auto">
+            <div className="relative flex justify-center items-center outline-none   w-full my-14 mx-auto">
               {userURL !== null && userURL !== undefined ? (
+                <div className=" h-48 w-48 md:h-52 md:w-52 fill-lightMainColor m-auto flex justify-center items-center stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
                 <ImgFromDb
                   url={userURL}
                   stylings="object-contain overflow-hidden rounded-md"
                   alt="User Picture"
                 />
+                </div>
               ) : (
-                <div className=" h-8 w-8 md:h-10 md:w-10 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor overflow-hidden rounded-md ">
+                <div className=" h-48 w-48 md:h-52 md:w-52 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor overflow-hidden rounded-md ">
                   <ShowIcon icon={'DefaultUser'} stroke={'2'} />
                 </div>
               )}
 
               <button
-                className=" outline-none border-none fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor rounded-md  absolute p-1 -top-3 -right-3 w-8 h-8"
+                className=" outline-none border-none fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor rounded-md  absolute p-1 -top-1 right-16 md:right-24 w-8 h-8"
                 onClick={(e) => {
                   e.preventDefault();
                   setAlertStyle({

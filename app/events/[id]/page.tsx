@@ -70,7 +70,11 @@ export default function Page({ params }: { params: { id: string } }) {
       });
   }, []);
   useEffect(() => {
-    (document.querySelector('#wrapperDiv')?.clientHeight!-document.querySelector('#containedDiv')?.clientHeight!>0)? setScrolling(true):setScrolling(false);
+    document.querySelector('#wrapperDiv')?.clientHeight! -
+      document.querySelector('#containedDiv')?.clientHeight! >
+    0
+      ? setScrolling(true)
+      : setScrolling(false);
   }, [eventData, windowSize.height]);
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
@@ -171,12 +175,12 @@ export default function Page({ params }: { params: { id: string } }) {
         >
           <div
             id="containedDiv"
-            className={`${
-              scrolling ? '' : 'absolute top-0 left-0'
-            } flex flex-col w-full p-1 justify-center items-center `}
+            className={`
+            ${scrolling ? '' : 'absolute top-0 left-0'}
+             flex flex-col w-full p-1 justify-center items-center `}
           >
             {eventData && (
-              <div className="w-full h-full flex flex-col justify-center items-center  p-2">
+              <div className="w-full flex flex-col justify-center items-center  p-2">
                 <div className="w-full flex flex-row justify-end">
                   <h2
                     className="text-center font-bold uppercase mx-auto"
@@ -252,14 +256,16 @@ export default function Page({ params }: { params: { id: string } }) {
                   </span>
                 </h1>
                 {eventData.image !== '' ? (
-                  <ImgFromDb
-                    url={eventData.image!}
-                    stylings="object-contain m-auto"
-                    alt="Event Picture"
-                  />
+                  <div className=" h-48 w-48 md:h-52 md:w-52 fill-lightMainColor m-auto flex justify-center items-center stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
+                    <ImgFromDb
+                      url={eventData.image!}
+                      stylings="object-contain m-auto"
+                      alt="Event Picture"
+                    />
+                  </div>
                 ) : (
-                  <div className=" h-8 w-8 md:h-10 md:w-10 fill-lightMainColor m-auto stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
-                    <ShowIcon icon={'Template'} stroke={'2'} />
+                  <div className=" h-48 w-48 md:h-52 md:w-52 fill-lightMainColor m-auto flex justify-center items-center stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
+                    <ShowIcon icon={'Image'} stroke={'0.5'} />
                   </div>
                 )}
                 <h2 className="w-full text-left">
