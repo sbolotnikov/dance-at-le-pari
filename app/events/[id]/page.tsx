@@ -10,11 +10,14 @@ import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addItem } from '@/slices/cartSlice';
+import { useDimensions } from '@/hooks/useDimensions';
 
 export default function Page({ params }: { params: { id: string } }) {
   const [eventData, setEventData] = useState<TFullEvent>();
   const [revealBuyTicketModal, setRevealBuyTicketModal] = useState(false);
   const [revealAlert, setRevealAlert] = useState(false);
+  const [scrolling, setScrolling] = useState(true);
+  const windowSize = useDimensions();
   const [alertStyle, setAlertStyle] = useState({
     variantHead: '',
     heading: '',
@@ -66,6 +69,9 @@ export default function Page({ params }: { params: { id: string } }) {
         console.log(error);
       });
   }, []);
+  useEffect(() => {
+    (document.querySelector('#wrapperDiv')?.clientHeight!-document.querySelector('#containedDiv')?.clientHeight!>0)? setScrolling(true):setScrolling(false);
+  }, [eventData, windowSize.height]);
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
       {revealBuyTicketModal && (
@@ -158,147 +164,162 @@ export default function Page({ params }: { params: { id: string } }) {
         <AlertMenu onReturn={onReturnAlert} styling={alertStyle} />
       )}
 
-      <div className="border-0 rounded-md p-2 shadow-2xl w-[90%] max-w-[450px] max-h-[85%] overflow-y-auto md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
-        {eventData && (
-          <div className="w-full h-full flex flex-col justify-center items-center border rounded-md border-lightMainColor dark:border-darkMainColor relative p-2 overflow-y-scroll">
-            <div className="w-full flex flex-row justify-end">
-              <h2
-                className="text-center font-bold uppercase mx-auto"
-                style={{ letterSpacing: '1px' }}
-              >
-                Event:
-              </h2>
-              {session?.user.role == 'Admin' && (
+      <div className="   shadow-2xl w-[90%]  max-w-[450px] md:w-full h-[85svh]  bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md border-0 rounded-md  p-2 md:mt-6">
+        <div
+          id="wrapperDiv"
+          className="w-full h-full border rounded-md border-lightMainColor dark:border-darkMainColor relative overflow-y-auto flex flex-col justify-center items-center"
+        >
+          <div
+            id="containedDiv"
+            className={`${
+              scrolling ? '' : 'absolute top-0 left-0'
+            } flex flex-col w-full p-1 justify-center items-center `}
+          >
+            {eventData && (
+              <div className="w-full h-full flex flex-col justify-center items-center  p-2">
+                <div className="w-full flex flex-row justify-end">
+                  <h2
+                    className="text-center font-bold uppercase mx-auto"
+                    style={{ letterSpacing: '1px' }}
+                  >
+                    Event:
+                  </h2>
+                  {session?.user.role == 'Admin' && (
+                    <button
+                      className=" outline-none border-none fill-alertcolor  stroke-alertcolor  rounded-md border-alertcolor mt-2  w-8 h-8"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setAlertStyle({
+                          variantHead: 'danger',
+                          heading: 'Warning',
+                          text: 'You are about to Delete Event!',
+                          color1: 'danger',
+                          button1: 'Delete',
+                          color2: 'secondary',
+                          button2: 'Cancel',
+                          inputField: '',
+                        });
+                        setRevealAlert(!revealAlert);
+                        return;
+                      }}
+                    >
+                      <ShowIcon icon={'Close'} stroke={'2'} />
+                    </button>
+                  )}
+                  {session?.user.role == 'Admin' && (
+                    <button
+                      className=" outline-none border-none fill-editcolor  stroke-editcolor  rounded-md border-editcolor p-1 w-8 h-8"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        window.location.replace(
+                          '/admin/editevent/' + params.id
+                        );
+                        return;
+                      }}
+                    >
+                      <ShowIcon icon={'Edit'} stroke={'.5'} />
+                    </button>
+                  )}
+                </div>
                 <button
-                  className=" outline-none border-none fill-alertcolor  stroke-alertcolor  rounded-md border-alertcolor mt-2  w-8 h-8"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setAlertStyle({
-                      variantHead: 'danger',
-                      heading: 'Warning',
-                      text: 'You are about to Delete Event!',
-                      color1: 'danger',
-                      button1: 'Delete',
-                      color2: 'secondary',
-                      button2: 'Cancel',
-                      inputField: '',
-                    });
-                    setRevealAlert(!revealAlert);
-                    return;
-                  }}
+                  className="btnFancy w-[90%] "
+                  onClick={() => setRevealBuyTicketModal(true)}
                 >
-                  <ShowIcon icon={'Close'} stroke={'2'} />
+                  Choose tickets
                 </button>
-              )}
-              {session?.user.role == 'Admin' && (
-                <button
-                  className=" outline-none border-none fill-editcolor  stroke-editcolor  rounded-md border-editcolor p-1 w-8 h-8"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    window.location.replace('/admin/editevent/' + params.id);
-                    return;
-                  }}
-                >
-                  <ShowIcon icon={'Edit'} stroke={'.5'} />
-                </button>
-              )}
-            </div>
-            <button
-              className="btnFancy w-[90%] "
-              onClick={() => setRevealBuyTicketModal(true)}
-            >
-              Choose tickets
-            </button>
-            <h2 className="flex flex-row items-center justify-center">
-              {new Date(eventData!.date).toLocaleDateString('en-us', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-              })}
-            </h2>
-            <h2 className="flex flex-row items-center justify-center">
-              {'Starts at:'}
-              <span>
-                &nbsp;
-                {new Date(eventData!.date).toLocaleTimeString('en-US', {
-                  timeStyle: 'short',
-                })}
-              </span>{' '}
-            </h2>
-            <h1>
-              {eventData?.eventtype}
-              {' : '}
-              <span className="text-2xl font-extrabold font-DancingScript">
-                {eventData!.title}
-              </span>
-            </h1>
-            {eventData.image !== '' ? (
-              <ImgFromDb
-                url={eventData.image!}
-                stylings="object-contain m-auto"
-                alt="Event Picture"
-              />
-            ) : (
-              <div className=" h-8 w-8 md:h-10 md:w-10 fill-lightMainColor m-auto stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
-                <ShowIcon icon={'Template'} stroke={'2'} />
-              </div>
-            )}
-            <h2 className="w-full text-left">
-              {'Description:'}&nbsp;{eventData!.description}
-            </h2>
-            <h2 className="w-full text-left ">
-              {'Price: $'}
-              {eventData!.price}
-            </h2>
-            <h2 className="w-full text-left">
-              {'Location:'}&nbsp;{eventData!.location}
-            </h2>
-            <h2 className="w-full text-left mb-1">
-              {'Length: '}
-              {Math.floor(eventData!.length / 60) > 0
-                ? Math.floor(eventData!.length / 60) + ' hour'
-                : ''}
-              {Math.floor(eventData!.length / 60) > 1 ? 's ' : ' '}
-              &nbsp;{(eventData!.length % 60) + ' minutes'}
-            </h2>
-            <hr
-              className={
-                'w-3/4 border-4 border-double border-lightMainColor dark:border-darkMainColor rounded-full' +
-                (eventData!.teacher == null)
-                  ? 'mb-6'
-                  : 'mb-2'
-              }
-            />
-            {eventData!.teacher !== null && eventData!.teacher.length > 0 && (
-              <div className="w-full  mt-3 mb-6">
-                <div className="w-full mb-2">
-                  {eventData!.teacher_img !== null &&
-                  eventData!.teacher_img !== undefined ? (
-                    <ImgFromDb
-                      url={eventData!.teacher_img!}
-                      stylings="h-12 w-12 float-left m-2 rounded-md"
-                      alt="User Picture"
-                    />
-                  ) : (
-                    <div className=" h-12 w-12 md:h-16 md:w-16 fill-lightMainColor float-left stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
-                      <ShowIcon icon={'DefaultUser'} stroke={'2'} />
+                <h2 className="flex flex-row items-center justify-center">
+                  {new Date(eventData!.date).toLocaleDateString('en-us', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </h2>
+                <h2 className="flex flex-row items-center justify-center">
+                  {'Starts at:'}
+                  <span>
+                    &nbsp;
+                    {new Date(eventData!.date).toLocaleTimeString('en-US', {
+                      timeStyle: 'short',
+                    })}
+                  </span>{' '}
+                </h2>
+                <h1>
+                  {eventData?.eventtype}
+                  {' : '}
+                  <span className="text-2xl font-extrabold font-DancingScript">
+                    {eventData!.title}
+                  </span>
+                </h1>
+                {eventData.image !== '' ? (
+                  <ImgFromDb
+                    url={eventData.image!}
+                    stylings="object-contain m-auto"
+                    alt="Event Picture"
+                  />
+                ) : (
+                  <div className=" h-8 w-8 md:h-10 md:w-10 fill-lightMainColor m-auto stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
+                    <ShowIcon icon={'Template'} stroke={'2'} />
+                  </div>
+                )}
+                <h2 className="w-full text-left">
+                  {'Description:'}&nbsp;{eventData!.description}
+                </h2>
+                <h2 className="w-full text-left ">
+                  {'Price: $'}
+                  {eventData!.price}
+                </h2>
+                <h2 className="w-full text-left">
+                  {'Location:'}&nbsp;{eventData!.location}
+                </h2>
+                <h2 className="w-full text-left mb-1">
+                  {'Length: '}
+                  {Math.floor(eventData!.length / 60) > 0
+                    ? Math.floor(eventData!.length / 60) + ' hour'
+                    : ''}
+                  {Math.floor(eventData!.length / 60) > 1 ? 's ' : ' '}
+                  &nbsp;{(eventData!.length % 60) + ' minutes'}
+                </h2>
+                <hr
+                  className={
+                    'w-3/4 border-4 border-double border-lightMainColor dark:border-darkMainColor rounded-full' +
+                    (eventData!.teacher == null)
+                      ? 'mb-6'
+                      : 'mb-2'
+                  }
+                />
+                {eventData!.teacher !== null &&
+                  eventData!.teacher.length > 0 && (
+                    <div className="w-full  mt-3 mb-6">
+                      <div className="w-full mb-2">
+                        {eventData!.teacher_img !== null &&
+                        eventData!.teacher_img !== undefined ? (
+                          <ImgFromDb
+                            url={eventData!.teacher_img!}
+                            stylings="h-12 w-12 float-left m-2 rounded-md"
+                            alt="User Picture"
+                          />
+                        ) : (
+                          <div className=" h-12 w-12 md:h-16 md:w-16 fill-lightMainColor float-left stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
+                            <ShowIcon icon={'DefaultUser'} stroke={'2'} />
+                          </div>
+                        )}
+
+                        <h2 className="flex flex-row items-center justify-center ">
+                          {'Your instructor:'}
+                          <span>&nbsp;{eventData!.teacher}</span>
+                        </h2>
+                      </div>
+                      <h2 className="w-full text-left mb-1 ">
+                        {'Short bio:'}
+                        <span>&nbsp;{eventData!.bio}</span>
+                      </h2>
                     </div>
                   )}
-
-                  <h2 className="flex flex-row items-center justify-center ">
-                    {'Your instructor:'}
-                    <span>&nbsp;{eventData!.teacher}</span>
-                  </h2>
-                </div>
-                <h2 className="w-full text-left mb-1 ">
-                  {'Short bio:'}
-                  <span>&nbsp;{eventData!.bio}</span>
-                </h2>
               </div>
             )}
           </div>
-        )}
+        </div>
       </div>
     </PageWrapper>
   );

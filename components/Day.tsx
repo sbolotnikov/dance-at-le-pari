@@ -16,7 +16,7 @@ export const Day = ( {day, onClick}:Props) => {
         <span onClick={onClick} className={classNameDay}>{day.value === 'padding' ? '' : day.value}</span>
         {(day.event!=null)&&(day.event.length>0) && <Link href={`/events/${day.event[0].id}`}><div className="text-xs cursor-pointer flex flex-row"
         //  style={{color: day.event[0].color}}
-         ><span className="text-xs hidden md:block md:mr-1">{new Date(day.event[0].date).toLocaleTimeString('en-US',{timeStyle: 'short'})}</span> {day.event[0].tag}</div></Link>}
+         ><span className="text-xs mr-1">{new Date(day.event[0].date).toLocaleTimeString('en-US',{timeStyle: 'short'})}</span> {day.event[0].tag}</div></Link>}
         {(day.event!=null)&&(day.event.length>1) && <div className="text-xs cursor-pointer " onClick={onClick}>{`${day.event.length-1} more event${(day.event.length-1>1)?"s":""}`}</div>}
         </div>
     );
