@@ -3,9 +3,10 @@ import Link from 'next/link';
 type Props = {
   day: TDaySchedule;
   users: { id: number; name: string; color: string | null }[];
+  role: string;
   onClick: () => void; onEventClick: (n:number) => void;
 };
-export const DaySchedule = ({ day, users, onClick, onEventClick }: Props) => {
+export const DaySchedule = ({ day, users,role, onClick, onEventClick }: Props) => {
   const className = `day ${day.value === 'padding' ? 'padding' : ''} ${
     day.isCurrentDay ? ' border-red-800 border-2 rounded-md' : ''
   }`;
@@ -60,7 +61,7 @@ export const DaySchedule = ({ day, users, onClick, onEventClick }: Props) => {
                 </span>
                 {event.tag.length > 0
                   ? ' ' + event.tag
-                  : ' ' + getName(event.studentid[0])}
+                  : ' ' + ((role=='Student')? getName(event.teachersid[0]) : getName(event.studentid[0]))}
               </div>
             ))}
             <span className='h-2 w-2'> </span>

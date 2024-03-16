@@ -108,10 +108,11 @@ const page: FC<pageProps> = ({}) => {
       {revealAlert && (
         <AlertMenu onReturn={onReturnAlert} styling={alertStyle} />
       )}
-      {(revealModal && ((session?.user.role === 'Admin') || session?.user.role === 'Teacher')) && (
+      {revealModal  && (
         <EditScheduleModal
           visibility={revealModal}
           event={selectedEvent}
+          role={session?.user.role!}
           users={users}
           onReturn={async (n, del) => {
             setRevealModal(false);
@@ -263,12 +264,13 @@ const page: FC<pageProps> = ({}) => {
               })}
             </div>
             <div id="calendar" className="w-full m-auto flex flex-wrap">
-              {days &&
+              {days  &&
                 days.map((d, index) => (
                   <DaySchedule
                     key={index}
                     day={d}
                     users={users}
+                    role={session?.user.role!}
                     onClick={() => {
                       if (d.value !== 'padding') {
                         let dt = new Date();
