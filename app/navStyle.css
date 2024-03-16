@@ -65,7 +65,7 @@ padding: 1.5rem;
   .navbar__list {
     display: flex;
     flex-direction: column;
-    padding: min(20vh, 10rem) 0rem;
+    padding: min(10vh, 5rem) 0rem;
     height: 100svh;
     right:0;
     top:0;

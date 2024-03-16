@@ -221,15 +221,15 @@ const page: FC<pageProps> = ({}) => {
 
       <div className="   shadow-2xl w-[90%]  max-w-[1000px] md:w-full h-[70svh] md:h-[90%] bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md border-0 rounded-md  p-2 mt-6">
         <div className="border rounded-md border-lightMainColor dark:border-darkMainColor w-full h-full relative  p-1 flex  overflow-y-scroll">
-          <div className="flex flex-col w-full p-1 justify-center items-center absolute top-0 left-0">
+          <div className="flex flex-col w-[1000px] p-1 justify-center items-center absolute top-0 left-0">
             <h2
               className="text-center font-bold uppercase"
               style={{ letterSpacing: '1px' }}
             >
-              Scheduling Tool
+              Personal Schedule Tool
             </h2>
             <div className=" h-20 w-20 md:h-28 md:w-28 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor m-auto">
-              <ShowIcon icon={'Schedule'} stroke={'0.1'} />
+              <ShowIcon icon={'Schedule'} stroke={'0.5'} />
             </div>
             <CalendarHeader
               dateDisplay={dateDisplay}

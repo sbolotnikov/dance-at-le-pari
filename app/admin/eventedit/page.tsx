@@ -1,6 +1,5 @@
 'use client';
-import { FC, useEffect, useState } from 'react';
-import { useRef } from 'react';
+import { FC, useEffect, useState, useRef } from 'react';
 import { PageWrapper } from '@/components/page-wrapper';
 import EventTemplateEditingForm from '@/components/EventTemplateEditingForm';
 import ShowIcon from '@/components/svg/showIcon';
@@ -10,6 +9,7 @@ import ImgFromDb from '@/components/ImgFromDb';
 import AlertMenu from '@/components/alertMenu';
 import ChooseTemplates from '@/components/ChooseTemplates';
 import ChoosePicture from '@/components/ChoosePicture';
+import { useDimensions } from '@/hooks/useDimensions';
 
 interface pageProps {}
 
@@ -29,6 +29,9 @@ const page: FC<pageProps> = ({}) => {
   const [revealAlert, setRevealAlert] = useState(false);
   const [revealFrontTemplates, setRevealFrontTemplates] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [scrolling, setScrolling] = useState(true);
+  const containerRef = useRef<HTMLInputElement>(null);
+  const windowSize = useDimensions();
   const [alertStyle, setAlertStyle] = useState({
     variantHead: '',
     heading: '',
@@ -94,9 +97,16 @@ const page: FC<pageProps> = ({}) => {
       setImage(fileLink);
     }
   };
-  console.log(displayTemplates);
+  useEffect(() => {
+    document.getElementById('wrapperDiv')?.offsetHeight! -
+    containerRef.current?.offsetHeight! >
+    0
+      ? setScrolling(true)
+      : setScrolling(false);
+      console.log(containerRef.current?.offsetHeight);
+  }, [complexEvent, windowSize.height]);
   return (
-    <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
+    <PageWrapper className="absolute top-0 left-0 w-full h-screen flex md:items-end items-center justify-center">
       {revealAlert && <AlertMenu onReturn={onReturn} styling={alertStyle} />}
       {revealCloud && <ChoosePicture onReturn={onReturnPicture} />}
       {revealFrontTemplates && (
@@ -108,9 +118,9 @@ const page: FC<pageProps> = ({}) => {
           template={template1?.id}
         />
       ) : (
-        <div className="   shadow-2xl w-[90%]  max-w-[450px] md:w-full h-[70svh] md:h-[90%] bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md border-0 rounded-md  p-2 mt-6">
-          <div className="border rounded-md border-lightMainColor dark:border-darkMainColor w-full h-full relative  p-1 flex  overflow-y-scroll">
-            <div className="flex flex-col w-full p-1 justify-center items-center absolute top-0 left-0">
+        <div className="   shadow-2xl w-[90%]  max-w-[450px] md:w-full h-[75svh] md:h-[90%] bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md border-0 rounded-md  p-2 mt-6 md:mb-2">
+          <div id="wrapperDiv" className="border rounded-md border-lightMainColor dark:border-darkMainColor w-full h-full relative  p-1 overflow-y-scroll flex flex-col justify-center items-center">
+            <div ref={containerRef} className={`${scrolling?"":"absolute top-0 left-0"} flex flex-col w-full p-1 justify-center items-center`}>
               <h2
                 className="text-center font-bold uppercase"
                 style={{ letterSpacing: '1px' }}
@@ -180,11 +190,26 @@ const page: FC<pageProps> = ({}) => {
                   </div>
                 </div>
               </div>
-              {template1 !== undefined && (
-                <h2 className="flex flex-row justify-center items-center  relative  m-1">
-                  {template1?.eventtype + ' ' + template1?.tag}
-                  <div
-                    className="absolute -top-1 right-5 h-6 w-6 md:h-7 md:w-7 fill-green-600 m-auto stroke-lightMainColor dark:fill-green-600 dark:stroke-darkMainColor cursor-pointer "
+                <h2 className="flex flex-row justify-center items-center  m-1">
+                  {(template1 !== undefined )?`${template1?.eventtype} ${template1?.tag}` :"Undefined" }
+                </h2>
+              <div className="w-full h-20 flex  justify-center items-center">
+                <div className="relative flex  justify-center items-center outline-none border border-lightMainColor dark:border-darkMainColor rounded-md w-24 mx-auto ">
+                  {template1 !== undefined ? (
+                    <div className=" h-10 w-10 md:h-12 md:w-12 m-auto">
+                    <ImgFromDb
+                      url={template1.image}
+                      stylings="object-contain m-auto"
+                      alt="Template Picture"
+                    />
+                    </div>
+                  ) : (
+                    <div className=" h-10 w-10 md:h-12 md:w-12 fill-lightMainColor m-auto stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
+                      <ShowIcon icon={'Image'} stroke={'0.75'} />
+                    </div>
+                  )}
+                   <div
+                    className="absolute -top-3 -right-8 h-6 w-6 md:h-7 md:w-7 fill-green-600 m-auto stroke-lightMainColor dark:fill-green-600 dark:stroke-darkMainColor cursor-pointer "
                     onClick={(e) => {
                       e.preventDefault();
                       setRevealTemplateEdit(true);
@@ -192,21 +217,6 @@ const page: FC<pageProps> = ({}) => {
                   >
                     <ShowIcon icon={'Edit'} stroke={'0.5'} />
                   </div>
-                </h2>
-              )}
-              <div className="w-full h-20 flex  justify-center items-center">
-                <div className="relative flex  justify-center items-center outline-none border border-lightMainColor dark:border-darkMainColor rounded-md w-24 mx-auto">
-                  {template1 !== undefined ? (
-                    <ImgFromDb
-                      url={template1.image}
-                      stylings="object-contain m-auto"
-                      alt="Template Picture"
-                    />
-                  ) : (
-                    <div className=" h-8 w-8 md:h-10 md:w-10 mt-1 fill-lightMainColor m-auto stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
-                      <ShowIcon icon={'Image'} stroke={'0.75'} />
-                    </div>
-                  )}
                 </div>
               </div>
               <label className="flex flex-row justify-between items-center">

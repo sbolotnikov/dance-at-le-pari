@@ -7,6 +7,7 @@ import { TEventSchedule, TTeacherInfo } from '@/types/screen-settings';
 import ShowIcon from './svg/showIcon';
 import ChooseUsersQuick from './ChooseUsersQuick';
 import AlertMenu from './alertMenu';
+import { useDimensions } from '@/hooks/useDimensions';
 
 type Props = {
   visibility: boolean;
@@ -47,6 +48,8 @@ export default function EditScheduleModal({
   const [repeatInterval, setRepeatInterval] = useState<number>(0);
   const [teacher, setTeacher] = useState<TTeacherInfo | null>();
   const [revealAlert, setRevealAlert] = useState(false);
+  const [scrolling, setScrolling] = useState(true);
+  const windowSize = useDimensions();
   const [alertStyle, setAlertStyle] = useState({
     variantHead: '',
     heading: '',
@@ -145,7 +148,14 @@ export default function EditScheduleModal({
       onReturn(null, { s: 'Delete', id: event.id });
     }
     setRevealAlert(false);
-  };
+  };  useEffect(() => {
+    document.getElementById('wrapperDiv')?.offsetHeight! -
+      document.getElementById('containedDiv')?.offsetHeight! >
+    0
+      ? setScrolling(true)
+      : setScrolling(false);
+  }, [ windowSize.height]);
+
   return (
     <AnimateModalLayout
       visibility={isVisible}
@@ -189,11 +199,11 @@ export default function EditScheduleModal({
             })}
         />
       )}
-      <div className="border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-5xl  flex justify-center items-center flex-col  h-[70svh] md:h-[85svh] md:w-full bg-lightMainBG dark:bg-darkMainBG backdrop-blur-md">
-        <div className="w-full h-full relative  p-1 flex  overflow-y-scroll border border-lightMainColor dark:border-darkMainColor rounded-md">
-          <div className=" flex flex-col w-full p-1 justify-center items-center absolute top-0 left-0">
+      <div className="border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-md  flex justify-center items-center flex-col  h-[70svh] md:h-[85svh] md:w-full bg-lightMainBG dark:bg-darkMainBG backdrop-blur-md">
+        <div  id="wrapperDiv" className="w-full h-full relative  p-1  overflow-y-auto border border-lightMainColor dark:border-darkMainColor rounded-md flex flex-col justify-center items-center">
+          <div id="containedDiv" className={`${ scrolling ? '' : 'absolute top-0 left-0'} flex flex-col w-full p-1 justify-center items-center`}>
             <h2 className="w-full text-center uppercase">
-              {role == 'Student' ? 'Your event' : 'Edit/Add Schedule'}
+              {role == 'Student' ? 'Your event' : 'Edit/Add Schedule events'}
             </h2>
             <label className="flex flex-col justify-between items-center mb-1">
               {`${role == 'Student' ? 'Your' : 'Choose'} Instructor`}
@@ -246,7 +256,7 @@ export default function EditScheduleModal({
                 </label>
                 {/* <div className="relative flex justify-center items-center outline-none border border-lightMainColor dark:border-darkMainColor rounded-md w-24 my-6 mx-auto"> */}
 
-                <div className="w-full h-24 relative   overflow-scroll border border-lightMainColor dark:border-darkMainColor rounded-md">
+                <div className="w-full h-[6.1rem] relative   overflow-auto border border-lightMainColor dark:border-darkMainColor rounded-md">
                   <div className="absolute top-0 left-0  min-w-full  flex flex-wrap items-start justify-start ">
                     {studentid.length > 0 &&
                       studentid.map((item, i) => (
@@ -467,7 +477,7 @@ export default function EditScheduleModal({
             )}
             {role !== 'Student' && (
               <button
-                className="w-[50%] btnFancy text-base text-center  rounded-md"
+                className="w-[70%] btnFancy text-base text-center  rounded-md"
                 style={{ padding: '0' }}
                 onClick={() => {
                   if (teacher?.id == undefined) {
@@ -504,12 +514,12 @@ export default function EditScheduleModal({
                   );
                 }}
               >
-                {`${event.id ? 'Edit' : 'Create'} Event`}
+                {`${event.id ? 'Submit Edited' : 'Create New'} Event`}
               </button>
             )}
             {event.id !== undefined && role !== 'Student' && (
               <button
-                className="w-[50%] btnFancy text-base text-center  rounded-md"
+                className="w-[70%] btnFancy text-base text-center  rounded-md"
                 style={{ padding: '0' }}
                 onClick={() => {
                   setAlertStyle({

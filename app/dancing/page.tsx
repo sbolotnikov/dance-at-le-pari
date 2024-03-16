@@ -13,6 +13,7 @@ import { addItem } from "../../slices/cartSlice";
 import { useDimensions } from '@/hooks/useDimensions';
 import sleep from '@/utils/functions';
 import ShowIcon from '@/components/svg/showIcon';
+import { useRouter } from 'next/navigation';
 interface pageProps {}
 
 const page: FC<pageProps> = ({}) => {
@@ -41,6 +42,7 @@ const page: FC<pageProps> = ({}) => {
     'Dance Parties',
   ]);
   const dispatch = useDispatch();
+  const router = useRouter();
   const windowSize = useDimensions();
   const tabsIndexArray = ['Private', 'Group', 'Floor_Fee', 'Party'];
   const actionTemplateChoice = (action1: string, item: number) => {
@@ -249,7 +251,7 @@ const page: FC<pageProps> = ({}) => {
                       role={"None"}
                       specialEvent={true}
                       onReturn={(item1, action1) => {
-                        window.location.href='/events/'+item1;
+                        router.replace('/events/'+item1);
                       }}
                     />
                   )}

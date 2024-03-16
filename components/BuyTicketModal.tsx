@@ -7,6 +7,7 @@ import { PaymentForm, CreditCard } from 'react-square-web-payments-sdk';
 import { TableSeat } from '@/types/screen-settings';
 import { useSession } from 'next-auth/react';
 import AnimateModalLayout from './AnimateModalLayout';
+import { useDimensions } from '@/hooks/useDimensions';
 
 type Props = {
   seatmap: string | null;
@@ -36,6 +37,8 @@ export default function BuyTicketModal({
   const [chosenTable, setChosenTable] = useState(0);
   const [tickets, setTickets] = useState(0);
   const [eventSeatMap, setEventSeatMap] = useState<string[]>([]);
+  const [scrolling, setScrolling] = useState(true);
+  const windowSize = useDimensions();
   let el = document.querySelector('#mainPage');
 
   // Function to check if two objects are equal based on all fields
@@ -134,6 +137,13 @@ export default function BuyTicketModal({
       console.log(arr);
     }
   }, [currentSeat]);
+  useEffect(() => {
+    document.getElementById('wrapperDiv')?.offsetHeight! -
+      document.getElementById('containedDiv')?.offsetHeight! >
+    0
+      ? setScrolling(true)
+      : setScrolling(false);
+  }, [ windowSize.height]);
   return (
     <AnimateModalLayout
       visibility={isVisible}
@@ -143,9 +153,9 @@ export default function BuyTicketModal({
       }}
     >
       <div className="h-[73%] w-[75%] md:w-[50%] bg-darkMainColor dark:bg-lightMainColor rounded-md  p-1">
-        <div className="w-full h-full border rounded-md border-lightMainColor dark:border-darkMainColor relative overflow-y-auto">
-          <div
-            className={`absolute top-0 left-0 w-full p-1 ${
+        <div id="wrapperDiv" className="w-full h-full border rounded-md border-lightMainColor dark:border-darkMainColor relative overflow-y-auto flex flex-col justify-center items-center">
+          <div id="containedDiv"
+            className={`${scrolling?"":"absolute top-0 left-0"}  w-full p-1 ${
               tables !== null && tables.length > 0
                 ? ' flex flex-col justify-center items-center'
                 : 'h-full'
@@ -153,7 +163,7 @@ export default function BuyTicketModal({
           >
             {seatmap !== null ? (
               <div>
-                <h2 className="w-full text-center">Choose your seats</h2>
+                <h2 className="w-full text-center uppercase">Choose your seats</h2>
                 <ImgFromDb
                   url={seatmap}
                   stylings="object-contain p-2 rounded-md"

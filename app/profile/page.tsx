@@ -12,6 +12,7 @@ import ImgFromDb from '@/components/ImgFromDb';
 import { PageWrapper } from '@/components/page-wrapper';
 import Link from 'next/link';
 import LoadingScreen from '@/components/LoadingScreen';
+import { useDimensions } from '@/hooks/useDimensions';
 
 interface pageProps {}
 
@@ -36,9 +37,12 @@ const page: FC<pageProps> = () => {
     inputField: '',
   });
   const [loading, setLoading] = useState(false);
-  // const [toRoot, setToRoot] = useState(false);
   const [revealCloud, setRevealCloud] = useState(false);
   const router = useRouter();
+  const [scrolling, setScrolling] = useState(true);
+  const windowSize = useDimensions();
+
+  
   useEffect(() => {
     if (!session) router.replace('/');
     if (session?.user.name) userNameRef.current!.value = session?.user.name;
@@ -68,6 +72,9 @@ const page: FC<pageProps> = () => {
   );
   const [color, setColor] = useState('');
   const [bio, setBio] = useState('');
+  useEffect(() => {
+    (document.querySelector('#wrapperDiv')?.clientHeight!-document.querySelector('#containedDiv')?.clientHeight!>0)? setScrolling(true):setScrolling(false);
+  }, [bio,session, windowSize.height]);
   const onReturn = (decision1: string) => {
     setRevealAlert(false);
     if (decision1 == 'Close') {
@@ -205,12 +212,18 @@ const page: FC<pageProps> = () => {
         <ChooseAvatar onReturn={onReturnAvatar} styling={alertStyle} />
       )}
       {loading && <LoadingScreen />}
-      <div className="   shadow-2xl w-[90%]  max-w-[450px] md:w-full h-[70svh] md:h-[90%] bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md border-0 rounded-md  p-2 mt-6">
-        <div className="border rounded-md border-lightMainColor dark:border-darkMainColor w-full h-full relative  p-1 flex  overflow-y-scroll">
-          <div className="flex flex-col w-full p-1 justify-center items-center absolute top-0 left-0">
-            <button
+      <div className="   shadow-2xl w-[90%]  max-w-[450px] md:w-full h-[85svh] md:h-[90%] bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md border-0 rounded-md  p-2 mt-6">
+        <div id="wrapperDiv" className="w-full h-full border rounded-md border-lightMainColor dark:border-darkMainColor relative overflow-y-auto flex flex-col justify-center items-center">
+          <div  id="containedDiv"  className={`${scrolling?"":"absolute top-0 left-0"} flex flex-col w-full p-1 justify-center items-center `}>
+            
+            <h2
+              className="text-center font-bold uppercase relative"
+              style={{ letterSpacing: '1px' }}
+            >
+              Your's {session?.user.role} Profile
+              <button
               type="button"
-              className="absolute top-0 right-0 mt-2 h-6 w-6 mr-5 md:mr-6 md:h-8 md:w-8 rounded-sm outline-none "
+              className="absolute top-5 right-0 h-6 w-6   md:h-8 md:w-8 rounded-sm outline-none "
               onClick={() => {
                 signOut();
               }}
@@ -224,21 +237,16 @@ const page: FC<pageProps> = () => {
                 </p>
               </div>
             </button>
-            <h2
-              className="text-center font-bold uppercase"
-              style={{ letterSpacing: '1px' }}
-            >
-              Your's {session?.user.role} Profile
             </h2>
-            <div className="relative flex justify-center items-center outline-none border rounded-md w-24 my-6 mx-auto">
+            <div className="relative flex justify-center items-center outline-none   w-24 my-6 mx-auto">
               {userURL !== null && userURL !== undefined ? (
                 <ImgFromDb
                   url={userURL}
-                  stylings="object-contain"
+                  stylings="object-contain overflow-hidden rounded-md"
                   alt="User Picture"
                 />
               ) : (
-                <div className=" h-8 w-8 md:h-10 md:w-10 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
+                <div className=" h-8 w-8 md:h-10 md:w-10 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor overflow-hidden rounded-md ">
                   <ShowIcon icon={'DefaultUser'} stroke={'2'} />
                 </div>
               )}
@@ -273,13 +281,7 @@ const page: FC<pageProps> = () => {
                   Purchases
                 </button>
               </Link>
-              <Link href={'/schedule'}>
-                <button
-                  className="btnFancy w-[90%]"
-                >
-                  Schedule Tool
-                </button>
-              </Link>
+             
               <label className="flex flex-col items-center p-1 rounded-t-md bottom-0">
                 Your Name:
                 <input

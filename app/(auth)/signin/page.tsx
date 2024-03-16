@@ -1,9 +1,10 @@
 'use client';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { PageWrapper } from '@/components/page-wrapper';
 import ShowIcon from '@/components/svg/showIcon';
+import { useDimensions } from '@/hooks/useDimensions';
 interface pageProps {}
 
 const page: FC<pageProps> = ({}) => {
@@ -13,6 +14,8 @@ const page: FC<pageProps> = ({}) => {
   const passwordConfirmRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [scrolling, setScrolling] = useState(true);
+  const windowSize = useDimensions();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -48,13 +51,15 @@ const page: FC<pageProps> = ({}) => {
 
     setLoading(false);
   };
-
+  useEffect(() => {
+    (document.querySelector('#wrapperDiv')?.clientHeight!-document.querySelector('#containedDiv')?.clientHeight!>0)? setScrolling(true):setScrolling(false);
+  }, [windowSize.height]);
   return (
     <PageWrapper className="absolute inset-0  w-full h-screen flex items-center justify-center ">
       <div className="border-0 rounded-md p-1 mt-4 shadow-2xl w-[90%]   max-w-[450px] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md h-[70svh] md:h-[85svh] relative overflow-y-auto">
-        <div className="w-full h-full border rounded-md border-lightMainColor dark:border-darkMainColor relative overflow-y-auto">
-          <div
-            className={`absolute top-0 left-0 flex flex-col items-center justify-between  w-full `}
+        <div id="wrapperDiv" className="w-full h-full border rounded-md border-lightMainColor dark:border-darkMainColor relative overflow-y-auto flex flex-col justify-center items-center">
+          <div id="containedDiv"
+            className={`${scrolling?"":"absolute top-0 left-0"} flex flex-col items-center justify-between  w-full `}
           >
             <h2
               className="text-center font-bold uppercase"

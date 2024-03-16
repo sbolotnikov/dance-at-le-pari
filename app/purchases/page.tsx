@@ -5,6 +5,7 @@ import { PageWrapper } from '../../components/page-wrapper';
 import ImgFromDb from '@/components/ImgFromDb';
 import { useSession } from 'next-auth/react';
 import AlertMenu from '@/components/alertMenu';
+import { useDimensions } from '@/hooks/useDimensions';
 interface pageProps {}
 type Purchase = {
   activityID: number;
@@ -40,6 +41,8 @@ const page: FC<pageProps> = ({}) => {
     }[]
   >([]);
   const [revealAlert, setRevealAlert] = useState(false);
+  const [scrolling, setScrolling] = useState(true);
+  const windowSize = useDimensions();
   const [alertStyle, setAlertStyle] = useState({
     variantHead: '',
     heading: '',
@@ -132,7 +135,9 @@ const page: FC<pageProps> = ({}) => {
     }
     setPurchases(filteredPurchases);
   };
-
+  useEffect(() => {
+    (document.getElementById('wrapperDiv')?.offsetHeight!-document.getElementById('containedDiv')?.offsetHeight!>0)? setScrolling(true):setScrolling(false);
+  }, [purchases,windowSize.height]);
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
       {loading && <LoadingScreen />}
@@ -140,8 +145,8 @@ const page: FC<pageProps> = ({}) => {
         <AlertMenu onReturn={onReturnAlert} styling={alertStyle} />
       )}
       <div className="   shadow-2xl w-[90%]  max-w-[1000px] md:w-full h-[70svh] md:h-[90%] bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md border-0 rounded-md  p-2 mt-6">
-        <div className="border rounded-md border-lightMainColor dark:border-darkMainColor w-full h-full relative  p-1 flex  overflow-y-scroll">
-          <div className="flex flex-col w-[900px] p-1 justify-center items-center absolute top-0 left-0">
+        <div id="wrapperDiv" className="w-full h-full border rounded-md border-lightMainColor dark:border-darkMainColor relative overflow-y-auto flex flex-col justify-center items-center">
+          <div  id="containedDiv"  className={`${scrolling?"":"absolute top-0 left-0"} flex flex-col w-[900px] p-1 justify-center items-center `}>
             <h3 className="w-full uppercase xs:text-md sm:text-xl phone:text-2xl tablet:text-3xl text-center">
               Purchases
             </h3>

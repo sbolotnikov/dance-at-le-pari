@@ -126,6 +126,11 @@ const Navbar = ({ path, locale, children }: Props) => {
           icon: 'Home2',
         },
         {
+          url: '/schedule',
+          title: 'Shedule Tool',
+          icon: 'Schedule',
+        },
+        {
           url: '/admin/usersscreen',
           title: 'Users Screen',
           icon: 'Users',
@@ -157,6 +162,11 @@ const Navbar = ({ path, locale, children }: Props) => {
           url: '/rentals',
           title: 'Studio',
           icon: 'Home2',
+        },
+        {
+          url: '/schedule',
+          title: 'Shedule Tool',
+          icon: 'Schedule',
         },
       ];
     }
@@ -415,6 +425,7 @@ const Navbar = ({ path, locale, children }: Props) => {
                 : document
                     .getElementsByTagName('body')[0]
                     .classList.remove('dark');
+                    burgerState ? changeMenu(false) : {};
             }}
             className=" h-6 w-6 md:h-8 md:w-8  mr-3 md:mr-6 rounded-sm outline-none"
           >
@@ -437,7 +448,7 @@ const Navbar = ({ path, locale, children }: Props) => {
             id="cart-toggle"
             type="button"
             onClick={() => {
-              console.log('Shopping Cart pressed');
+              burgerState ? changeMenu(false) : {};
             }}
             className=" h-6 w-6 md:h-8 md:w-8  mr-3 md:mr-6 rounded-sm outline-none"
           >
