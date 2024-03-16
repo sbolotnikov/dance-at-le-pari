@@ -144,7 +144,7 @@ const page: FC<pageProps> = ({}) => {
       {revealAlert && (
         <AlertMenu onReturn={onReturnAlert} styling={alertStyle} />
       )}
-      <div className="   shadow-2xl w-[90%]  max-w-[1000px] md:w-full h-[70svh] md:h-[90%] bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md border-0 rounded-md  p-2 mt-6">
+      <div className="   shadow-2xl w-[90%]  max-w-[1000px] md:w-full h-[70svh] md:h-[85svh] bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md border-0 rounded-md  p-2 mt-6">
         <div id="wrapperDiv" className="w-full h-full border rounded-md border-lightMainColor dark:border-darkMainColor relative overflow-y-auto flex flex-col justify-center items-center">
           <div  id="containedDiv"  className={`${scrolling?"":"absolute top-0 left-0"} flex flex-col w-[900px] p-1 justify-center items-center `}>
             <h3 className="w-full uppercase xs:text-md sm:text-xl phone:text-2xl tablet:text-3xl text-center">

@@ -8,8 +8,8 @@ import { TFullEvent } from '@/types/screen-settings';
 import sleep from '@/utils/functions';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
-import { useDispatch} from "react-redux"
-import { addItem } from "@/slices/cartSlice";
+import { useDispatch } from 'react-redux';
+import { addItem } from '@/slices/cartSlice';
 
 export default function Page({ params }: { params: { id: string } }) {
   const [eventData, setEventData] = useState<TFullEvent>();
@@ -76,67 +76,78 @@ export default function Page({ params }: { params: { id: string } }) {
           eventImage={eventData!.image}
           price={eventData!.price}
           id={parseInt(params.id)}
-          onReturn={async(seatsArray) => {
+          onReturn={async (seatsArray) => {
             console.log(seatsArray);
-            if (seatsArray.length>0){
-              if (eventData!.tables!.length>0){
+            if (seatsArray.length > 0) {
+              if (eventData!.tables!.length > 0) {
                 for (let i = 0; i < seatsArray.length; i++) {
-                  console.log(seatsArray[i].seat, seatsArray[i].table, eventData!.date, eventData!.image, eventData!.eventtype, eventData!.tag, eventData!.price, seatsArray.length, -parseInt(params.id));
-                
-               fetch('/api/purchase_block', {
-                method: 'POST',
-                headers: {
-                  Accept: 'application/json, text/plain, */*',
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  activityID: -parseInt(params.id),
-                  image: eventData!.image!, 
-                  eventtype: eventData!.eventtype,
-                  tag: eventData!.tag,
-                  price: eventData!.price,
-                  invoice:"None",
-                  purchasedAt: "None",
-                  seat: seatsArray[i].seat,
-                  table: seatsArray[i].table,
-                  date:eventData!.date,
-                  userID: session?.user.id,  
-                }),
-              }).then(res => res.json())
-              .then((data) => {
-              console.log(data);
-              if (data.status!==422)
-              dispatch(addItem({
-                id: -parseInt(params.id),
-                image: eventData!.image!, 
-                eventtype: eventData!.eventtype,
-                tag: eventData!.tag,
-                price: eventData!.price,
-                amount: 1,
-                seat: seatsArray[i].seat,
-                table: seatsArray[i].table,
-                date:eventData!.date,
-                         
-            }));
-              })
-            }
-              }else{
-                dispatch(addItem({
-                  id: templateID,
-                  image: eventData!.image!, 
-                  eventtype: eventData!.eventtype,
-                  tag: eventData!.tag,
-                  price: eventData!.price*seatsArray.length,
-                  amount: seatsArray.length,
-                  seat: null,
-                  table: null,
-                  date:null,
-                           
-              }))
-              }
+                  console.log(
+                    seatsArray[i].seat,
+                    seatsArray[i].table,
+                    eventData!.date,
+                    eventData!.image,
+                    eventData!.eventtype,
+                    eventData!.tag,
+                    eventData!.price,
+                    seatsArray.length,
+                    -parseInt(params.id)
+                  );
 
-            
-          }
+                  fetch('/api/purchase_block', {
+                    method: 'POST',
+                    headers: {
+                      Accept: 'application/json, text/plain, */*',
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      activityID: -parseInt(params.id),
+                      image: eventData!.image!,
+                      eventtype: eventData!.eventtype,
+                      tag: eventData!.tag,
+                      price: eventData!.price,
+                      invoice: 'None',
+                      purchasedAt: 'None',
+                      seat: seatsArray[i].seat,
+                      table: seatsArray[i].table,
+                      date: eventData!.date,
+                      userID: session?.user.id,
+                    }),
+                  })
+                    .then((res) => res.json())
+                    .then((data) => {
+                      console.log(data);
+                      if (data.status !== 422)
+                        dispatch(
+                          addItem({
+                            id: -parseInt(params.id),
+                            image: eventData!.image!,
+                            eventtype: eventData!.eventtype,
+                            tag: eventData!.tag,
+                            price: eventData!.price,
+                            amount: 1,
+                            seat: seatsArray[i].seat,
+                            table: seatsArray[i].table,
+                            date: eventData!.date,
+                          })
+                        );
+                    });
+                }
+              } else {
+                dispatch(
+                  addItem({
+                    id: templateID,
+                    image: eventData!.image!,
+                    eventtype: eventData!.eventtype,
+                    tag: eventData!.tag,
+                    price: eventData!.price * seatsArray.length,
+                    amount: seatsArray.length,
+                    seat: null,
+                    table: null,
+                    date: null,
+                  })
+                );
+              }
+            }
             sleep(1200).then(() => {
               setRevealBuyTicketModal(false);
             });
@@ -151,12 +162,12 @@ export default function Page({ params }: { params: { id: string } }) {
         {eventData && (
           <div className="w-full h-full flex flex-col justify-center items-center border rounded-md border-lightMainColor dark:border-darkMainColor relative p-2 overflow-y-scroll">
             <div className="w-full flex flex-row justify-end">
-            <h2
-              className="text-center font-bold uppercase mx-auto"
-              style={{ letterSpacing: '1px' }}
-            >
-              Event:
-            </h2>
+              <h2
+                className="text-center font-bold uppercase mx-auto"
+                style={{ letterSpacing: '1px' }}
+              >
+                Event:
+              </h2>
               {session?.user.role == 'Admin' && (
                 <button
                   className=" outline-none border-none fill-alertcolor  stroke-alertcolor  rounded-md border-alertcolor mt-2  w-8 h-8"

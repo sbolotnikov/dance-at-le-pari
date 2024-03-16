@@ -118,7 +118,7 @@ const page: FC<pageProps> = ({}) => {
           template={template1?.id}
         />
       ) : (
-        <div className="   shadow-2xl w-[90%]  max-w-[450px] md:w-full h-[75svh] md:h-[90%] bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md border-0 rounded-md  p-2 mt-6 md:mb-2">
+        <div className="   shadow-2xl w-[90%]  max-w-[450px] md:w-full h-[75svh] md:h-[85svh] bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md border-0 rounded-md  p-2 mt-6 md:mb-2">
           <div id="wrapperDiv" className="border rounded-md border-lightMainColor dark:border-darkMainColor w-full h-full relative  p-1 overflow-y-scroll flex flex-col justify-center items-center">
             <div ref={containerRef} className={`${scrolling?"":"absolute top-0 left-0"} flex flex-col w-full p-1 justify-center items-center`}>
               <h2

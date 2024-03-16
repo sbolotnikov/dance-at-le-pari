@@ -36,7 +36,7 @@ const page: FC<pageProps> = ({}) => {
           }}
         />
       )}
-      <div className="border-0 rounded-md p-2 mt-8  shadow-2xl w-[90%] max-w-[450px] flex justify-center items-center flex-col  h-[70svh] md:h-[90%] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
+      <div className="border-0 rounded-md p-2 mt-8  shadow-2xl w-[90%] max-w-[450px] flex justify-center items-center flex-col  h-[70svh] md:h-[85svh] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
         <div className="w-full h-full relative  p-1 flex  overflow-y-scroll border border-lightMainColor dark:border-darkMainColor rounded-md">
           <div className="flex flex-col w-full p-1 justify-center items-center absolute top-0 left-0">
             <h2

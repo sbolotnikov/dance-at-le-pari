@@ -169,7 +169,7 @@ const page: FC<pageProps> = ({}) => {
         />
       ) : (
         <div
-          className="border-0 rounded-md p-2  shadow-2xl w-[95%] h-[70svh] md:h-[85%] max-w-5xl md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md "
+          className="border-0 rounded-md p-2  shadow-2xl w-[95%] h-[70svh] md:h-[85svh] max-w-5xl md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md "
          
         >
            

@@ -120,15 +120,15 @@ const page: FC<pageProps> = () => {
       });
   };
   return (
-    <PageWrapper className="flex min-h-screen flex-col items-center justify-center py-2  dark:text-light">
-       
-        {revealAlert && <AlertMenu onReturn={onReturn} styling={alertStyle} />}
-        <div className="absolute top-0 left-0 h-[100svh] w-[100vw] flex justify-center  items-center">
+    <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
+      {revealAlert && <AlertMenu onReturn={onReturn} styling={alertStyle} />}
+      <div className="border-0 rounded-md p-2 shadow-2xl w-[90%] max-w-[450px] max-h-[85%] overflow-y-auto md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
+        <div className="w-full h-full flex flex-col justify-center items-center border rounded-md border-lightMainColor dark:border-darkMainColor relative p-2">
           <form
             onSubmit={handleSubmit}
-            className="w-[80%] h-[80%] max-w-[700px] shadow-2xl max-h-[700px] rounded-md flex flex-col justify-between  items-center p-2 bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md "
+            className="w-full h-full rounded-md flex flex-col justify-between  items-center   "
           >
-            <h1 className=" font-semibold text-center text-2xl">
+            <h1 className=" font-semibold text-center uppercase text-lg">
               Send us an Email
             </h1>
             <p className="w-full ">
@@ -139,7 +139,7 @@ const page: FC<pageProps> = () => {
             <input
               name="user_name"
               id="user_name"
-              className="w-full rounded text-lightteal"
+              className="w-full rounded outline-none m-2 text-lightteal"
               type="text"
               placeholder="Your name"
             />
@@ -147,14 +147,14 @@ const page: FC<pageProps> = () => {
             <input
               name="user_email"
               id="user_email"
-              className="w-full rounded text-lightteal"
+              className="w-full rounded m-2 outline-none text-lightteal"
               type="text"
               placeholder="Email"
             />
             <textarea
               name="message"
               id="message"
-              className="w-full rounded text-lightteal"
+              className="w-full rounded m-2 outline-none text-lightteal"
               placeholder="Your question"
               rows={4}
               minLength={5}
@@ -164,7 +164,8 @@ const page: FC<pageProps> = () => {
               Send Message
             </button>
           </form>
-        </div> 
+        </div>
+      </div>
     </PageWrapper>
   );
 };
