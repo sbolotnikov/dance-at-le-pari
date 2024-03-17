@@ -196,7 +196,7 @@ const page: FC<pageProps> = ({}) => {
               <div className="w-full h-20 flex  justify-center items-center">
                 <div className="relative flex  justify-center items-center outline-none border border-lightMainColor dark:border-darkMainColor rounded-md w-24 mx-auto ">
                   {template1 !== undefined ? (
-                    <div className=" h-10 w-10 md:h-12 md:w-12 m-auto">
+                    <div className=" h-10 w-10 md:h-12 md:w-12  flex flex-col justify-center items-center">
                     <ImgFromDb
                       url={template1.image}
                       stylings="object-contain m-auto"
@@ -204,7 +204,7 @@ const page: FC<pageProps> = ({}) => {
                     />
                     </div>
                   ) : (
-                    <div className=" h-10 w-10 md:h-12 md:w-12 fill-lightMainColor m-auto stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
+                    <div className=" h-10 w-10 md:h-12 md:w-12 fill-lightMainColor flex justify-center items-center stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
                       <ShowIcon icon={'Image'} stroke={'0.75'} />
                     </div>
                   )}

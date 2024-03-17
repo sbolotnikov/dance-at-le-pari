@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import ShowIcon from './svg/showIcon';
+import { useDimensions } from '@/hooks/useDimensions';
 type Props = {
   dateDisplay: string;
   defaultView:boolean;
@@ -15,6 +16,7 @@ export const CalendarHeader = ({
   defaultView
 }: Props) => {
   const [agendaView, setAgendaView] = useState(true);
+  const windowSize = useDimensions();
   useEffect(() => {
     if (defaultView === false){
     let agendaViewGet = JSON.parse(localStorage.getItem('AgendaView')!);
@@ -27,6 +29,18 @@ export const CalendarHeader = ({
     }
   }
   }, []);
+  useEffect(() => {
+    if((windowSize.width!>767)&&(windowSize.height!>767)&&(document.getElementById('textID'))) {
+      document.getElementById('textID')!.style.fontFamily='var(--font-DancingScript)';
+      document.getElementById('textID')!.style.fontSize= '2.25rem';
+       document.getElementById('textID')!.style.lineHeight= '2.5rem';
+      
+    } else if ((windowSize.width!>0)&&(document.getElementById('textID'))) {
+      document.getElementById('textID')!.style.fontFamily='Sans-Serif';
+      document.getElementById('textID')!.style.fontSize= '1rem';
+      document.getElementById('textID')!.style.lineHeight= '1.5rem';
+    }   
+  }, [ windowSize.height]);
   return (
     <div className="w-full flex justify-center item-end flex-row">
       {!defaultView &&<button
@@ -52,7 +66,7 @@ export const CalendarHeader = ({
       </button>}
 
       {(!agendaView || defaultView )&& (
-        <div className=" font-bold  text-base md:text-4xl mt-4 md:my-2 md:mx-3 text-franceBlue dark:text-darkMainColor  md:font-DancingScript">
+        <div id="textID" className=" font-bold   mt-4  md:mx-3 text-franceBlue dark:text-darkMainColor ">
           {dateDisplay}
         </div>
       )}
