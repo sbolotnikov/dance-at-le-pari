@@ -152,7 +152,7 @@ export default function BuyTicketModal({
         onReturn([]);
       }}
     >
-      <div className="h-[73%] w-[75%] md:w-[50%] bg-darkMainColor dark:bg-lightMainColor rounded-md  p-1">
+      <div className={`${seatmap!== null?'h-[73%] w-[75%]':"w-full max-w-xl h-full max-h-[300px]"} md:w-[50%] bg-darkMainColor dark:bg-lightMainColor rounded-md  p-1`}>
         <div id="wrapperDiv" className="w-full h-full border rounded-md border-lightMainColor dark:border-darkMainColor relative overflow-y-auto flex flex-col justify-center items-center">
           <div id="containedDiv"
             className={`${scrolling?"":"absolute top-0 left-0"}  w-full p-1 ${

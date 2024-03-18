@@ -76,6 +76,7 @@ export default function Page({ params }: { params: { id: string } }) {
       ? setScrolling(true)
       : setScrolling(false);
   }, [eventData, windowSize.height]);
+ 
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
       {revealBuyTicketModal && (

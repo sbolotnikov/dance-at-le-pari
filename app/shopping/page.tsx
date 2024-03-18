@@ -22,7 +22,7 @@ const page: FC<pageProps> = ({}) => {
   const [loading, setLoading] = useState(false);
   const [transactionID, setTransactionID] = useState('');
   const [revealAlert, setRevealAlert] = useState(false);
-  const [scrolling, setScrolling] = useState(true);
+  const [scrolling, setScrolling1] = useState(true);
   const windowSize = useDimensions();
   const [alertStyle, setAlertStyle] = useState({
     variantHead: '',
@@ -38,16 +38,22 @@ const page: FC<pageProps> = ({}) => {
   const dispatch = useDispatch();
   const onReturnAlert = (decision1: string, amount: string | null) => {
     setRevealAlert(false);
-    // if (decision1 === 'Ok') {
-    //     window.location.reload();
-    // }
+   
   };
   useEffect(() => {
-    document.getElementById('wrapperDiv')?.offsetHeight! -
-      document.getElementById('containedDiv')?.offsetHeight! >
-    0
-      ? setScrolling(true)
-      : setScrolling(false);
+    if (
+      document.getElementById('wrapperDiv')?.offsetHeight! -
+        document.getElementById('containedDiv')?.offsetHeight! >
+      0
+    ) {
+      setScrolling1(true);
+      // console.log(document.getElementById('containedDiv')?.offsetHeight!,)
+      // document.getElementById('outerWrapper')!.style.height = (document.getElementById('containedDiv')?.offsetHeight!+200).toString() + 'px';
+      
+    } else {
+      setScrolling1(false);
+      
+    }
   }, [items, windowSize.height]);
 
   return (
@@ -83,12 +89,20 @@ const page: FC<pageProps> = ({}) => {
       {revealAlert && (
         <AlertMenu onReturn={onReturnAlert} styling={alertStyle} />
       )}
-      <div className="border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-5xl  flex justify-center items-center flex-col  h-[80svh] md:h-[85svh] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
+      <div
+        id="outerWrapper"
+        className="border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-5xl  flex justify-center items-center flex-col  h-[80svh] md:h-[85svh] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md"
+      >
         <div
           id="wrapperDiv"
           className="w-full h-full border rounded-md border-lightMainColor dark:border-darkMainColor relative overflow-y-auto flex flex-col justify-center items-center"
         >
-          <div id="containedDiv" className={`${ scrolling ? '' : 'absolute top-0 left-0'} flex flex-col w-full p-1 justify-center items-center`} >
+          <div
+            id="containedDiv"
+            className={`${
+              scrolling ? '' : 'absolute top-0 left-0'
+            } flex flex-col w-full p-1 justify-center items-center`}
+          >
             <h2
               className="text-center font-bold uppercase"
               style={{ letterSpacing: '1px' }}
@@ -118,9 +132,13 @@ const page: FC<pageProps> = ({}) => {
                         {item.seat !== null && item.table !== null && (
                           <p className="w-full text-sm italic text-left">
                             Table:
-                            {item.table < 12 ? item.table + 1 : item.table + 2}{' '}
+                            {item.table < 12
+                              ? item.table + 1
+                              : item.table + 2}{' '}
                             Seat:
-                            {item.seat < 12 ? item.seat + 1 : item.seat + 2}{' '}
+                            {item.seat < 12
+                              ? item.seat + 1
+                              : item.seat + 2}{' '}
                             Date:
                             {new Date(item.date!).toLocaleDateString('en-us', {
                               month: 'long',

@@ -66,7 +66,7 @@ export const CalendarHeader = ({
       </button>}
 
       {(!agendaView || defaultView )&& (
-        <div id="textID" className=" font-bold   mt-4  md:mx-3 text-franceBlue dark:text-darkMainColor ">
+        <div id="textID" className=" font-bold   mt-4 md:mt-2   text-franceBlue dark:text-darkMainColor ">
           {dateDisplay}
         </div>
       )}

@@ -11,6 +11,7 @@ import ShowIcon from '@/components/svg/showIcon';
 import { DaySchedule } from '@/components/DaySchedule';
 import { useScheduleDate } from '@/hooks/useScheduleDate';
 import EditScheduleModal from '@/components/EditScheduleModal';
+import { useDimensions } from '@/hooks/useDimensions';
 
 interface pageProps {}
 
@@ -32,6 +33,7 @@ const page: FC<pageProps> = ({}) => {
   const [nav, setNav] = useState(0);
   const [events, setEvents] = useState([] as TEventScheduleArray);
   const [selectedEvent, setSelectedEvent] = useState({} as TEventSchedule);
+  const windowSize = useDimensions();
   const [users, setUsers] = useState<
     {
       id: number;
@@ -101,14 +103,18 @@ const page: FC<pageProps> = ({}) => {
         });
     }
   }, [session]);
-
+  useEffect(() => {
+    windowSize.width! > 768 && windowSize.height! > 768
+      ? (document.getElementById('icon')!.style.display = 'block')
+      : (document.getElementById('icon')!.style.display = 'none');
+  }, [windowSize.height]);
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
       {loading && <LoadingScreen />}
       {revealAlert && (
         <AlertMenu onReturn={onReturnAlert} styling={alertStyle} />
       )}
-      {revealModal  && (
+      {revealModal && (
         <EditScheduleModal
           visibility={revealModal}
           event={selectedEvent}
@@ -204,14 +210,14 @@ const page: FC<pageProps> = ({}) => {
               }
               window.location.reload();
             }
-            if (del!==null){
-                setLoading(true);
-                const res = await fetch('/api/teacher/schedule_event/delete', {
+            if (del !== null) {
+              setLoading(true);
+              const res = await fetch('/api/teacher/schedule_event/delete', {
                 method: 'POST',
                 headers: {
-                  'Content-Type': 'application/json'
+                  'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({id: del.id})
+                body: JSON.stringify({ id: del.id }),
               });
               window.location.reload();
             }
@@ -219,18 +225,43 @@ const page: FC<pageProps> = ({}) => {
         />
       )}
 
-      <div className="   shadow-2xl w-[90%]  max-w-[1000px] md:w-full h-[70svh] md:h-[85svh] bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md border-0 rounded-md  p-2 mt-6">
-        <div className="border rounded-md border-lightMainColor dark:border-darkMainColor w-full h-full relative  p-1 flex  overflow-y-scroll">
-          <div className="flex flex-col w-[1000px] p-1 justify-center items-center absolute top-0 left-0">
-            <h2
-              className="text-center font-bold uppercase"
-              style={{ letterSpacing: '1px' }}
-            >
-              Personal Schedule Tool
-            </h2>
-            <div className=" h-20 w-20 md:h-28 md:w-28 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor m-auto">
-              <ShowIcon icon={'Schedule'} stroke={'0.5'} />
-            </div>
+      <div className="border-0 rounded-md p-2 mt-6 shadow-2xl w-[95%] h-[70svh] md:h-[85svh] max-w-5xl md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
+        <div className="border rounded-md border-lightMainColor dark:border-darkMainColor w-full h-full   p-2 flex flex-col">
+          <h2
+            className="text-center font-bold uppercase"
+            style={{ letterSpacing: '1px' }}
+          >
+            Personal Schedule Tool
+          </h2>
+
+          <div
+            id="icon"
+            className=" h-20 w-20 md:h-28 md:w-28 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor m-auto"
+          >
+            <ShowIcon icon={'Schedule'} stroke={'0.5'} />
+          </div>
+
+          <div className="w-full h-full  flex flex-col relative">
+            {(session?.user.role === 'Admin' ||
+              session?.user.role === 'Teacher') && (
+              <div className="group flex  cursor-pointer  flex-col items-center absolute right-0 -top-2 md:-top-8">
+                <div className="  h-8 w-8 md:h-10 md:w-10 relative hover:scale-110 group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
+                  <div
+                    className="cursor-pointer h-8 w-8 md:h-10 md:w-10 border-2 rounded-md  bg-editcolor m-auto "
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setSelectedEvent({} as TEventSchedule);
+                      setRevealModal(true);
+                    }}
+                  >
+                    <ShowIcon icon={'Plus'} stroke={'0.1'} />
+                  </div>
+                </div>
+                <p className="hidden tracking-widest mx-3 transition duration-300 ease-in-out absolute -right-4 -bottom-8 md:-bottom-12 rounded-md text-center text-editcolor text-xs md:text-base md:dark:bg-lightMainBG    opacity-100 group-hover:inline-flex md:block md:opacity-0 md:group-hover:opacity-100 ">
+                  New Event
+                </p>
+              </div>
+            )}
             <CalendarHeader
               dateDisplay={dateDisplay}
               defaultView={true}
@@ -238,62 +269,56 @@ const page: FC<pageProps> = ({}) => {
               onBack={() => setNav(nav - 1)}
               onStyle={(n) => {}}
             />
-            <div
-              id="weekdays"
-              className="w-full flex text-lightMainBG bg-franceBlue dark:text-franceBlue dark:bg-lightMainBG relative"
-            >
-              { ((session?.user.role === 'Admin') || session?.user.role === 'Teacher') &&<div
-                className="cursor-pointer h-8 w-8 md:h-10 md:w-10 border-2 rounded-md md:-top-12 bg-editcolor m-auto absolute right-1 -top-10"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setSelectedEvent({} as TEventSchedule);
-                  setRevealModal(true);
-                }}
-              >
-                <ShowIcon icon={'Plus'} stroke={'0.1'} />
-              </div>}
-              {weekdayName.map((item, i) => {
-                return (
-                  <div
-                    key={`dayOfWeek${i}`}
-                    className="w-[14.2857%] m-0 text-center truncate"
-                  >
-                    {item.charAt(0).toUpperCase() + item.slice(1)}
-                  </div>
-                );
-              })}
-            </div>
-            <div id="calendar" className="w-full m-auto flex flex-wrap">
-              {days  &&
-                days.map((d, index) => (
-                  <DaySchedule
-                    key={index}
-                    day={d}
-                    users={users}
-                    role={session?.user.role!}
-                    onClick={() => {
-                      if (d.value !== 'padding') {
-                        let dt = new Date();
-                        dt.setMonth(new Date().getMonth() + nav);
-                        let dayStr =
-                          dt.toISOString().split('-')[0] +
-                          '-' +
-                          dt.toISOString().split('-')[1] +
-                          '-';
-                        parseInt(d.value) < 10
-                          ? (dayStr += '0' + d.value)
-                          : (dayStr += d.value);
-                        console.log(dayStr);
-                      }
-                    }}
-                    onEventClick={(e) => {
-                      setRevealModal(true);
-                      setSelectedEvent(
-                        events.filter((event) => event.id == e)[0]
-                      );
-                    }}
-                  />
-                ))}
+            <div className="w-full h-full relative overflow-auto border rounded-md border-lightMainColor dark:border-darkMainColor">
+              <div className={`w-[960px] absolute top-0 left-0`}>
+                <div
+                  id="weekdays"
+                  className="w-full flex text-lightMainBG bg-franceBlue dark:text-franceBlue dark:bg-lightMainBG relative"
+                >
+                  {weekdayName.map((item, i) => {
+                    return (
+                      <div
+                        key={`dayOfWeek${i}`}
+                        className="w-[14.2857%] m-0 text-center truncate"
+                      >
+                        {item.charAt(0).toUpperCase() + item.slice(1)}
+                      </div>
+                    );
+                  })}
+                </div>
+                <div id="calendar" className="w-full m-auto flex flex-wrap">
+                  {days &&
+                    days.map((d, index) => (
+                      <DaySchedule
+                        key={index}
+                        day={d}
+                        users={users}
+                        role={session?.user.role!}
+                        onClick={() => {
+                          if (d.value !== 'padding') {
+                            let dt = new Date();
+                            dt.setMonth(new Date().getMonth() + nav);
+                            let dayStr =
+                              dt.toISOString().split('-')[0] +
+                              '-' +
+                              dt.toISOString().split('-')[1] +
+                              '-';
+                            parseInt(d.value) < 10
+                              ? (dayStr += '0' + d.value)
+                              : (dayStr += d.value);
+                            console.log(dayStr);
+                          }
+                        }}
+                        onEventClick={(e) => {
+                          setRevealModal(true);
+                          setSelectedEvent(
+                            events.filter((event) => event.id == e)[0]
+                          );
+                        }}
+                      />
+                    ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>

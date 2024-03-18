@@ -54,11 +54,10 @@ export const DaySchedule = ({ day, users,role, onClick, onEventClick }: Props) =
                 style={{ backgroundColor: getColor(event.teachersid[0]) }}
                 onClick={(e)=>{e.preventDefault(); onEventClick(event.id)}}
               >
-                <span className="text-xs hidden md:block md:m-1">
+                
                   {new Date(event.date).toLocaleTimeString('en-US', {
                     timeStyle: 'short',
                   })}
-                </span>
                 {event.tag.length > 0
                   ? ' ' + event.tag
                   : ' ' + ((role=='Student')? getName(event.teachersid[0]) : getName(event.studentid[0]))}

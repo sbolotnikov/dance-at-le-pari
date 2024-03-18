@@ -199,7 +199,7 @@ export default function EditScheduleModal({
             })}
         />
       )}
-      <div className="border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-md  flex justify-center items-center flex-col  h-[70svh] md:h-[85svh] md:w-full bg-lightMainBG dark:bg-darkMainBG backdrop-blur-md">
+      <div className={`border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-md  flex justify-center items-center flex-col   md:w-full bg-lightMainBG dark:bg-darkMainBG backdrop-blur-md ${role == 'Student' ?"max-h-[527px] h-full":"h-[70svh] md:h-[85svh]"}`}>
         <div  id="wrapperDiv" className="w-full h-full relative  p-1  overflow-y-auto border border-lightMainColor dark:border-darkMainColor rounded-md flex flex-col justify-center items-center">
           <div id="containedDiv" className={`${ scrolling ? '' : 'absolute top-0 left-0'} flex flex-col w-full p-1 justify-center items-center`}>
             <h2 className="w-full text-center uppercase">
@@ -211,7 +211,7 @@ export default function EditScheduleModal({
                 {teacher?.image !== null &&
                 teacher?.image !== '' &&
                 teacher?.image !== undefined ? (
-                  <div>
+                  <div className="w-[8rem] h-[12rem] flex flex-col justify-between items-center">
                     <ImgFromDb
                       url={teacher?.image!}
                       stylings="object-contain"
