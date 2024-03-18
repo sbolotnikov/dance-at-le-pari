@@ -94,6 +94,7 @@ export default function EditScheduleModal({
         })
     );
     if (event.id !== undefined) {
+        console.log(event)
       setEventType(event.eventtype);
       setTag(event.tag);
       setLocation(event.location!);
@@ -514,10 +515,10 @@ export default function EditScheduleModal({
                   );
                 }}
               >
-                {`${event.id ? 'Submit Edited' : 'Create New'} Event`}
+                {`${(event.id&&event.id>-1 )? 'Submit Edited' : 'Create New'} Event`}
               </button>
             )}
-            {event.id !== undefined && role !== 'Student' && (
+            {event.id !== undefined && event.id>-1 && role !== 'Student' && (
               <button
                 className="w-[70%] btnFancy text-base text-center  rounded-md"
                 style={{ padding: '0' }}

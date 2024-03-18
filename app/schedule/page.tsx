@@ -12,6 +12,8 @@ import { DaySchedule } from '@/components/DaySchedule';
 import { useScheduleDate } from '@/hooks/useScheduleDate';
 import EditScheduleModal from '@/components/EditScheduleModal';
 import { useDimensions } from '@/hooks/useDimensions';
+import sleep from '@/utils/functions';
+import FullDayScheduleView from '@/components/FullDayScheduleView';
 
 interface pageProps {}
 
@@ -33,6 +35,8 @@ const page: FC<pageProps> = ({}) => {
   const [nav, setNav] = useState(0);
   const [events, setEvents] = useState([] as TEventScheduleArray);
   const [selectedEvent, setSelectedEvent] = useState({} as TEventSchedule);
+  const [ revealDayView, setRevealDayView] = useState(false);
+  const [clicked, setClicked] = useState<string>();
   const windowSize = useDimensions();
   const [users, setUsers] = useState<
     {
@@ -113,6 +117,40 @@ const page: FC<pageProps> = ({}) => {
       {loading && <LoadingScreen />}
       {revealAlert && (
         <AlertMenu onReturn={onReturnAlert} styling={alertStyle} />
+      )}
+            {revealDayView && (
+        <FullDayScheduleView
+          events={events.filter(
+            (e) => e.date.split('T')[0] === clicked!.split('T')[0]
+          )}
+          users={users}
+          day={clicked}
+          onReturn={() => {
+            sleep(1200).then(() => {
+              setRevealDayView(false);
+            });
+          }}
+          onEventClick={(e) => {
+            setRevealModal(true);
+            setSelectedEvent(
+              events.filter((event) => event.id == e)[0]
+            );
+          }}
+          onNewEventClick={(dateLine, teachersid, location) => {
+            setRevealModal(true);
+            setSelectedEvent({
+              id: -1,
+              date: dateLine,
+              tag: '',
+              eventtype: 'Private',
+              length: 45,
+              teachersid,
+              studentid: [],
+              location,
+              interval:null, repeating:false, until:null
+            });
+          }}
+        />
       )}
       {revealModal && (
         <EditScheduleModal
@@ -306,7 +344,8 @@ const page: FC<pageProps> = ({}) => {
                             parseInt(d.value) < 10
                               ? (dayStr += '0' + d.value)
                               : (dayStr += d.value);
-                            console.log(dayStr);
+                            setClicked(dayStr);
+                            setRevealDayView(true);
                           }
                         }}
                         onEventClick={(e) => {

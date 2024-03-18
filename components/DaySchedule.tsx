@@ -4,7 +4,8 @@ type Props = {
   day: TDaySchedule;
   users: { id: number; name: string; color: string | null }[];
   role: string;
-  onClick: () => void; onEventClick: (n:number) => void;
+  onClick: () => void; 
+  onEventClick: (n:number) => void;
 };
 export const DaySchedule = ({ day, users,role, onClick, onEventClick }: Props) => {
   const className = `day ${day.value === 'padding' ? 'padding' : ''} ${
