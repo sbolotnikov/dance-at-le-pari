@@ -84,7 +84,7 @@ const FullDayCalendarView = ({ events, onReturn, day }: Props) => {
                         key={'LinksEvent' + index}
                         href={`/events/${item.id}`}
                       >
-                        <div className="m-3 p-2  flex flex-col justify-center items-center relative text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG    shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2">
+                        <div className="m-3 p-2  flex flex-col justify-center items-center relative  bg-lightMainBG  dark:bg-darkMainBG text-lightMainColor dark:text-darkMainColor  shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2">
                           {session?.user.role=="Admin"&&<button
                             className=" outline-none border-none fill-alertcolor  stroke-alertcolor  rounded-md border-alertcolor absolute p-1 -top-1 -right-4 w-10 h-10"
                             onClick={(e) => {

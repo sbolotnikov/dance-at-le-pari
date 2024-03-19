@@ -3,7 +3,7 @@ import { createContext, useContext, useState, useEffect } from 'react';
 type Props = {
     children?: React.ReactNode;
   };
-  export const SettingsContext = createContext<ScreenSettingsContextType | null>(null);;
+  export const SettingsContext = createContext<ScreenSettingsContextType | null>(null);
 
 export const SettingsProvider = ({ children }: Props) => {
     

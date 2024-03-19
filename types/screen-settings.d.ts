@@ -5,6 +5,7 @@ export interface IScreenSettings {
     darkMode: boolean;
     changeTheme: (a:boolean) => void;
   };
+  
   export type TEvent = {
     date: string;
     tag: string;
