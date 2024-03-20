@@ -1,5 +1,5 @@
 import { TEventSchedule } from '@/types/screen-settings';
-import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { createContext,  useState, } from 'react';
 
 export type PopupContextType ={
   isMoving: boolean;
@@ -9,13 +9,10 @@ export type PopupContextType ={
 }
 
 
-type Props = {
-    children?: React.ReactNode;
-  };
   export const PopupContext = createContext<PopupContextType | null>(null);
 
-export const PopupContextProvider = ({ children }: Props) => {
-    
+export const usePopupContext = () => {
+
     const [isMoving, changeIsMoving] = useState (false);
     const [item, changeItem] = useState<TEventSchedule | null>(null);
    
@@ -26,10 +23,6 @@ export const PopupContextProvider = ({ children }: Props) => {
       changeItem(item);
     }
      
-      return (
-        <PopupContext.Provider value={{isMoving, setIsMoving, item, setItem}}>
-          { children}
-        </PopupContext.Provider>
-      );
+      return ( {isMoving, setIsMoving, item, setItem});
     };
   

@@ -1,10 +1,11 @@
-import { MouseEvent, useEffect, useRef, useState } from 'react';
+import { MouseEvent, useContext, useEffect, useRef, useState } from 'react';
 import { TEventSchedule } from '@/types/screen-settings';
 import AlertMenu from './alertMenu';
 import AnimateModalLayout from './AnimateModalLayout';
 import { ContextMenu } from './ContextMenu';
 import { useDimensions } from '@/hooks/useDimensions';
 import { useOnOutsideClick } from '@/hooks/useOnOutsideClick';
+import { usePopupContext } from '@/hooks/usePopupContext';
 type User = {
   id: number;
   name: string;
@@ -51,8 +52,9 @@ const FullDayScheduleView = ({
   const [scale1, setScale] = useState(30);
   const [selectedEvents, setSelectedEvents] = useState<TEventSchedule[]>([]);
   const [teacher, setTeacher] = useState<number | undefined>(undefined);
+  const {isMoving, setIsMoving, item, setItem} = usePopupContext()
   const [selectedEventItem, setSelectedEventItem] = useState<TEventSchedule | undefined>(undefined);
-
+  const [selectedTime, setSelectedTime] = useState<string>('');
   const windowSize = useDimensions();
   let el = document.querySelector('#mainPage');
   const getColor = (n: number) => {
@@ -134,32 +136,79 @@ const FullDayScheduleView = ({
   ) => {
     e.preventDefault();
     const { clientX, clientY } = e;
-    console.log(item, timeFrame);
+    console.log(item, timeFrame)
+    let str="";
+    if (timeFrame != undefined){
+        let h=Math.floor(timeFrame);
+        let m=Math.floor((timeFrame%1)*60)
+         str=day+`T${(h<10)?"0":""}${h}:${(m<10)?"0":""}${m}`
+    console.log(h, m,str);
+    }
+    if (timeFrame != undefined) setSelectedTime(str);
     if (item!== undefined) setSelectedEventItem(item);
     setContextMenu({ x: clientX, y: clientY, isShown: true });
   };
 
 // handling results of click on Menu
-  const handleContextMenuChoice = (str: string) => {
+  const handleContextMenuChoice = async (str: string) => {
     console.log(str);
     setContextMenu({ x: 0, y: 0, isShown: false });
-
+    // isMoving, setIsMoving, item, setItem
+    // selectedEventItem
     if (str === 'Copy') {
+        setItem (selectedEventItem!);
+        setIsMoving(false)
       //copy logic
     } else if (str === 'Paste') {
+        if (item!=null){
+
+           if (isMoving) {
+            const res1 = await fetch('/api/teacher/schedule_event/edit', {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  id: item.id,
+                  data: {
+                    date: selectedTime,        
+                  },
+                }),
+            })
+           }else{
+            const res1 = await fetch('/api/teacher/schedule_event/create', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({    
+                    tag: item.tag,
+                      eventtype: item.eventtype,
+                      length: item.length,
+                      teachersid: item.teachersid,
+                      studentid: item.studentid,
+                      location: item.location,
+                     date: selectedTime}),
+              });
+
+           }
+        }
       //paste logic
     }else if (str === 'Move') {
+        setItem (selectedEventItem!);
+        setIsMoving(true);
         //paste logic
       } else if (str === 'Delete') {
+
       //delete logic
       setRevealAlert(true);
       setAlertStyle({
         variantHead: 'danger',
         heading: 'Delete Event',
         text: 'Are you sure you want to delete this event?',
-        color1: 'red',
+        color1: 'alert',
         button1: 'Delete',
-        color2: 'gray',
+        color2: 'secondary',
         button2: 'Cancel',
         inputField: '',
       });
@@ -366,8 +415,8 @@ const FullDayScheduleView = ({
                             onEventClick(item.id);
                           }}
                           onContextMenu={(e) =>{
-                            setContextMenuItems([{title:"Copy", icon:undefined},{title:"Move", icon:undefined},{title:"Paste", icon:undefined}, {title:"Delete", icon:undefined},])
-                            handleContextMenu(e,undefined, item)
+                            setContextMenuItems([{title:"Copy", icon:"Copy"},{title:"Move", icon:"Move"},{title:"Paste", icon:"Paste"}, {title:"Delete", icon:"Close"},])
+                            handleContextMenu(e,(index / slots.length) * 24, item)
                         }}
                         >
                           {item.tag +

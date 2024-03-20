@@ -1,3 +1,4 @@
+import ShowIcon from "./svg/showIcon";
 
 
 type Props = {
@@ -19,7 +20,14 @@ const ContextMenu = ({ items,anchorPoint,contextMenuRef,isShown, onChoice }:Prop
      
     >
       {items.map((item) => (
-        <li key={item.title} onClick={(e) =>{e.preventDefault(); onChoice(item.title)}}>{item.title}</li>
+        <li key={item.title} onClick={(e) =>{e.preventDefault(); onChoice(item.title)}} className="flex flex-row justify-between items-center cursor-pointer m-1">
+            {item.title}
+            {item.icon!==undefined &&<div
+            className=" h-10 w-10 md:h-12 md:w-12 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor m-auto"
+          >
+            <ShowIcon icon={item.icon} stroke={'0.2'} />
+          </div>}
+            </li>
       ))}
     </ul>
     </div>
