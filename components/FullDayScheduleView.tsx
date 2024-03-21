@@ -25,7 +25,22 @@ type Props = {
   day: string | undefined;
   users: User[];
 };
-
+type DisplayEvent = {
+  date: string;
+  tag: string;
+  id: number;
+  eventtype: string;
+  interval: number | null;
+  length: number;
+  location: string | null;
+  repeating: boolean;
+  studentid: number[];
+  teachersid: number[];
+  until: string | null;
+  crossed: number;
+  x_shift: number;
+  date2: string;
+};
 const FullDayScheduleView = ({
   events,
   users,
@@ -50,10 +65,14 @@ const FullDayScheduleView = ({
   const [location, setLocation] = useState('Main ballroom');
   const [slots, setSlots] = useState<string[]>([]);
   const [scale1, setScale] = useState(30);
-  const [selectedEvents, setSelectedEvents] = useState<TEventSchedule[]>([]);
+  const [selectedEvents, setSelectedEvents] =
+    useState<TEventSchedule[]>(events);
+  const [displayedEvents, setDisplayedEvents] = useState<DisplayEvent[]>([]);
   const [teacher, setTeacher] = useState<number | undefined>(undefined);
-  const {isMoving, setIsMoving, item, setItem} = usePopupContext()
-  const [selectedEventItem, setSelectedEventItem] = useState<TEventSchedule | undefined>(undefined);
+  const { isMoving, setIsMoving, item, setItem } = usePopupContext();
+  const [selectedEventItem, setSelectedEventItem] = useState<
+    TEventSchedule | undefined
+  >(undefined);
   const [selectedTime, setSelectedTime] = useState<string>('');
   const windowSize = useDimensions();
   let el = document.querySelector('#mainPage');
@@ -66,20 +85,75 @@ const FullDayScheduleView = ({
     if (decision1 == 'Cancel') {
     }
     if (decision1 == 'Delete') {
-      //   fetch('/api/admin/del_event', {
-      //     method: 'POST',
-      //     headers: {
-      //       'Content-Type': 'application/json',
-      //     },
-      //     body: JSON.stringify({
-      //       id: eventID,
-      //     }),
-      //   }).then(() => {
-      //     window.location.reload();
-      //   });
+      fetch('/api/teacher/schedule_event/delete', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: selectedEventItem?.id,
+        }),
+      }).then(() => {
+        window.location.reload();
+      });
     }
   };
   console.log(day, events);
+  useEffect(() => {
+    if (events.length > 0) {
+    let evArray = events
+      .filter((event) => event.location == 'Main ballroom')
+      .sort((a, b) => {
+        if (a.date > b.date) return 1;
+        else if (a.date < b.date) return -1;
+        else return 0;
+      });
+    let evArray2 = evArray.map((obj) => ({
+      ...obj,
+      crossed: 0,
+      x_shift: 0,
+      date2: '',
+    }));
+    // map(obj => ({ ...obj, Active: 'false' }))
+    //   let evArray2=evArray.forEach(function (element) {
+    //     repeats:0; date2:""
+    //   });
+
+    console.log(evArray2);
+    for (let i = 0; i < evArray2.length; i++) {
+      let dt = new Date(evArray2[i].date);
+      dt.setMinutes(dt.getMinutes() + evArray2[i].length);
+      dt = new Date(dt);
+      evArray2[i].date2 =
+        dt.toLocaleDateString('sv-SE', {
+          year: 'numeric',
+          month: 'numeric',
+          day: 'numeric',
+        }) +
+        'T' +
+        dt.toLocaleString('es-CL').split(' ')[1].slice(0, -3);
+    }
+    for (let i = 0; i < evArray2.length; i++) {
+      for (let j = i + 1; j < evArray2.length; j++) {
+        if (evArray2[i].date2 >= evArray2[j].date) {
+          evArray2[i].crossed++;
+          evArray2[j].crossed++;
+        }
+      }
+    }
+    console.log(evArray2);
+    let nMax = Math.max(...evArray2.map((event) => event.crossed)) + 1;
+    for (let i = 1; i < evArray2.length; i++) {
+      if ((evArray2[i].crossed >= evArray2[i - 1].crossed)&&(evArray2[i].crossed > 0)) {
+        evArray2[i].x_shift = evArray2[i - 1].x_shift + 1;
+      } else evArray2[i].x_shift = 0;
+      evArray2[i - 1].crossed = nMax;
+    }
+    evArray2[0].crossed = nMax;
+    evArray2[evArray2.length - 1].crossed = nMax;
+    setDisplayedEvents(evArray2);
+}
+  }, [selectedEvents]);
   let date1 = new Date(day! + ' 07:00:00');
   useEffect(() => {
     let slotsArray: string[] = [];
@@ -94,12 +168,11 @@ const FullDayScheduleView = ({
       minutes = i % 60;
 
       slotsArray.push(
-        `${hours}:${minutes < 10 ? ('0' + minutes) : minutes} ${timeLocal1}`
+        `${hours}:${minutes < 10 ? '0' + minutes : minutes} ${timeLocal1}`
       );
     }
     setSlots(slotsArray);
   }, [scale1]);
-
 
   const [contextMenu, setContextMenu] = useState<{
     x: number;
@@ -107,7 +180,9 @@ const FullDayScheduleView = ({
     isShown: boolean;
   }>({ x: 0, y: 0, isShown: false });
 
-  const [contextMenuItems, setContextMenuItems] = useState<{title:string, icon:string|undefined}[]>([])
+  const [contextMenuItems, setContextMenuItems] = useState<
+    { title: string; icon: string | undefined }[]
+  >([]);
 
   // fixing position of the context menu to make it always visible
   useEffect(() => {
@@ -129,77 +204,77 @@ const FullDayScheduleView = ({
     }
   }, [contextMenu.isShown]);
 
-// open context menu and setting it up
+  // open context menu and setting it up
   const handleContextMenu = (
     e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
-    timeFrame: number | undefined, item:TEventSchedule | undefined
+    timeFrame: number | undefined,
+    item: TEventSchedule | undefined
   ) => {
     e.preventDefault();
     const { clientX, clientY } = e;
-    console.log(item, timeFrame)
-    let str="";
-    if (timeFrame != undefined){
-        let h=Math.floor(timeFrame);
-        let m=Math.floor((timeFrame%1)*60)
-         str=day+`T${(h<10)?"0":""}${h}:${(m<10)?"0":""}${m}`
-    console.log(h, m,str);
+    console.log(item, timeFrame);
+    let str = '';
+    if (timeFrame != undefined) {
+      let h = Math.floor(timeFrame);
+      let m = Math.floor((timeFrame % 1) * 60);
+      str = day + `T${h < 10 ? '0' : ''}${h}:${m < 10 ? '0' : ''}${m}`;
+      console.log(h, m, str);
     }
     if (timeFrame != undefined) setSelectedTime(str);
-    if (item!== undefined) setSelectedEventItem(item);
+    if (item !== undefined) setSelectedEventItem(item);
     setContextMenu({ x: clientX, y: clientY, isShown: true });
   };
 
-// handling results of click on Menu
+  // handling results of click on Menu
   const handleContextMenuChoice = async (str: string) => {
     console.log(str);
     setContextMenu({ x: 0, y: 0, isShown: false });
     // isMoving, setIsMoving, item, setItem
     // selectedEventItem
     if (str === 'Copy') {
-        setItem (selectedEventItem!);
-        setIsMoving(false)
+      setItem(selectedEventItem!);
+      setIsMoving(false);
       //copy logic
     } else if (str === 'Paste') {
-        if (item!=null){
-
-           if (isMoving) {
-            const res1 = await fetch('/api/teacher/schedule_event/edit', {
-                method: 'PUT',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  id: item.id,
-                  data: {
-                    date: selectedTime,        
-                  },
-                }),
-            })
-           }else{
-            const res1 = await fetch('/api/teacher/schedule_event/create', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({    
-                    tag: item.tag,
-                      eventtype: item.eventtype,
-                      length: item.length,
-                      teachersid: item.teachersid,
-                      studentid: item.studentid,
-                      location: item.location,
-                     date: selectedTime}),
-              });
-
-           }
+      if (item != null) {
+        //    setLoading(true)
+        if (isMoving) {
+          const res1 = await fetch('/api/teacher/schedule_event/edit', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              id: item.id,
+              data: {
+                date: selectedTime,
+              },
+            }),
+          });
+        } else {
+          const res1 = await fetch('/api/teacher/schedule_event/create', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              tag: item.tag,
+              eventtype: item.eventtype,
+              length: item.length,
+              teachersid: item.teachersid,
+              studentid: item.studentid,
+              location: item.location,
+              date: selectedTime,
+            }),
+          });
         }
+      }
       //paste logic
-    }else if (str === 'Move') {
-        setItem (selectedEventItem!);
-        setIsMoving(true);
-        //paste logic
-      } else if (str === 'Delete') {
-
+    } else if (str === 'Move') {
+      setItem(selectedEventItem!);
+      setIsMoving(true);
+      //paste logic
+    } else if (str === 'Delete') {
       //delete logic
       setRevealAlert(true);
       setAlertStyle({
@@ -214,7 +289,7 @@ const FullDayScheduleView = ({
       });
     }
   };
-//   close contextMenu on Click outside div using Hook 
+  //   close contextMenu on Click outside div using Hook
   useOnOutsideClick(contextMenuRef, () => {
     setContextMenu({ x: 0, y: 0, isShown: false });
   });
@@ -237,7 +312,7 @@ const FullDayScheduleView = ({
       />
 
       <div
-        className={`border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-md  flex justify-center items-center flex-col   md:w-full bg-lightMainBG dark:bg-darkMainBG backdrop-blur-md h-[70svh] md:h-[85svh]`}
+        className={`border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-xl  flex justify-center items-center flex-col   md:w-full bg-lightMainBG dark:bg-darkMainBG backdrop-blur-md h-[70svh] md:h-[85svh]`}
       >
         <div
           id="wrapperDiv"
@@ -258,35 +333,37 @@ const FullDayScheduleView = ({
                 day: 'numeric',
               })}
             </div>
-            <label className="flex flex-col m-auto justify-between items-center">
-              Location
-              <select
-                className="bg-main-bg mb-2 rounded-md text-ellipsis bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor"
-                value={location}
-                onChange={(e) => {
-                  setLocation(e.target.value);
-                }}
-              >
-                <option value="Studio A (Front)">Studio A (Front)</option>
-                <option value="Studio B (Back)">Studio B (Back)</option>
-                <option value="Main ballroom">Main ballroom</option>
-              </select>
-            </label>
-            <label className="flex flex-col m-auto justify-between items-center">
-              Scale
-              <select
-                className="bg-main-bg mb-2 rounded-md text-ellipsis bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor"
-                value={scale1}
-                onChange={(e) => {
-                  setScale(parseInt(e.target.value));
-                }}
-              >
-                <option value={15}>15 minutes</option>
-                <option value={30}>30 minutes</option>
-                <option value={45}>45 minutes</option>
-                <option value={60}>1 hour</option>
-              </select>
-            </label>
+            <div className="w-full flex flex-row justify-between items-center">
+              <label className="flex flex-col m-auto justify-between items-center">
+                Location
+                <select
+                  className="bg-main-bg mb-2 rounded-md text-ellipsis bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor"
+                  value={location}
+                  onChange={(e) => {
+                    setLocation(e.target.value);
+                  }}
+                >
+                  <option value="Studio A (Front)">Studio A (Front)</option>
+                  <option value="Studio B (Back)">Studio B (Back)</option>
+                  <option value="Main ballroom">Main ballroom</option>
+                </select>
+              </label>
+              <label className="flex flex-col m-auto justify-between items-center">
+                Scale
+                <select
+                  className="bg-main-bg mb-2 rounded-md text-ellipsis bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor"
+                  value={scale1}
+                  onChange={(e) => {
+                    setScale(parseInt(e.target.value));
+                  }}
+                >
+                  <option value={15}>15 minutes</option>
+                  <option value={30}>30 minutes</option>
+                  <option value={45}>45 minutes</option>
+                  <option value={60}>1 hour</option>
+                </select>
+              </label>
+            </div>
             <label className="flex flex-col m-auto justify-between items-center">
               Instructor
               <select
@@ -300,18 +377,31 @@ const FullDayScheduleView = ({
                 value={teacher!}
                 onChange={(e) => {
                   setTeacher(parseInt(e.target.value));
-                  setSelectedEvents(
-                    events.filter(
-                      (event) =>
-                        event.teachersid[0] == parseInt(e.target.value) &&
-                        event.location == location
-                    )
-                  );
-                  let item = events.filter(
-                    (event) => event.teachersid[0] == parseInt(e.target.value)
-                  )[0];
+                  if (e.target.value == 'All') {
+                    setSelectedEvents(events);
+                  } else {
+                    setSelectedEvents(
+                      events.filter(
+                        (event) =>
+                          event.teachersid[0] == parseInt(e.target.value) &&
+                          event.location == location
+                      )
+                    );
+                    let item = events.filter(
+                      (event) => event.teachersid[0] == parseInt(e.target.value)
+                    )[0];
+                  }
                 }}
               >
+                <option
+                  key={'all teachers'}
+                  value={'All'}
+                  style={{
+                    backgroundColor: 'transparent',
+                  }}
+                >
+                  {'All Instructors'}
+                </option>
                 {users
                   .filter(
                     (user) => user.role === 'Teacher' || user.role === 'Admin'
@@ -361,16 +451,20 @@ const FullDayScheduleView = ({
                           onNewEventClick(
                             `${day}T${hours < 10 ? '0' : ''}${hours}:${
                               minutes < 10 ? '0' : ''
-                            }${
-                              minutes 
-                            }`,
+                            }${minutes}`,
                             teacher !== undefined ? [teacher] : [],
                             location
                           );
                         }}
-                        onContextMenu={(e) =>{
-                            setContextMenuItems([{title:"Paste", icon:undefined}])
-                            handleContextMenu(e, (index / slots.length) * 24, undefined)
+                        onContextMenu={(e) => {
+                          setContextMenuItems([
+                            { title: 'Paste', icon: 'Paste' },
+                          ]);
+                          handleContextMenu(
+                            e,
+                            (index / slots.length) * 24,
+                            undefined
+                          );
                         }}
                       >
                         <span>{`${d}`}</span>
@@ -378,59 +472,62 @@ const FullDayScheduleView = ({
                       </div>
                     ))}
                 </div>
-                {selectedEvents &&
-                  selectedEvents
-                    .sort((a, b) => {
-                      if (a.date > b.date) return 1;
-                      else if (a.date < b.date) return -1;
-                      else return 0;
-                    })
-                    .map((item, index) => {
-                      return (
-                        <div
-                          key={'day' + index}
-                          className="text-xs cursor-pointer flex flex-row justify-start items-center m-0.5 rounded-md w-[70%] truncate absolute left-20"
-                          style={{
-                            backgroundColor: getColor(item.teachersid[0]),
+                {displayedEvents &&
+                  displayedEvents.map((item, index) => {
+                    return (
+                      <div
+                        key={'day' + index}
+                        className="text-xs cursor-pointer flex flex-row justify-start items-center m-0.5 rounded-md w-[70%] truncate absolute left-20"
+                        style={{
+                          backgroundColor: getColor(item.teachersid[0]),
 
-                            height: `${(item.length / scale1) * 50}px`,
+                          height: `${(item.length / scale1) * 50}px`,
+                          left: `${
+                            65 + (item.x_shift / item.crossed) * 480 * 0.8
+                          }px`,
+                          width: `${(480 * 0.8) / item.crossed}px`,
 
-                            top: `${
-                              (((parseInt(
-                                item.date.split('T')[1].split(':')[0]
-                              ) *
-                                60 +
-                                parseInt(
-                                  item.date.split('T')[1].split(':')[1]
-                                )) /
-                                1440) *
-                                50 *
-                                24 *
-                                60) /
-                              scale1
-                            }px`,
-                          }}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            onEventClick(item.id);
-                          }}
-                          onContextMenu={(e) =>{
-                            setContextMenuItems([{title:"Copy", icon:"Copy"},{title:"Move", icon:"Move"},{title:"Paste", icon:"Paste"}, {title:"Delete", icon:"Close"},])
-                            handleContextMenu(e,(index / slots.length) * 24, item)
+                          top: `${
+                            (((parseInt(item.date.split('T')[1].split(':')[0]) *
+                              60 +
+                              parseInt(item.date.split('T')[1].split(':')[1])) /
+                              1440) *
+                              50 *
+                              24 *
+                              60) /
+                            scale1
+                          }px`,
                         }}
-                        >
-                          {item.tag +
-                            ' ' +
-                            (item.studentid[0] !== undefined
-                              ? users.filter(
-                                  (user) => user.id == item.studentid[0]
-                                )[0].name
-                              : '') +
-                            ' ' +
-                            item.eventtype}
-                        </div>
-                      );
-                    })}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          onEventClick(item.id);
+                        }}
+                        onContextMenu={(e) => {
+                          setContextMenuItems([
+                            { title: 'Copy', icon: 'Copy' },
+                            { title: 'Move', icon: 'Move' },
+                            { title: 'Paste', icon: 'Paste' },
+                            { title: 'Delete', icon: 'Close' },
+                          ]);
+                          handleContextMenu(
+                            e,
+                            (index / slots.length) * 24,
+                            item
+                          );
+                        }}
+                      >
+                        {item.tag +
+                          ' ' +
+                          (item.studentid[0] !== undefined
+                            ? users.filter(
+                                (user) => user.id == item.studentid[0]
+                              )[0].name
+                            : '') +
+                          ' ' +
+                          item.eventtype}
+                      </div>
+                    );
+                  })}
               </div>
             </div>
           </div>

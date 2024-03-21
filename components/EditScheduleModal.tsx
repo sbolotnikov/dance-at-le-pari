@@ -62,6 +62,9 @@ export default function EditScheduleModal({
   });
   useEffect(() => {
     let dt = new Date();
+    if (event.id !== undefined) dt = new Date(event.date)
+
+
     setEventDateTime1(
       dt.toLocaleDateString('sv-SE', {
         year: 'numeric',
