@@ -95,7 +95,7 @@ const FullDayScheduleView = ({
           id: selectedEventItem?.id,
         }),
       }).then(() => {
-        window.location.reload();
+        window.location.replace("/schedule?date="+day);
       });
     }
   };
@@ -112,9 +112,11 @@ const FullDayScheduleView = ({
       let evArray2 = evArray.map((obj) => ({
         ...obj,
         crossed: 0,
-        x_shift: 0,
+        x_shift: -1,
         date2: '',
       }));
+      let evArrayFinal = [...evArray2];
+      evArrayFinal=[];
       // map(obj => ({ ...obj, Active: 'false' }))
       //   let evArray2=evArray.forEach(function (element) {
       //     repeats:0; date2:""
@@ -134,28 +136,28 @@ const FullDayScheduleView = ({
           'T' +
           dt.toLocaleString('es-CL').split(' ')[1].slice(0, -3);
       }
+      let counter=0
+      // getting first uncrossed sequence, then second till runout of records
+      do {
       for (let i = 0; i < evArray2.length; i++) {
+        evArray2[i].x_shift=counter;   
         for (let j = i + 1; j < evArray2.length; j++) {
-          if (evArray2[i].date2 >= evArray2[j].date) {
-            evArray2[i].crossed++;
-            evArray2[j].crossed++;
+          if (evArray2[i].date2 <= evArray2[j].date) {
+            
+            evArray2[j].x_shift=counter;
+            i=j
           }
+          if (j==evArray2.length-1) i=evArray2.length;
         }
+        
       }
-      console.log(evArray2);
-      let nMax = Math.max(...evArray2.map((event) => event.crossed)) + 1;
-      for (let i = 1; i < evArray2.length; i++) {
-        if (
-          evArray2[i].crossed >= evArray2[i - 1].crossed &&
-          evArray2[i].crossed > 0
-        ) {
-          evArray2[i].x_shift = evArray2[i - 1].x_shift + 1;
-        } else evArray2[i].x_shift = 0;
-        evArray2[i - 1].crossed = nMax;
-      }
-      evArray2[0].crossed = nMax;
-      evArray2[evArray2.length - 1].crossed = nMax;
-      setDisplayedEvents(evArray2);
+     evArrayFinal=[...evArrayFinal, ...evArray2.filter((event) => event.x_shift === counter)];
+     console.log(evArray2.filter((event) => event.x_shift === counter))
+     evArray2=evArray2.filter((event) => event.x_shift !== counter);    
+     counter++;
+    } while (evArray2.length>0);
+     for (let i=0; i<evArrayFinal.length; i++) evArrayFinal[i].crossed=counter;
+      setDisplayedEvents(evArrayFinal);
     }
   }, [events, users]);
   let date1 = new Date(day! + ' 07:00:00');
@@ -272,6 +274,7 @@ const FullDayScheduleView = ({
             }),
           });
         }
+        window.location.replace("/schedule?date="+day);
       }
       //paste logic
     } else if (str === 'Move') {

@@ -71,7 +71,7 @@ model ScheduleEvent {
    id Int @id @default(autoincrement())
    date String
    tag String @default("")
-   eventtype EventType @default(Group)
+   eventtype EventType @default(Private)
    length Int
    teachersid Int[]
    studentid Int[]
@@ -107,6 +107,7 @@ enum EventType {
   Group
   Party
   Floor_Fee
+  Blocked
 }
 enum StatusType {
   Purchased

@@ -104,6 +104,23 @@ export default function EditScheduleModal({
       setEventDateTime1(event.date);
       setEventDateTimeEnd(event.date);
       setLength(event.length);
+      let dateObj = Date.parse(event.date);
+      let newDateOBJ = new Date(
+        dateObj + event.length * 60000
+      );
+      setEventDateTime2(
+        newDateOBJ.toLocaleDateString('en-us', {
+          year: 'numeric',
+          month: 'numeric',
+          day: 'numeric',
+        }) +
+          ' ' +
+          newDateOBJ.toLocaleTimeString('en-US', {
+            timeStyle: 'short',
+          })
+      );
+
+
       if (event.teachersid.length === 1) {
         let user1 = users.filter((user) => user.id == event.teachersid[0])[0];
         setTeacher({ id: user1.id, name: user1.name, image: user1.image! });
@@ -346,9 +363,10 @@ export default function EditScheduleModal({
                   setEventType(e.target.value);
                 }}
               >
-                <option value="Group">Group</option>
+                <option value="Blocked">Blocked</option>
+                <option value="Group">Group session</option>
                 <option value="Party">Party</option>
-                <option value="Private">Private</option>
+                <option value="Private">Private lesson</option>
               </select>
             </label>
             <label className="flex flex-col m-auto justify-between items-center">
@@ -364,7 +382,6 @@ export default function EditScheduleModal({
                 <option value="Studio A (Front)">Studio A (Front)</option>
                 <option value="Studio B (Back)">Studio B (Back)</option>
                 <option value="Main ballroom">Main ballroom</option>
-                <option value="Whole studio">Whole studio</option>
               </select>
             </label>
             <label className="flex flex-row justify-between items-center">
