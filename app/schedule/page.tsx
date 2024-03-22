@@ -348,8 +348,8 @@ const page: FC = () => {
                             parseInt(d.value) < 10
                               ? (dayStr += '0' + d.value)
                               : (dayStr += d.value);
-                            setClicked(dayStr);
-                            setRevealDayView(true);
+                            window.location.replace('/schedule?date=' + dayStr);
+                            
                           }
                         }}
                         onEventClick={(e) => {
