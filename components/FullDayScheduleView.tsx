@@ -62,6 +62,7 @@ const FullDayScheduleView = ({
   });
   const [isVisible, setIsVisible] = useState(true);
   const contextMenuRef = useRef<HTMLDivElement>(null);
+  const inputDate = useRef<HTMLInputElement>(null);
   const [location, setLocation] = useState('Main ballroom');
   const [slots, setSlots] = useState<string[]>([]);
   const [scale1, setScale] = useState(30);
@@ -75,7 +76,7 @@ const FullDayScheduleView = ({
   >(undefined);
   const [selectedTime, setSelectedTime] = useState<string>('');
   const windowSize = useDimensions();
-  let el = document.querySelector('#mainPage');
+  // let el = document.querySelector('#mainPage');
   const getColor = (n: number) => {
     let color = users.filter((user) => user.id == n)[0];
     return color?.color ?? '#000';
@@ -98,62 +99,65 @@ const FullDayScheduleView = ({
       });
     }
   };
-  console.log(day, events);
+  console.log("Props for Full day",day, events, users);
   useEffect(() => {
-    if (events.length > 0) {
-    let evArray = events
-      .filter((event) => event.location == 'Main ballroom')
-      .sort((a, b) => {
-        if (a.date > b.date) return 1;
-        else if (a.date < b.date) return -1;
-        else return 0;
-      });
-    let evArray2 = evArray.map((obj) => ({
-      ...obj,
-      crossed: 0,
-      x_shift: 0,
-      date2: '',
-    }));
-    // map(obj => ({ ...obj, Active: 'false' }))
-    //   let evArray2=evArray.forEach(function (element) {
-    //     repeats:0; date2:""
-    //   });
+    if ((events.length > 0)&&(users.length > 0)) {
+      let evArray = events
+        .filter((event) => event.location == 'Main ballroom')
+        .sort((a, b) => {
+          if (a.date > b.date) return 1;
+          else if (a.date < b.date) return -1;
+          else return 0;
+        });
+      let evArray2 = evArray.map((obj) => ({
+        ...obj,
+        crossed: 0,
+        x_shift: 0,
+        date2: '',
+      }));
+      // map(obj => ({ ...obj, Active: 'false' }))
+      //   let evArray2=evArray.forEach(function (element) {
+      //     repeats:0; date2:""
+      //   });
 
-    console.log(evArray2);
-    for (let i = 0; i < evArray2.length; i++) {
-      let dt = new Date(evArray2[i].date);
-      dt.setMinutes(dt.getMinutes() + evArray2[i].length);
-      dt = new Date(dt);
-      evArray2[i].date2 =
-        dt.toLocaleDateString('sv-SE', {
-          year: 'numeric',
-          month: 'numeric',
-          day: 'numeric',
-        }) +
-        'T' +
-        dt.toLocaleString('es-CL').split(' ')[1].slice(0, -3);
-    }
-    for (let i = 0; i < evArray2.length; i++) {
-      for (let j = i + 1; j < evArray2.length; j++) {
-        if (evArray2[i].date2 >= evArray2[j].date) {
-          evArray2[i].crossed++;
-          evArray2[j].crossed++;
+      console.log(evArray2);
+      for (let i = 0; i < evArray2.length; i++) {
+        let dt = new Date(evArray2[i].date);
+        dt.setMinutes(dt.getMinutes() + evArray2[i].length);
+        dt = new Date(dt);
+        evArray2[i].date2 =
+          dt.toLocaleDateString('sv-SE', {
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric',
+          }) +
+          'T' +
+          dt.toLocaleString('es-CL').split(' ')[1].slice(0, -3);
+      }
+      for (let i = 0; i < evArray2.length; i++) {
+        for (let j = i + 1; j < evArray2.length; j++) {
+          if (evArray2[i].date2 >= evArray2[j].date) {
+            evArray2[i].crossed++;
+            evArray2[j].crossed++;
+          }
         }
       }
+      console.log(evArray2);
+      let nMax = Math.max(...evArray2.map((event) => event.crossed)) + 1;
+      for (let i = 1; i < evArray2.length; i++) {
+        if (
+          evArray2[i].crossed >= evArray2[i - 1].crossed &&
+          evArray2[i].crossed > 0
+        ) {
+          evArray2[i].x_shift = evArray2[i - 1].x_shift + 1;
+        } else evArray2[i].x_shift = 0;
+        evArray2[i - 1].crossed = nMax;
+      }
+      evArray2[0].crossed = nMax;
+      evArray2[evArray2.length - 1].crossed = nMax;
+      setDisplayedEvents(evArray2);
     }
-    console.log(evArray2);
-    let nMax = Math.max(...evArray2.map((event) => event.crossed)) + 1;
-    for (let i = 1; i < evArray2.length; i++) {
-      if ((evArray2[i].crossed >= evArray2[i - 1].crossed)&&(evArray2[i].crossed > 0)) {
-        evArray2[i].x_shift = evArray2[i - 1].x_shift + 1;
-      } else evArray2[i].x_shift = 0;
-      evArray2[i - 1].crossed = nMax;
-    }
-    evArray2[0].crossed = nMax;
-    evArray2[evArray2.length - 1].crossed = nMax;
-    setDisplayedEvents(evArray2);
-}
-  }, [selectedEvents]);
+  }, [events, users]);
   let date1 = new Date(day! + ' 07:00:00');
   useEffect(() => {
     let slotsArray: string[] = [];
@@ -166,7 +170,7 @@ const FullDayScheduleView = ({
       timeLocal1 = i == 24 * 60 ? 'am' : timeLocal1;
       hours = i % (12 * 60) == 0 ? 12 : Math.floor(i / 60) % 12;
       minutes = i % 60;
-
+      if (hours == 0) hours = 12;
       slotsArray.push(
         `${hours}:${minutes < 10 ? '0' + minutes : minutes} ${timeLocal1}`
       );
@@ -322,16 +326,30 @@ const FullDayScheduleView = ({
             id="containedDiv"
             className={`absolute top-0 left-0 flex flex-col w-full p-1 justify-center items-center`}
           >
-            <div className="font-semibold text-md text-center  text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG mt-4 p-3">
-              <span className="font-extrabold text-xl text-left  text-lightMainColor  dark:text-darkMainColor ">
+            {/* <span className="font-extrabold text-xl text-left  text-lightMainColor  dark:text-darkMainColor ">
                 Schedule for:{' '}
-              </span>
+              </span> */}
+           <div className="w-full relative">
+            <input
+              type="date"
+              className="w-full mb-2 rounded-md text-center bg-lightMainBG dark:bg-darkMainBG"
+              value={new Date(date1).toLocaleDateString('sv-SE', {
+                year: 'numeric',
+                month: 'numeric',
+                day: 'numeric',
+              })}
+              onChange={(e) => {
+                console.log(e.target.value);
+              }}
+            />
+            <div className="font-semibold text-md text-center w-[95%] text-lightMainColor outline-none dark:text-darkMainColor bg-lightMainBG dark:bg-darkMainBG absolute top-0 left-0">
               {new Date(date1).toLocaleDateString('en-us', {
                 weekday: 'long',
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric',
               })}
+            </div>
             </div>
             <div className="w-full flex flex-row justify-between items-center">
               <label className="flex flex-col m-auto justify-between items-center">
@@ -447,6 +465,7 @@ const FullDayScheduleView = ({
                             (index / slots.length) * 24 * 60
                           );
                           let hours = Math.floor(time / 60);
+
                           let minutes = time % 60;
                           onNewEventClick(
                             `${day}T${hours < 10 ? '0' : ''}${hours}:${

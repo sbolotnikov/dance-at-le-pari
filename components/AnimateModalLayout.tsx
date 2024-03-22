@@ -14,7 +14,6 @@ export default function AnimateModalLayout( {visibility,onReturn, children}:Prop
      ) {
 
     const [isVisible, setIsVisible] = useState(visibility);
-    let el = document.querySelector('#mainPage');
     return (
         <AnimatePresence>
           {isVisible && (
@@ -36,7 +35,6 @@ export default function AnimateModalLayout( {visibility,onReturn, children}:Prop
                 x: ['0vw', '0vw', '0vw', '0vw', '-100vw'],
               }}
               className="w-[100vw] h-[100svh] absolute flex flex-col justify-center items-center bg-slate-500/70 left-0 z-[1001] backdrop-blur-md"
-              style={{ top: el!.scrollTop }}
             >
               <button
                 className={` flex flex-col justify-center items-center md:mt-14 origin-center cursor-pointer z-10 hover:scale-125 `}

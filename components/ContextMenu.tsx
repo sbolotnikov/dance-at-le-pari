@@ -14,7 +14,7 @@ const ContextMenu = ({ items,anchorPoint,contextMenuRef,isShown, onChoice }:Prop
  
 
   return (
-    <div ref={contextMenuRef}  className={`h-auto w-auto bg-slate-100 rounded-md shadow-md absolute z-[1000] ${!isShown && 'hidden'}`}
+    <div ref={contextMenuRef}  className={`h-auto w-auto bg-darkMainColor dark:bg-lightMainColor rounded-md shadow-md absolute z-[1000] ${!isShown && 'hidden'}`}
     style={{top: anchorPoint.y + 'px', left: anchorPoint.x + 'px'}}>
     <ul
      

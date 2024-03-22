@@ -14,10 +14,14 @@ import EditScheduleModal from '@/components/EditScheduleModal';
 import { useDimensions } from '@/hooks/useDimensions';
 import sleep from '@/utils/functions';
 import FullDayScheduleView from '@/components/FullDayScheduleView';
+import { useSearchParams } from 'next/navigation';
 
-interface pageProps {}
 
-const page: FC<pageProps> = ({}) => {
+
+const page: FC = () => {
+  const searchParams = useSearchParams()
+  const selectedDate = searchParams.get ("date") || null;
+
   const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
   const [revealAlert, setRevealAlert] = useState(false);
@@ -35,8 +39,8 @@ const page: FC<pageProps> = ({}) => {
   const [nav, setNav] = useState(0);
   const [events, setEvents] = useState([] as TEventScheduleArray);
   const [selectedEvent, setSelectedEvent] = useState({} as TEventSchedule);
-  const [ revealDayView, setRevealDayView] = useState(false);
-  const [clicked, setClicked] = useState<string>();
+  const [ revealDayView, setRevealDayView] = useState((selectedDate!==null)? true:false);
+  const [clicked, setClicked] = useState<string>(selectedDate!==null? selectedDate: '');
   const windowSize = useDimensions();
   const [users, setUsers] = useState<
     {
