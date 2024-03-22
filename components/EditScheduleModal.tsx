@@ -123,6 +123,7 @@ export default function EditScheduleModal({
 
       if (event.teachersid.length === 1) {
         let user1 = users.filter((user) => user.id == event.teachersid[0])[0];
+        console.log(event )
         setTeacher({ id: user1.id, name: user1.name, image: user1.image! });
       }
       setStudentid(event.studentid);

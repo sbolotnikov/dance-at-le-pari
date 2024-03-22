@@ -67,16 +67,15 @@ const FullDayScheduleView = ({
   const [slots, setSlots] = useState<string[]>([]);
   const [scale1, setScale] = useState(30);
   const [selectedEvents, setSelectedEvents] =
-    useState<TEventSchedule[]>(events);
+    useState<TEventSchedule[]>([]);
   const [displayedEvents, setDisplayedEvents] = useState<DisplayEvent[]>([]);
-  const [teacher, setTeacher] = useState<number | undefined>(undefined);
+  const [teacher, setTeacher] = useState(-1);
   const { isMoving, setIsMoving, item, setItem } = usePopupContext();
   const [selectedEventItem, setSelectedEventItem] = useState<
     TEventSchedule | undefined
   >(undefined);
   const [selectedTime, setSelectedTime] = useState<string>('');
   const windowSize = useDimensions();
-  // let el = document.querySelector('#mainPage');
   const getColor = (n: number) => {
     let color = users.filter((user) => user.id == n)[0];
     return color?.color ?? '#000';
@@ -95,15 +94,28 @@ const FullDayScheduleView = ({
           id: selectedEventItem?.id,
         }),
       }).then(() => {
-        window.location.replace("/schedule?date="+day);
+        window.location.replace('/schedule?date=' + day);
       });
     }
   };
-  console.log("Props for Full day",day, events, users);
+ 
+
   useEffect(() => {
-    if ((events.length > 0)&&(users.length > 0)) {
-      let evArray = events
-        .filter((event) => event.location == 'Main ballroom')
+  setSelectedEvents(events)
+  }, [events]);
+  const [widthDiv, setWidthDiv] = useState(0);
+  const [heightDiv, setHeightDiv] = useState(0);
+ 
+ useEffect(() => { 
+  setHeightDiv(document.getElementById("displayDiv")!.offsetHeight);
+  setWidthDiv(document.getElementById("displayDiv")!.offsetWidth);
+  console.log("Div height:"+document.getElementById("displayDiv")!.offsetHeight);
+  console.log("Div width:"+document.getElementById("displayDiv")!.offsetWidth);
+  },[windowSize])
+  useEffect(() => {
+    if (selectedEvents.length > 0 && users.length > 0) {
+      let evArray = selectedEvents
+        .filter((event) => event.location == location)
         .sort((a, b) => {
           if (a.date > b.date) return 1;
           else if (a.date < b.date) return -1;
@@ -116,13 +128,9 @@ const FullDayScheduleView = ({
         date2: '',
       }));
       let evArrayFinal = [...evArray2];
-      evArrayFinal=[];
-      // map(obj => ({ ...obj, Active: 'false' }))
-      //   let evArray2=evArray.forEach(function (element) {
-      //     repeats:0; date2:""
-      //   });
+      evArrayFinal = [];
 
-      console.log(evArray2);
+  
       for (let i = 0; i < evArray2.length; i++) {
         let dt = new Date(evArray2[i].date);
         dt.setMinutes(dt.getMinutes() + evArray2[i].length);
@@ -136,30 +144,48 @@ const FullDayScheduleView = ({
           'T' +
           dt.toLocaleString('es-CL').split(' ')[1].slice(0, -3);
       }
-      let counter=0
+      let counter = 0;
       // getting first uncrossed sequence, then second till runout of records
       do {
-      for (let i = 0; i < evArray2.length; i++) {
-        evArray2[i].x_shift=counter;   
-        for (let j = i + 1; j < evArray2.length; j++) {
-          if (evArray2[i].date2 <= evArray2[j].date) {
-            
-            evArray2[j].x_shift=counter;
-            i=j
+        for (let i = 0; i < evArray2.length; i++) {
+          evArray2[i].x_shift = counter;
+          for (let j = i + 1; j < evArray2.length; j++) {
+            if (evArray2[i].date2 <= evArray2[j].date) {
+              evArray2[j].x_shift = counter;
+              i = j;
+            }
+            if (j == evArray2.length - 1) i = evArray2.length;
           }
-          if (j==evArray2.length-1) i=evArray2.length;
         }
+        evArrayFinal = [
+          ...evArrayFinal,
+          ...evArray2.filter((event) => event.x_shift === counter),
+        ];
+        evArray2 = evArray2.filter((event) => event.x_shift !== counter);
+        counter++;
+        } while (evArray2.length > 0);
         
-      }
-     evArrayFinal=[...evArrayFinal, ...evArray2.filter((event) => event.x_shift === counter)];
-     console.log(evArray2.filter((event) => event.x_shift === counter))
-     evArray2=evArray2.filter((event) => event.x_shift !== counter);    
-     counter++;
-    } while (evArray2.length>0);
-     for (let i=0; i<evArrayFinal.length; i++) evArrayFinal[i].crossed=counter;
+        evArrayFinal.sort((a, b) => {
+          if (a.date > b.date) return 1;
+          else if (a.date < b.date) return -1;
+          else return 0;
+        });
+        for (let i = 0; i < evArrayFinal.length; i++) {
+          for (let j = i + 1; j < evArrayFinal.length; j++) {
+            if (evArrayFinal[i].date2 >= evArrayFinal[j].date) {
+              evArrayFinal[i].crossed++;
+              evArrayFinal[j].crossed++;
+            }
+          }
+        }
+
+        console.log(counter, evArrayFinal)
+         for (let i = 0; i < evArrayFinal.length; i++){
+          if (evArrayFinal[i].crossed > counter) evArrayFinal[i].crossed=counter
+         }
       setDisplayedEvents(evArrayFinal);
-    }
-  }, [events, users]);
+    }else setDisplayedEvents([]);
+  }, [selectedEvents,location, users]);
   let date1 = new Date(day! + ' 07:00:00');
   useEffect(() => {
     let slotsArray: string[] = [];
@@ -189,7 +215,7 @@ const FullDayScheduleView = ({
   const [contextMenuItems, setContextMenuItems] = useState<
     { title: string; icon: string | undefined }[]
   >([]);
-
+  
   // fixing position of the context menu to make it always visible
   useEffect(() => {
     if (contextMenu.isShown) {
@@ -274,7 +300,7 @@ const FullDayScheduleView = ({
             }),
           });
         }
-        window.location.replace("/schedule?date="+day);
+        window.location.replace('/schedule?date=' + day);
       }
       //paste logic
     } else if (str === 'Move') {
@@ -300,6 +326,8 @@ const FullDayScheduleView = ({
   useOnOutsideClick(contextMenuRef, () => {
     setContextMenu({ x: 0, y: 0, isShown: false });
   });
+  
+
   return (
     <AnimateModalLayout
       visibility={isVisible}
@@ -332,27 +360,27 @@ const FullDayScheduleView = ({
             {/* <span className="font-extrabold text-xl text-left  text-lightMainColor  dark:text-darkMainColor ">
                 Schedule for:{' '}
               </span> */}
-           <div className="w-full relative">
-            <input
-              type="date"
-              className="w-full mb-2 rounded-md text-center bg-lightMainBG dark:bg-darkMainBG"
-              value={new Date(date1).toLocaleDateString('sv-SE', {
-                year: 'numeric',
-                month: 'numeric',
-                day: 'numeric',
-              })}
-              onChange={(e) => {
-                console.log(e.target.value);
-              }}
-            />
-            <div className="font-semibold text-md text-center w-[95%] text-lightMainColor outline-none dark:text-darkMainColor bg-lightMainBG dark:bg-darkMainBG absolute top-0 left-0">
-              {new Date(date1).toLocaleDateString('en-us', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-              })}
-            </div>
+            <div className="w-full relative">
+              <input
+                type="date"
+                className="w-full mb-2 rounded-md text-center bg-lightMainBG dark:bg-darkMainBG"
+                value={new Date(date1).toLocaleDateString('sv-SE', {
+                  year: 'numeric',
+                  month: 'numeric',
+                  day: 'numeric',
+                })}
+                onChange={(e) => {
+                  window.location.replace('/schedule?date=' + e.target.value);
+                }}
+              />
+              <div className="font-semibold text-md text-center w-[95%] text-lightMainColor outline-none dark:text-darkMainColor bg-lightMainBG dark:bg-darkMainBG absolute top-0 left-0">
+                {new Date(date1).toLocaleDateString('en-us', {
+                  weekday: 'long',
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </div>
             </div>
             <div className="w-full flex flex-row justify-between items-center">
               <label className="flex flex-col m-auto justify-between items-center">
@@ -392,13 +420,13 @@ const FullDayScheduleView = ({
                 style={{
                   backgroundColor:
                     teacher == undefined || teacher == null
-                      ? 'transparent'
+                      ? 'white'
                       : users.filter((user) => user.id == teacher)[0]?.color!,
                 }}
                 value={teacher!}
                 onChange={(e) => {
                   setTeacher(parseInt(e.target.value));
-                  if (e.target.value == 'All') {
+                  if (e.target.value == '-1') {
                     setSelectedEvents(events);
                   } else {
                     setSelectedEvents(
@@ -416,7 +444,7 @@ const FullDayScheduleView = ({
               >
                 <option
                   key={'all teachers'}
-                  value={'All'}
+                  value={-1}
                   style={{
                     backgroundColor: 'transparent',
                   }}
@@ -451,16 +479,17 @@ const FullDayScheduleView = ({
               {'(for more info click on event)'}
             </h2>
 
-            <div className="w-full h-[50svh] relative  overflow-y-auto border border-lightMainColor dark:border-darkMainColor rounded-md">
-              <div className="absolute top-0 left-0 w-full  flex  ">
+            <div id="displayDiv" className="w-full h-[50svh] relative  overflow-y-auto border border-lightMainColor dark:border-darkMainColor rounded-md" 
+           >
+              <div className="absolute top-0 left-0 w-full  flex  overflow-auto">
                 <div
                   id="timeSlots"
-                  className=" relative w-full  flex flex-col justify-center items-center "
+                  className={` relative w-full flex flex-col justify-center items-center overflow-auto`}
                 >
-                  {slots &&
+                  {slots && widthDiv>0 &&
                     slots.map((d, index) => (
                       <div
-                        className=" w-full h-[50px] cursor-pointer border-b border-dashed border-lightMainColor dark:border-darkMainColor  flex flex-col justify-left flex-wrap overflow-hidden"
+                        className={` w-full h-[50px] cursor-pointer border-b border-dashed border-lightMainColor dark:border-darkMainColor  flex flex-col justify-left flex-wrap overflow-hidden`}
                         key={`timeslot ${index}`}
                         onClick={(e) => {
                           e.preventDefault();
@@ -470,11 +499,12 @@ const FullDayScheduleView = ({
                           let hours = Math.floor(time / 60);
 
                           let minutes = time % 60;
+                          console.log(teacher);
                           onNewEventClick(
                             `${day}T${hours < 10 ? '0' : ''}${hours}:${
                               minutes < 10 ? '0' : ''
                             }${minutes}`,
-                            teacher !== undefined ? [teacher] : [],
+                            teacher !== -1 ? [teacher] : [],
                             location
                           );
                         }}
@@ -499,15 +529,15 @@ const FullDayScheduleView = ({
                     return (
                       <div
                         key={'day' + index}
-                        className="text-xs cursor-pointer flex flex-row justify-start items-center m-0.5 rounded-md w-[70%] truncate absolute left-20"
+                        className="text-xs cursor-pointer flex flex-row justify-start items-center m-0.5 rounded-md  truncate absolute left-20"
                         style={{
                           backgroundColor: getColor(item.teachersid[0]),
 
                           height: `${(item.length / scale1) * 50}px`,
                           left: `${
-                            65 + (item.x_shift / item.crossed) * 480 * 0.8
+                            65 + (item.x_shift / item.crossed) * widthDiv * 0.85
                           }px`,
-                          width: `${(480 * 0.8) / item.crossed}px`,
+                          width: `${(widthDiv * 0.85) / item.crossed}px`,
 
                           top: `${
                             (((parseInt(item.date.split('T')[1].split(':')[0]) *
