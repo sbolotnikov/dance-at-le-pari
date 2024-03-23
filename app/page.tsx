@@ -29,7 +29,7 @@ export default function Home() {
     { name: 'Calendar', path: '/images/calendar.jpg', link: '/calendar' },
     { name: 'Activities', path: '/images/social.jpg', link: '/dancing' },
     {name: 'Wedding Dance', path: '/images/weddingcouple.jpg', link: '/wedding',}, 
-    { name: 'Studio', path: '/images/ballroom.jpg', link: '/rentals' },     
+    { name: 'Studio', path: '/images/ballroom.jpg', link: '/about_us' },     
     { name: 'Competitive Dance', path: '/images/competitive.jpg', link: '/competition',}, 
   ];
  

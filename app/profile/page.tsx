@@ -39,8 +39,8 @@ const page: FC<pageProps> = () => {
   const [loading, setLoading] = useState(false);
   const [revealCloud, setRevealCloud] = useState(false);
   const router = useRouter();
-  const [scrolling, setScrolling] = useState(true);
-  const windowSize = useDimensions();
+  // const [scrolling, setScrolling] = useState(true);
+  // const windowSize = useDimensions();
 
   
   useEffect(() => {
@@ -72,9 +72,9 @@ const page: FC<pageProps> = () => {
   );
   const [color, setColor] = useState('');
   const [bio, setBio] = useState('');
-  useEffect(() => {
-    (document.querySelector('#wrapperDiv')?.clientHeight!-document.querySelector('#containedDiv')?.clientHeight!>0)? setScrolling(true):setScrolling(false);
-  }, [bio,session, windowSize.height]);
+  // useEffect(() => {
+  //   (document.querySelector('#wrapperDiv')?.clientHeight!-document.querySelector('#containedDiv')?.clientHeight!>0)? setScrolling(true):setScrolling(false);
+  // }, [bio,session, windowSize.height]);
   const onReturn = (decision1: string) => {
     setRevealAlert(false);
     if (decision1 == 'Close') {
@@ -214,8 +214,8 @@ const page: FC<pageProps> = () => {
       {loading && <LoadingScreen />}
       <div className="   shadow-2xl w-[90%]  max-w-[450px] md:w-full h-[85svh]  bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md border-0 rounded-md  p-2 md:mt-6">
         <div id="wrapperDiv" className="w-full h-full border rounded-md border-lightMainColor dark:border-darkMainColor relative overflow-y-auto flex flex-col justify-center items-center">
-          <div  id="containedDiv"  className={`${scrolling?"":"absolute top-0 left-0"} flex flex-col w-full p-1 justify-center items-center `}>
-            
+          {/* <div  id="containedDiv"  className={`${scrolling?"":"absolute top-0 left-0"} flex flex-col w-full p-1 justify-center items-center `}> */}
+          <div  id="containedDiv"  className={`absolute top-0 left-0 flex flex-col w-full p-1 justify-center items-center `}>  
             <h2
               className="text-center font-bold uppercase relative"
               style={{ letterSpacing: '1px' }}

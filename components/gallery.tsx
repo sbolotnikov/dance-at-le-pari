@@ -1,4 +1,4 @@
-// import Image from 'next/image';
+'use client'
 import { useEffect, useState } from 'react';
 import { gsap } from '../utils/gsap';
 import ShowIcon from './svg/showIcon';
@@ -203,7 +203,7 @@ const Gallery = ({ pictures, auto,particles, seconds, width, height }: Props) =>
           <ShowIcon icon={'ArrowLeft'} stroke={'.1'} />
         </div>
       </button>
-      <canvas id ="canvas1" className='m-auto ' style={{objectFit: "contain"}}></canvas>
+      <canvas id ="canvas1" className={`m-auto `} style={{objectFit: "contain"}}></canvas>
       {(particles==true) &&
           <img id="particleBGImg"
             src={pictures[nextActivePic].urlData} 

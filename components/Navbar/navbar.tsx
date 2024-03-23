@@ -68,7 +68,7 @@ const Navbar = ({ path, locale, children }: Props) => {
       icon: 'Activities',
     },
     {
-      url: '/rentals',
+      url: '/about_us',
       title: 'Studio',
       icon: 'Home2',
     },
@@ -93,7 +93,7 @@ const Navbar = ({ path, locale, children }: Props) => {
           icon: 'Activities',
         },
         {
-          url: '/rentals',
+          url: '/about_us',
           title: 'Studio',
           icon: 'Home2',
         },
@@ -121,7 +121,7 @@ const Navbar = ({ path, locale, children }: Props) => {
           icon: 'Activities',
         },
         {
-          url: '/rentals',
+          url: '/about_us',
           title: 'Studio',
           icon: 'Home2',
         },
@@ -159,7 +159,7 @@ const Navbar = ({ path, locale, children }: Props) => {
           icon: 'Activities',
         },
         {
-          url: '/rentals',
+          url: '/about_us',
           title: 'Studio',
           icon: 'Home2',
         },
