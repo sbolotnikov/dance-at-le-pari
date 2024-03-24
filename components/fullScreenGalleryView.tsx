@@ -1,45 +1,31 @@
-'use client';
+import { useState } from 'react'
 import Gallery from './gallery';
-import { galeryPictures } from '../utils/galeryPictures';
+import {galeryPictures} from '../utils/galeryPictures';
 import AnimateModalLayout from './AnimateModalLayout';
-import { TPictureWithCapture } from '@/types/screen-settings';
 
 type Props = {
-  pictures: TPictureWithCapture[] | null;
-  index?: number | undefined;
-  onReturn: () => void;
-};
+    pictures: string[];
+    onReturn: () => void
+}
 
-const FullScreenGalleryView = async (props: Props) => {
-  
+const FullScreenGalleryView = ({pictures, onReturn}: Props) => {
+    const [isVisible, setIsVisible] = useState(true);
+    let el = document.querySelector('#mainPage');
   return (
-    <AnimateModalLayout
-      visibility={true}
-      onReturn={() => {
-        props.onReturn();
-      }}
-    >
-      {(props.index != undefined) ? (
-        <Gallery
-          pictures={ props.pictures! }
-          auto={false}
-          seconds={5}
-          width={'100vw'}
-          height={'100svh'}
-          particles
-        />
-      ) : (
-        <Gallery
-          pictures={galeryPictures}
-          auto={false}
-          seconds={5}
-          width={'100vw'}
-          height={'100svh'}
-          particles
-        />
-      )}
-    </AnimateModalLayout>
-  );
-};
+    
+    <AnimateModalLayout visibility={isVisible} onReturn={()=>{onReturn(); }} >
+          
+      <Gallery
+        pictures={galeryPictures}
+        auto={false}
+        seconds={5}
+        width={'100vw'}
+        height={'100svh'}
+        particles
+      />
+     </AnimateModalLayout> 
+  
+  )
+}
 
-export default FullScreenGalleryView;
+export default FullScreenGalleryView

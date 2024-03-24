@@ -100,8 +100,7 @@ const page: FC<pageProps> = ({}) => {
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
       {revealGallery && (
         <FullScreenGalleryView
-          pictures={null}
-          
+          pictures={picturesArray}
           onReturn={() => {
             sleep(1200).then(() => {
               setRevealGallery(false);
@@ -156,12 +155,12 @@ const page: FC<pageProps> = ({}) => {
           </TabList>
 
           <TabPanel
-            className={`w-full h-full relative overflow-auto ${
+            className={`w-full h-full relative overflow-auto  ${
               tabIndex != 0 ? 'hidden' : ''
             }`}
-            style={{ flex: '1 1 100%',  scrollbarWidth: "none" }}
+            style={{   scrollbarWidth: "none" }}
           >
-            <div className="absolute top-0 left-0 w-full">
+            <div className="absolute top-0 left-0 w-full flex flex-col justify-center items-center">
               <div className="h-[270px] w-full">
                 <Iframe
                   url="https://www.youtube.com/embed/oiF1NnGzUiM?autoplay=1&amp;mute=1&amp;controls=1&amp;loop=0&amp;origin=https%3A%2F%2Fwww.leparidancenter.com&amp;playsinline=1&amp;enablejsapi=1&amp;widgetid=3"
@@ -177,34 +176,34 @@ const page: FC<pageProps> = ({}) => {
                 />
               </div>
               <div
-                className="cursor-pointer  w-full h-[400px] flex justify-center items-center m-2 "
-                onClick={() => {
-                  setRevealGallery(true);
-                }}
-              >
-                {!revealGallery && (
-                  <Gallery
-                    pictures={galeryPictures}
-                    auto={true}
-                    seconds={8}
-                    width={'500px'}
-                    height={'550px'}
-                  />
-                )}
-              </div>
+              className="cursor-pointer h-[300px] w-[300px] md:h-[450px] md:w-[450px] md:mt-10 mb-10"
+              onClick={() => {
+                setRevealGallery(true);
+              }}
+            >
+              {!revealGallery && (
+                <Gallery
+                  pictures={galeryPictures}
+                  auto={true}
+                  seconds={8}
+                  width={'400px'}
+                  height={'300px'}
+                />
+              )}
+            </div>
             </div>
           </TabPanel>
           <TabPanel
-            className={`w-full  flex relative overflow-y-scroll ${
+            className={`w-full  flex flex-col relative overflow-auto ${
               tabIndex != 1 ? 'hidden' : ''
             }`}
-            style={{ flex: '1 1 100%', }}
+            
           >
 
-<section className="grid gap-4 mb-4 w-full m-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))'}}>
+<section className="flex flex-col justify-center items-center sm:grid sm:gap-4 mt-2  w-[98%] mx-auto" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))'}}>
   {users.map((user, i) => {
     return(
-  <div key={"user"+i} className=" w-72 grid cursor-pointer delay-[800] hover:[transform:rotateY(180deg)] hover:delay-0" style={{  aspectRatio: '1 / 1.2', transformStyle: 'preserve-3d' , transition: 'all 0.8s ease-in-out',}}
+  <div key={"user"+i} className="m-2 sm:m-0 w-72 grid cursor-pointer delay-[800] hover:[transform:rotateY(180deg)] hover:delay-0" style={{  aspectRatio: '1 / 1.2', transformStyle: 'preserve-3d' , transition: 'all 0.8s ease-in-out',}}
   onClick={()=>{setIndex(i);setRevealGallery2(true)}}
   >
     <div className="teammember overflow-hidden" style={{gridArea: '1/1/2/2', backfaceVisibility: 'hidden'}}>
@@ -212,7 +211,7 @@ const page: FC<pageProps> = ({}) => {
      {user.image !== null && user.image !== '' && user.image !== undefined ? (
               <ImgFromDb
                 url={user.image}
-                stylings="w-full h-full object-cover"
+                stylings="w-full h-full object-cover rounded-md"
                 alt="Event Picture"
               />
             ) : (
@@ -221,7 +220,7 @@ const page: FC<pageProps> = ({}) => {
               </div>
             )}
     </div>
-    <div className="team-member-bio flex justify-center items-center flex-col outline outline-2 border-blue-500 outline-offset-2 bg-[#f1f2f9] color-[#1e1f25]" style={{gridArea: '1/1/2/2', transform: 'rotateY(180deg)', backfaceVisibility: 'hidden'}}>
+    <div className="team-member-bio flex justify-center items-center flex-col outline outline-2 rounded-md border-blue-500 outline-offset-2 bg-[#f1f2f9] color-[#1e1f25]" style={{gridArea: '1/1/2/2', transform: 'rotateY(180deg)', backfaceVisibility: 'hidden'}}>
  
       <strong className="font-bold text-4xl text-franceBlue  text-center font-DancingScript text-shadow">{user.name}</strong>
       <span>{user.role=="Admin"?"Manager":(user.role=="Teacher")?"Dance Instructor":"Owner"}</span>
@@ -229,9 +228,12 @@ const page: FC<pageProps> = ({}) => {
     </div>
   </div>
   )})}
+  
  </section>
            
-
+ <p 
+  className="text-lightMainBG dark:text-darkMainBG text-[0.1rem]"
+  >{"hello"}</p>
 
 
 
