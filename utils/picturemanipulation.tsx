@@ -1,8 +1,6 @@
-'use server'
+
 import { v4 as uuidv4 } from 'uuid';
 import Resizer from 'react-image-file-resizer';
-import { TPictureWithCapture } from '@/types/screen-settings';
-import { prisma } from '@/lib/prisma';
  
   export async function deleteImage(id:string ) {
     fetch('/api/img_del', {
@@ -82,23 +80,24 @@ import { prisma } from '@/lib/prisma';
       return('Error uploading');
     }
   }
-  export async function getTeamImages(
-    pictures: { bio: string; urlData: string; name: string; role: string }[]
-      | null
-  ) {
-    let arr=[] as TPictureWithCapture[]
-    if (pictures == null) return arr;
-    else {
+  // export async function getTeamImages(
+  //   pictures: { bio: string; urlData: string; name: string; role: string }[]
+  //     | null
+  // ) {
+  //   let arr=[] as TPictureWithCapture[]
+  //   if (pictures == null) return arr;
+  //   else {
       
-      for (let i = 0; i < pictures.length; i++) {
-          let urlData=await prisma.picture
-          .findUnique({
-            where: {
-              id: pictures[i]?.urlData,
-            },
-          })
-          arr.push({urlData: urlData!.file!, capture: pictures[i]?.name})
-      }
-      return arr
-    }
-  }
+  //     for (let i = 0; i < pictures.length; i++) {
+  //         let urlData=await prisma.picture
+  //         .findUnique({
+  //           where: {
+  //             id: pictures[i]?.urlData,
+  //           },
+  //         })
+  //         console.log((i+1)+". "+urlData)
+  //         arr.push({urlData: urlData!.file!, capture: pictures[i]?.name})
+  //     }
+  //     return arr
+  //   }
+  // }

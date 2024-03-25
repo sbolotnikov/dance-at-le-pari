@@ -12,8 +12,8 @@ import { useDimensions } from '@/hooks/useDimensions';
 import ShowIcon from '@/components/svg/showIcon';
 import { useRouter } from 'next/navigation';
 import ImgFromDb from '@/components/ImgFromDb';
-import { getTeamImages } from '@/utils/picturemanipulation';
 import { TPictureWithCapture } from '@/types/screen-settings';
+import FullScreenTeamView from '@/components/FullScreenTeamView';
 interface pageProps {}
 
 const page: FC<pageProps> = ({}) => {
@@ -55,7 +55,7 @@ const page: FC<pageProps> = ({}) => {
     inputField: '',
   });
   const [users, setUsers] = useState<TTeamMember[]>([]);
-  const [team, setTeam] = useState<TPictureWithCapture[]>([]);
+  const [team, setTeam] = useState<{bio:string, urlData: string, capture: string, role: string}[]>([]);
   const [revealAlert, setRevealAlert] = useState(false);
   const [tabsArray, setTabsArray] = useState([
     'Studio View',
@@ -83,8 +83,8 @@ const page: FC<pageProps> = ({}) => {
         let arr =data as TTeamMember[]
         let arr2=[...arr.filter(user =>user.role=="Owner"),...arr.filter(user =>user.role=="Admin"),...arr.filter(user =>user.role=="Teacher").sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0))]
         setUsers(arr2);
-        
-        // getTeamImages(arr2.map((user) => {return{bio: user.bio!, urlData: user.image!, name: user.name!, role: user.role!}})).then((data) =>{
+        console.log(arr2)
+        setTeam(arr2.map((user) => {return{bio: user.bio!, urlData: user.image!, capture: user.name!, role: user.role!}}))
         //   setTeam(data)
         // })
       })
@@ -108,8 +108,8 @@ const page: FC<pageProps> = ({}) => {
           }}
         />
       )}
-      {/* {revealGallery2 && (
-        <FullScreenGalleryView
+       {revealGallery2 && 
+        <FullScreenTeamView
           pictures={team}
           index={index}
           onReturn={() => {
@@ -118,7 +118,7 @@ const page: FC<pageProps> = ({}) => {
             });
           }}
         />
-      )} */}
+      } 
       <div className="border-0 rounded-md p-2  shadow-2xl w-[95%] h-[70svh] md:h-[85svh] max-w-5xl md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md ">
         <Tabs
           selectedIndex={tabIndex}
@@ -204,7 +204,6 @@ const page: FC<pageProps> = ({}) => {
   {users.map((user, i) => {
     return(
   <div key={"user"+i} className="m-2 sm:m-0 w-72 grid cursor-pointer delay-[800] hover:[transform:rotateY(180deg)] hover:delay-0" style={{  aspectRatio: '1 / 1.2', transformStyle: 'preserve-3d' , transition: 'all 0.8s ease-in-out',}}
-  onClick={()=>{setIndex(i);setRevealGallery2(true)}}
   >
     <div className="teammember overflow-hidden" style={{gridArea: '1/1/2/2', backfaceVisibility: 'hidden'}}>
      
@@ -225,6 +224,8 @@ const page: FC<pageProps> = ({}) => {
       <strong className="font-bold text-4xl text-franceBlue  text-center font-DancingScript text-shadow">{user.name}</strong>
       <span>{user.role=="Admin"?"Manager":(user.role=="Teacher")?"Dance Instructor":"Owner"}</span>
       <p className="w-72 h-48 flex-wrap overflow-clip">{user.bio}</p>
+      <button className="btnFancy font-bold text-xl text-franceBlue font-DancingScript" 
+       onClick={()=>{setIndex(i);setRevealGallery2(true)}}> Continue reading...</button>
     </div>
   </div>
   )})}
