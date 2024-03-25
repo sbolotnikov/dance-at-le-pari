@@ -17,8 +17,8 @@ const FullScreenTeamView = ({pictures,index, onReturn}: Props) => {
     let el = document.querySelector('#mainPage');
     
       const [firstTime, setFirstTime] = useState(true);
-      const [activePic, setActivePic] = useState(0);
-      const [nextActivePic, setNextActivePic] = useState(index);
+      const [activePic, setActivePic] = useState(index);
+      const [nextActivePic, setNextActivePic] = useState((index+1)==pictures.length?0:index+1);
       let seconds=5
       let particles=false 
       let counter=0
@@ -47,7 +47,7 @@ const FullScreenTeamView = ({pictures,index, onReturn}: Props) => {
           gsap.timeline().to(textEl1, { opacity: 1, duration: seconds*.8, stagger: seconds*.6 });
           gsap
             .timeline()
-            .to(imgEl1, { opacity: 1, duration: seconds*.4, stagger: seconds*.6 })
+            .to(imgEl1, { opacity: 1, duration: seconds*.8, stagger: seconds*.6 })
             .then(() => {
               if (imgEl) imgEl.style.filter = '';
               setActivePic(nextActivePic);
@@ -62,12 +62,32 @@ const FullScreenTeamView = ({pictures,index, onReturn}: Props) => {
   return (
     
     <AnimateModalLayout visibility={isVisible} onReturn={()=>{onReturn(); }} >
-          
-          <div id="galleryContainer" className={` relative  h-full w-full rounded-md overflow-hidden flex justify-between items-center `} style={{zIndex:300}}>
-       
-       <button
+     
+ 
+        {pictures.map((item, index) => (
+         <div key={'img' + index} className={`relative h-full w-full flex flex-col md:flex-row justify-center md:justify-start items-center ${
+          index !== activePic ? 'hidden' : ''
+        }`}>
+           <div className="w-[90%] h-1/2 md:h-full md:w-1/2 flex justify-center items-center">
+           <ImgFromDbWithID id={'image'+index}  url={item.urlData} stylings={` h-full md:h-auto md:w-5/12 object-contain`} alt={item.capture} />
+           </div>  
+           <h2
+             id={'text_' + index}
+             className={`w-[98%] h-1/4 md:h-[75%] md:w-5/12 md:max-h-[80%] flex rounded-md p-2 flex-col justify-center items-center bg-lightMainBG/70 dark:bg-darkMainBG/70 ${
+               index !== activePic ? 'hidden' : '0'
+             }`}
+           >
+            
+      <strong className="font-bold text-4xl md:text-6xl text-franceBlue  text-center font-DancingScript text-shadow">{item.capture}</strong>
+      <span className='md:text-2xl md:m-2'>{item.role=="Admin"?"Manager":(item.role=="Teacher")?"Dance Instructor":"Owner"}</span>
+      <p className=" w-full h-full overflow-y-auto md:text-xl">{item.bio}</p>
+
+           </h2>
+         </div>
+       ))}
+              <button
          id="prevButton"
-         className={` absolute top-1/2 left-0 cursor-pointer z-10 hover:scale-125 `} style={{transform: 'translate(0%, -50%)'}}
+         className={` absolute top-1/2 left-0  translate-x-0 -translate-y-1/2 cursor-pointer z-10 hover:scale-125 `}
          onClick={() => {
            if (activePic > 0) setNextActivePic(activePic - 1);
            else setNextActivePic(pictures.length - 1);
@@ -77,33 +97,15 @@ const FullScreenTeamView = ({pictures,index, onReturn}: Props) => {
            <ShowIcon icon={'ArrowLeft'} stroke={'.1'} />
          </div>
        </button>
-      
-       
- 
-        {pictures.map((item, index) => (
-         <div key={'img' + index} className={`relative h-full w-full flex justify-center items-center ${
-          index !== activePic ? 'hidden' : ''
-        }`}>
-           <ImgFromDbWithID id={'image'+index}  url={item.urlData} stylings={`h-[550px] w-[400px] m-auto`} alt={item.capture} />
-             
-           <h2
-             id={'text_' + index}
-             className={`w-full mb-12 text-center absolute bottom-0 right-0 z-100 bg-lightMainBG/70 dark:bg-darkMainBG/70 ${
-               index !== activePic ? 'hidden' : '0'
-             }`}
-           >
-             {item.capture}
-           </h2>
-         </div>
-       ))}
        <button
          id="nextButton"
-         className={` absolute top-1/2 right-0 cursor-pointer z-10 hover:scale-125 `} style={{transform: 'translate(0%, -50%)'}}
+         className={` absolute top-1/2 right-0 translate-x-0 -translate-y-1/2 cursor-pointer z-10 hover:scale-125 `}
          onClick={() => {
            if (activePic < pictures.length - 1) setNextActivePic(activePic + 1);
            else  setNextActivePic(0);
          }}
        >
+        
          <div className="mr-2 h-8 w-8 md:h-16 md:w-16  fill-darkMainColor stroke-darkMainColor">
            <ShowIcon icon={'ArrowRight'} stroke={'.1'} />
          </div>
@@ -125,7 +127,6 @@ const FullScreenTeamView = ({pictures,index, onReturn}: Props) => {
            ></feDisplacementMap>
          </filter>
        </svg>
-     </div>
      </AnimateModalLayout> 
   
   )
