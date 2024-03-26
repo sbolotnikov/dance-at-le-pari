@@ -1,6 +1,5 @@
 
-import ImageUploader from 'react-images-upload'
-import { v4 as uuidv4 } from 'uuid';
+import ImageUploader from 'react-images-upload';
 import Resizer from 'react-image-file-resizer'; 
 const UploadPicture  = () => {
     

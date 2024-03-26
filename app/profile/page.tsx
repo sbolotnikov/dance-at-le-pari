@@ -209,7 +209,7 @@ const page: FC<pageProps> = () => {
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
       {revealAlert && <AlertMenu onReturn={onReturn} styling={alertStyle} />}
       {revealCloud && (
-        <ChooseAvatar onReturn={onReturnAvatar} styling={alertStyle} />
+        <ChooseAvatar onReturn={onReturnAvatar} styling={alertStyle} extraSize={session?.user.role=="Admin"?true:false} />
       )}
       {loading && <LoadingScreen />}
       <div className="   shadow-2xl w-[90%]  max-w-[450px] md:w-full h-[85svh]  bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md border-0 rounded-md  p-2 md:mt-6">

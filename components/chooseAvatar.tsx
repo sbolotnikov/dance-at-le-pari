@@ -33,6 +33,7 @@ var variant = {
   '': {},
 }
 type AlertType = {
+  extraSize:boolean,
   styling:{
 variantHead: string,
 heading: string,
@@ -52,7 +53,7 @@ export default function ChooseAvatar(props:AlertType) {
   const el = document.querySelector('#mainPage');
   const [button1Color, setbutton1Color]=useState({'color': "", 'backgroundColor': '','borderColor': ''});
   const [button2Color, setbutton2Color]=useState({'color': "", 'backgroundColor': '','borderColor': ''});
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(300);
 
   function StopScroll(){
     // prevent scrolling
@@ -69,7 +70,7 @@ function AllowScroll(){
 const handleChange =async (e: React.ChangeEvent<HTMLInputElement>)=> {
            e.preventDefault();
  
-           const img=await uploadImage(e.currentTarget.files![0], 300, 300, "Profile");
+           const img=await uploadImage(e.currentTarget.files![0], value, value, "Profile");
            console.log( img)
           
            if (img!=='Error uploading') props.onReturn(props.styling.button1,img!);
@@ -86,10 +87,15 @@ const handleChange =async (e: React.ChangeEvent<HTMLInputElement>)=> {
 
     <div className="w-[100vw] h-[100svh] absolute flex justify-center items-center bg-slate-500/70 left-0 z-[1001] backdrop-blur-md" style={{ top: el!.scrollTop }} >
       <div className='m-auto  max-w-[600px] bg-gray-200 border-2 border-solid border-gray-400 rounded-md w-[97%] p-2 flex flex-col content-evenly'>
-        <label className='px-1 py-2 border-2 border-solid border-transparent rounded-sm w-full m-1 text-center' style={Object.values(variant)[Object.keys(variant).indexOf(props.styling.variantHead)]}>{props.styling.heading}</label>
-        <h5 className="px-1 py-2 border-2 border-solid border-transparent text-light rounded-sm w-full m-1 text-center"  dangerouslySetInnerHTML={{ __html:props.styling.text}}/>
+        <label className='px-1 py-2 border-2 border-solid border-transparent text-slate-500 rounded-sm w-full m-1 text-center' style={Object.values(variant)[Object.keys(variant).indexOf(props.styling.variantHead)]}>{props.styling.heading}</label>
+        <h5 className="px-1 py-2 border-2 border-solid border-transparent text-slate-500 rounded-sm w-full m-1 text-center"  dangerouslySetInnerHTML={{ __html:props.styling.text}}/>
          <input type="file" hidden id="inputField" accept="image/*" className="w-full mb-2 rounded-md text-gray-700" 
         onChange={handleChange}/>
+        {props.extraSize && <select onChange={(e)=>{ setValue(Number(e.target.value))}} className="w-full mb-2 rounded-md text-gray-700">
+          <option value={300}>Small</option>
+          <option value={600}>Medium</option>
+          <option value={1200}>Large</option>
+          </select>}
         {(props.styling.color1!=="") && 
         <button className='px-1 py-2 border-2 border-solid border-transparent rounded-sm w-full m-1 text-center text-white' style={button1Color} 
         onClick={() => {

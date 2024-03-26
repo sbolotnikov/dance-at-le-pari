@@ -4,6 +4,8 @@ export interface IScreenSettings {
   export type ScreenSettingsContextType = {
     darkMode: boolean;
     changeTheme: (a:boolean) => void;
+    events:TEventArray;
+    hours:string[];
   };
   
   export type TEvent = {

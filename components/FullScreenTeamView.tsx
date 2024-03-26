@@ -69,11 +69,11 @@ const FullScreenTeamView = ({pictures,index, onReturn}: Props) => {
           index !== activePic ? 'hidden' : ''
         }`}>
            <div className="w-[90%] h-1/2 md:h-full md:w-1/2 flex justify-center items-center">
-           <ImgFromDbWithID id={'image'+index}  url={item.urlData} stylings={` h-full md:h-auto md:w-5/12 object-contain`} alt={item.capture} />
+           <ImgFromDbWithID id={'image'+index}  url={item.urlData} stylings={` h-full md:h-auto md:w-5/12 object-contain rounded-md`} alt={item.capture} />
            </div>  
            <h2
              id={'text_' + index}
-             className={`w-[98%] h-1/4 md:h-[75%] md:w-5/12 md:max-h-[80%] flex rounded-md p-2 flex-col justify-center items-center bg-lightMainBG/70 dark:bg-darkMainBG/70 ${
+             className={`w-[98%] h-1/4 md:h-[75%] md:w-5/12 md:max-h-[80%] flex rounded-md p-2 md:p-6 flex-col justify-center items-center bg-lightMainBG/70 dark:bg-darkMainBG/70 ${
                index !== activePic ? 'hidden' : '0'
              }`}
            >
