@@ -77,7 +77,7 @@ const page: FC<pageProps> = ({}) => {
     if(hours &&((session?.user.role=="Admin"))){
       setHours(hours);
     } 
-  }, [hours]);
+  }, [hours, session]);
   console.log(hoursOfOperation)
   // const tabsIndexArray = ['Private', 'Group', 'Floor_Fee', 'Party'];
 

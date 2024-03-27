@@ -80,7 +80,7 @@ const FullScreenTeamView = ({pictures,index, onReturn}: Props) => {
             
       <strong className="font-bold text-4xl md:text-6xl text-franceBlue  text-center font-DancingScript text-shadow">{item.capture}</strong>
       <span className='md:text-2xl md:m-2'>{item.role=="Admin"?"Manager":(item.role=="Teacher")?"Dance Instructor":"Owner"}</span>
-      <p className=" w-full h-full overflow-y-auto md:text-xl">{item.bio}</p>
+      <p className=" w-full h-full overflow-y-scroll md:text-xl">{item.bio}</p>
 
            </h2>
          </div>
