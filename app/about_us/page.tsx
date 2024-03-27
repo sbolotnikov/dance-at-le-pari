@@ -281,7 +281,7 @@ const page: FC<pageProps> = ({}) => {
                           ? 'Dance Instructor'
                           : 'Owner'}
                       </span>
-                      <p className="w-72 h-48 flex-wrap overflow-clip">
+                      <p className="w-72 h-48 text-ellipsis overflow-hidden">
                         {user.bio}
                       </p>
                       <button
