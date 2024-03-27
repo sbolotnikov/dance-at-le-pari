@@ -74,9 +74,7 @@ const page: FC<pageProps> = ({}) => {
   ) as ScreenSettingsContextType;
   const [hoursOfOperation, setHours]= useState<string[] | null>(null);
   useEffect(() => {
-    if(hours &&((session?.user.role=="Admin"))){
       setHours(hours);
-    } 
   }, [hours]);
   console.log(hoursOfOperation)
   // const tabsIndexArray = ['Private', 'Group', 'Floor_Fee', 'Party'];
@@ -353,16 +351,39 @@ const page: FC<pageProps> = ({}) => {
               return (
                 <div key={"hours"+i} className="flex justify-between items-center my-4">  
                   {(session?.user.role=="Admin")?(
-                    <input defaultValue={hour} onChange={(e)=>console.log(e.target.value,i)}/>
+                    <input defaultValue={hour} onChange={(e)=>{
+                      console.log(e.target.value,i)
+                      let hoursArr=hoursOfOperation;
+                      hoursArr[i]=e.target.value;
+                      setHours([...hoursArr]);
+                    }}/>
                     ):(
                       <p dangerouslySetInnerHTML={{__html:hour}}/>
                       )}
-                    {(session?.user.role=="Admin") &&<button className="h-10 w-10 md:h-12 md:w-12 stroke-alertcolor fill-alertcolor" onClick={(e)=>console.log(i)}>
+                    {(session?.user.role=="Admin") &&<button className="h-10 w-10 md:h-12 md:w-12 stroke-alertcolor fill-alertcolor" onClick={(e)=>{
+                      
+                      console.log(i)
+                      let hoursArr=hoursOfOperation;
+                      hoursArr.splice(i,1);
+                      setHours([...hoursArr]);
+
+                      }}>
                         <ShowIcon icon={'Close'} stroke={'2'} />
                       </button>}  
                  </div> 
             )})}
-            <button className="btnFancy" onClick={()=>setHours([...hoursOfOperation!,"New Hour"])}>Add</button>
+            {(session?.user.role=="Admin") &&<button className="btnFancy" onClick={()=>setHours([...hoursOfOperation!,"New Hours"])}>Add</button>}
+            {(session?.user.role=="Admin") &&<button className="btnFancy" onClick={async()=>{
+              const res = await fetch('/api/admin/update_hours', {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                   hours: hoursOfOperation!,
+                }),
+              });
+            }}>Save</button>}
             </h1>
           </TabPanel>
         </Tabs>
