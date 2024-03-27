@@ -95,3 +95,23 @@ body {
     rotate: y 360deg;
   }
 }
+
+.teamMember {
+  -ms-transform: rotateY(0deg);
+  -webkit-transform: rotateY(0deg);
+  -moz-transform: rotateY(0deg);
+  -o-transform: rotateY(0deg);
+  transform: rotateY(0deg);
+  transform-style: 'preserve-3d',
+}
+.teamMember:hover .teamMemberBio {
+  -ms-transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+  -moz-transform: rotateY(180deg);
+  -o-transform: rotateY(180deg);
+  transform: rotateY(180deg);
+}
+.teamMemberFront {
+  backface-visibility: 'hidden';
+  -webkit-backface-visibility: 'hidden'; /* Safari */
+}

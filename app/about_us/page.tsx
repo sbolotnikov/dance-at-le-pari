@@ -235,28 +235,19 @@ const page: FC<pageProps> = ({}) => {
                 return (
                   <div
                     key={'user' + i}
-                    className="myElement m-2 sm:m-0 w-72 grid delay-[800] hover:[transform:rotateY(180deg)] hover:delay-0"
+                    className="teamMember m-2 sm:m-0 w-72 grid delay-[800] hover:[transform:rotateY(180deg)] hover:delay-0"
                     style={{
                       aspectRatio: '1 / 1.2',
-                      transformStyle: 'preserve-3d',
+                      
                       transition: 'all 0.8s ease-in-out',
                       
                     }}
-                    onMouseEnter={() => {
-                      // Rotate on hover
-                      document.querySelector('.myElement')!.setAttribute("style", "-ms-transform: rotateY(180deg);-webkit-transform: rotateY(180deg);-moz-transform: rotateY(180deg);-o-transform: rotateY(180deg);");
-                     
-                    }}
-                    onMouseLeave={() => {
-                      // Reset transform on mouse leave
-                      document.querySelector('.myElement')!.setAttribute("style", "-ms-transform: '';-webkit-transform: '';-moz-transform: '';-o-transform:'';");
-                    }}
+                  
                   >
                     <div
-                      className="teammember overflow-hidden"
+                      className="teamMemberFront overflow-hidden"
                       style={{
                         gridArea: '1/1/2/2',
-                        backfaceVisibility: 'hidden',
                       }}
                     >
                       {user.image !== null &&
@@ -274,15 +265,9 @@ const page: FC<pageProps> = ({}) => {
                       )}
                     </div>
                     <div
-                      className="team-member-bio flex justify-center items-center flex-col outline outline-2 rounded-md border-blue-500 outline-offset-2 bg-[#f1f2f9] color-[#1e1f25]"
+                      className="teamMemberBio flex justify-center items-center flex-col outline outline-2 rounded-md border-blue-500 outline-offset-2 bg-[#f1f2f9] color-[#1e1f25]"
                       style={{
-                        gridArea: '1/1/2/2',
-                        transform: 'rotateY(180deg)',
-                        msTransform: 'rotateY(180deg)',
-                        WebkitTransform: 'rotateY(180deg)',
-                        OTransform: 'rotateY(180deg)',
-                        backfaceVisibility: 'hidden',
-                        WebkitBackfaceVisibility: 'hidden'
+                        gridArea: '1/1/2/2'
                       }}
                     >
                       <strong className="font-bold text-4xl text-franceBlue  text-center font-DancingScript text-shadow">
