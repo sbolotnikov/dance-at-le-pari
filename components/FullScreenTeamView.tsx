@@ -73,14 +73,15 @@ const FullScreenTeamView = ({pictures,index, onReturn}: Props) => {
            </div>  
            <h2
              id={'text_' + index}
-             className={`w-[98%] h-1/4 md:h-[75%] md:w-5/12 md:max-h-[80%] flex rounded-md p-2 md:p-6 flex-col justify-center items-center bg-lightMainBG/70 dark:bg-darkMainBG/70 ${
+             className={`w-[98%] h-1/4 md:h-[75%] md:w-5/12 md:max-h-[80%]  overflow-y-auto relative flex rounded-md p-2 md:p-6 flex-col justify-center items-center bg-lightMainBG/70 dark:bg-darkMainBG/70 ${
                index !== activePic ? 'hidden' : '0'
              }`}
            >
-            
+      <div className="absolute top-0 left-0 w-full flex flex-col justify-center items-center p-2">      
       <strong className="font-bold text-4xl md:text-6xl text-franceBlue  text-center font-DancingScript text-shadow">{item.capture}</strong>
       <span className='md:text-2xl md:m-2'>{item.role=="Admin"?"Manager":(item.role=="Teacher")?"Dance Instructor":"Owner"}</span>
-      <div className=" w-full h-[100%] overflow-y-auto relative md:text-xl"><div className="absolute top-0 left-0 flex flex-col w-full ">{item.bio}</div></div>
+      <div className=" w-full  md:text-xl">{item.bio}</div>
+      </div>
 
            </h2>
          </div>
