@@ -235,11 +235,21 @@ const page: FC<pageProps> = ({}) => {
                 return (
                   <div
                     key={'user' + i}
-                    className="m-2 sm:m-0 w-72 grid delay-[800] hover:[transform:rotateY(180deg)] hover:delay-0"
+                    className="myElement m-2 sm:m-0 w-72 grid delay-[800] hover:[transform:rotateY(180deg)] hover:delay-0"
                     style={{
                       aspectRatio: '1 / 1.2',
                       transformStyle: 'preserve-3d',
                       transition: 'all 0.8s ease-in-out',
+                      
+                    }}
+                    onMouseEnter={() => {
+                      // Rotate on hover
+                      document.querySelector('.myElement')!.setAttribute("style", "-ms-transform: rotateY(180deg);-webkit-transform: rotateY(180deg);-moz-transform: rotateY(180deg);-o-transform: rotateY(180deg);");
+                     
+                    }}
+                    onMouseLeave={() => {
+                      // Reset transform on mouse leave
+                      document.querySelector('.myElement')!.setAttribute("style", "-ms-transform: '';-webkit-transform: '';-moz-transform: '';-o-transform:'';");
                     }}
                   >
                     <div
@@ -268,7 +278,11 @@ const page: FC<pageProps> = ({}) => {
                       style={{
                         gridArea: '1/1/2/2',
                         transform: 'rotateY(180deg)',
+                        msTransform: 'rotateY(180deg)',
+                        WebkitTransform: 'rotateY(180deg)',
+                        OTransform: 'rotateY(180deg)',
                         backfaceVisibility: 'hidden',
+                        WebkitBackfaceVisibility: 'hidden'
                       }}
                     >
                       <strong className="font-bold text-4xl text-franceBlue  text-center font-DancingScript text-shadow">
