@@ -182,6 +182,7 @@ const FullDayScheduleView = ({
         console.log(counter, evArrayFinal)
          for (let i = 0; i < evArrayFinal.length; i++){
           if (evArrayFinal[i].crossed > counter) evArrayFinal[i].crossed=counter
+          if (evArrayFinal[i].crossed==0) evArrayFinal[i].crossed=1
          }
       setDisplayedEvents(evArrayFinal);
     }else setDisplayedEvents([]);

@@ -12,7 +12,10 @@ import { useDimensions } from '@/hooks/useDimensions';
 import ShowIcon from '@/components/svg/showIcon';
 import { useRouter, useSearchParams } from 'next/navigation';
 import ImgFromDb from '@/components/ImgFromDb';
-import { ScreenSettingsContextType, TPictureWithCapture } from '@/types/screen-settings';
+import {
+  ScreenSettingsContextType,
+  TPictureWithCapture,
+} from '@/types/screen-settings';
 import FullScreenTeamView from '@/components/FullScreenTeamView';
 import GoogleMapComponent from '@/components/GoogleMapComponent';
 import Link from 'next/link';
@@ -21,8 +24,8 @@ import { useSession } from 'next-auth/react';
 interface pageProps {}
 
 const page: FC<pageProps> = ({}) => {
-  const searchParams = useSearchParams()
-  const selectedDate = searchParams.get ("tab") || null;
+  const searchParams = useSearchParams();
+  const selectedDate = searchParams.get('tab') || null;
   type TTeamMember = {
     id: number;
     name: string;
@@ -47,7 +50,9 @@ const page: FC<pageProps> = ({}) => {
     '/images/Front Room (Studio B).webp',
     '/images/Kitchen.webp',
   ];
-  const [tabIndex, setTabIndex] = useState(selectedDate!== null? parseInt(selectedDate) : 0);
+  const [tabIndex, setTabIndex] = useState(
+    selectedDate !== null ? parseInt(selectedDate) : 0
+  );
   const [alertStyle, setAlertStyle] = useState({
     variantHead: '',
     heading: '',
@@ -69,14 +74,12 @@ const page: FC<pageProps> = ({}) => {
     'Location',
     'Hours ',
   ]);
-  const { hours } = useContext(
-    SettingsContext
-  ) as ScreenSettingsContextType;
-  const [hoursOfOperation, setHours]= useState<string[] | null>(null);
+  const { hours } = useContext(SettingsContext) as ScreenSettingsContextType;
+  const [hoursOfOperation, setHours] = useState<string[] | null>(null);
   useEffect(() => {
-      setHours(hours);
+    setHours(hours);
   }, [hours]);
-  console.log(hoursOfOperation)
+  console.log(hoursOfOperation);
   // const tabsIndexArray = ['Private', 'Group', 'Floor_Fee', 'Party'];
 
   const onReturn = async (decision1: string, amount: string | null) => {
@@ -308,83 +311,194 @@ const page: FC<pageProps> = ({}) => {
             }`}
             style={{ flex: '1 1 100%' }}
           >
-            <div className="h-[400px] w-[400px]">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1513.8719849763888!2d-74.39239667245666!3d40.63552797140525!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c3b097b4d07caf%3A0x3c77409024a4ea95!2sDance%20at%20Le%20Pari%20Dance%20Studio!5e0!3m2!1sen!2sus!4v1711426211014!5m2!1sen!2sus"
-              width="400"
-              height="400"
-              
-              className="h-full w-full"
-              allowFullScreen={true}
-              loading="lazy"
-              referrerPolicy={'no-referrer-when-downgrade'}
-            />
-            </div>
-            <div className="p-2 md:p-4">
-              <h2>ADDRESS:</h2>
-              <p>34 South Avenue, Fanwood, NJ 07023</p>
+            <section className=" absolute top-0 left-0 flex flex-col justify-center items-center  mt-2  w-[98%] mx-auto">
+              <div className=" h-52 w-52 m-auto fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
+                <ShowIcon icon={'Location'} stroke={'0.1'} />
+              </div>
+              <div className="flex flex-col md:flex-row items-center justify-between w-full h-auto">
+                <div className="h-[400px] w-[400px]">
+                  <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1513.8719849763888!2d-74.39239667245666!3d40.63552797140525!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c3b097b4d07caf%3A0x3c77409024a4ea95!2sDance%20at%20Le%20Pari%20Dance%20Studio!5e0!3m2!1sen!2sus!4v1711426211014!5m2!1sen!2sus"
+                    width="400"
+                    height="400"
+                    className="h-full w-full"
+                    allowFullScreen={true}
+                    loading="lazy"
+                    referrerPolicy={'no-referrer-when-downgrade'}
+                  />
+                </div>
+                <div className="p-2 md:p-4">
+                  <h2>ADDRESS:</h2>
+                  <p>34 South Avenue, Fanwood, NJ 07023</p>
 
-              <h2>HOURS OF OPERATION:</h2>
-                <p className='cursor-pointer' onClick={(e)=>{e.preventDefault(); window.location.replace("/about_us?tab=3")}}>click here</p>
-              
-              <h2>PARKING:</h2>
-              <p>ample, free, back of the building (main entrance)</p>
-              <h2>PUBLIC TRANSPORTATION:</h2>
+                  <h2>HOURS OF OPERATION:</h2>
+                  <p
+                    className="cursor-pointer"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      window.location.replace('/about_us?tab=3');
+                    }}
+                  >
+                    click here
+                  </p>
+
+                  <h2>PARKING:</h2>
+                  <p>ample, free, back of the building (main entrance)</p>
+                  <h2>PUBLIC TRANSPORTATION:</h2>
+                  <p>
+                    Check{' '}
+                    <Link href={'https://www.njtransit.com'}>
+                      www.njtransit.com
+                    </Link>
+                  </p>
+                  <h2>CONTACT:</h2>
+                  <p>
+                    <Link href={'/mail_page'}>lepari34@gmail.com</Link> /{' '}
+                    <Link href={'tel:1-8482440512'}>848-244-0512</Link>
+                  </p>
+                </div>
+              </div>
               <p>
-                Check <Link href={'https://www.njtransit.com'}>www.njtransit.com</Link>
+                Fanwood is a small city in Union County that happens to be close
+                to Manhattan, NYC, center of high level dancing. LE PARI's prime
+                location allows for easy access via other major freeways like
+                the
               </p>
-              <h2>CONTACT:</h2>
+              <ul className="list-disc">
+                <li>Garden State Parkway,</li>
+                <li>Route 280,</li>
+                <li>NJ Turnpike and</li>
+                <li>Route 22.</li>
+              </ul>
               <p>
-                <Link href={'/mail_page'}>lepari34@gmail.com</Link> /{' '}
-                <Link href={"tel:1-8482440512"}>848-244-0512</Link>
+                It's located in walking distance (10 min.) from Fanwood train
+                station (1/4 mile) which provides service to Penn station in
+                Newark, Hoboken Terminal or Penn station in Manhattan.
               </p>
-            </div>
+              <p>
+                The studio offers a warm and inviting feel with beautiful
+                floating dance floor and superior sound system. The main
+                ballroom boasts a large open space (75 feet by 40 feet) with
+                cozy furniture, a large screen television and recessed lights
+                with dimmers, while Studio A & B offers cozy private rooms for
+                smaller to medium size groups. When the dancing heats up, the
+                studio is ready to push cool air-conditioning backed by
+                air-conditioning systems.{' '}
+              </p>
+              <br />
+              <p>
+                Please note that LePari Dance Center is located just across the
+                street of the kickboxing and pizza locations, next to William
+                lift company and Exxon gas station.
+              </p>
+              ​<br />
+              <p>Welcome to Le Pari Dance Center​!</p>
+            </section>
           </TabPanel>
           <TabPanel
-            className={`w-full  flex relative overflow-y-scroll ${
+            className={`w-full  flex  flex-col justify-center items-center relative overflow-y-scroll ${
               tabIndex != 3 ? 'hidden' : ''
             }`}
             style={{ flex: '1 1 100%' }}
           >
-            <h1 className="flex flex-col justify-start items-center"> Our Hours
-            {hoursOfOperation && hoursOfOperation.map((hour, i) => {
-              return (
-                <div key={"hours"+i} className="flex justify-between items-center my-4">  
-                  {(session?.user.role=="Admin")?(
-                    <input defaultValue={hour} onChange={(e)=>{
-                      console.log(e.target.value,i)
-                      let hoursArr=hoursOfOperation;
-                      hoursArr[i]=e.target.value;
-                      setHours([...hoursArr]);
-                    }}/>
-                    ):(
-                      <p dangerouslySetInnerHTML={{__html:hour}}/>
-                      )}
-                    {(session?.user.role=="Admin") &&<button className="h-10 w-10 md:h-12 md:w-12 stroke-alertcolor fill-alertcolor" onClick={(e)=>{
-                      
-                      console.log(i)
-                      let hoursArr=hoursOfOperation;
-                      hoursArr.splice(i,1);
-                      setHours([...hoursArr]);
+            <section className=" absolute top-0 left-0 flex flex-col justify-center items-center  mt-2  w-[98%] mx-auto">
+            <div className="flex flex-col md:flex-row items-center justify-between w-full h-auto">
+              <div className="h-[200px] w-[400px]">
+                <div className=" h-52 w-52 m-auto">
+                  <ShowIcon icon={'Home2'} stroke={'0.1'} />
+                </div>
+              </div>
+              <p className="text-alertcolor">
+                Our Hours of Operation had been changed. It is updated monthly.
+                So please check on it regularly.{' '}
+              </p>
+            </div>
+            <div className="flex flex-col md:flex-row items-center justify-between w-full h-auto">
 
-                      }}>
-                        <ShowIcon icon={'Close'} stroke={'2'} />
-                      </button>}  
-                 </div> 
-            )})}
-            {(session?.user.role=="Admin") &&<button className="btnFancy" onClick={()=>setHours([...hoursOfOperation!,"New Hours"])}>Add</button>}
-            {(session?.user.role=="Admin") &&<button className="btnFancy" onClick={async()=>{
-              const res = await fetch('/api/admin/update_hours', {
-                method: 'PUT',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                   hours: hoursOfOperation!,
-                }),
-              });
-            }}>Save</button>}
-            </h1>
+            <div className="flex flex-col order-2 md:order-none md:w-2/3 justify-start items-center">
+              {' '}
+              Our Hours
+              {hoursOfOperation &&
+                hoursOfOperation.map((hour, i) => {
+                  return (
+                    <div
+                      key={'hours' + i}
+                      className="flex justify-between items-center"
+                    >
+                      {session?.user.role == 'Admin' ? (
+                        <input
+                          defaultValue={hour}
+                          onChange={(e) => {
+                            console.log(e.target.value, i);
+                            let hoursArr = hoursOfOperation;
+                            hoursArr[i] = e.target.value;
+                            setHours([...hoursArr]);
+                          }}
+                        />
+                      ) : (
+                        <p dangerouslySetInnerHTML={{ __html: hour }} />
+                      )}
+                      {session?.user.role == 'Admin' && (
+                        <button
+                          className="h-10 w-10 md:h-12 md:w-12 stroke-alertcolor fill-alertcolor"
+                          onClick={(e) => {
+                            console.log(i);
+                            let hoursArr = hoursOfOperation;
+                            hoursArr.splice(i, 1);
+                            setHours([...hoursArr]);
+                          }}
+                        >
+                          <ShowIcon icon={'Close'} stroke={'2'} />
+                        </button>
+                      )}
+                    </div>
+                  );
+                })}
+              {session?.user.role == 'Admin' && (
+                <button
+                  className="btnFancy"
+                  onClick={() => setHours([...hoursOfOperation!, 'New Hours'])}
+                >
+                  Add
+                </button>
+              )}
+              {session?.user.role == 'Admin' && (
+                <button
+                  className="btnFancy"
+                  onClick={async () => {
+                    const res = await fetch('/api/admin/update_hours', {
+                      method: 'PUT',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({
+                        hours: hoursOfOperation!,
+                      }),
+                    });
+                  }}
+                >
+                  Save
+                </button>
+              )}
+            </div>
+              <div className="h-[300px] w-[400px]">
+                <div className=" h-64 w-64 m-auto">
+                  <ShowIcon icon={'Home2'} stroke={'0.1'} />
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col md:flex-row items-center justify-between w-full h-auto">
+              <div className="h-[200px] w-[400px]">
+                <div className=" h-52 w-52 m-auto">
+                  <ShowIcon icon={'Home2'} stroke={'0.1'} />
+                </div>
+              </div>
+              <p>
+              Please note that the studio is opened earlier if private lessons are in session. Please give us a call at <a href="tel:1-8482440512">848-244-0512 (or text)</a> if you would like to come at different time than our hours of operation.
+
+              </p>
+            </div>
+            </section>
           </TabPanel>
         </Tabs>
       </div>
