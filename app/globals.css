@@ -3,29 +3,29 @@
 @tailwind utilities;
 
 @layer utilities {
- @variants responsive {
-      .text-shadow {
-        text-shadow: 2px 2px 4px black;
-      }
-      .text-shadow-light {
-        text-shadow: 2px 2px 4px white;
-      }
-      .text-shadow-md {
-        text-shadow: 4px 4px 8px black;
-      }
-      .text-shadow-md-light {
-        text-shadow: 4px 4px 8px white;
-      }
-      .text-shadow-xl {
-        text-shadow: 15px 15px 30px black;
-      }
-      .text-shadow-xl-light {
-        text-shadow: 15px 15px 30px white;
-      }
-      .text-shadow-none {
-        text-shadow: none;
-      }
-  } 
+  @variants responsive {
+    .text-shadow {
+      text-shadow: 2px 2px 4px black;
+    }
+    .text-shadow-light {
+      text-shadow: 2px 2px 4px white;
+    }
+    .text-shadow-md {
+      text-shadow: 4px 4px 8px black;
+    }
+    .text-shadow-md-light {
+      text-shadow: 4px 4px 8px white;
+    }
+    .text-shadow-xl {
+      text-shadow: 15px 15px 30px black;
+    }
+    .text-shadow-xl-light {
+      text-shadow: 15px 15px 30px white;
+    }
+    .text-shadow-none {
+      text-shadow: none;
+    }
+  }
 }
 :root {
   --foreground-rgb: 0, 0, 0;
@@ -68,16 +68,20 @@ body {
   transition: 0.4s;
   color: var(--accent-color);
   border: 3px solid var(--accent-color);
-  background-image: linear-gradient(to top, var(--accent-color) 50%, transparent 50%);
+  background-image: linear-gradient(
+    to top,
+    var(--accent-color) 50%,
+    transparent 50%
+  );
   background-size: 100% 200%;
   background-position: 0% 0%;
 }
 .btnFancy:hover {
-  color: #FFF;
+  color: #fff;
   background-position: 0% 100%;
 }
 .btnFancy:active {
-  color: #FFF;
+  color: #fff;
   background-position: 0% 100%;
 }
 @keyframes loader {
@@ -97,21 +101,27 @@ body {
 }
 
 .teamMember {
-  -ms-transform: rotateY(0deg);
-  -webkit-transform: rotateY(0deg);
-  -moz-transform: rotateY(0deg);
-  -o-transform: rotateY(0deg);
-  transform: rotateY(0deg);
-  transform-style: 'preserve-3d',
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
 }
-.teamMember:hover .teamMemberBio {
+.teamMember:hover {
+  transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+-moz-transform: rotateY(180deg);
+-ms-transform: rotateY(180deg);
+-o-transform: rotateY(180deg);
+} 
+.team .teamMemberFront {
+  backface-visibility: 'hidden';
+  -webkit-backface-visibility: 'hidden'; /* Safari */
+}
+.teamMemberBio {
   -ms-transform: rotateY(180deg);
   -webkit-transform: rotateY(180deg);
   -moz-transform: rotateY(180deg);
   -o-transform: rotateY(180deg);
   transform: rotateY(180deg);
-}
-.teamMemberFront {
   backface-visibility: 'hidden';
   -webkit-backface-visibility: 'hidden'; /* Safari */
 }
+
