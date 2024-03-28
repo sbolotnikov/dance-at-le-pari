@@ -404,8 +404,8 @@ const page: FC<pageProps> = ({}) => {
             <section className=" absolute top-0 left-0 flex flex-col justify-center items-center  mt-2  w-[98%] mx-auto">
             <div className="flex flex-col md:flex-row items-center justify-between w-full h-auto">
               <div className="h-[200px] w-[400px]">
-                <div className=" h-52 w-52 m-auto">
-                  <ShowIcon icon={'Home2'} stroke={'0.1'} />
+                <div className=" h-52 w-52 m-auto fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
+                  <ShowIcon icon={'ClockBallroom'} stroke={'0.05'} />
                 </div>
               </div>
               <p className="text-alertcolor">
@@ -482,15 +482,15 @@ const page: FC<pageProps> = ({}) => {
               )}
             </div>
               <div className="h-[300px] w-[400px]">
-                <div className=" h-64 w-64 m-auto">
-                  <ShowIcon icon={'Home2'} stroke={'0.1'} />
+                <div className=" h-64 w-64 m-auto fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
+                  <ShowIcon icon={'ClockLatin'} stroke={'0.05'} />
                 </div>
               </div>
             </div>
             <div className="flex flex-col md:flex-row items-center justify-between w-full h-auto">
               <div className="h-[200px] w-[400px]">
-                <div className=" h-52 w-52 m-auto">
-                  <ShowIcon icon={'Home2'} stroke={'0.1'} />
+                <div className=" h-52 w-52 m-auto fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
+                  <ShowIcon icon={'CallUs'} stroke={'0.05'} />
                 </div>
               </div>
               <p>
