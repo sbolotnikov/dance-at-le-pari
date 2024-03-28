@@ -11,7 +11,7 @@ import { html_receipt, text_receipt } from '@/utils/htmlEmail';
   };
 const { paymentsApi }= new Client ({
     accessToken:  process.env.SQUARE_ACCESS_TOKEN,
-    environment:'sandbox' as any,
+    environment:process.env.SQUARE_APP_ENVIRONMENT as any,
 })
 export  async function POST(
   req: any, 
