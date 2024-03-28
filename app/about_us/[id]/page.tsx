@@ -5,27 +5,22 @@ import { galeryPictures } from '@/utils/galeryPictures';
 import Gallery from '@/components/gallery';
 import FullScreenGalleryView from '@/components/fullScreenGalleryView';
 import sleep from '@/utils/functions';
-import { FC, useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import AlertMenu from '@/components/alertMenu';
-import { useDimensions } from '@/hooks/useDimensions';
 import ShowIcon from '@/components/svg/showIcon';
-import { useRouter, useSearchParams } from 'next/navigation';
 import ImgFromDb from '@/components/ImgFromDb';
 import {
   ScreenSettingsContextType,
   TPictureWithCapture,
 } from '@/types/screen-settings';
 import FullScreenTeamView from '@/components/FullScreenTeamView';
-import GoogleMapComponent from '@/components/GoogleMapComponent';
 import Link from 'next/link';
 import { SettingsContext } from '@/hooks/useSettings';
 import { useSession } from 'next-auth/react';
-interface pageProps {}
 
-const page: FC<pageProps> = ({}) => {
-  const searchParams = useSearchParams();
-  const selectedDate = searchParams.get('tab') || null;
+
+export default function Page ({ params }: { params: { id: string } }) {
+  const selectedDate = params.id || null;
   type TTeamMember = {
     id: number;
     name: string;
@@ -332,15 +327,11 @@ const page: FC<pageProps> = ({}) => {
                   <p>34 South Avenue, Fanwood, NJ 07023</p>
 
                   <h2>HOURS OF OPERATION:</h2>
-                  <p
+                  <a href="/about_us/3"
                     className="cursor-pointer"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      window.location.replace('/about_us?tab=3');
-                    }}
                   >
                     click here
-                  </p>
+                  </a>
 
                   <h2>PARKING:</h2>
                   <p>ample, free, back of the building (main entrance)</p>
@@ -505,5 +496,3 @@ const page: FC<pageProps> = ({}) => {
     </PageWrapper>
   );
 };
-
-export default page;
