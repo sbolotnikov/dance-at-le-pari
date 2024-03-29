@@ -348,7 +348,11 @@ export default function Page ({ params }: { params: { id: string } }) {
                             parseInt(d.value) < 10
                               ? (dayStr += '0' + d.value)
                               : (dayStr += d.value);
-                            window.location.replace('/schedule/' + dayStr);
+                            if (dayStr.length>3)  {
+                              setClicked(dayStr)  
+                              setRevealDayView(true)
+                            }
+                            // window.location.replace('/schedule/' + dayStr);
                             
                           }
                         }}

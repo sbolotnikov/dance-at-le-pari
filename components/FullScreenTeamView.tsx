@@ -108,9 +108,9 @@ const FullScreenTeamView = ({ pictures, index, onReturn }: Props) => {
              rounded-md p-2  bg-lightMainBG/70 dark:bg-darkMainBG/70 
               ${index !== activePic ? 'hidden' : ''}`}
             >
-              <div id="wrapperDiv" className="w-full h-full border rounded-md border-lightMainColor dark:border-darkMainColor relative overflow-y-auto flex flex-col justify-center items-center">
-          
-               <div  id="containedDiv"  className={`absolute top-0 left-0 flex flex-col w-full p-1 justify-center items-center `}> 
+              <div  className="w-full h-full border rounded-md border-lightMainColor dark:border-darkMainColor relative overflow-y-scroll flex flex-col justify-center items-center">
+               
+            <section className=" absolute top-0 left-0 flex flex-col justify-center items-center  mt-2  w-[98%] mx-auto"> 
                   <strong className="font-bold text-4xl md:text-6xl text-franceBlue  text-center font-DancingScript text-shadow">
                     {item.capture}
                   </strong>
@@ -122,7 +122,7 @@ const FullScreenTeamView = ({ pictures, index, onReturn }: Props) => {
                      : 'Owner'}
                   </span>
                   <div className=" w-full  md:text-xl">{item.bio}</div>
-                </div>
+                </section>
               </div>
             </div>
             

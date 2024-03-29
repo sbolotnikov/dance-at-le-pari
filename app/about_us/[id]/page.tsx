@@ -110,8 +110,6 @@ export default function Page ({ params }: { params: { id: string } }) {
             };
           })
         );
-        //   setTeam(data)
-        // })
       });
   }, []);
 

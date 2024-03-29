@@ -5,7 +5,7 @@ import AnimateModalLayout from './AnimateModalLayout';
 import { ContextMenu } from './ContextMenu';
 import { useDimensions } from '@/hooks/useDimensions';
 import { useOnOutsideClick } from '@/hooks/useOnOutsideClick';
-import { usePopupContext } from '@/hooks/usePopupContext';
+import { PopupContext, PopupContextType } from '@/hooks/usePopupContext';
 type User = {
   id: number;
   name: string;
@@ -70,7 +70,7 @@ const FullDayScheduleView = ({
     useState<TEventSchedule[]>([]);
   const [displayedEvents, setDisplayedEvents] = useState<DisplayEvent[]>([]);
   const [teacher, setTeacher] = useState(-1);
-  const { isMoving, setIsMoving, item, setItem } = usePopupContext();
+  const {isMoving, setIsMoving, item, setItem } = useContext(PopupContext) as PopupContextType;
   const [selectedEventItem, setSelectedEventItem] = useState<
     TEventSchedule | undefined
   >(undefined);

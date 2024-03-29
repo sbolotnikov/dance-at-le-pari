@@ -11,18 +11,25 @@ export type PopupContextType ={
 
   export const PopupContext = createContext<PopupContextType | null>(null);
 
-export const usePopupContext = () => {
+  type Props = {
+    children?: React.ReactNode;
+  };
 
-    const [isMoving, changeIsMoving] = useState (false);
-    const [item, changeItem] = useState<TEventSchedule | null>(null);
-   
-    const setIsMoving =(b:boolean)=>{
-      changeIsMoving (b);
+export const PopupProvider = ({ children }: Props) => {
+  const [isMoving, changeIsMoving] = useState (false);
+  const [item, changeItem] = useState<TEventSchedule | null>(null);
+ 
+  const setIsMoving =(b:boolean)=>{
+    changeIsMoving (b);
+}
+  const setItem =(item: TEventSchedule | null)=>{
+    changeItem(item);
   }
-    const setItem =(item: TEventSchedule | null)=>{
-      changeItem(item);
-    }
-     
-      return ( {isMoving, setIsMoving, item, setItem});
-    };
+   
   
+      return (
+        <PopupContext.Provider value={{isMoving, setIsMoving, item, setItem}}>
+          { children}
+        </PopupContext.Provider>
+      );
+    };
