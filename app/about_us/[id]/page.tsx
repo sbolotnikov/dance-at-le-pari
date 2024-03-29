@@ -20,7 +20,7 @@ import { useSession } from 'next-auth/react';
 
 
 export default function Page ({ params }: { params: { id: string } }) {
-  const selectedDate = params.id || null;
+  const selectedTab = params.id || null;
   type TTeamMember = {
     id: number;
     name: string;
@@ -46,7 +46,7 @@ export default function Page ({ params }: { params: { id: string } }) {
     '/images/Kitchen.webp',
   ];
   const [tabIndex, setTabIndex] = useState(
-    selectedDate !== null ? parseInt(selectedDate) : 0
+    ((selectedTab !== null) && (parseInt(selectedTab)>=0) && (parseInt(selectedTab)<4))  ? parseInt(selectedTab) : 0
   );
   const [alertStyle, setAlertStyle] = useState({
     variantHead: '',

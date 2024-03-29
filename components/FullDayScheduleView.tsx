@@ -94,7 +94,7 @@ const FullDayScheduleView = ({
           id: selectedEventItem?.id,
         }),
       }).then(() => {
-        window.location.replace('/schedule?date=' + day);
+        window.location.replace('/schedule/' + day);
       });
     }
   };
@@ -301,7 +301,7 @@ const FullDayScheduleView = ({
             }),
           });
         }
-        window.location.replace('/schedule?date=' + day);
+        window.location.replace('/schedule/' + day);
       }
       //paste logic
     } else if (str === 'Move') {
@@ -371,7 +371,7 @@ const FullDayScheduleView = ({
                   day: 'numeric',
                 })}
                 onChange={(e) => {
-                  window.location.replace('/schedule?date=' + e.target.value);
+                  window.location.replace('/schedule/' + e.target.value);
                 }}
               />
               <div className="font-semibold text-md text-center w-[95%] text-lightMainColor outline-none dark:text-darkMainColor bg-lightMainBG dark:bg-darkMainBG absolute top-0 left-0">

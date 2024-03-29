@@ -126,7 +126,7 @@ const Navbar = ({ path, locale, children }: Props) => {
           icon: 'Home2',
         },
         {
-          url: '/schedule',
+          url: '/schedule/0',
           title: 'Shedule Tool',
           icon: 'Schedule',
         },
@@ -164,7 +164,7 @@ const Navbar = ({ path, locale, children }: Props) => {
           icon: 'Home2',
         },
         {
-          url: '/schedule',
+          url: '/schedule/0',
           title: 'Shedule Tool',
           icon: 'Schedule',
         },

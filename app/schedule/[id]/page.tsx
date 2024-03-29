@@ -1,7 +1,7 @@
 'use client';
 import { FC, useEffect, useState } from 'react';
-import LoadingScreen from '../../components/LoadingScreen';
-import { PageWrapper } from '../../components/page-wrapper';
+import LoadingScreen from '../../../components/LoadingScreen';
+import { PageWrapper } from '../../../components/page-wrapper';
 import ImgFromDb from '@/components/ImgFromDb';
 import { useSession } from 'next-auth/react';
 import AlertMenu from '@/components/alertMenu';
@@ -14,14 +14,14 @@ import EditScheduleModal from '@/components/EditScheduleModal';
 import { useDimensions } from '@/hooks/useDimensions';
 import sleep from '@/utils/functions';
 import FullDayScheduleView from '@/components/FullDayScheduleView';
-import { useSearchParams } from 'next/navigation';
 
 
 
-const page: FC = () => {
-  const searchParams = useSearchParams()
-  const selectedDate = searchParams.get ("date") || null;
-
+export default function Page ({ params }: { params: { id: string } }) { 
+  let selectedDate =null;
+  if (params.id !=="0") {
+    selectedDate = params.id;
+  }
   const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
   const [revealAlert, setRevealAlert] = useState(false);
@@ -348,7 +348,7 @@ const page: FC = () => {
                             parseInt(d.value) < 10
                               ? (dayStr += '0' + d.value)
                               : (dayStr += d.value);
-                            window.location.replace('/schedule?date=' + dayStr);
+                            window.location.replace('/schedule/' + dayStr);
                             
                           }
                         }}
@@ -368,6 +368,4 @@ const page: FC = () => {
       </div>
     </PageWrapper>
   );
-};
-
-export default page;
+}
