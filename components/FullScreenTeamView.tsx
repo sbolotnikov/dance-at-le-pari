@@ -21,6 +21,7 @@ const FullScreenTeamView = ({ pictures, index, onReturn }: Props) => {
   const [firstTime, setFirstTime] = useState(true);
   const [activePic, setActivePic] = useState(index);
   const [nextActivePic, setNextActivePic] = useState(index);
+  const [containerHeight, setContainerHeight] = useState(50);
   let seconds = 5;
 
   useEffect(() => {
@@ -77,6 +78,10 @@ const FullScreenTeamView = ({ pictures, index, onReturn }: Props) => {
         });
     } else setFirstTime(false);
   }, [nextActivePic]);
+  useEffect(() => {
+    setContainerHeight((document.getElementById(`textNext`)?.offsetHeight!>50)? document.getElementById(`textNext`)?.offsetHeight!:50);
+    console.log(document.getElementById(`textNext`)?.offsetHeight!);
+  },[windowSize.height, windowSize.width]);
   return (
     <AnimateModalLayout
       visibility={isVisible}
@@ -102,8 +107,8 @@ const FullScreenTeamView = ({ pictures, index, onReturn }: Props) => {
             className={`w-[98%] h-1/4 md:h-3/4 md:w-5/12 md:max-h-[80%]  
              rounded-md p-2  bg-darkMainColor dark:bg-lightMainColor`}
           >
-            <div className="w-full h-full border rounded-md border-lightMainColor dark:border-darkMainColor relative overflow-y-scroll flex flex-col justify-center items-center"
-            style={{ flex: '1 1 100%' }}
+            {containerHeight>50 &&<div className='w-full  border rounded-md border-lightMainColor dark:border-darkMainColor relative overflow-y-scroll flex flex-col justify-center items-center'
+            style={{height: (containerHeight-15)+'px'}}
             >
               <section className=" absolute top-0 left-0 flex flex-col justify-center items-center  p-2  w-[98%] mx-auto">
                 <strong className="font-bold text-4xl md:text-6xl text-franceBlue  text-center font-DancingScript text-shadow">
@@ -120,7 +125,7 @@ const FullScreenTeamView = ({ pictures, index, onReturn }: Props) => {
                   {pictures[nextActivePic].bio}
                 </div>
               </section>
-            </div>
+            </div>}
           </div>
         </div>
         <div className="w-full h-full absolute top-0 left-0">
@@ -142,9 +147,11 @@ const FullScreenTeamView = ({ pictures, index, onReturn }: Props) => {
               <div
                 id={'text_' + index}
                 className={`w-[98%] h-1/4 md:h-3/4 md:w-5/12 md:max-h-[80%]  
-             rounded-md p-2  bg-lightMainBG/70 dark:bg-darkMainBG/70 `}
+             rounded-md p-2  bg-darkMainColor dark:bg-lightMainColor`}
               >
-                <div className="w-full h-full border rounded-md border-lightMainColor dark:border-darkMainColor relative overflow-y-scroll flex flex-col justify-center items-center">
+                {containerHeight>50 &&<div  className='w-full border rounded-md border-lightMainColor dark:border-darkMainColor relative overflow-y-scroll flex flex-col justify-center items-center'
+                style={{height: (containerHeight-15)+'px'}}
+                >
                   <section className=" absolute top-0 left-0 flex flex-col justify-center items-center  p-2  w-[98%] mx-auto">
                     <strong className="font-bold text-4xl md:text-6xl text-franceBlue  text-center font-DancingScript text-shadow">
                       {item.capture}
@@ -158,7 +165,7 @@ const FullScreenTeamView = ({ pictures, index, onReturn }: Props) => {
                     </span>
                     <div className=" w-full  md:text-xl">{item.bio}</div>
                   </section>
-                </div>
+                </div>}
               </div>
             </div>
           ))}
