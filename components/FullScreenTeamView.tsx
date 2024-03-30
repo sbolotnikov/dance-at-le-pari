@@ -33,11 +33,12 @@ const FullScreenTeamView = ({ pictures, index, onReturn }: Props) => {
       imgEl!.style.opacity = '1';
 
       let textEl = document.getElementById(`text_${activePic}`);
+      textEl!.style.opacity = '1';
       let imgEl1 = document.getElementById(`imageNext`);
-      let textEl1 = document.getElementById(`textNext`);
+      // let textEl1 = document.getElementById(`textNext`);
       imgEl1!.style.opacity = '0';
       imgEl1!.style.filter = 'url(#noise)';
-      textEl1!.style.opacity = '0';
+      // textEl1!.style.opacity = '0';
       console.log('anime');
       gsap
         .timeline()
@@ -52,16 +53,16 @@ const FullScreenTeamView = ({ pictures, index, onReturn }: Props) => {
         duration: seconds * 0.8,
         stagger: 0,
       });
-      gsap.timeline().to(textEl, {
-        opacity: 0,
-        duration: seconds * 0.8,
-        stagger: 0,
-      });
-      gsap.timeline().to(textEl1, {
-        opacity: 1,
-        duration: seconds * 0.7,
-        stagger: seconds * 0.2,
-      });
+      // gsap.timeline().to(textEl, {
+      //   opacity: 0,
+      //   duration: seconds * 0.8,
+      //   stagger: 0,
+      // });
+      // gsap.timeline().to(textEl1, {
+      //   opacity: 1,
+      //   duration: seconds * 0.7,
+      //   stagger: seconds * 0.2,
+      // });
       gsap
         .timeline()
         .to(imgEl1, {
@@ -73,7 +74,7 @@ const FullScreenTeamView = ({ pictures, index, onReturn }: Props) => {
           imgEl!.style.filter = '';
           imgEl1!.style.filter = '';
           imgEl!.style.opacity = '0';
-          textEl!.style.opacity = '0';
+          // textEl!.style.opacity = '0';
           setActivePic(nextActivePic);
         });
     } else setFirstTime(false);
