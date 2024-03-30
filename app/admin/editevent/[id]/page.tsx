@@ -34,7 +34,6 @@ export default function Page({ params }: { params: { id: string } }) {
   const [title, setTitle] = useState('');
   const [tag, setTag] = useState('');
   const [specialEvent, setSpecialEvent] = useState(false);
-  const windowSize = useDimensions();
   const [eventDateTime, setEventDateTime] = useState('');
   const [alertStyle, setAlertStyle] = useState({
     variantHead: '',

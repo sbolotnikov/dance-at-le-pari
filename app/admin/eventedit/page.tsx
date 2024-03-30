@@ -3,7 +3,6 @@ import { FC, useEffect, useState, useRef } from 'react';
 import { PageWrapper } from '@/components/page-wrapper';
 import EventTemplateEditingForm from '@/components/EventTemplateEditingForm';
 import ShowIcon from '@/components/svg/showIcon';
-import Image from 'next/image';
 import { TTemplateSmall } from '@/types/screen-settings';
 import ImgFromDb from '@/components/ImgFromDb';
 import AlertMenu from '@/components/alertMenu';
