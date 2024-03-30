@@ -1,5 +1,4 @@
 import { TDaySchedule } from '@/types/screen-settings';
-import Link from 'next/link';
 type Props = {
   day: TDaySchedule;
   users: { id: number; name: string; color: string | null }[];

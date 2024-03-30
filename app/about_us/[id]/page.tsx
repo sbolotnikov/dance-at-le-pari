@@ -9,10 +9,7 @@ import { useContext, useEffect, useState } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import ShowIcon from '@/components/svg/showIcon';
 import ImgFromDb from '@/components/ImgFromDb';
-import {
-  ScreenSettingsContextType,
-  TPictureWithCapture,
-} from '@/types/screen-settings';
+import { ScreenSettingsContextType } from '@/types/screen-settings';
 import FullScreenTeamView from '@/components/FullScreenTeamView';
 import Link from 'next/link';
 import { SettingsContext } from '@/hooks/useSettings';
