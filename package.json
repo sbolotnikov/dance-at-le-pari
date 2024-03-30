@@ -1,6 +1,9 @@
 {
-  "name": "payment_system",
-  "version": "0.1.0",
+  "name": "dance-at-le-pari-dance-studio",
+  "version": "1.1.0",
+  "description": "dance studio running in Next js  app",
+  "author": "Sergey Bolotnikov",
+  "license": "MIT",
   "private": true,
   "scripts": {
     "dev": "next dev",
