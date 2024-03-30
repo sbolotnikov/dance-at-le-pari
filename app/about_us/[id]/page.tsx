@@ -14,6 +14,7 @@ import FullScreenTeamView from '@/components/FullScreenTeamView';
 import Link from 'next/link';
 import { SettingsContext } from '@/hooks/useSettings';
 import { useSession } from 'next-auth/react';
+import { useDimensions } from '@/hooks/useDimensions';
 
 
 export default function Page ({ params }: { params: { id: string } }) {
@@ -45,6 +46,7 @@ export default function Page ({ params }: { params: { id: string } }) {
   const [tabIndex, setTabIndex] = useState(
     ((selectedTab !== null) && (parseInt(selectedTab)>=0) && (parseInt(selectedTab)<4))  ? parseInt(selectedTab) : 0
   );
+  const windowSize = useDimensions();
   const [alertStyle, setAlertStyle] = useState({
     variantHead: '',
     heading: '',
@@ -150,7 +152,7 @@ export default function Page ({ params }: { params: { id: string } }) {
           </div>
 
           <TabList
-            className="h-[2.43rem] w-full p-0.5 flex flex-row justify-start items-start flex-wrap rounded-t-md  dark:bg-lightMainBG  bg-darkMainBG"
+            className="h-[2.43rem] w-full p-0.5 flex flex-row justify-between items-start flex-wrap rounded-t-md  dark:bg-lightMainBG  bg-darkMainBG"
             style={{
               backgroundImage:
                 'linear-gradient(0deg, rgba(63, 62, 211,0.2) 0%, rgba(63, 62, 211,0.2) 16.667%,rgba(73, 92, 210,0.2) 16.667%, rgba(73, 92, 210,0.2) 33.334%,rgba(101, 183, 208,0.2) 33.334%, rgba(101, 183, 208,0.2) 50.001%,rgba(92, 153, 209,0.2) 50.001%, rgba(92, 153, 209,0.2) 66.668%,rgba(82, 122, 209,0.2) 66.668%, rgba(82, 122, 209,0.2) 83.335%,rgba(111, 213, 207,0.2) 83.335%, rgba(111, 213, 207,0.2) 100.002%),linear-gradient(45deg, rgba(63, 62, 211,0.2) 0%, rgba(63, 62, 211,0.2) 16.667%,rgba(73, 92, 210,0.2) 16.667%, rgba(73, 92, 210,0.2) 33.334%,rgba(101, 183, 208,0.2) 33.334%, rgba(101, 183, 208,0.2) 50.001%,rgba(92, 153, 209,0.2) 50.001%, rgba(92, 153, 209,0.2) 66.668%,rgba(82, 122, 209,0.2) 66.668%, rgba(82, 122, 209,0.2) 83.335%,rgba(111, 213, 207,0.2) 83.335%, rgba(111, 213, 207,0.2) 100.002%),linear-gradient(90deg, rgba(63, 62, 211,0.2) 0%, rgba(63, 62, 211,0.2) 16.667%,rgba(73, 92, 210,0.2) 16.667%, rgba(73, 92, 210,0.2) 33.334%,rgba(101, 183, 208,0.2) 33.334%, rgba(101, 183, 208,0.2) 50.001%,rgba(92, 153, 209,0.2) 50.001%, rgba(92, 153, 209,0.2) 66.668%,rgba(82, 122, 209,0.2) 66.668%, rgba(82, 122, 209,0.2) 83.335%,rgba(111, 213, 207,0.2) 83.335%, rgba(111, 213, 207,0.2) 100.002%),linear-gradient(90deg, rgb(118, 34, 211),rgb(55, 13, 228))',
@@ -160,12 +162,12 @@ export default function Page ({ params }: { params: { id: string } }) {
               return (
                 <Tab
                   key={item}
+                  style={{width:((windowSize.width! < 400)&&(tabIndex != index))?(windowSize.width! < 343)?'2.6rem':'4rem': 'fit-content'}}
                   className={` mt-1 p-1 cursor-pointer outline-0 border ${
                     tabIndex != index
                       ? ` truncate `
                       : 'border-2 md:border-4 border-yellow-600 text-yellow-600 dark:border-yellow-600 dark:text-yellow-600'
-                  } rounded-t-lg   text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG`}
-                >
+                  } rounded-t-lg   text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG`}                >
                   {item}
                 </Tab>
               );
@@ -194,17 +196,17 @@ export default function Page ({ params }: { params: { id: string } }) {
                 />
               </div>
               <div
-                className="cursor-pointer h-[300px] w-[300px] md:h-[450px] md:w-[450px] md:mt-10 mb-10"
+                className="cursor-pointer h-[300px] w-full w-max-[450px] md:h-[450px]  mx-auto md:mt-10 mb-10"
                 onClick={() => {
                   setRevealGallery(true);
                 }}
               >
-                {!revealGallery && (
+                {!revealGallery && windowSize.width!=undefined && (
                   <Gallery
                     pictures={galeryPictures}
                     auto={true}
                     seconds={8}
-                    width={'400px'}
+                    width={(windowSize.width!<450)?windowSize.width!+'px':'450px'}
                     height={'300px'}
                   />
                 )}

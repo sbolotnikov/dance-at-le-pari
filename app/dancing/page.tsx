@@ -197,16 +197,15 @@ const page: FC<pageProps> = ({}) => {
                 Terms & Conditions here:
               </button>
             </div>
-            <TabList className="h-[2.43rem] w-full flex flex-row justify-start items-start flex-wrap rounded-t-md  dark:bg-lightMainBG  bg-darkMainBG">
+            <TabList className="h-[2.43rem] w-full flex flex-row justify-between items-start flex-wrap rounded-t-md  dark:bg-lightMainBG  bg-darkMainBG">
               {tabsArray.map((item, index) => {
                 return (
                   <Tab
                     key={item}
+                    style={{width:((windowSize.width! < 640)&&(tabIndex != index))?(windowSize.width! < 434)?(windowSize.width! < 350)?'1.7rem':'2.8rem':'4rem': 'fit-content'}}
                     className={` mt-1 p-1 cursor-pointer outline-0 border ${
                       tabIndex != index
-                        ? ` truncate ${
-                          windowSize.width! < 640 ? 'w-12' : ''
-                        }`
+                        ? ` truncate `
                         : 'border-2 md:border-4 border-yellow-600 text-yellow-600 dark:border-yellow-600 dark:text-yellow-600'
                     } rounded-t-lg   text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG`}
                   >

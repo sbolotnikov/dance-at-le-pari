@@ -225,16 +225,15 @@ const Gallery = ({ pictures, auto,particles, seconds, width, height }: Props) =>
             src={item.urlData}
             alt={item.urlData}
             
-            style={{objectFit: "contain"}}
-            className={`absolute inset-0 m-auto ${
-              index !== activePic ? 'opacity-0' : 'opacity-100'
-            }`}
+            style={{objectFit: "contain", opacity: index !== activePic ? 0 : 100}}
+            className={`absolute inset-0 m-auto  `}
           />
           <h2
             id={'text_' + index}
-            className={`w-full mb-12 text-center absolute bottom-0 right-0 z-100 bg-lightMainBG/70 dark:bg-darkMainBG/70 ${
-              index !== activePic ? 'opacity-0' : 'opacity-100'
-            }`}
+            style={{
+              opacity: index!== activePic? 0 : 100,
+            }}
+            className={`w-full mb-12 text-center absolute bottom-0 right-0 z-100 bg-lightMainBG/70 dark:bg-darkMainBG/70 `}
           >
             {item.capture}
           </h2>
