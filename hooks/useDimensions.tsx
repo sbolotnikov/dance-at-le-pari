@@ -1,6 +1,6 @@
 'use client'
 import { createContext, useContext, useState, useEffect } from 'react';
-// possible server side rendering issue
+
 
 
 export const useDimensions = () => {
