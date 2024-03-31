@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import { TDay, TEventArray } from '@/types/screen-settings';
 export const useDate = (events: TEventArray, nav: number) => {
   const [dateDisplay, setDateDisplay] = useState('');

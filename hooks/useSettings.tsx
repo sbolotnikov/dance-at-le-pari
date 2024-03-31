@@ -1,5 +1,5 @@
-import { ScreenSettingsContextType, IScreenSettings, TEventArray } from '@/types/screen-settings';
-import { createContext, useContext, useState, useEffect } from 'react';
+import { ScreenSettingsContextType,  TEventArray } from '@/types/screen-settings';
+import { createContext, useState, useEffect } from 'react';
 type Props = {
     children?: React.ReactNode;
   };
