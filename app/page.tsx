@@ -2,10 +2,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { PageWrapper } from '@/components/page-wrapper';
-import { useContext, useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
+import { useContext } from 'react';
 import BannerGallery from '@/components/BannerGallery';
-import { ScreenSettingsContextType, TEventArray } from '@/types/screen-settings';
+import { ScreenSettingsContextType } from '@/types/screen-settings';
 import { SettingsContext } from '@/hooks/useSettings';
 
 export default function Home() {
@@ -13,8 +12,7 @@ export default function Home() {
   const { events } = useContext(
     SettingsContext
   ) as ScreenSettingsContextType;
-
-  const { data: session } = useSession();
+ 
   
   // {date:"2023-10-19T20:00",eventtype:"Party",id: 43, image:"cln5j37qp0000sl0g8xip7j0p",tag:"East Coast Swing" }
   let departmentsArray = [
