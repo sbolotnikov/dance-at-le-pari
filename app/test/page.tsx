@@ -1,10 +1,7 @@
 'use client';
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import LoadingScreen from '../../components/LoadingScreen';
 import { PageWrapper } from '../../components/page-wrapper';
-import QRCode from 'react-qr-code';
-import * as htmlToImage from 'html-to-image';
-import { toBlob } from 'html-to-image';
 import ReceiptModal from '@/components/ReceiptModal';
 interface pageProps {}
 
