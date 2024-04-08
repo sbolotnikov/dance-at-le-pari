@@ -69,12 +69,12 @@ export const useDate = (events: TEventArray, nav: number) => {
         });
       }
     }
-    if (daysArr.length > 35) {
-      for (let i = 35; i <= daysArr.length - 1; i++) {
-        daysArr[i - 35] = daysArr[i];
-      }
-      daysArr.splice(35, daysArr.length - 34);
-    }
+    // if (daysArr.length > 35) {
+    //   for (let i = 35; i <= daysArr.length - 1; i++) {
+    //     daysArr[i - 35] = daysArr[i];
+    //   }
+    //   daysArr.splice(35, daysArr.length - 34);
+    // }
     setDays(daysArr);
   }, [events, nav]);
 
