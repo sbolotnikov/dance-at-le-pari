@@ -5,6 +5,7 @@ import AlertMenu from '@/components/alertMenu';
 import { PageWrapper } from '@/components/page-wrapper';
 import ChooseAvatar from '@/components/chooseAvatar';
 import { deleteImage } from '@/utils/picturemanipulation';
+import { useDimensions } from '@/hooks/useDimensions';
 
 interface UserType {
   name: string;
@@ -24,7 +25,8 @@ function page() {
   const [revealAlert, setRevealAlert] = useState(false);
   const [revealAvatarSelect, setRevealAvatarSelect] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserType>({} as UserType);
-  const [dimensions, setDimensions] = useState({ height: 0, width: 0 });
+  // const [dimensions, setDimensions] = useState({ height: 0, width: 0 });
+  const dimensions = useDimensions();
 
   console.log(dimensions);
   const [alertStyle, setAlertStyle] = useState({
@@ -56,7 +58,7 @@ function page() {
         setUsersDisplay(data);
       });
     });
-    setDimensions({ height: window.innerHeight, width: window.innerWidth });
+    // setDimensions({ height: window.innerHeight, width: window.innerWidth });
     // document.getElementById('userContainer')?.style({height:`[${window.innerHeight-100}px]`});
   }, []);
   const handleDelete = (id: number, name: string) => {
