@@ -22,7 +22,16 @@ module.exports = withTM({
       'localhost',
       'dance-at-le-pari.vercel.app',
       'lh3.googleusercontent.com',
+      'i3.ytimg.com',
     ],
+      remotePatterns: [
+        {
+          protocol: 'https',
+          hostname: 'i3.ytimg.com',
+          port: '',
+          pathname: '/vi/**',
+        },
+      ],
   },
 });
 

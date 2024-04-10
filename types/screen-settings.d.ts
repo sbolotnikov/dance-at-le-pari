@@ -6,6 +6,7 @@ export interface IScreenSettings {
     changeTheme: (a:boolean) => void;
     events:TEventArray;
     hours:string[];
+    dances:TDance[];
   };
   
   export type TEvent = {
@@ -120,3 +121,14 @@ teacher:string | null,
     image: string;
     eventtype: string;
  }
+ type TDance = {
+    name: string;
+    img: string;
+    videoLink: string;
+    short: string;
+    poem: string;
+    songs: {
+        title: string;
+        link: string;
+    }[];
+}

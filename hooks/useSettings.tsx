@@ -1,5 +1,6 @@
-import { ScreenSettingsContextType,  TEventArray } from '@/types/screen-settings';
-import { createContext, useState, useEffect } from 'react';
+import dataObject from '@/DataObject';
+import { ScreenSettingsContextType,  TDance,  TEventArray } from '@/types/screen-settings';
+import { createContext, useState, useEffect } from 'react'; 
 type Props = {
     children?: React.ReactNode;
   };
@@ -10,6 +11,7 @@ export const SettingsProvider = ({ children }: Props) => {
     const [darkMode, setDarkMode] = useState (false);
     const [events, setEvents] = useState<TEventArray>([]);
     const [hours, setHours] = useState<string[]>([]);
+    const [dances, setDances] = useState<TDance[]>(dataObject.dances);
     const changeTheme =(theme:boolean)=>{
         setDarkMode (theme);
     }
@@ -28,7 +30,7 @@ export const SettingsProvider = ({ children }: Props) => {
         }).catch((error) => {console.log(error);})
     },[])
       return (
-        <SettingsContext.Provider value={{darkMode, changeTheme,events, hours}}>
+        <SettingsContext.Provider value={{darkMode, changeTheme,events, hours, dances }}>
           { children}
         </SettingsContext.Provider>
       );
