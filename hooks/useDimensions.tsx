@@ -10,7 +10,7 @@ export const useDimensions = () => {
       });
     
       useEffect(() => {
-        const handleResize = () =>{ if (window) setWindowSize({ width: window.innerWidth, height: window.innerHeight });}
+        const handleResize = () =>{ if (typeof window !== "undefined") setWindowSize({ width: window.innerWidth, height: window.innerHeight });}
         
     
         window.addEventListener('resize', handleResize);
