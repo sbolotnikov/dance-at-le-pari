@@ -6,6 +6,7 @@ import { ContextMenu } from './ContextMenu';
 import { useDimensions } from '@/hooks/useDimensions';
 import { useOnOutsideClick } from '@/hooks/useOnOutsideClick';
 import { PopupContext, PopupContextType } from '@/hooks/usePopupContext';
+import { useRouter } from 'next/navigation';
 type User = {
   id: number;
   name: string;
@@ -50,6 +51,7 @@ const FullDayScheduleView = ({
   onNewEventClick,
 }: Props) => {
   const [revealAlert, setRevealAlert] = useState(false);
+  const router = useRouter()
   const [alertStyle, setAlertStyle] = useState({
     variantHead: '',
     heading: '',
@@ -94,7 +96,7 @@ const FullDayScheduleView = ({
           id: selectedEventItem?.id,
         }),
       }).then(() => {
-        window.location.replace('/schedule/' + day);
+        router.replace('/schedule/' + day);
       });
     }
   };
@@ -301,7 +303,7 @@ const FullDayScheduleView = ({
             }),
           });
         }
-        window.location.replace('/schedule/' + day);
+        router.replace('/schedule/' + day);
       }
       //paste logic
     } else if (str === 'Move') {
@@ -371,7 +373,7 @@ const FullDayScheduleView = ({
                   day: 'numeric',
                 })}
                 onChange={(e) => {
-                  window.location.replace('/schedule/' + e.target.value);
+                  router.replace('/schedule/' + e.target.value);
                 }}
               />
               <div className="font-semibold text-md text-center w-[95%] text-lightMainColor outline-none dark:text-darkMainColor bg-lightMainBG dark:bg-darkMainBG absolute top-0 left-0">

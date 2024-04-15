@@ -46,7 +46,7 @@ const page: FC<pageProps> = ({}) => {
         </h2>
         <BoxClickable title="Why Take Wedding Dance Lessons?">
           <div className=" w-full  overflow-auto">
-            <ul className="list-disc w-full ">
+            <ol className="list-decimal list-inside">
               <li className="m-2">
                 <b>Celebrate Love:</b><br/>
                 <span>
@@ -82,7 +82,7 @@ const page: FC<pageProps> = ({}) => {
                   last a lifetime. 📸
                 </span>
               </li>
-            </ul>
+            </ol>
           </div>
         </BoxClickable>
         <BoxClickable

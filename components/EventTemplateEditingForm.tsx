@@ -143,8 +143,8 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
       validationError = 'Enter price in range $0 to $10000';
       // make name input red
       document.querySelector('#price')!.classList.add('invalid_input');
-    } else if (tag.length > 30 || tag.length < 2) {
-      validationError = 'Enter tag in range of 3 to 30 symbols';
+    } else if (tag.length > 60 || tag.length < 2) {
+      validationError = 'Enter tag in range of 3 to 60 symbols';
       // make message input red
       document.querySelector('#tag')!.classList.add('invalid_input');
     }

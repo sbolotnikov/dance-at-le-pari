@@ -56,7 +56,7 @@ const page: FC<pageProps> = ({}) => {
   const onReturnAlert = (decision1: string, inputValue: string | null) => {
     setRevealAlert(false);
     console.log(decision1, inputValue);
-    window.location.reload();
+    location.reload();
   };
   const statuses = ['Purchased', 'Used', 'Pending'];
   const { data: session } = useSession();

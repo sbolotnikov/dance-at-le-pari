@@ -42,7 +42,7 @@ const FullDayCalendarView = ({ events, onReturn, day }: Props) => {
           id: eventID,
         }),
       }).then(() => {
-        window.location.reload();
+        location.reload();
       });
     }
 

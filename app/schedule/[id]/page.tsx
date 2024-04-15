@@ -2,7 +2,6 @@
 import { FC, useEffect, useState } from 'react';
 import LoadingScreen from '../../../components/LoadingScreen';
 import { PageWrapper } from '../../../components/page-wrapper';
-import ImgFromDb from '@/components/ImgFromDb';
 import { useSession } from 'next-auth/react';
 import AlertMenu from '@/components/alertMenu';
 import { CalendarHeader } from '@/components/CalendarHeader';
@@ -352,7 +351,6 @@ export default function Page ({ params }: { params: { id: string } }) {
                               setClicked(dayStr)  
                               setRevealDayView(true)
                             }
-                            // window.location.replace('/schedule/' + dayStr);
                             
                           }
                         }}

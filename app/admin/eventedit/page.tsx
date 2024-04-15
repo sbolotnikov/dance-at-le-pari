@@ -14,9 +14,7 @@ interface pageProps {}
 
 const page: FC<pageProps> = ({}) => {
   const [revealTemplateEdit, setRevealTemplateEdit] = useState(false);
-  const [displayTemplates, setDisplayTemplates] = useState<TTemplateSmall[]>(
-    []
-  );
+  const [displayTemplates, setDisplayTemplates] = useState<TTemplateSmall[]>([]);
   const dateTimeRef = useRef<HTMLInputElement>(null);
   const [complexEvent, setComplexEvent] = useState<boolean>(false);
   const [seatsPerTable, setSeatsPerTable] = useState<Number[]>([8, 7]);
@@ -65,10 +63,11 @@ const page: FC<pageProps> = ({}) => {
           id: delTemplateID,
         }),
       }).then(() => {
-        window.location.reload();
+        location.reload();
       });
     }
-  };
+    if (decision1 === 'Ok') location.reload();
+  }
   const refreshTemplates = () => {
     fetch('/api/admin/get_event_templates', {
       method: 'GET',

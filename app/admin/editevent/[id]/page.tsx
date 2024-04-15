@@ -12,10 +12,11 @@ import sleep from '@/utils/functions';
 import { useEffect, useState } from 'react';
 import ChooseTeacher from '@/components/ChooseTeacher';
 import { TTeacherInfo } from '@/types/screen-settings';
-import { useDimensions } from '@/hooks/useDimensions';
+import { useRouter } from 'next/navigation';
 
 export default function Page({ params }: { params: { id: string } }) {
   const [eventData, setEventData] = useState<TFullEvent>();
+  const router = useRouter();
   const [revealCloud, setRevealCloud] = useState(false);
   const [revealCloud1, setRevealCloud1] = useState(false);
   const [revealCloud2, setRevealCloud2] = useState(false);
@@ -88,8 +89,8 @@ export default function Page({ params }: { params: { id: string } }) {
     setRevealAlert(false);
     if (decision1 == 'Cancel') {
     }
-    if (decision1 == 'Ok') {
-      window.location.reload();
+    if (decision1 == 'Ok') { 
+      window.location.reload(); 
     }
     if (decision1 == 'Update Table') {
       let eventDataCopy = eventData;
@@ -307,8 +308,8 @@ export default function Page({ params }: { params: { id: string } }) {
       validationError = 'Enter price in range $0 to $10000';
       // make name input red
       document.querySelector('#price')!.classList.add('invalid_input');
-    } else if (tag.length > 30 || tag.length < 2) {
-      validationError = 'Enter tag in range of 3 to 30 symbols';
+    } else if (tag.length > 60 || tag.length < 2) {
+      validationError = 'Enter tag in range of 3 to 60 symbols';
       // make message input red
       document.querySelector('#tag')!.classList.add('invalid_input');
     }

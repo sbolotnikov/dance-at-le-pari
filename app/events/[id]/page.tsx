@@ -45,7 +45,7 @@ export default function Page({ params }: { params: { id: string } }) {
           id: parseInt(params.id),
         }),
       }).then(() => {
-        window.location.replace('/calendar');
+        location.replace('/calendar');
       });
     }
   };
@@ -216,7 +216,7 @@ export default function Page({ params }: { params: { id: string } }) {
                       className=" outline-none border-none fill-editcolor  stroke-editcolor  rounded-md border-editcolor p-1 w-8 h-8"
                       onClick={(e) => {
                         e.preventDefault();
-                        window.location.replace(
+                        location.replace(
                           '/admin/editevent/' + params.id
                         );
                         return;

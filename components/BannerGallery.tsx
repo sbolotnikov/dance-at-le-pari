@@ -96,7 +96,7 @@ const BannerGallery = ({ seconds, events }: Props) => {
         className=" absolute top-8 -right-16  cursor-pointer  "
         style={{ transform: 'translate(0%, -50%)' }}
         onClick={() => {
-          window.location.replace('/events/' + events![activePic].id);
+          location.replace('/events/' + events![activePic].id);
         }}
       >
         <div className="text-lg italic  hover:scale-125  dark:fill-darkMainColor dark:stroke-darkMainColor fill-lightMainColor stroke-lightMainColor flex flex-row justify-between items-center">

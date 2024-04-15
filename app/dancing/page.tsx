@@ -100,7 +100,7 @@ const page: FC<pageProps> = ({}) => {
           id: templateID,
         }),
       }).then(() => {
-        window.location.reload();
+        location.reload();
       });
     }
   };

@@ -32,7 +32,7 @@ function UserForm(props: UserType) {
       }),
     });
     console.log(res);
-    window.location.reload();
+    location.reload();
   };
   const handleDelete = () => {
     props.delUser(props.user.id, props.user.name);

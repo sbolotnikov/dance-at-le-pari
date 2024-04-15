@@ -60,7 +60,7 @@ export const DaySchedule = ({ day, users,role, onClick, onEventClick }: Props) =
                   })}
                 {event.tag.length > 0
                   ? ' ' + event.tag
-                  : ' ' + ((role=='Student')? getName(event.teachersid[0]) : getName(event.studentid[0]))}
+                  : ' ' + ((role=='Student')? getName(event.teachersid[0]) : (event.studentid.length>0)?getName(event.studentid[0]):"")}
               </div>
             ))}
             <span className='h-2 w-2'> </span>

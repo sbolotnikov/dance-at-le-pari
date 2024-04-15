@@ -54,6 +54,7 @@ function page() {
     }).then((res) => {
       res.json().then((data) => {
         console.log(data);
+        let dataArray=data.sort((a:UserType,b:UserType) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
         setUsers(data);
         setUsersDisplay(data);
       });
@@ -103,7 +104,7 @@ function page() {
           id: selectedId,
         }),
       }).then(() => {
-        window.location.reload();
+        location.reload();
       });
     } else setSelectedId(0);
   };
