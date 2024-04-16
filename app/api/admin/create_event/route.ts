@@ -19,7 +19,6 @@ export  async function POST(
     if (repeating == true && interval! > 0) {
       let time1=date
       .split('T')[1];
-      // if (time1.length==4) time1='0'+time1;
       let dateObj = Date.parse(date);
       
       let newDateOBJ = new Date(dateObj + interval!);
