@@ -413,6 +413,7 @@ const FullDayScheduleView = ({
                   <option value={30}>30 minutes</option>
                   <option value={45}>45 minutes</option>
                   <option value={60}>1 hour</option>
+                  <option value={90}>1h 30min</option>
                 </select>
               </label>
             </div>

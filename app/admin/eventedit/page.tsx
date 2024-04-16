@@ -29,6 +29,11 @@ const page: FC<pageProps> = ({}) => {
   const [scrolling, setScrolling] = useState(true);
   const containerRef = useRef<HTMLInputElement>(null);
   const windowSize = useDimensions();
+  const [repeating, setRepeating] = useState(false);
+  const [repeatInterval, setRepeatInterval] = useState<number>(0);
+  const [eventDateTime1, setEventDateTime1] = useState('');
+  const [eventDateTime2, setEventDateTime2] = useState('');
+  const [eventDateTimeEnd, setEventDateTimeEnd] = useState('');
   const [alertStyle, setAlertStyle] = useState({
     variantHead: '',
     heading: '',
@@ -227,6 +232,51 @@ const page: FC<pageProps> = ({}) => {
                   required
                 />
               </label>
+              <label className="flex flex-row justify-between items-center mb-1">
+                Repeating Event
+                <input
+                  className=" outline-none border-none rounded-md  text-lightMainColor p-0.5 mx-1"
+                  id="reapetingEvent"
+                  name="reapetingEvent"
+                  type="checkbox"
+                  checked={repeating}
+                  onChange={(e) => {
+                    setRepeating(!repeating);
+                  }}
+                />
+              </label>
+              {repeating && (
+              <label className="flex flex-row m-auto justify-between items-center">
+                Interval of repeating
+                <select
+                  className="bg-main-bg m-2 rounded-md bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor"
+                  value={repeatInterval}
+                  onChange={(e) => {
+                    setRepeatInterval(parseInt(e.target.value));
+                  }}
+                >
+                  <option value={0}>None</option>
+                  <option value={24 * 3600000}>Every Day</option>
+                  <option value={24 * 3600000 * 7}>Every Week</option>
+                  <option value={24 * 3600000 * 14}>Every 2 Week</option>
+                </select>
+              </label>
+            )}
+            {repeating && (
+              <label className="flex flex-row justify-between items-center">
+                End of interval date
+                <input
+                  className="flex-1 outline-none border-none rounded-md   text-lightMainColor p-0.5 mx-1"
+                  value={eventDateTimeEnd}
+                  onChange={(e) => {
+                    if (e.target.value >= eventDateTime1)
+                      setEventDateTimeEnd(e.target.value);
+                  }}
+                  type="datetime-local"
+                  required
+                />
+              </label>
+            )}
               <div className="flex flex-col justify-center items-center border border-lightMainColor dark:border-darkMainColor rounded-md p-1 m-1">
                 <label
                   className="flex flex-row cursor-pointer justify-center text-center items-start"
@@ -431,6 +481,9 @@ const page: FC<pageProps> = ({}) => {
                       location: template1.location,
                       description: template1.description,
                       visible: template1.visible,
+                      repeating: repeating,
+                      interval: repeatInterval,
+                      until: eventDateTimeEnd,
                     }),
                   })
                     .then(async (res) => {
