@@ -135,7 +135,6 @@ function page() {
           console.log(delObj);
         }
         if (res.status === 200) {
-          // setLoading(false);
           setAlertStyle({
             variantHead: 'info',
             heading: 'Message',

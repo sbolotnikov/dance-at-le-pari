@@ -6,10 +6,6 @@ import { NextResponse } from 'next/server';
 export  async function POST(
   req: Request
 ) {
-
-
-
-
     const data = await req.json();
     
     const {date, eventtype, tag, image, templateID, tables,seatmap,length,price,teachersid,title,location,description,visible,repeating,interval,until} = data;
