@@ -10,15 +10,14 @@ export const useDimensions = () => {
       });
     
       useEffect(() => {
-        const handleResize = () =>{ if (typeof window !== "undefined") setWindowSize({ width: window.innerWidth, height: window.innerHeight });}
+        const handleResize = () =>{ if (typeof window !== "undefined") setWindowSize({ width: window!.innerWidth, height: window!.innerHeight });}
         
-    
-        window.addEventListener('resize', handleResize);
+        if (typeof window !== "undefined")  window.addEventListener('resize', handleResize);
     
         handleResize();
     
         return () => {
-          window.removeEventListener('resize', handleResize);
+          if (typeof window !== "undefined") window.removeEventListener('resize', handleResize);
         };
       }, []); 
    
