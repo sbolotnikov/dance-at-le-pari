@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import ShowIcon from './svg/showIcon';
 import { gsap } from '../utils/gsap';
 import ImgFromDb from './ImgFromDb';
+import { useDimensions } from '@/hooks/useDimensions';
 
  
 type Props = {
@@ -15,6 +16,7 @@ const BannerGallery = ({ seconds, events }: Props) => {
 
   const [activePic, setActivePic] = useState(0);
   const [nextActivePic, setNextActivePic] = useState(1);
+  const windowSize = useDimensions();
   const nextActive = (num: number) => {
     let timerInterval = setInterval(function () {
       clearInterval(timerInterval);
@@ -29,9 +31,10 @@ const BannerGallery = ({ seconds, events }: Props) => {
 
  
   useEffect(() => {
+    if (events?.length > 0) 
       nextActive(0);
     
-  }, []);
+  }, [events]);
   console.log(events)
   useEffect(() => {
     if (events!= null ) {
@@ -111,21 +114,23 @@ const BannerGallery = ({ seconds, events }: Props) => {
       </div>
           <h2
             id={'text_' + index}
-            className={`w-full  text-center absolute bottom-0 right-0 z-100 bg-lightMainBG/70 dark:bg-darkMainBG/70`}
+            className={`w-full  text-center text-xs md:text-base absolute bottom-0 right-0 z-100 bg-lightMainBG/70 dark:bg-darkMainBG/70`}
             style={{ display: index !== activePic ? 'none' : 'block' }}
           >
             {item.tag +
-              ' Join us on ' +
-              new Date(item.date).toLocaleDateString('en-us', {
+              `${(windowSize.width!>767)?' Join us on':''} ${(windowSize.width!>767)? new Date(item.date).toLocaleDateString('en-us', {
                 weekday: 'long',
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric',
-              }) +
-              ' at ' +
-              new Date(item.date).toLocaleTimeString('en-US', {
+              }) : new Date(item.date).toLocaleDateString('en-us', {
+                weekday: 'short',
+                year: 'numeric',
+                month: 'numeric',
+                day: 'numeric',
+              })} @ ${new Date(item.date).toLocaleTimeString('en-US', {
                 timeStyle: 'short',
-              })}
+              })}`}
           </h2>
         </div>
       ))}
