@@ -86,7 +86,7 @@ const page: FC<pageProps> = ({}) => {
           </div>
         </BoxClickable>
         <BoxClickable
-        title="Recomended Dances"
+        title="Recommended Dances"
       >
         <div className=" w-full  overflow-auto">
           <DanceDetails onDanceClick={(dance, videolink)=> {
@@ -104,7 +104,7 @@ const page: FC<pageProps> = ({}) => {
           }}/>
         </div>
       </BoxClickable>
-        <BoxClickable title="Recomened Songs" >
+        <BoxClickable title="Recommended Songs" >
           <SongDetails onDanceClick={(dance, videolink)=> {
             setAlertStyle({
               variantHead: 'info',

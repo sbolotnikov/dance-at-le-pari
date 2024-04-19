@@ -23,7 +23,7 @@ function DanceDetails({onDanceClick}:Props) {
       <h1 className="relative text-7xl  font-DancingScript text-red-600">
         {danceChoice.name}
       </h1>
-      <div className=" landscape:h-[30vw] landscape:w-[40vw] portrait:h-[60vw] portrait:w-[80vw] relative flex justify-center items-end m-2">
+      <div className=" md:h-[30vw] md:w-[40vw] h-[60vw] w-[80vw] relative flex justify-center items-center m-2">
         <img
           className="absolute hover:grayscale hover:scale-105 cursor-pointer"
           src={  `https://i3.ytimg.com/vi/${danceChoice.videoLink}/hqdefault.jpg`}

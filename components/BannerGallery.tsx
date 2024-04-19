@@ -82,8 +82,11 @@ const BannerGallery = ({ seconds, events }: Props) => {
         <div
           key={'img' + index}
           id={'image' + index}
-          className={`h-full w-screen flex flex-row justify-start items-start absolute top-0 left-0  `}
+          className={`h-full w-screen flex flex-row justify-start items-start absolute top-0 left-0 cursor-pointer `}
           style={{ display: index !== activePic ? 'none' : 'block' }}
+          onClick={() => {
+            location.replace('/events/' + events![activePic].id);
+          }}
         >
           <div className='h-full w-fit m-auto relative'>
          <ImgFromDb stylings={"object-contain h-full"} url={item.image} alt={'Event Picture' + index} />   
@@ -93,7 +96,7 @@ const BannerGallery = ({ seconds, events }: Props) => {
             alt={'Event Picture' + index}
           /> */}
          <button 
-        className=" absolute top-8 -right-16  cursor-pointer  "
+        className=" absolute top-4 -right-16  cursor-pointer  "
         style={{ transform: 'translate(0%, -50%)' }}
         onClick={() => {
           location.replace('/events/' + events![activePic].id);
@@ -102,8 +105,7 @@ const BannerGallery = ({ seconds, events }: Props) => {
         <div className="text-lg italic  hover:scale-125  dark:fill-darkMainColor dark:stroke-darkMainColor fill-lightMainColor stroke-lightMainColor flex flex-row justify-between items-center">
           <div className=" h-4 w-4">
             <ShowIcon icon={'Info'} stroke={'.5'} />
-          </div>
-        <h2>info</h2> 
+          </div> 
         </div>
       </button>
       </div>

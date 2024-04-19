@@ -31,6 +31,7 @@ type CartItem = {
 const Navbar = ({ path, locale, children }: Props) => {
   const [style1, setStyle1] = useState({ display: 'none' });
   const [burgerState, setBurgerState] = useState(false);
+  const [cartState, setCartState] = useState(false);
   const { changeTheme, darkMode } = useContext(
     SettingsContext
   ) as ScreenSettingsContextType;
@@ -127,7 +128,7 @@ const Navbar = ({ path, locale, children }: Props) => {
         },
         {
           url: '/schedule/0',
-          title: 'Shedule Tool',
+          title: 'Schedule Tool',
           icon: 'Schedule',
         },
         {
@@ -165,7 +166,7 @@ const Navbar = ({ path, locale, children }: Props) => {
         },
         {
           url: '/schedule/0',
-          title: 'Shedule Tool',
+          title: 'Schedule Tool',
           icon: 'Schedule',
         },
       ];
@@ -202,9 +203,6 @@ const Navbar = ({ path, locale, children }: Props) => {
       burgerState
         ? document.getElementById('profile-toggle')?.classList.add('hidden')
         : document.getElementById('profile-toggle')?.classList.remove('hidden');
-      burgerState
-        ? document.getElementById('cart-toggle')?.classList.add('hidden')
-        : document.getElementById('cart-toggle')?.classList.remove('hidden');
       setBurgerState(!burgerState);
     }
     if (windowSize.height! < 760 && !isChangeOrientation) {
@@ -227,10 +225,7 @@ const Navbar = ({ path, locale, children }: Props) => {
         : document.getElementById('theme-toggle')?.classList.remove('hidden');
       burgerState
         ? document.getElementById('profile-toggle')?.classList.add('hidden')
-        : document.getElementById('profile-toggle')?.classList.remove('hidden');
-      burgerState
-        ? document.getElementById('cart-toggle')?.classList.add('hidden')
-        : document.getElementById('cart-toggle')?.classList.remove('hidden');
+        : document.getElementById('profile-toggle')?.classList.remove('hidden'); 
       setBurgerState(!burgerState);
     }
     if (
@@ -252,10 +247,12 @@ const Navbar = ({ path, locale, children }: Props) => {
 
       document.getElementById('theme-toggle')?.classList.add('hidden');
       document.getElementById('profile-toggle')?.classList.add('hidden');
-      document.getElementById('cart-toggle')?.classList.add('hidden');
       setBurgerState(false);
     }
   };
+  useEffect(() => {
+  (items.length>0)?setCartState(true): setCartState(false)
+  }, [items]);
   let barArray = [
     {
       link: 'tel:1-8482440512',
@@ -444,7 +441,7 @@ const Navbar = ({ path, locale, children }: Props) => {
               </p>
             </div>
           </button>
-          <button
+          {cartState && <button
             id="cart-toggle"
             type="button"
             onClick={() => {
@@ -468,6 +465,7 @@ const Navbar = ({ path, locale, children }: Props) => {
               </div>
             </Link>
           </button>
+          }
           <button
             id="burger-toggle"
             className={`relative m-1 flex cursor-pointer p-1.5  outline-none rounded-md hover:ring-2 hover:ring-lightAccentColor focus:ring-lightAccentColor dark:hover:ring-darkAccentColor dark:focus:ring-darkAccentColor ${
