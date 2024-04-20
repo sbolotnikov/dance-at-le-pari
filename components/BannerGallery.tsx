@@ -99,7 +99,7 @@ const BannerGallery = ({ seconds, events }: Props) => {
             alt={'Event Picture' + index}
           /> */}
          <button 
-        className=" absolute top-4 -right-16  cursor-pointer  "
+        className=" absolute top-6 -right-16  cursor-pointer  "
         style={{ transform: 'translate(0%, -50%)' }}
         onClick={() => {
           location.replace('/events/' + events![activePic].id);

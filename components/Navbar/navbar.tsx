@@ -375,8 +375,8 @@ const Navbar = ({ path, locale, children }: Props) => {
                 <div className=" h-6 w-6 md:h-8 md:w-8 fill-none rounded-full bg-lightMainBG dark:bg-lightMainColor p-1 group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
                   <ShowIcon icon={'Login'} stroke={'2'} />
                 </div>
-                <p className="hidden tracking-widest mx-3 rounded-md text-darkMainColor md:bg-lightMainBG md:dark:bg-lightMainColor md:dark:text-darkMainColor md:text-lightMainColor  opacity-100 group-hover:inline-flex md:block md:opacity-0 md:group-hover:opacity-100 ">
-                  {'Login'}
+                <p className=" tracking-widest mx-3 rounded-md text-lightMainColor darkMainColor md:bg-lightMainBG md:dark:bg-lightMainColor md:dark:text-darkMainColor dark:text-darkMainColor  opacity-100 group-hover:inline-flex md:block  md:group-hover:opacity-100 ">
+                  {'LogIn'}
                 </p>
               </div>
             </button>
