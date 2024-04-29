@@ -6,6 +6,7 @@ import AlertMenu from './alertMenu';
 import { useDate } from '@/hooks/useDate';
 import Link from 'next/link';
 import ImgFromDb from './ImgFromDb';
+import { useDimensions } from '@/hooks/useDimensions';
 // import CopyPasteModal from './CopyPasteModal';
 type Props = {
   eventsSet: TEventArray;
@@ -20,6 +21,7 @@ const Schedule = ({ eventsSet, onReturn }: Props) => {
   const [agendaView, setAgendaView] = useState(false);
   const [alertStyle, setAlertStyle] = useState({});
   const { days, dateDisplay } = useDate(events, nav);
+  const windowSize = useDimensions();
   const weekdayName = [
     'Sunday',
     'Monday',
@@ -69,7 +71,11 @@ const Schedule = ({ eventsSet, onReturn }: Props) => {
       console.log('Agenda view needs data');
     }
   }, [agendaView]);
+  useEffect(() => {
+    if (windowSize.width! < 960)  
+     document.getElementById('container1')!.style.minWidth='960px'
 
+  }, [windowSize.width]);
   return (
     <div className="w-full h-full  flex flex-col ">
       <CalendarHeader
@@ -80,7 +86,7 @@ const Schedule = ({ eventsSet, onReturn }: Props) => {
         onStyle={(n) => setAgendaView(n)}
       />
       <div className="w-full h-full relative overflow-auto border rounded-md border-lightMainColor dark:border-darkMainColor">
-        <div className={`${agendaView?"w-full":"w-[960px]"} absolute top-0 left-0`}>
+        <div id="container1" className={`w-full absolute top-0 left-0`}>
           {!agendaView && (
             <div
               id="weekdays"

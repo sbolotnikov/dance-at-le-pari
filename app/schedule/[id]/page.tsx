@@ -115,6 +115,12 @@ export default function Page ({ params }: { params: { id: string } }) {
       ? (document.getElementById('icon')!.style.display = 'block')
       : (document.getElementById('icon')!.style.display = 'none');
   }, [windowSize.height]);
+  useEffect(() => {
+    if (windowSize.width! < 960)  
+     document.getElementById('container1')!.style.minWidth='960px'
+    else 
+     document.getElementById('container1')!.style.width='100%'
+  }, [windowSize.width]);
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
       {loading && <LoadingScreen />}
@@ -311,7 +317,7 @@ export default function Page ({ params }: { params: { id: string } }) {
               onStyle={(n) => {}}
             />
             <div className="w-full h-full relative overflow-auto border rounded-md border-lightMainColor dark:border-darkMainColor">
-              <div className={`w-[960px] absolute top-0 left-0`}>
+              <div id="container1" className={` absolute top-0 left-0`}>
                 <div
                   id="weekdays"
                   className="w-full flex text-lightMainBG bg-franceBlue dark:text-franceBlue dark:bg-lightMainBG relative"
