@@ -9,11 +9,15 @@ export  async function POST(
 
     const data = await req.json();
     const {id} = data;
-
+    const optionsToDelete = await prisma.priceOptions.deleteMany({
+      where: {
+        templateID: id,
+      }
+    })
     const deletedTemplate = await prisma.eventTemplate.delete({
         where: {
          id
-        },
+        } 
       })
     console.log(deletedTemplate)
     await prisma.$disconnect()

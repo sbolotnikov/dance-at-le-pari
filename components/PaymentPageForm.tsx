@@ -1,7 +1,8 @@
-import { TPaymentType } from '@/types/screen-settings';
+import { TPaymentType, TPriceOption } from '@/types/screen-settings';
 import React from 'react';
 import ImgFromDb from './ImgFromDb';
 import Link from 'next/link';
+import PriceOptionSelect from './PriceOptionSelect';
 type Props = {
   paymentsArray: TPaymentType[];
   role: string;
@@ -35,7 +36,7 @@ const PaymentPageForm = ({ paymentsArray, role, specialEvent, onReturn }: Props)
               </div>
             </div>
             <div className="w-[49%] flex flex-row justify-around items-center">
-              <p className="w-[45%] text-base text-center">${payment.price}</p>
+              {payment.options!.length>0 ?<p>{payment.options &&<PriceOptionSelect options={payment.options} onChange={(options:TPriceOption )=>{ console.log(options)}}/>}</p>:<p className="w-[45%] text-base text-center">${payment.price}</p>}
               <div className="w-[50%] flex flex-col justify-around items-center">
                 {specialEvent?(
                   <Link href={`/events/${payment.id}`} >

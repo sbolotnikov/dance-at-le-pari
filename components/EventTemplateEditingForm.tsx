@@ -5,7 +5,7 @@ import ShowIcon from './svg/showIcon';
 import ChoosePicture from './ChoosePicture';
 import AlertMenu from './alertMenu';
 import ChooseTeacher from './ChooseTeacher';
-import { TTeacherInfo } from '@/types/screen-settings';
+import { TPriceOption, TTeacherInfo } from '@/types/screen-settings';
 import PriceOptions from './PriceOptions';
 
 type Props = {
@@ -25,6 +25,7 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
   const [revealAlert, setRevealAlert] = useState(false);
   const [length1, setLength] = useState(0);
   const [amount, setAmount] = useState(1);
+  const [priceOptions, setPriceOptions] = useState<TPriceOption[] | null>(null)
   const [price, setPrice] = useState(0.0);
   const [title, setTitle] = useState('');
   const [tag, setTag] = useState('');
@@ -77,6 +78,7 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
           setTitle(data.template.title);
           setTag(data.template.tag);
           setVisible(data.template.visible);
+          setPriceOptions(data.template.options !== null ? data.template.options.map((option:any )=>({tag:option.tag,price:option.price,amount:option.amount})):null);
           if (data.template.teachersid.length > 0) {
             fetch('/api/admin/get_teacher_by_id', {
               method: 'POST',
@@ -126,8 +128,8 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
       window.location.reload();
     }
   };
-  const handleSubmit = (event: React.SyntheticEvent) => {
-    event.preventDefault();
+  const handleSubmit = () => {
+    // event.preventDefault();
     console.log(length1, price, title, tag, description);
     let validationError = '';
     document.querySelector('#length1')!.classList.remove('invalid_input');
@@ -148,6 +150,10 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
       validationError = 'Enter tag in range of 3 to 60 symbols';
       // make message input red
       document.querySelector('#tag')!.classList.add('invalid_input');
+    } else if (priceOptions === null || priceOptions.length < 1) {
+      validationError = 'Enter at least one pricing option';
+      // make message input red
+      document.querySelector('#priceOptions')!.classList.add('invalid_input');
     }
     if (validationError > '') {
       setAlertStyle({
@@ -182,6 +188,7 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
           location,
           description,
           amount,
+          priceOptions,
           visible,
           teachersid:
             teacher !== null && teacher !== undefined ? [teacher?.id] : [],
@@ -225,6 +232,7 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
           location,
           description,
           visible,
+          priceOptions,
           teachersid:
             teacher !== null && teacher !== undefined ? [teacher?.id] : [],
         }),
@@ -249,7 +257,7 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
           console.log(error);
         });
   };
-
+ console.log(priceOptions)
   return (
     <>
       {revealCloud && <ChoosePicture onReturn={onReturnPicture} />}
@@ -363,7 +371,7 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
               </select>
             </label>
 
-            <form className=" m-auto" onSubmit={handleSubmit}>
+            <div className=" m-auto" >
               <label className="flex flex-row justify-between items-center mb-1">
                 Length in min.
                 <input
@@ -380,9 +388,9 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
               </label>
               <label className="flex flex-row justify-between items-center mb-1">
                 Price Options
-                 <PriceOptions onAdd={(tag: string, price: number, amount: number)=>{console.log(tag,price, amount)}}/>
+                 <PriceOptions options={priceOptions} onChange={(options:TPriceOption[] | null )=>{options!==null?setPriceOptions([...options]):setPriceOptions(null)}}/>
               </label>
-              <label className="flex flex-row justify-between items-center mb-1">
+              {/* <label className="flex flex-row justify-between items-center mb-1">
                 Price
                 <input
                   className=" outline-none border-none rounded-md w-1/2  text-lightMainColor p-0.5 mx-1"
@@ -410,7 +418,7 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
                   }}
                   required
                 />
-              </label>
+              </label> */}
               <label className="flex flex-row justify-between items-center mb-1">
                 Title
                 <input
@@ -468,12 +476,12 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
               </label>
               <button
                 className="btnFancy w-[90%] mb-10"
-                type="submit"
+                onClick={handleSubmit}
                 disabled={loading}
               >
                 {'Submit'}
               </button>
-            </form>
+            </div>
           </div>
         </div>
       </div>

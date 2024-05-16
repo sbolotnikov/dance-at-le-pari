@@ -96,6 +96,11 @@ teacher:string | null,
    description:string | null;
    visible:boolean;
   }
+  type TPriceOption = {
+    tag: string;
+    price: number;
+    amount: number;
+  }; 
   type TTemplateFront ={
     tag:string;
     eventtype:string,
@@ -118,6 +123,7 @@ teacher:string | null,
     description: string;    
     amount: number;
     price: number;
+    options: TPriceOption[] | null;
     image: string;
     eventtype: string;
  }

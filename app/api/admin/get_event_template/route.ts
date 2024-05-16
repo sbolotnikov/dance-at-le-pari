@@ -10,6 +10,9 @@ export async function POST(req: Request) {
         where: {
           id,
         },
+        include:{
+          options:true
+        }
       });
     await prisma.$disconnect()
     if (template==null) {

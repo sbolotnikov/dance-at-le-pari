@@ -54,7 +54,9 @@ body {
 .invalid_input {
   outline: 5px solid red;
 }
-
+.alertColor {
+  --accent-color: red;
+}
 .btnFancy {
   appearance: none;
   border: none;
@@ -81,6 +83,35 @@ body {
   background-position: 0% 100%;
 }
 .btnFancy:active {
+  color: #fff;
+  background-position: 0% 100%;
+}
+.btnFancySmall {
+  appearance: none;
+  border: none;
+  outline: none;
+  padding: 5px;
+  border-radius: 6px;
+  font-size: 20px;
+  font-weight: 600;
+  margin: 5px;
+  cursor: pointer;
+  transition: 0.4s;
+  color: var(--accent-color);
+  border: 3px solid var(--accent-color);
+  background-image: linear-gradient(
+    to top,
+    var(--accent-color) 50%,
+    transparent 50%
+  );
+  background-size: 100% 200%;
+  background-position: 0% 0%;
+}
+.btnFancySmall:hover {
+  color: #fff;
+  background-position: 0% 100%;
+}
+.btnFancySmall:active {
   color: #fff;
   background-position: 0% 100%;
 }
