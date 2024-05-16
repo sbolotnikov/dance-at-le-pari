@@ -105,11 +105,11 @@ const BannerGallery = ({ seconds, events }: Props) => {
           location.replace('/events/' + events![activePic].id);
         }}
       >
-        <div className="text-lg italic  hover:scale-125  dark:fill-darkMainColor dark:stroke-darkMainColor fill-lightMainColor stroke-lightMainColor flex flex-row justify-between items-center">
+        {/* <div className="text-lg italic  hover:scale-125  dark:fill-darkMainColor dark:stroke-darkMainColor fill-lightMainColor stroke-lightMainColor flex flex-row justify-between items-center">
           <div className=" h-4 w-4">
             <ShowIcon icon={'Info'} stroke={'.5'} />
           </div> 
-        </div>
+        </div> */}
       </button>
       </div>
           <h2

@@ -31,11 +31,12 @@ export default function Home() {
       </div>  
       <div
         id="text"
-        className="text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG mt-3 shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2"
+        className="text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG mt-3 p-1 md:p-4 shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2"
       >
-        <h1 className="font-bold text-5xl text-franceBlue  text-center font-DancingScript text-shadow  dark:text-shadow-light  ">
-        Welcome to Dance At Le Pari
+        <h1 className="font-bold text-5xl md:text-7xl text-franceBlue  text-center font-DancingScript text-shadow  dark:text-shadow-light  ">
+        Dance at Le Pari
         </h1>
+        <p className="text-center md:text-2xl text-xl text-shadow  dark:text-shadow-light"> The place that brings People <br/> together through Dancing</p>
       </div>
  
       <div className="w-full h-full relative  mb-12 overflow-y-auto ">
@@ -51,8 +52,8 @@ export default function Home() {
                   <Image 
                     className="rounded-md overflow-hidden "
                     src={item.path}
-                    width={300}
-                    height={300} 
+                    width={250}
+                    height={250} 
                     alt="Logo"
                   />
                 </div>

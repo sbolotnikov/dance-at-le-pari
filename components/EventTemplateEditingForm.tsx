@@ -6,6 +6,7 @@ import ChoosePicture from './ChoosePicture';
 import AlertMenu from './alertMenu';
 import ChooseTeacher from './ChooseTeacher';
 import { TTeacherInfo } from '@/types/screen-settings';
+import PriceOptions from './PriceOptions';
 
 type Props = {
   template: number | undefined;
@@ -376,6 +377,10 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
                   }}
                   required
                 />
+              </label>
+              <label className="flex flex-row justify-between items-center mb-1">
+                Price Options
+                 <PriceOptions onAdd={(tag: string, price: number, amount: number)=>{console.log(tag,price, amount)}}/>
               </label>
               <label className="flex flex-row justify-between items-center mb-1">
                 Price
