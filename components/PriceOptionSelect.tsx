@@ -16,7 +16,7 @@ const PriceOptionSelect = ({ options, onChange }: Props) => {
   return (
     <select
       id="priceOptions"
-      className="bg-main-bg mb-2 rounded-md text-ellipsis bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor p-1 w-3/4"
+      className="bg-main-bg mb-2 rounded-md text-ellipsis bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor p-1 w-[95%]"
       onChange={(e) => {
         e.preventDefault;
         setChoosenOption(parseInt(e.target.value));
