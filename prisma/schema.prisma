@@ -47,6 +47,15 @@ model EventTemplate {
   updatedAt DateTime @updatedAt
   teachersid Int[]
   events Event[]
+  options PriceOptions[]
+}
+model PriceOptions {
+  id Int @id @default(autoincrement()) 
+  price Float
+  tag String 
+  amount Int @default(1)
+  templateID Int
+  template EventTemplate @relation(fields: [templateID], references: [id] )
 }
 model Event {
    id Int @id @default(autoincrement())
