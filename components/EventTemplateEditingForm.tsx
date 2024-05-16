@@ -390,7 +390,7 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
                 Price Options
                  <PriceOptions options={priceOptions} onChange={(options:TPriceOption[] | null )=>{options!==null?setPriceOptions([...options]):setPriceOptions(null)}}/>
               </label>
-              {/* <label className="flex flex-row justify-between items-center mb-1">
+              <label className="flex flex-row justify-between items-center mb-1">
                 Price
                 <input
                   className=" outline-none border-none rounded-md w-1/2  text-lightMainColor p-0.5 mx-1"
@@ -418,7 +418,7 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
                   }}
                   required
                 />
-              </label> */}
+              </label>
               <label className="flex flex-row justify-between items-center mb-1">
                 Title
                 <input
