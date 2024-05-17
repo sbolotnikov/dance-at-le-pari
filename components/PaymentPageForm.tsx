@@ -1,5 +1,5 @@
-import { TPaymentType, TPriceOption } from '@/types/screen-settings';
-import React from 'react';
+import { TPaymentType  } from '@/types/screen-settings';
+import { useEffect, useState } from 'react';
 import ImgFromDb from './ImgFromDb';
 import Link from 'next/link';
 import PriceOptionSelect from './PriceOptionSelect';
@@ -7,14 +7,22 @@ type Props = {
   paymentsArray: TPaymentType[];
   role: string;
   specialEvent: boolean
-  onReturn: (tempID: number, callbackType: string) => void;
+  onReturn: (tempID: number, callbackType: string, option:number | null ) => void;
 };
 
 const PaymentPageForm = ({ paymentsArray, role, specialEvent, onReturn }: Props) => {
+  const [options, setOptions] = useState<number[]>([]);
   console.log(paymentsArray);
+  useEffect(() => {
+    let arr=[];
+    for (let i = 0; i < paymentsArray.length; i++) {
+      arr.push(0);      
+    }
+    setOptions([...arr]);
+  },[paymentsArray] );
   return (
     <div className="w-full absolute top-0 left-0  mb-20">
-      {paymentsArray.map((payment) => {
+      {paymentsArray.map((payment,index) => {
         return (
           <div
             key={payment.id}
@@ -36,20 +44,26 @@ const PaymentPageForm = ({ paymentsArray, role, specialEvent, onReturn }: Props)
               </div>
             </div>
             <div className="w-[49%] flex flex-row justify-around items-center">
-              {payment.options!.length>0 ?<p>{payment.options &&<PriceOptionSelect options={payment.options} onChange={(options:TPriceOption )=>{ console.log(options)}}/>}</p>:<p className="w-[45%] text-base text-center">${payment.price}</p>}
+              {payment.options!.length>0 ?<p>{payment.options &&<PriceOptionSelect options={payment.options} onChange={(option:number )=>{ 
+                console.log(option); 
+                let arr = options; 
+                arr[index]=option;
+                console.log(arr);
+                setOptions([...arr]);
+                }}/>}</p>:<p className="w-[45%] text-base text-center">${payment.price}</p>}
               <div className="w-[50%] flex flex-col justify-around items-center">
                 {specialEvent?(
                   <Link href={`/events/${payment.id}`} >
                     <div
                   className="w-full btnFancy my-1 text-base text-center  rounded-md" style={{padding:'0'}}
-                  onClick={() => onReturn(payment.id!, 'Book')}
+                  onClick={() => onReturn(payment.id!, 'Book', 0 )}
                 >
                   {"Check Event"}
                 </div>
                   </Link>
                 ):(<div
                   className="w-full btnFancy my-1 text-base text-center  rounded-md" style={{padding:'0'}}
-                  onClick={() => onReturn(payment.id!, 'Book')}
+                  onClick={() => onReturn(payment.id!, 'Book', options[index])}
                 >
                   {'Add to Cart'}
                 </div>)}
@@ -57,7 +71,7 @@ const PaymentPageForm = ({ paymentsArray, role, specialEvent, onReturn }: Props)
                 {role == 'Admin' && (
                   <button
                     className="w-full bg-lightMainColor my-1 text-base dark:bg-darkMainColor text-lightMainBG dark:text-darkMainBG rounded-md"
-                    onClick={() => onReturn(payment.id!, 'Edit')}
+                    onClick={() => onReturn(payment.id!, 'Edit', null)}
                   >
                     Edit
                   </button>
@@ -65,7 +79,7 @@ const PaymentPageForm = ({ paymentsArray, role, specialEvent, onReturn }: Props)
                 {role == 'Admin' && (
                   <button
                     className="w-full bg-lightMainColor text-base dark:bg-darkMainColor text-lightMainBG dark:text-darkMainBG rounded-md"
-                    onClick={() => onReturn(payment.id!, 'Delete')}
+                    onClick={() => onReturn(payment.id!, 'Delete', null)}
                   >
                     Delete
                   </button>
@@ -77,7 +91,7 @@ const PaymentPageForm = ({ paymentsArray, role, specialEvent, onReturn }: Props)
       })}
       {role == 'Admin' && (<button
         className="w-full bg-lightMainColor mt-2 mb-8 text-base dark:bg-darkMainColor text-lightMainBG dark:text-darkMainBG rounded-md"
-        onClick={() => onReturn(-1,'Add')}
+        onClick={() => onReturn(-1,'Add',null)}
       >
         Add
       </button>)}

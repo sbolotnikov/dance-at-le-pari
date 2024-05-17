@@ -45,7 +45,7 @@ const page: FC<pageProps> = ({}) => {
   const router = useRouter();
   const windowSize = useDimensions();
   const tabsIndexArray = ['Private', 'Group', 'Floor_Fee', 'Party'];
-  const actionTemplateChoice = (action1: string, item: number) => {
+  const actionTemplateChoice = (action1: string, item: number, option: number | null) => {
     if (action1 == 'Edit') {
       setTemplateID(item);
       setRevealTemplateEdit(true);
@@ -57,13 +57,14 @@ const page: FC<pageProps> = ({}) => {
     if (action1 == 'Book') {
       console.log(item, products)
       const productToCart= products.find((product)=>product.id === item)
+      console.log("choice",productToCart, option)   
         const p1 = {
           id:item,
           image:productToCart?.image?productToCart?.image:'',
           eventtype:productToCart?.eventtype?productToCart?.eventtype:'',
           tag:productToCart?.tag?productToCart?.tag:'',
-          price:productToCart?.price?productToCart?.price:0,
-          amount:productToCart?.amount?productToCart?.amount:0,
+          price:productToCart?.options?productToCart?.options[option!].price:0,
+          amount:productToCart?.options?productToCart?.options[option!].amount:0,
           seat: null,
           table: null,
           date: null
@@ -235,8 +236,8 @@ const page: FC<pageProps> = ({}) => {
                       )}
                       role={session?.user.role!}
                       specialEvent={false}
-                      onReturn={(item1, action1) => {
-                        actionTemplateChoice(action1, item1);
+                      onReturn={(item1, action1, option) => {
+                        actionTemplateChoice(action1, item1, option);
                       }}
                     />
                   )}

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 
 type Props = {
   options: TPriceOption[] | null;
-  onChange: (opt: TPriceOption) => void;
+  onChange: (opt: number) => void;
 };
 
 const PriceOptionSelect = ({ options, onChange }: Props) => {
@@ -20,7 +20,7 @@ const PriceOptionSelect = ({ options, onChange }: Props) => {
       onChange={(e) => {
         e.preventDefault;
         setChoosenOption(parseInt(e.target.value));
-        onChange(priceOptions![parseInt(e.target.value)]);
+        onChange(parseInt(e.target.value));
       }}
     >
       {priceOptions && priceOptions!.map((option, index) => (
