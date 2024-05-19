@@ -5,7 +5,7 @@ import { PageWrapper } from '@/components/page-wrapper';
 import BoxClickable from '@/components/BoxClickable';
 import DanceDetails from '@/components/DanceDetails';
 import InfoPopup from '@/components/InfoPopup';
-import sleep from '@/utils/functions';
+import sleep, { get_package } from '@/utils/functions';
 import SongDetails from '@/components/SongDetails';
 import Image from 'next/image';
 import { addItem } from '@/slices/cartSlice';
@@ -86,7 +86,21 @@ const page: FC<pageProps> = ({}) => {
                   />
                   <div
                   className="w-full btnFancy my-1 text-base text-center  rounded-md" style={{padding:'0'}}
-                  onClick={() => dispatch(addItem({
+                  onClick={async() => {
+                    let info = await get_package(item.id);
+                    // dispatch(addItem({
+                    //   id:item.id,
+                    //   image:info.image,
+                    //   eventtype:'Private',
+                    //   tag:info.tag,
+                    //   price:info.price,
+                    //   amount:info.amount,
+                    //   seat: null,
+                    //   table: null,
+                    //   date: null
+                    // }))
+                    console.log(info.template)
+                    dispatch(addItem({
                     id:packageArray[index]!.id,
                     image:packageArray[index]!.image,
                     eventtype:'Private',
@@ -96,7 +110,7 @@ const page: FC<pageProps> = ({}) => {
                     seat: null,
                     table: null,
                     date: null
-                  }))}
+                  }))}}
                 >
                   {'Add to Cart'}
                 </div>
