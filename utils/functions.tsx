@@ -2,14 +2,14 @@ const sleep = (n:number)=> {
     return new Promise((resolve) => setTimeout(resolve, n));
   }
   export default sleep;
-export const get_package = async (n:number)=> {
+export const get_package = async (n:number[])=> {
    return fetch('/api/get_template', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
         body: JSON.stringify({
-          id: n,
+          arr: n,
         }),
   }).then(async (res) => {
     const data = await res.json();

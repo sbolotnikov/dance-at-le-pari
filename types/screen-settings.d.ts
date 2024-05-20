@@ -96,6 +96,19 @@ teacher:string | null,
    description:string | null;
    visible:boolean;
   }
+  type TTemplateNew ={
+    tag:string;
+    eventtype:string,
+    id:number;
+     image:string;
+     length:number;
+     options:TPriceOption[]; 
+     teachersid:number[];
+     title:string | null;
+     location:string | null;
+     description:string | null;
+     visible:boolean;
+    }
   type TPriceOption = {
     tag: string;
     price: number;

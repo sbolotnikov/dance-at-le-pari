@@ -4,10 +4,11 @@ import { prisma } from '@/lib/prisma';
 
 export async function POST(req: Request) {
     const data = await req.json();
-    const {id} = data;
-    const product1 = await prisma.eventTemplate.findUnique({
+    const {arr} = data;
+    console.log(arr)
+    const product1 = await prisma.eventTemplate.findMany({
         where: {
-            id:parseInt(id),
+            id: { in: arr } ,
           },
         include:{options:true }});
     await prisma.$disconnect()
@@ -21,4 +22,4 @@ export async function POST(req: Request) {
     status: 201,
   });
 }
-export const dynamic = 'force-dynamic'
+// export const dynamic = 'force-dynamic'
