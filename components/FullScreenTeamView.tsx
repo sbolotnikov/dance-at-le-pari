@@ -143,6 +143,23 @@ const FullScreenTeamView = ({ pictures, index, onReturn }: Props) => {
                   stylings={` h-full md:h-auto md:w-5/12 object-contain rounded-md`}
                   alt={item.capture}
                 />
+        <svg className="absolute inset-0 h-full w-full">
+          <filter id="noise" x="0%" y="0%" width="100%" height="100%">
+            <feTurbulence
+              type="fractalNoise"
+              result="NOISE"
+              baseFrequency="0"
+              numOctaves="5"
+              seed="2"
+              id="turbulence"
+            />
+            <feDisplacementMap
+              in="SourceGraphic"
+              in2="NOISE"
+              scale="20"
+            ></feDisplacementMap>
+          </filter>
+        </svg>
               </div>
 
               <div
@@ -196,23 +213,7 @@ const FullScreenTeamView = ({ pictures, index, onReturn }: Props) => {
             <ShowIcon icon={'ArrowRight'} stroke={'.1'} />
           </div>
         </button>
-        <svg className="absolute inset-0 h-full w-full">
-          <filter id="noise" x="0%" y="0%" width="100%" height="100%">
-            <feTurbulence
-              type="fractalNoise"
-              result="NOISE"
-              baseFrequency="0"
-              numOctaves="5"
-              seed="2"
-              id="turbulence"
-            />
-            <feDisplacementMap
-              in="SourceGraphic"
-              in2="NOISE"
-              scale="20"
-            ></feDisplacementMap>
-          </filter>
-        </svg>
+
       </div>
     </AnimateModalLayout>
   );
