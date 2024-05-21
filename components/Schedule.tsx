@@ -72,10 +72,11 @@ const Schedule = ({ eventsSet, onReturn }: Props) => {
     }
   }, [agendaView]);
   useEffect(() => {
-    if (windowSize.width! < 960)  
+    if ((windowSize.width! < 960)&&(!agendaView))   
      document.getElementById('container1')!.style.minWidth='960px'
+    else document.getElementById('container1')!.style.minWidth='0px'
 
-  }, [windowSize.width]);
+  }, [windowSize.width, agendaView]);
   return (
     <div className="w-full h-full  flex flex-col ">
       <CalendarHeader
