@@ -115,6 +115,14 @@ body {
   color: #fff;
   background-position: 0% 100%;
 }
+@keyframes spinLogo {
+  to {
+      transform: rotateY(360deg);
+  }
+}
+.spinLogo {
+  animation: spinLogo 6s linear infinite;
+}
 @keyframes loader {
   0% {
     rotate: y 0deg;
