@@ -94,7 +94,27 @@ export default function Page ({ params }: { params: { id: string } }) {
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
-          setEvents(data);
+
+
+          // date:"2024-05-23T18:15", eventtype:"Group",id:137,length:45,location:"Main ballroom",studentid:[],tag:"Waltz",teachersid:[2]
+          fetch('/api/event/all_get_schedule', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+            .then((response) => response.json())
+            .then((data2) => {
+              console.log([...data2.eventJSON,...data])
+              setEvents([...data2.eventJSON,...data]);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+
+
+
+          // setEvents(data);
           fetch('/api/users_info_color', {
             method: 'GET',
             headers: {

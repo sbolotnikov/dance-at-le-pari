@@ -51,7 +51,7 @@ const FullDayScheduleView = ({
   onNewEventClick,
 }: Props) => {
   const [revealAlert, setRevealAlert] = useState(false);
-  const router = useRouter()
+  const router = useRouter();
   const [alertStyle, setAlertStyle] = useState({
     variantHead: '',
     heading: '',
@@ -68,11 +68,12 @@ const FullDayScheduleView = ({
   const [location, setLocation] = useState('Main ballroom');
   const [slots, setSlots] = useState<string[]>([]);
   const [scale1, setScale] = useState(30);
-  const [selectedEvents, setSelectedEvents] =
-    useState<TEventSchedule[]>([]);
+  const [selectedEvents, setSelectedEvents] = useState<TEventSchedule[]>([]);
   const [displayedEvents, setDisplayedEvents] = useState<DisplayEvent[]>([]);
   const [teacher, setTeacher] = useState(-1);
-  const {isMoving, setIsMoving, item, setItem } = useContext(PopupContext) as PopupContextType;
+  const { isMoving, setIsMoving, item, setItem } = useContext(
+    PopupContext
+  ) as PopupContextType;
   const [selectedEventItem, setSelectedEventItem] = useState<
     TEventSchedule | undefined
   >(undefined);
@@ -100,20 +101,23 @@ const FullDayScheduleView = ({
       });
     }
   };
- 
 
   useEffect(() => {
-  setSelectedEvents(events)
+    setSelectedEvents(events);
   }, [events]);
   const [widthDiv, setWidthDiv] = useState(0);
   const [heightDiv, setHeightDiv] = useState(0);
- 
- useEffect(() => { 
-  setHeightDiv(document.getElementById("displayDiv")!.offsetHeight);
-  setWidthDiv(document.getElementById("displayDiv")!.offsetWidth);
-  console.log("Div height:"+document.getElementById("displayDiv")!.offsetHeight);
-  console.log("Div width:"+document.getElementById("displayDiv")!.offsetWidth);
-  },[windowSize])
+
+  useEffect(() => {
+    setHeightDiv(document.getElementById('displayDiv')!.offsetHeight);
+    setWidthDiv(document.getElementById('displayDiv')!.offsetWidth);
+    console.log(
+      'Div height:' + document.getElementById('displayDiv')!.offsetHeight
+    );
+    console.log(
+      'Div width:' + document.getElementById('displayDiv')!.offsetWidth
+    );
+  }, [windowSize]);
   useEffect(() => {
     if (selectedEvents.length > 0 && users.length > 0) {
       let evArray = selectedEvents
@@ -132,7 +136,6 @@ const FullDayScheduleView = ({
       let evArrayFinal = [...evArray2];
       evArrayFinal = [];
 
-  
       for (let i = 0; i < evArray2.length; i++) {
         let dt = new Date(evArray2[i].date);
         dt.setMinutes(dt.getMinutes() + evArray2[i].length);
@@ -165,30 +168,31 @@ const FullDayScheduleView = ({
         ];
         evArray2 = evArray2.filter((event) => event.x_shift !== counter);
         counter++;
-        } while (evArray2.length > 0);
-        
-        evArrayFinal.sort((a, b) => {
-          if (a.date > b.date) return 1;
-          else if (a.date < b.date) return -1;
-          else return 0;
-        });
-        for (let i = 0; i < evArrayFinal.length; i++) {
-          for (let j = i + 1; j < evArrayFinal.length; j++) {
-            if (evArrayFinal[i].date2 >= evArrayFinal[j].date) {
-              evArrayFinal[i].crossed++;
-              evArrayFinal[j].crossed++;
-            }
+      } while (evArray2.length > 0);
+
+      evArrayFinal.sort((a, b) => {
+        if (a.date > b.date) return 1;
+        else if (a.date < b.date) return -1;
+        else return 0;
+      });
+      for (let i = 0; i < evArrayFinal.length; i++) {
+        for (let j = i + 1; j < evArrayFinal.length; j++) {
+          if (evArrayFinal[i].date2 >= evArrayFinal[j].date) {
+            evArrayFinal[i].crossed++;
+            evArrayFinal[j].crossed++;
           }
         }
+      }
 
-        console.log(counter, evArrayFinal)
-         for (let i = 0; i < evArrayFinal.length; i++){
-          if (evArrayFinal[i].crossed > counter) evArrayFinal[i].crossed=counter
-          if (evArrayFinal[i].crossed==0) evArrayFinal[i].crossed=1
-         }
+      console.log(counter, evArrayFinal);
+      for (let i = 0; i < evArrayFinal.length; i++) {
+        if (evArrayFinal[i].crossed > counter)
+          evArrayFinal[i].crossed = counter;
+        if (evArrayFinal[i].crossed == 0) evArrayFinal[i].crossed = 1;
+      }
       setDisplayedEvents(evArrayFinal);
-    }else setDisplayedEvents([]);
-  }, [selectedEvents,location, users]);
+    } else setDisplayedEvents([]);
+  }, [selectedEvents, location, users]);
   let date1 = new Date(day! + ' 07:00:00');
   useEffect(() => {
     let slotsArray: string[] = [];
@@ -218,7 +222,7 @@ const FullDayScheduleView = ({
   const [contextMenuItems, setContextMenuItems] = useState<
     { title: string; icon: string | undefined }[]
   >([]);
-  
+
   // fixing position of the context menu to make it always visible
   useEffect(() => {
     if (contextMenu.isShown) {
@@ -274,34 +278,38 @@ const FullDayScheduleView = ({
       if (item != null) {
         //    setLoading(true)
         if (isMoving) {
-          const res1 = await fetch('/api/teacher/schedule_event/edit', {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              id: item.id,
-              data: {
-                date: selectedTime,
+          if (item.id > 0) {
+            const res1 = await fetch('/api/teacher/schedule_event/edit', {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
               },
-            }),
-          });
+              body: JSON.stringify({
+                id: item.id,
+                data: {
+                  date: selectedTime,
+                },
+              }),
+            });
+          }
         } else {
-          const res1 = await fetch('/api/teacher/schedule_event/create', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              tag: item.tag,
-              eventtype: item.eventtype,
-              length: item.length,
-              teachersid: item.teachersid,
-              studentid: item.studentid,
-              location: item.location,
-              date: selectedTime,
-            }),
-          });
+          if (item.id > 0) {
+            const res1 = await fetch('/api/teacher/schedule_event/create', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                tag: item.tag,
+                eventtype: item.eventtype,
+                length: item.length,
+                teachersid: item.teachersid,
+                studentid: item.studentid,
+                location: item.location,
+                date: selectedTime,
+              }),
+            });
+          }
         }
         router.replace('/schedule/' + day);
       }
@@ -329,7 +337,6 @@ const FullDayScheduleView = ({
   useOnOutsideClick(contextMenuRef, () => {
     setContextMenu({ x: 0, y: 0, isShown: false });
   });
-  
 
   return (
     <AnimateModalLayout
@@ -483,14 +490,17 @@ const FullDayScheduleView = ({
               {'(for more info click on event)'}
             </h2>
 
-            <div id="displayDiv" className="w-full h-[50svh] relative  overflow-y-auto border border-lightMainColor dark:border-darkMainColor rounded-md" 
-           >
+            <div
+              id="displayDiv"
+              className="w-full h-[50svh] relative  overflow-y-auto border border-lightMainColor dark:border-darkMainColor rounded-md"
+            >
               <div className="absolute top-0 left-0 w-full  flex  overflow-auto">
                 <div
                   id="timeSlots"
                   className={` relative w-full flex flex-col justify-center items-center overflow-auto`}
                 >
-                  {slots && widthDiv>0 &&
+                  {slots &&
+                    widthDiv > 0 &&
                     slots.map((d, index) => (
                       <div
                         className={` w-full h-[50px] cursor-pointer border-b border-dashed border-lightMainColor dark:border-darkMainColor  flex flex-col justify-left flex-wrap overflow-hidden`}
