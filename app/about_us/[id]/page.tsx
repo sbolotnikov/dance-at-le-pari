@@ -15,9 +15,9 @@ import Link from 'next/link';
 import { SettingsContext } from '@/hooks/useSettings';
 import { useSession } from 'next-auth/react';
 import { useDimensions } from '@/hooks/useDimensions';
+import Image from 'next/image';
 
-
-export default function Page ({ params }: { params: { id: string } }) {
+export default function Page({ params }: { params: { id: string } }) {
   const selectedTab = params.id || null;
   type TTeamMember = {
     id: number;
@@ -44,7 +44,11 @@ export default function Page ({ params }: { params: { id: string } }) {
     '/images/Kitchen.webp',
   ];
   const [tabIndex, setTabIndex] = useState(
-    ((selectedTab !== null) && (parseInt(selectedTab)>=0) && (parseInt(selectedTab)<4))  ? parseInt(selectedTab) : 0
+    selectedTab !== null &&
+      parseInt(selectedTab) >= 0 &&
+      parseInt(selectedTab) < 5
+      ? parseInt(selectedTab)
+      : 0
   );
   const windowSize = useDimensions();
   const [alertStyle, setAlertStyle] = useState({
@@ -63,8 +67,9 @@ export default function Page ({ params }: { params: { id: string } }) {
   >([]);
   const [revealAlert, setRevealAlert] = useState(false);
   const [tabsArray, setTabsArray] = useState([
-    'Studio View',
+    'About Us',
     'Our Team',
+    'Studio Tour',
     'Location',
     'Hours ',
   ]);
@@ -162,56 +167,97 @@ export default function Page ({ params }: { params: { id: string } }) {
               return (
                 <Tab
                   key={item}
-                  style={{width:((windowSize.width! < 400)&&(tabIndex != index))?(windowSize.width! < 343)?'2.6rem':'4rem': 'fit-content'}}
+                  style={{
+                    width:
+                      windowSize.width! < 500 && tabIndex != index
+                        ? windowSize.width! < 380
+                          ? '2.5rem'
+                          : '4rem'
+                        : 'fit-content',
+                  }}
                   className={` mt-1 p-1 cursor-pointer outline-0 border ${
                     tabIndex != index
                       ? ` truncate `
                       : 'border-2 md:border-4 border-yellow-600 text-yellow-600 dark:border-yellow-600 dark:text-yellow-600'
-                  } rounded-t-lg   text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG`}                >
+                  } rounded-t-lg   text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG`}
+                >
                   {item}
                 </Tab>
               );
             })}
           </TabList>
-
           <TabPanel
-            className={`w-full h-full relative overflow-auto  ${
+            className={`w-full h-full relative flex flex-col overflow-auto ${
               tabIndex != 0 ? 'hidden' : ''
             }`}
-            style={{ scrollbarWidth: 'none' }}
-          >
-            <div className="absolute top-0 left-0 w-full flex flex-col justify-center items-center">
-              <div className="h-[270px] w-full">
-                <Iframe
-                  url="https://www.youtube.com/embed/oiF1NnGzUiM?autoplay=1&amp;mute=1&amp;controls=1&amp;loop=0&amp;origin=https%3A%2F%2Fwww.leparidancenter.com&amp;playsinline=1&amp;enablejsapi=1&amp;widgetid=3"
-                  width="100%"
-                  height="100%"
-                  title="Best Dance Studio in New Jersey. Wedding event/ Special events rental.  Dance events in New Jersey."
-                  allowFullScreen
-                  frameBorder={0}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  className=""
-                  display="block"
-                  position="relative"
+          > 
+              <div className='w-full absolute top-0 left-0'>
+              <div className="w-full rounded-md md:grid md:grid-cols-4 md:gap-2 ">
+                <div className='w-full h-[160px] p-2 self-center'>
+                <Image
+                  src="/images/couple.webp"
+                  alt="couple dancing image"
+                  width={225}
+                  height={150}
+                  className=" m-auto drop-shadow-xl border-2 outline-lightMainColor dark:outline-darkMainColor rounded-md "
                 />
+                </div>
+                <p className="w-full text-left flex justify-start items-center md:col-start-2 md:col-span-3">
+                  Dance at Le Pari is located at 34 South Ave. in Fanwood. Dance
+                  center is open for community of Fanwood and nearby area
+                  residents to explore the beautiful art of ballroom dancing, to
+                  meet each other and spend time together within family, friends
+                  and community.
+                  <br /><br/>
+                  Name “Le Pari” symbolizes love for ballroom dancing as the
+                  city of Paris symbolizes love and romance throughout the
+                  world. “Le Pari” is the place uniting everyone who loves to
+                  dance.
+                  <br /><br/>
+                  Our beautiful venue has large oak sprung wood floors over
+                  4,000 sq. feet with recessed lightning, large sitting area,
+                  built-in sound system, separate practice studios, large screen
+                  projection television, kitchen area and much more. Dance at Le
+                  Pari has qualified experienced instructors much to offer for
+                  Fanwood and the surrounding areas!
+                  <br/><br/>
+                </p>
               </div>
-              <div
-                className="cursor-pointer h-[300px] w-full w-max-[450px] md:h-[450px]  mx-auto md:mt-10 mb-10"
-                onClick={() => {
-                  setRevealGallery(true);
-                }}
-              >
-                {!revealGallery && windowSize.width!=undefined && (
-                  <Gallery
-                    pictures={galeryPictures}
-                    auto={true}
-                    seconds={8}
-                    width={(windowSize.width!<450)?windowSize.width!+'px':'450px'}
-                    height={'300px'}
-                  />
-                )}
-              </div>
-            </div>
+              <p className="w-full">
+                Dance at Le Pari's goal is to develop friendships and
+                relatedness, promote health and fitness, and reach out to a
+                diverse group of Fanwood residents by introducing them to the
+                possibilities of Ballroom Dancing. “Le Pari” would like to
+                present Fanwood community with quality and fun dance
+                instruction, entertaining social dance events, and community
+                building service projects. Owner, Paul Horvath an amateur dancer
+                himself, said, “Ballroom dancing has a way of bringing people
+                together.” “Dancing is this art form that involves everyone,
+                whether you’re young, old, small or tall,” he said.<br/><br/> As Paul
+                describes the mission of “Dance at Le Pari” is to show love and
+                warmth towards each person that we meet here…He said: “We
+                welcome diversity of all kinds! Le Pari is the place where
+                everything (status, job, money, nationality, etc.) is put aside
+                and people are united by their passion to dance. Le Pari is the
+                place to meet new friends and have fun together.” <br/><br/> So what can
+                the community of Fanwood can expect from this magnificent venue? <br/><br/>
+                Many things such as: <br/><br/> <b>Socials:</b> offered to everyone, beginners
+                and/or advanced ballroom/latin dancers where people can enjoy DJ
+                hosted parties in a welcoming atmosphere. Please check our
+                calendar for all social events. <br/><br/><b>Group and Private classes:</b> for
+                someone to advance or start from beginning learning the art of
+                ballroom dancing. <br/><br/> <b>Wedding and other special event instructions:</b>
+                for couples soon to be married a choreographed routine to their
+                song of choice to perform on the most important day of their
+                life. First Dance! <br/><br/><b>Zumba and fitness exercises:</b> offered to
+                provide recreational and fitness exercises to community to stay
+                fit. <br/><br/>SO START NOW! DON'T WAIT! <a href='/about_us/4'>CONTACT US!</a>
+              </p>
+              </div> 
+
+            <p className="text-lightMainBG dark:text-darkMainBG text-[0.1rem]">
+              {'hello'}
+            </p>
           </TabPanel>
           <TabPanel
             className={`w-full  flex flex-col relative overflow-auto ${
@@ -298,8 +344,52 @@ export default function Page ({ params }: { params: { id: string } }) {
             </p>
           </TabPanel>
           <TabPanel
-            className={`w-full h-full  flex flex-col md:flex-row justify-center items-center relative overflow-y-scroll ${
+            className={`w-full h-full relative overflow-auto  ${
               tabIndex != 2 ? 'hidden' : ''
+            }`}
+            style={{ scrollbarWidth: 'none' }}
+          >
+            <div className="absolute top-0 left-0 w-full flex flex-col justify-center items-center">
+              <div className="h-[270px] w-full">
+                <Iframe
+                  url="https://www.youtube.com/embed/oiF1NnGzUiM?autoplay=1&amp;mute=1&amp;controls=1&amp;loop=0&amp;origin=https%3A%2F%2Fwww.leparidancenter.com&amp;playsinline=1&amp;enablejsapi=1&amp;widgetid=3"
+                  width="100%"
+                  height="100%"
+                  title="Best Dance Studio in New Jersey. Wedding event/ Special events rental.  Dance events in New Jersey."
+                  allowFullScreen
+                  frameBorder={0}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  className=""
+                  display="block"
+                  position="relative"
+                />
+              </div>
+              <div
+                className="cursor-pointer h-[300px] w-full w-max-[450px] md:h-[450px]  mx-auto md:mt-10 mb-10"
+                onClick={() => {
+                  setRevealGallery(true);
+                }}
+              >
+                {!revealGallery && windowSize.width != undefined && (
+                  <Gallery
+                    pictures={galeryPictures}
+                    auto={true}
+                    seconds={8}
+                    width={
+                      windowSize.width! < 450
+                        ? windowSize.width! + 'px'
+                        : '450px'
+                    }
+                    height={'300px'}
+                  />
+                )}
+              </div>
+            </div>
+          </TabPanel>
+
+          <TabPanel
+            className={`w-full h-full  flex flex-col md:flex-row justify-center items-center relative overflow-y-scroll ${
+              tabIndex != 3 ? 'hidden' : ''
             }`}
             style={{ flex: '1 1 100%' }}
           >
@@ -324,9 +414,7 @@ export default function Page ({ params }: { params: { id: string } }) {
                   <p>34 South Avenue, Fanwood, NJ 07023</p>
 
                   <h2>HOURS OF OPERATION:</h2>
-                  <a href="/about_us/3"
-                    className="cursor-pointer"
-                  >
+                  <a href="/about_us/3" className="cursor-pointer">
                     click here
                   </a>
 
@@ -385,111 +473,115 @@ export default function Page ({ params }: { params: { id: string } }) {
           </TabPanel>
           <TabPanel
             className={`w-full  flex  flex-col justify-center items-center relative overflow-y-scroll ${
-              tabIndex != 3 ? 'hidden' : ''
+              tabIndex != 4 ? 'hidden' : ''
             }`}
             style={{ flex: '1 1 100%' }}
           >
             <section className=" absolute top-0 left-0 flex flex-col justify-center items-center  mt-2  w-[98%] mx-auto">
-            <div className="flex flex-col md:flex-row items-center justify-between w-full h-auto">
-              <div className="h-[200px] w-[400px]">
-                <div className=" h-52 w-52 m-auto fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
-                  <ShowIcon icon={'ClockBallroom'} stroke={'0.05'} />
+              <div className="flex flex-col md:flex-row items-center justify-between w-full h-auto">
+                <div className="h-[200px] w-[400px]">
+                  <div className=" h-52 w-52 m-auto fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
+                    <ShowIcon icon={'ClockBallroom'} stroke={'0.05'} />
+                  </div>
                 </div>
+                <p className="text-alertcolor">
+                  Our Hours of Operation had been changed. It is updated
+                  monthly. So please check on it regularly.{' '}
+                </p>
               </div>
-              <p className="text-alertcolor">
-                Our Hours of Operation had been changed. It is updated monthly.
-                So please check on it regularly.{' '}
-              </p>
-            </div>
-            <div className="flex flex-col md:flex-row items-center justify-between w-full h-auto">
-
-            <div className="flex flex-col order-2 md:order-none md:w-2/3 justify-start items-center">
-              {' '}
-              Our Hours
-              {hoursOfOperation &&
-                hoursOfOperation.map((hour, i) => {
-                  return (
-                    <div
-                      key={'hours' + i}
-                      className="flex justify-between items-center"
-                    >
-                      {session?.user.role == 'Admin' ? (
-                        <input
-                          defaultValue={hour}
-                          onChange={(e) => {
-                            console.log(e.target.value, i);
-                            let hoursArr = hoursOfOperation;
-                            hoursArr[i] = e.target.value;
-                            setHours([...hoursArr]);
-                          }}
-                        />
-                      ) : (
-                        <p dangerouslySetInnerHTML={{ __html: hour }} />
-                      )}
-                      {session?.user.role == 'Admin' && (
-                        <button
-                          className="h-10 w-10 md:h-12 md:w-12 stroke-alertcolor fill-alertcolor"
-                          onClick={(e) => {
-                            console.log(i);
-                            let hoursArr = hoursOfOperation;
-                            hoursArr.splice(i, 1);
-                            setHours([...hoursArr]);
-                          }}
+              <div className="flex flex-col md:flex-row items-center justify-between w-full h-auto">
+                <div className="flex flex-col order-2 md:order-none md:w-2/3 justify-start items-center">
+                  {' '}
+                  Our Hours
+                  {hoursOfOperation &&
+                    hoursOfOperation.map((hour, i) => {
+                      return (
+                        <div
+                          key={'hours' + i}
+                          className="flex justify-between items-center"
                         >
-                          <ShowIcon icon={'Close'} stroke={'2'} />
-                        </button>
-                      )}
-                    </div>
-                  );
-                })}
-              {session?.user.role == 'Admin' && (
-                <button
-                  className="btnFancy"
-                  onClick={() => setHours([...hoursOfOperation!, 'New Hours'])}
-                >
-                  Add
-                </button>
-              )}
-              {session?.user.role == 'Admin' && (
-                <button
-                  className="btnFancy"
-                  onClick={async () => {
-                    const res = await fetch('/api/admin/update_hours', {
-                      method: 'PUT',
-                      headers: {
-                        'Content-Type': 'application/json',
-                      },
-                      body: JSON.stringify({
-                        hours: hoursOfOperation!,
-                      }),
-                    });
-                  }}
-                >
-                  Save
-                </button>
-              )}
-            </div>
-              <div className="h-[300px] w-[400px]">
-                <div className=" h-64 w-64 m-auto fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
-                  <ShowIcon icon={'ClockLatin'} stroke={'0.05'} />
+                          {session?.user.role == 'Admin' ? (
+                            <input
+                              defaultValue={hour}
+                              onChange={(e) => {
+                                console.log(e.target.value, i);
+                                let hoursArr = hoursOfOperation;
+                                hoursArr[i] = e.target.value;
+                                setHours([...hoursArr]);
+                              }}
+                            />
+                          ) : (
+                            <p dangerouslySetInnerHTML={{ __html: hour }} />
+                          )}
+                          {session?.user.role == 'Admin' && (
+                            <button
+                              className="h-10 w-10 md:h-12 md:w-12 stroke-alertcolor fill-alertcolor"
+                              onClick={(e) => {
+                                console.log(i);
+                                let hoursArr = hoursOfOperation;
+                                hoursArr.splice(i, 1);
+                                setHours([...hoursArr]);
+                              }}
+                            >
+                              <ShowIcon icon={'Close'} stroke={'2'} />
+                            </button>
+                          )}
+                        </div>
+                      );
+                    })}
+                  {session?.user.role == 'Admin' && (
+                    <button
+                      className="btnFancy"
+                      onClick={() =>
+                        setHours([...hoursOfOperation!, 'New Hours'])
+                      }
+                    >
+                      Add
+                    </button>
+                  )}
+                  {session?.user.role == 'Admin' && (
+                    <button
+                      className="btnFancy"
+                      onClick={async () => {
+                        const res = await fetch('/api/admin/update_hours', {
+                          method: 'PUT',
+                          headers: {
+                            'Content-Type': 'application/json',
+                          },
+                          body: JSON.stringify({
+                            hours: hoursOfOperation!,
+                          }),
+                        });
+                      }}
+                    >
+                      Save
+                    </button>
+                  )}
+                </div>
+                <div className="h-[300px] w-[400px]">
+                  <div className=" h-64 w-64 m-auto fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
+                    <ShowIcon icon={'ClockLatin'} stroke={'0.05'} />
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="flex flex-col md:flex-row items-center justify-between w-full h-auto">
-              <div className="h-[200px] w-[400px]">
-                <div className=" h-52 w-52 m-auto fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
-                  <ShowIcon icon={'CallUs'} stroke={'0.05'} />
+              <div className="flex flex-col md:flex-row items-center justify-between w-full h-auto">
+                <div className="h-[200px] w-[400px]">
+                  <div className=" h-52 w-52 m-auto fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
+                    <ShowIcon icon={'CallUs'} stroke={'0.05'} />
+                  </div>
                 </div>
+                <p>
+                  Please note that the studio is opened earlier if private
+                  lessons are in session. Please give us a call at{' '}
+                  <a href="tel:1-8482440512">848-244-0512 (or text)</a> if you
+                  would like to come at different time than our hours of
+                  operation.
+                </p>
               </div>
-              <p>
-              Please note that the studio is opened earlier if private lessons are in session. Please give us a call at <a href="tel:1-8482440512">848-244-0512 (or text)</a> if you would like to come at different time than our hours of operation.
-
-              </p>
-            </div>
             </section>
           </TabPanel>
         </Tabs>
       </div>
     </PageWrapper>
   );
-};
+}
