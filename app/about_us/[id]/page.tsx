@@ -172,7 +172,7 @@ export default function Page({ params }: { params: { id: string } }) {
                       windowSize.width! < 500 && tabIndex != index
                         ? windowSize.width! < 380
                           ? '2.5rem'
-                          : '4rem'
+                          : '3.8rem'
                         : 'fit-content',
                   }}
                   className={` mt-1 p-1 cursor-pointer outline-0 border ${
