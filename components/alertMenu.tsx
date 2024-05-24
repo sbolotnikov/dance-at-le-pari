@@ -49,15 +49,21 @@ export default function AlertMenu(props:AlertType) {
   // main popup alert component
   // DO NOT FORGET TO NAME main tag id="mainPage"
 
-  const el = document.querySelector('#mainPage');
+  // const el = document.querySelector('#mainPage');
   const [button1Color, setbutton1Color]=useState({'color': "", 'backgroundColor': '','borderColor': ''});
   const [button2Color, setbutton2Color]=useState({'color': "", 'backgroundColor': '','borderColor': ''});
   const [value, setValue] = useState("");
-
+  const [scrollAmount, setScrollAmount] = useState(0);
+  useEffect(() => {
+    if (props.visibility) {
+      setScrollAmount(document.querySelector('#mainPage')!.scrollTop);
+      StopScroll();
+    }
+  },[props.visibility]);
   function StopScroll(){
     // prevent scrolling
     var x=0;
-    var y=el!==null?el!.scrollTop:0;
+    var y=scrollAmount;
     window.onscroll=function(){window.scrollTo(x, y);};
        
 }
@@ -98,19 +104,9 @@ const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElemen
               }}
               className="animatePageMainDiv w-[100vw] h-[100svh] absolute flex flex-col justify-center items-center bg-slate-500/70 left-0 z-[1001] backdrop-blur-md"
             >
-              {/* <button
-                className={` flex flex-col justify-center items-center md:mt-14 origin-center cursor-pointer z-10 hover:scale-125 `}
-                onClick={() => {
-                  setIsVisible(false);
-                  onReturn();
-                }}
-              >
-            <div className=" h-8 w-8 md:h-12 md:w-12   fill-darkMainColor stroke-darkMainColor">
-              <ShowIcon icon={'Close'} stroke={'2'} />
-            </div>
-          </button>         */}
+              
           
-    <div className="w-[100vw] h-[100svh] absolute flex justify-center items-center bg-slate-500/70 left-0 z-[1001] backdrop-blur-md" style={{ top: el!.scrollTop }} >
+    <div className="w-[100vw] h-[100svh] absolute flex justify-center items-center bg-slate-500/70 left-0 z-[1001] backdrop-blur-md" style={{ top: scrollAmount }} >
       <div className='m-auto  max-w-[600px] bg-gray-200 border-2 border-solid border-gray-400 rounded-md w-[97%] p-2 flex flex-col content-evenly'>
         <label className='px-1 py-2 border-2 border-solid border-transparent rounded-sm w-full m-1 text-center' style={Object.values(variant)[Object.keys(variant).indexOf(props.styling.variantHead)]}>{props.styling.heading}</label>
         <h5 className="px-1 py-2 border-2 border-solid border-transparent text-light rounded-sm w-full m-1 text-center text-gray-700"  dangerouslySetInnerHTML={{ __html:props.styling.text}}/>
