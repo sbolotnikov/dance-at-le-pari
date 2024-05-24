@@ -8,8 +8,8 @@ import { TPaymentType } from '@/types/screen-settings';
 import EventTemplateEditingForm from '@/components/EventTemplateEditingForm';
 import AlertMenu from '@/components/alertMenu';
 import PDFDisplay from '@/components/PDFDIsplay';
-import { useDispatch} from "react-redux"
-import { addItem } from "../../slices/cartSlice";
+import { useDispatch } from 'react-redux';
+import { addItem } from '../../slices/cartSlice';
 import { useDimensions } from '@/hooks/useDimensions';
 import sleep from '@/utils/functions';
 import ShowIcon from '@/components/svg/showIcon';
@@ -45,7 +45,11 @@ const page: FC<pageProps> = ({}) => {
   const router = useRouter();
   const windowSize = useDimensions();
   const tabsIndexArray = ['Private', 'Group', 'Floor_Fee', 'Party'];
-  const actionTemplateChoice = (action1: string, item: number, option: number | null) => {
+  const actionTemplateChoice = (
+    action1: string,
+    item: number,
+    option: number | null
+  ) => {
     if (action1 == 'Edit') {
       setTemplateID(item);
       setRevealTemplateEdit(true);
@@ -55,23 +59,25 @@ const page: FC<pageProps> = ({}) => {
       setRevealTemplateEdit(true);
     }
     if (action1 == 'Book') {
-      console.log(item, products)
-      const productToCart= products.find((product)=>product.id === item)
-      console.log("choice",productToCart, option)   
-        const p1 = {
-          id:item,
-          image:productToCart?.image?productToCart?.image:'',
-          eventtype:productToCart?.eventtype?productToCart?.eventtype:'',
-          tag:productToCart?.tag?productToCart?.tag:'',
-          price:productToCart?.options?productToCart?.options[option!].price:0,
-          amount:productToCart?.options?productToCart?.options[option!].amount:0,
-          seat: null,
-          table: null,
-          date: null
-        }
-        dispatch(addItem(p1));
-    
-      
+      console.log(item, products);
+      const productToCart = products.find((product) => product.id === item);
+      console.log('choice', productToCart, option);
+      const p1 = {
+        id: item,
+        image: productToCart?.image ? productToCart?.image : '',
+        eventtype: productToCart?.eventtype ? productToCart?.eventtype : '',
+        tag: productToCart?.tag ? productToCart?.tag : '',
+        price: productToCart?.options
+          ? productToCart?.options[option!].price
+          : 0,
+        amount: productToCart?.options
+          ? productToCart?.options[option!].amount
+          : 0,
+        seat: null,
+        table: null,
+        date: null,
+      };
+      dispatch(addItem(p1));
     }
     if (action1 == 'Delete') {
       setTemplateID(item);
@@ -115,19 +121,21 @@ const page: FC<pageProps> = ({}) => {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        if ((data.length > 0)&&(tabsArray.indexOf('Special Events')==-1)) {
+        if (data.length > 0 && tabsArray.indexOf('Special Events') == -1) {
           setTabsArray((prev) => [...prev, 'Special Events']);
-          setSpecialEvents(data.sort((a:any , b:any) => {
-            if (a.price > b.price) return 1;
-            else if (a.price < b.price) return -1;
-            else return 0;
-          }));
-                    }
+          setSpecialEvents(
+            data.sort((a: any, b: any) => {
+              if (a.price > b.price) return 1;
+              else if (a.price < b.price) return -1;
+              else return 0;
+            })
+          );
+        }
       })
       .catch((error) => {
         console.log(error);
       });
-  }, []);  
+  }, []);
   useEffect(() => {
     fetch('/api/get_products', {
       method: 'GET',
@@ -138,15 +146,17 @@ const page: FC<pageProps> = ({}) => {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        let prodArr=[]
+        let prodArr = [];
         if (session?.user.role !== 'Admin') {
-          prodArr = data.products.filter((product: any) => product.visible == true);
-        } else prodArr =data.products;
-        prodArr.sort((a:any , b:any) => {
+          prodArr = data.products.filter(
+            (product: any) => product.visible == true
+          );
+        } else prodArr = data.products;
+        prodArr.sort((a: any, b: any) => {
           if (a.price > b.price) return 1;
           else if (a.price < b.price) return -1;
           else return 0;
-        })
+        });
         setProducts(prodArr);
       })
       .catch((error) => {
@@ -155,32 +165,36 @@ const page: FC<pageProps> = ({}) => {
   }, [session?.user.role!]);
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
-      {revealAlert && <AlertMenu onReturn={onReturn} styling={alertStyle} />}
-      {revealPDF && <PDFDisplay onReturn={()=>{setRevealPDF(false)}} />}
+      <AlertMenu
+        visibility={revealAlert}
+        onReturn={onReturn}
+        styling={alertStyle}
+      />
+      {revealPDF && (
+        <PDFDisplay
+          onReturn={() => {
+            setRevealPDF(false);
+          }}
+        />
+      )}
       {revealTemplateEdit == true ? (
         <EventTemplateEditingForm
-        
-          onReturn={() =>{
+          onReturn={() => {
             sleep(1200).then(() => {
-              setRevealTemplateEdit(false)
-            }); 
-            
+              setRevealTemplateEdit(false);
+            });
           }}
           template={templateID}
         />
       ) : (
-        <div
-          className="border-0 rounded-md p-2  shadow-2xl w-[95%] h-[70svh] md:h-[85svh] max-w-5xl md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md "
-         
-        >
-           
+        <div className="border-0 rounded-md p-2  shadow-2xl w-[95%] h-[70svh] md:h-[85svh] max-w-5xl md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md ">
           <Tabs
             selectedIndex={tabIndex}
-            className="w-full h-full flex flex-col border rounded-md border-lightMainColor dark:border-darkMainColor"
+            className="w-full h-full flex flex-col border rounded-md relative border-lightMainColor dark:border-darkMainColor"
             onSelect={(index: number) => setTabIndex(index)}
           >
-                       <h2
-              className="text-center font-bold uppercase"
+            <h2
+              className="text-center font-semibold md:text-4xl uppercase"
               style={{ letterSpacing: '1px' }}
             >
               Activities
@@ -189,26 +203,38 @@ const page: FC<pageProps> = ({}) => {
               <ShowIcon icon={'Activities'} stroke={'0.1'} />
             </div>
             <div className="w-full  flex justify-center items-center">
-
+              <h2 className="text-center font-semibold md:text-sm italic">
+                All prices include credit card fees
+              </h2>
               <button
-                className=" btnFancy mx-auto text-base text-center  rounded-md"
-                style={{ padding: '0' }}
+                className=" btnFancy mx-auto text-base text-center w-28 rounded-md absolute top-0 right-0"
+                style={{ padding: '0', margin: '5px 5px' }}
                 onClick={() => setRevealPDF(true)}
               >
-                Terms & Conditions here:
+                Terms & Conditions
               </button>
             </div>
-            <TabList className="h-[2.43rem] w-full  flex flex-row justify-between items-start flex-wrap rounded-t-md  dark:bg-lightMainBG  bg-darkMainBG"
-            style={{
-              backgroundImage:
-                'linear-gradient(0deg, rgba(63, 62, 211,0.2) 0%, rgba(63, 62, 211,0.2) 16.667%,rgba(73, 92, 210,0.2) 16.667%, rgba(73, 92, 210,0.2) 33.334%,rgba(101, 183, 208,0.2) 33.334%, rgba(101, 183, 208,0.2) 50.001%,rgba(92, 153, 209,0.2) 50.001%, rgba(92, 153, 209,0.2) 66.668%,rgba(82, 122, 209,0.2) 66.668%, rgba(82, 122, 209,0.2) 83.335%,rgba(111, 213, 207,0.2) 83.335%, rgba(111, 213, 207,0.2) 100.002%),linear-gradient(45deg, rgba(63, 62, 211,0.2) 0%, rgba(63, 62, 211,0.2) 16.667%,rgba(73, 92, 210,0.2) 16.667%, rgba(73, 92, 210,0.2) 33.334%,rgba(101, 183, 208,0.2) 33.334%, rgba(101, 183, 208,0.2) 50.001%,rgba(92, 153, 209,0.2) 50.001%, rgba(92, 153, 209,0.2) 66.668%,rgba(82, 122, 209,0.2) 66.668%, rgba(82, 122, 209,0.2) 83.335%,rgba(111, 213, 207,0.2) 83.335%, rgba(111, 213, 207,0.2) 100.002%),linear-gradient(90deg, rgba(63, 62, 211,0.2) 0%, rgba(63, 62, 211,0.2) 16.667%,rgba(73, 92, 210,0.2) 16.667%, rgba(73, 92, 210,0.2) 33.334%,rgba(101, 183, 208,0.2) 33.334%, rgba(101, 183, 208,0.2) 50.001%,rgba(92, 153, 209,0.2) 50.001%, rgba(92, 153, 209,0.2) 66.668%,rgba(82, 122, 209,0.2) 66.668%, rgba(82, 122, 209,0.2) 83.335%,rgba(111, 213, 207,0.2) 83.335%, rgba(111, 213, 207,0.2) 100.002%),linear-gradient(90deg, rgb(118, 34, 211),rgb(55, 13, 228))',
-            }}
+            <TabList
+              className="h-[2.43rem] w-full  flex flex-row justify-between items-start flex-wrap rounded-t-md  dark:bg-lightMainBG  bg-darkMainBG"
+              style={{
+                backgroundImage:
+                  'linear-gradient(0deg, rgba(63, 62, 211,0.2) 0%, rgba(63, 62, 211,0.2) 16.667%,rgba(73, 92, 210,0.2) 16.667%, rgba(73, 92, 210,0.2) 33.334%,rgba(101, 183, 208,0.2) 33.334%, rgba(101, 183, 208,0.2) 50.001%,rgba(92, 153, 209,0.2) 50.001%, rgba(92, 153, 209,0.2) 66.668%,rgba(82, 122, 209,0.2) 66.668%, rgba(82, 122, 209,0.2) 83.335%,rgba(111, 213, 207,0.2) 83.335%, rgba(111, 213, 207,0.2) 100.002%),linear-gradient(45deg, rgba(63, 62, 211,0.2) 0%, rgba(63, 62, 211,0.2) 16.667%,rgba(73, 92, 210,0.2) 16.667%, rgba(73, 92, 210,0.2) 33.334%,rgba(101, 183, 208,0.2) 33.334%, rgba(101, 183, 208,0.2) 50.001%,rgba(92, 153, 209,0.2) 50.001%, rgba(92, 153, 209,0.2) 66.668%,rgba(82, 122, 209,0.2) 66.668%, rgba(82, 122, 209,0.2) 83.335%,rgba(111, 213, 207,0.2) 83.335%, rgba(111, 213, 207,0.2) 100.002%),linear-gradient(90deg, rgba(63, 62, 211,0.2) 0%, rgba(63, 62, 211,0.2) 16.667%,rgba(73, 92, 210,0.2) 16.667%, rgba(73, 92, 210,0.2) 33.334%,rgba(101, 183, 208,0.2) 33.334%, rgba(101, 183, 208,0.2) 50.001%,rgba(92, 153, 209,0.2) 50.001%, rgba(92, 153, 209,0.2) 66.668%,rgba(82, 122, 209,0.2) 66.668%, rgba(82, 122, 209,0.2) 83.335%,rgba(111, 213, 207,0.2) 83.335%, rgba(111, 213, 207,0.2) 100.002%),linear-gradient(90deg, rgb(118, 34, 211),rgb(55, 13, 228))',
+              }}
             >
               {tabsArray.map((item, index) => {
                 return (
                   <Tab
                     key={item}
-                    style={{width:((windowSize.width! < 640)&&(tabIndex != index))?(windowSize.width! < 434)?(windowSize.width! < 350)?'1.7rem':'2.8rem':'4rem': 'fit-content'}}
+                    style={{
+                      width:
+                        windowSize.width! < 640 && tabIndex != index
+                          ? windowSize.width! < 434
+                            ? windowSize.width! < 350
+                              ? '1.7rem'
+                              : '2.8rem'
+                            : '4rem'
+                          : 'fit-content',
+                    }}
                     className={` mt-1 p-1 cursor-pointer outline-0 border ${
                       tabIndex != index
                         ? ` truncate `
@@ -223,11 +249,11 @@ const page: FC<pageProps> = ({}) => {
             {tabsIndexArray.map((item, index) => {
               return (
                 <TabPanel
-                key={item+index}
+                  key={item + index}
                   className={`w-full  flex relative overflow-y-scroll ${
                     tabIndex != index ? 'hidden' : ''
-                  }`} 
-                  style={{ flex: '1 1 100%'}}
+                  }`}
+                  style={{ flex: '1 1 100%' }}
                 >
                   {products.length > 0 && (
                     <PaymentPageForm
@@ -244,30 +270,25 @@ const page: FC<pageProps> = ({}) => {
                 </TabPanel>
               );
             })}
-            {(tabsArray.indexOf('Special Events')!=-1)&&
-            <TabPanel className={`w-full  flex relative overflow-y-scroll ${
-                    tabIndex != 4 ? 'hidden' : ''
-                  }`}
-                  style={{ flex: '1 1 100%'}}
-                  >
- {specialEvents.length > 0 && (
-                    <PaymentPageForm
-                      paymentsArray={specialEvents}
-                      role={"None"}
-                      specialEvent={true}
-                      onReturn={(item1, action1) => {
-                        router.replace('/events/'+item1);
-                      }}
-                    />
-                  )}
-
-
-
-
-
-
-            </TabPanel>
-}
+            {tabsArray.indexOf('Special Events') != -1 && (
+              <TabPanel
+                className={`w-full  flex relative overflow-y-scroll ${
+                  tabIndex != 4 ? 'hidden' : ''
+                }`}
+                style={{ flex: '1 1 100%' }}
+              >
+                {specialEvents.length > 0 && (
+                  <PaymentPageForm
+                    paymentsArray={specialEvents}
+                    role={'None'}
+                    specialEvent={true}
+                    onReturn={(item1, action1) => {
+                      router.replace('/events/' + item1);
+                    }}
+                  />
+                )}
+              </TabPanel>
+            )}
           </Tabs>
         </div>
       )}

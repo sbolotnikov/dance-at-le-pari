@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { CalendarHeader } from './CalendarHeader';
 import { Day } from './Day';
 import { TEventAgenda, TEventArray } from '@/types/screen-settings';
-import AlertMenu from './alertMenu';
 import { useDate } from '@/hooks/useDate';
 import Link from 'next/link';
 import ImgFromDb from './ImgFromDb';
@@ -78,7 +77,7 @@ const Schedule = ({ eventsSet, onReturn }: Props) => {
 
   }, [windowSize.width, agendaView]);
   return (
-    <div className="w-full h-full  flex flex-col ">
+    <div className="w-full h-full  flex flex-col justify-center items-center ">
       <CalendarHeader
         dateDisplay={dateDisplay}
         defaultView={false}

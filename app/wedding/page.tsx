@@ -11,7 +11,7 @@ import ImgFromDb from '@/components/ImgFromDb';
 import { addItem } from '@/slices/cartSlice';
 import Iframe from 'react-iframe';
 import { useDispatch } from 'react-redux';
-import { TTemplateNew } from '@/types/screen-settings';
+import { TPriceOption, TTemplateNew } from '@/types/screen-settings';
 import Image from 'next/image';
 
 interface pageProps {}
@@ -21,7 +21,21 @@ const page: FC<pageProps> = ({}) => {
   const dispatch = useDispatch();
   const emailRef = useRef<HTMLInputElement>(null);
   const [revealAlert, setRevealAlert] = useState(false);
-  const [packages, setPackages] = useState<TTemplateNew[]>([]);
+  const [packages, setPackages] = useState<{tag: string;
+    eventtype: string;
+    id: number;
+    image: string;
+    length: number;
+    options: TPriceOption[];
+    teachersid: number[];
+    title: string | null;
+    location: string | null;
+    description: string | null;
+    visible: boolean;
+    name: string;
+            description2: string;
+            price1: string;
+  }[]>([]);
   const [alertStyle, setAlertStyle] = useState({
     variantHead: '',
     heading: ``,
@@ -66,12 +80,24 @@ const page: FC<pageProps> = ({}) => {
     tag: string;
     description: string;
   }[];
-  const bestPackage = 1;
+  const bestPackage = 78;
   useEffect(() => {
     console.log(packageArray.map((item) => item.id));
     get_package(packageArray.map((item) => item.id))
       .then((info) => {
-        setPackages(info.template);
+        let array1 =[];
+        let pack1;
+        for (let i=0; i<info.template.length; i++) {
+          pack1= packageArray.find((item) => item.id === info.template[i].id);
+          array1.push({
+            ...info.template[i],
+            name: pack1!.name,
+            description2: pack1!.description,
+            price1:pack1!.tag
+          });
+
+        }
+        setPackages(array1);
       })
       .catch((err) => {
         console.log(err);
@@ -79,24 +105,23 @@ const page: FC<pageProps> = ({}) => {
   }, []);
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
-      {/* {revealAlert && <AlertMenu onReturn={onReturn} styling={alertStyle} />} */}
       {revealAlert && <InfoPopup onReturn={onReturn} styling={alertStyle} />}
       <div
         className="border-0 rounded-md p-4  shadow-2xl w-[90%] h-[85svh]  max-w-[850px] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md overflow-auto"
         // style={{ boxShadow: '0 0 150px rgb(113, 113, 109 / 50%),inset 0 0 20px #242422' }}
       >
         <h2
-          className="text-center font-bold uppercase"
-          style={{ letterSpacing: '1px' }}
-        >
-          WEDDING / SPECIAL EVENT
-        </h2>
-        <h2
-          className="text-center font-bold uppercase"
-          style={{ letterSpacing: '1px' }}
-        >
-          DANCE LESSONS
-        </h2>
+            className="text-center font-semibold md:text-4xl uppercase"
+            style={{ letterSpacing: '1px' }}
+          >
+             WEDDING / SPECIAL EVENT
+          </h2>
+          <h2
+            className="text-center font-semibold md:text-4xl uppercase"
+            style={{ letterSpacing: '1px' }}
+          >
+            DANCE LESSONS
+          </h2>
         <div className="w-full   rounded-md md:grid md:grid-cols-4 md:gap-2">
           <Image
             src="/images/vendorBadge_AsSeenOnWeb.png"
@@ -178,10 +203,10 @@ const page: FC<pageProps> = ({}) => {
                     <div
                       key={'package' + index}
                       className={`m-3 p-2  flex flex-col justify-center items-center text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md ${
-                        index == bestPackage ? 'border-red-600' : ''
+                        item.id == bestPackage ? 'border-red-600' : ''
                       } border-2`}
                     >
-                      {index == bestPackage && (
+                      {item.id == bestPackage && (
                         <p
                           className={`text-red-600  font-DancingScript text-2xl rotate-12 animate-pulse`}
                         >
@@ -190,22 +215,22 @@ const page: FC<pageProps> = ({}) => {
                       )}
                       <h1
                         className={`text-2xl  text-center   text-shadow  dark:text-shadow-light ${
-                          index == bestPackage ? 'text-red-600' : ''
+                          item.id == bestPackage ? 'text-red-600' : ''
                         }`}
                       >
-                        {packageArray[index].name}
+                        {item.name}
                       </h1>
 
                       <p
                         className="  text-center"
                         dangerouslySetInnerHTML={{
-                          __html: `${packageArray[index].tag} ($${item.options[0].price} credit card) includes: <br/> ${item.options[0].amount} (45 minute) private lessons for the bride & groom`,
+                          __html: `${item.price1} ($${item.options[0].price} credit card) includes: <br/> ${item.options[0].amount} (45 minute) private lessons for the bride & groom`,
                         }}
                       />
                       <div
                         className="list-disc"
                         dangerouslySetInnerHTML={{
-                          __html: packageArray[index].description,
+                          __html: item.description2,
                         }}
                       ></div>
                       <ImgFromDb

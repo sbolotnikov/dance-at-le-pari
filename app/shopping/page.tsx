@@ -38,7 +38,6 @@ const page: FC<pageProps> = ({}) => {
   const dispatch = useDispatch();
   const onReturnAlert = (decision1: string, amount: string | null) => {
     setRevealAlert(false);
-   
   };
   useEffect(() => {
     if (
@@ -49,10 +48,8 @@ const page: FC<pageProps> = ({}) => {
       setScrolling1(true);
       // console.log(document.getElementById('containedDiv')?.offsetHeight!,)
       // document.getElementById('outerWrapper')!.style.height = (document.getElementById('containedDiv')?.offsetHeight!+200).toString() + 'px';
-      
     } else {
       setScrolling1(false);
-      
     }
   }, [items, windowSize.height]);
 
@@ -86,9 +83,11 @@ const page: FC<pageProps> = ({}) => {
           }}
         />
       )}
-      {revealAlert && (
-        <AlertMenu onReturn={onReturnAlert} styling={alertStyle} />
-      )}
+      <AlertMenu
+        visibility={revealAlert}
+        onReturn={onReturnAlert}
+        styling={alertStyle}
+      />
       <div
         id="outerWrapper"
         className="border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-5xl  flex justify-center items-center flex-col  h-[80svh] md:h-[85svh] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md"
@@ -104,7 +103,7 @@ const page: FC<pageProps> = ({}) => {
             } flex flex-col w-full p-1 justify-center items-center`}
           >
             <h2
-              className="text-center font-bold uppercase"
+              className="text-center font-semibold md:text-4xl uppercase"
               style={{ letterSpacing: '1px' }}
             >
               Shopping Cart

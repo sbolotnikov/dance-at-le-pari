@@ -2,7 +2,7 @@ import Navbar from '@/components/Navbar/navbar';
 import './navStyle.css';
 import './globals.css';
 import { Providers } from './providers';
-import { Inter } from 'next/font/google';
+import { Lato } from 'next/font/google';
 import localFont from 'next/font/local';
 
 const dancingScript = localFont({
@@ -26,7 +26,7 @@ const dancingScript = localFont({
   ],
   variable: '--font-DancingScript'
 })
-const inter = Inter({ subsets: ['latin'] });
+const latoFont = Lato({weight:["300",'400','700'],style:['italic','normal'], subsets: ['latin'] });
 
 export const metadata = {
   title: 'Le Pari Dance Center | In-Studio & Online Dance Lessons, Wedding Dance | Fanwood, NJ',
@@ -48,7 +48,7 @@ export default function RootLayoutFC({
   return ( 
     <html
       lang="en"
-      className={`min-h-screen  light antialiased ${inter.className} ${dancingScript.variable}`}
+      className={`min-h-screen  light antialiased ${latoFont.className} ${dancingScript.variable}`}
     > 
           
           {/* <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" /> */}

@@ -71,9 +71,11 @@ export default function ChooseTeacher(props: TAlertType) {
       className="w-[100vw] h-[100svh] absolute flex justify-center items-center bg-slate-500/70 left-0 z-[1001] backdrop-blur-md"
       style={{ top: el!.scrollTop }}
     >
-      {revealAlert && (
-        <AlertMenu onReturn={onReturnAlert} styling={alertStyle} />
-      )}
+      <AlertMenu
+        visibility={revealAlert}
+        onReturn={onReturnAlert}
+        styling={alertStyle}
+      />
       <div className="m-auto  max-w-[600px] bg-gray-200 border-2 border-solid border-gray-400 rounded-md w-[97%] p-2 flex flex-col content-evenly">
         <label className="px-1 py-2 border-2 border-solid border-transparent rounded-sm w-full m-1 text-center">
           Available teachers
@@ -88,7 +90,7 @@ export default function ChooseTeacher(props: TAlertType) {
               displayTeachers.map((item, index) =>
                 item.image !== null && item.image !== undefined ? (
                   <div
-                    key={"Teacher"+index}
+                    key={'Teacher' + index}
                     className="m-1 mr-4 relative cursor-pointer flex flex-col justify-center items-center "
                     onClick={(e) => {
                       e.preventDefault();
@@ -122,10 +124,12 @@ export default function ChooseTeacher(props: TAlertType) {
                         <ShowIcon icon={'DefaultUser'} stroke={'2'} />
                       </div>
                     )}
-                     <h2 className="text-center flex-wrap truncate  w-12 md:w-16">{item.name}</h2>
+                    <h2 className="text-center flex-wrap truncate  w-12 md:w-16">
+                      {item.name}
+                    </h2>
                   </div>
                 ) : (
-                  <div key={"Teacher"+index} ></div>
+                  <div key={'Teacher' + index}></div>
                 )
               )}
           </div>

@@ -14,7 +14,9 @@ interface pageProps {}
 
 const page: FC<pageProps> = ({}) => {
   const [revealTemplateEdit, setRevealTemplateEdit] = useState(false);
-  const [displayTemplates, setDisplayTemplates] = useState<TTemplateSmall[]>([]);
+  const [displayTemplates, setDisplayTemplates] = useState<TTemplateSmall[]>(
+    []
+  );
   const dateTimeRef = useRef<HTMLInputElement>(null);
   const [complexEvent, setComplexEvent] = useState<boolean>(false);
   const [seatsPerTable, setSeatsPerTable] = useState<Number[]>([8, 7]);
@@ -72,7 +74,7 @@ const page: FC<pageProps> = ({}) => {
       });
     }
     if (decision1 === 'Ok') location.reload();
-  }
+  };
   const refreshTemplates = () => {
     fetch('/api/admin/get_event_templates', {
       method: 'GET',
@@ -101,17 +103,24 @@ const page: FC<pageProps> = ({}) => {
     }
   };
   useEffect(() => {
-    if (document.getElementById('wrapperDiv')?.offsetHeight! -
-    containerRef.current?.offsetHeight! >
-    0)
-      { setScrolling(true)
-      }
-      else{ setScrolling(false);}
-      console.log(containerRef.current?.offsetHeight);
+    if (
+      document.getElementById('wrapperDiv')?.offsetHeight! -
+        containerRef.current?.offsetHeight! >
+      0
+    ) {
+      setScrolling(true);
+    } else {
+      setScrolling(false);
+    }
+    console.log(containerRef.current?.offsetHeight);
   }, [complexEvent, windowSize.height]);
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex md:items-end items-center justify-center">
-      {revealAlert && <AlertMenu onReturn={onReturn} styling={alertStyle} />}
+      <AlertMenu
+        visibility={revealAlert}
+        onReturn={onReturn}
+        styling={alertStyle}
+      />
       {revealCloud && <ChoosePicture onReturn={onReturnPicture} />}
       {revealFrontTemplates && (
         <ChooseTemplates onReturn={() => setRevealFrontTemplates(false)} />
@@ -122,9 +131,20 @@ const page: FC<pageProps> = ({}) => {
           template={template1?.id}
         />
       ) : (
-        <div id="outerWrapper" className="   shadow-2xl w-[90%]  max-w-[450px] md:w-full h-[75svh] md:h-[85svh] bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md border-0 rounded-md  p-2 mt-6 md:mb-2">
-          <div id="wrapperDiv" className="border rounded-md border-lightMainColor dark:border-darkMainColor w-full h-full relative  p-1 overflow-y-scroll flex flex-col justify-center items-center">
-            <div ref={containerRef} className={`${scrolling?"":"absolute top-0 left-0"} flex flex-col w-full p-1 justify-center items-center`}>
+        <div
+          id="outerWrapper"
+          className="   shadow-2xl w-[90%]  max-w-[450px] md:w-full h-[75svh] md:h-[85svh] bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md border-0 rounded-md  p-2 mt-6 md:mb-2"
+        >
+          <div
+            id="wrapperDiv"
+            className="border rounded-md border-lightMainColor dark:border-darkMainColor w-full h-full relative  p-1 overflow-y-scroll flex flex-col justify-center items-center"
+          >
+            <div
+              ref={containerRef}
+              className={`${
+                scrolling ? '' : 'absolute top-0 left-0'
+              } flex flex-col w-full p-1 justify-center items-center`}
+            >
               <h2
                 className="text-center font-bold uppercase"
                 style={{ letterSpacing: '1px' }}
@@ -132,8 +152,8 @@ const page: FC<pageProps> = ({}) => {
                 Add Events
               </h2>
               <div className="  h-20 w-20 md:h-28 md:w-28 mb-6 m-auto">
-              <ShowIcon icon={'Plus'} stroke={'0.1'} />
-            </div>
+                <ShowIcon icon={'Plus'} stroke={'0.1'} />
+              </div>
               <div className="w-full h-28 relative   overflow-scroll border border-lightMainColor dark:border-darkMainColor rounded-md">
                 <div className="absolute top-0 left-0  min-w-full  flex flex-wrap items-start justify-start ">
                   {displayTemplates.length > 0 &&
@@ -194,25 +214,27 @@ const page: FC<pageProps> = ({}) => {
                   </div>
                 </div>
               </div>
-                <h2 className="flex flex-row justify-center items-center  m-1">
-                  {(template1 !== undefined )?`${template1?.eventtype} ${template1?.tag}` :"Undefined" }
-                </h2>
+              <h2 className="flex flex-row justify-center items-center  m-1">
+                {template1 !== undefined
+                  ? `${template1?.eventtype} ${template1?.tag}`
+                  : 'Undefined'}
+              </h2>
               <div className="w-full h-20 flex  justify-center items-center">
                 <div className="relative flex  justify-center items-center outline-none border border-lightMainColor dark:border-darkMainColor rounded-md w-24 mx-auto ">
                   {template1 !== undefined ? (
                     <div className=" h-10 w-10 md:h-12 md:w-12  flex flex-col justify-center items-center">
-                    <ImgFromDb
-                      url={template1.image}
-                      stylings="object-contain m-auto"
-                      alt="Template Picture"
-                    />
+                      <ImgFromDb
+                        url={template1.image}
+                        stylings="object-contain m-auto"
+                        alt="Template Picture"
+                      />
                     </div>
                   ) : (
                     <div className=" h-10 w-10 md:h-12 md:w-12 fill-lightMainColor flex justify-center items-center stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
                       <ShowIcon icon={'Image'} stroke={'0.75'} />
                     </div>
                   )}
-                   <div
+                  <div
                     className="absolute -top-3 -right-8 h-6 w-6 md:h-7 md:w-7 fill-green-600 m-auto stroke-lightMainColor dark:fill-green-600 dark:stroke-darkMainColor cursor-pointer "
                     onClick={(e) => {
                       e.preventDefault();
@@ -246,37 +268,37 @@ const page: FC<pageProps> = ({}) => {
                 />
               </label>
               {repeating && (
-              <label className="flex flex-row m-auto justify-between items-center">
-                Interval of repeating
-                <select
-                  className="bg-main-bg m-2 rounded-md bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor"
-                  value={repeatInterval}
-                  onChange={(e) => {
-                    setRepeatInterval(parseInt(e.target.value));
-                  }}
-                >
-                  <option value={0}>None</option>
-                  <option value={24 * 3600000}>Every Day</option>
-                  <option value={24 * 3600000 * 7}>Every Week</option>
-                  <option value={24 * 3600000 * 14}>Every 2 Week</option>
-                </select>
-              </label>
-            )}
-            {repeating && (
-              <label className="flex flex-row justify-between items-center">
-                End of interval date
-                <input
-                  className="flex-1 outline-none border-none rounded-md   text-lightMainColor p-0.5 mx-1"
-                  value={eventDateTimeEnd}
-                  onChange={(e) => {
-                    if (e.target.value >= eventDateTime1)
-                      setEventDateTimeEnd(e.target.value);
-                  }}
-                  type="datetime-local"
-                  required
-                />
-              </label>
-            )}
+                <label className="flex flex-row m-auto justify-between items-center">
+                  Interval of repeating
+                  <select
+                    className="bg-main-bg m-2 rounded-md bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor"
+                    value={repeatInterval}
+                    onChange={(e) => {
+                      setRepeatInterval(parseInt(e.target.value));
+                    }}
+                  >
+                    <option value={0}>None</option>
+                    <option value={24 * 3600000}>Every Day</option>
+                    <option value={24 * 3600000 * 7}>Every Week</option>
+                    <option value={24 * 3600000 * 14}>Every 2 Week</option>
+                  </select>
+                </label>
+              )}
+              {repeating && (
+                <label className="flex flex-row justify-between items-center">
+                  End of interval date
+                  <input
+                    className="flex-1 outline-none border-none rounded-md   text-lightMainColor p-0.5 mx-1"
+                    value={eventDateTimeEnd}
+                    onChange={(e) => {
+                      if (e.target.value >= eventDateTime1)
+                        setEventDateTimeEnd(e.target.value);
+                    }}
+                    type="datetime-local"
+                    required
+                  />
+                </label>
+              )}
               <div className="flex flex-col justify-center items-center border border-lightMainColor dark:border-darkMainColor rounded-md p-1 m-1">
                 <label
                   className="flex flex-row cursor-pointer justify-center text-center items-start"

@@ -89,8 +89,8 @@ export default function Page({ params }: { params: { id: string } }) {
     setRevealAlert(false);
     if (decision1 == 'Cancel') {
     }
-    if (decision1 == 'Ok') { 
-      window.location.reload(); 
+    if (decision1 == 'Ok') {
+      window.location.reload();
     }
     if (decision1 == 'Update Table') {
       let eventDataCopy = eventData;
@@ -377,19 +377,20 @@ export default function Page({ params }: { params: { id: string } }) {
   };
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
-      {revealAlert && (
-        <AlertMenu onReturn={onReturnAlert} styling={alertStyle} />
-      )}
+      <AlertMenu
+        visibility={revealAlert}
+        onReturn={onReturnAlert}
+        styling={alertStyle}
+      />
       {(revealCloud || revealCloud1) && (
         <ChoosePicture onReturn={onReturnPicture} />
       )}
       {revealCloud2 && <ChooseTeacher onReturn={onReturnTeacher} />}
-      {revealAlert && (
-        <AlertMenu onReturn={onReturnAlert} styling={alertStyle} />
-      )}
       {loading && <LoadingScreen />}
       <div className="border-0 rounded-md px-4 pt-4 shadow-2xl w-[90%] max-w-[1350px] h-[85%] overflow-y-auto md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
-        <div className={`  min-w-full   flex flex-col flex-wrap items-center justify-center absolute top-0 right-0 `}>
+        <div
+          className={`  min-w-full   flex flex-col flex-wrap items-center justify-center absolute top-0 right-0 `}
+        >
           <h2
             className="text-center w-full font-bold uppercase"
             style={{ letterSpacing: '1px' }}

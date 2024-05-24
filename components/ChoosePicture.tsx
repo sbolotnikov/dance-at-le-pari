@@ -98,9 +98,7 @@ export default function ChoosePicture(props: TAlertType) {
       className="w-[100svw] h-[100svh] absolute flex justify-center items-center bg-slate-500/70 left-0 z-[1001] backdrop-blur-md"
       style={{ top: el!.scrollTop }}
     >
-      {revealAlert && (
-        <AlertMenu onReturn={onReturnAlert} styling={alertStyle} />
-      )}
+        <AlertMenu visibility={revealAlert}  onReturn={onReturnAlert} styling={alertStyle} />
       <div className="m-auto  max-w-[600px] bg-gray-200 border-2 border-solid border-gray-400 rounded-md w-[97%] p-2 flex flex-col content-evenly">
         <label className="px-1 py-2 border-2 border-solid border-transparent rounded-sm w-full m-1 text-center">
           Available images

@@ -62,8 +62,7 @@ export default function EditScheduleModal({
   });
   useEffect(() => {
     let dt = new Date();
-    if (event.id !== undefined) dt = new Date(event.date)
-
+    if (event.id !== undefined) dt = new Date(event.date);
 
     setEventDateTime1(
       dt.toLocaleDateString('sv-SE', {
@@ -97,7 +96,7 @@ export default function EditScheduleModal({
         })
     );
     if (event.id !== undefined) {
-        console.log(event)
+      console.log(event);
       setEventType(event.eventtype);
       setTag(event.tag);
       setLocation(event.location!);
@@ -105,9 +104,7 @@ export default function EditScheduleModal({
       setEventDateTimeEnd(event.date);
       setLength(event.length);
       let dateObj = Date.parse(event.date);
-      let newDateOBJ = new Date(
-        dateObj + event.length * 60000
-      );
+      let newDateOBJ = new Date(dateObj + event.length * 60000);
       setEventDateTime2(
         newDateOBJ.toLocaleDateString('en-us', {
           year: 'numeric',
@@ -120,10 +117,9 @@ export default function EditScheduleModal({
           })
       );
 
-
       if (event.teachersid.length === 1) {
         let user1 = users.filter((user) => user.id == event.teachersid[0])[0];
-        console.log(event )
+        console.log(event);
         setTeacher({ id: user1.id, name: user1.name, image: user1.image! });
       }
       setStudentid(event.studentid);
@@ -170,13 +166,14 @@ export default function EditScheduleModal({
       onReturn(null, { s: 'Delete', id: event.id });
     }
     setRevealAlert(false);
-  };  useEffect(() => {
+  };
+  useEffect(() => {
     document.getElementById('wrapperDiv')?.offsetHeight! -
       document.getElementById('containedDiv')?.offsetHeight! >
     0
       ? setScrolling(true)
       : setScrolling(false);
-  }, [ windowSize.height]);
+  }, [windowSize.height]);
 
   return (
     <AnimateModalLayout
@@ -186,9 +183,12 @@ export default function EditScheduleModal({
         onReturn(null, null);
       }}
     >
-      {revealAlert && (
-        <AlertMenu onReturn={onReturnAlert} styling={alertStyle} />
-      )}
+      <AlertMenu
+        visibility={revealAlert}
+        onReturn={onReturnAlert}
+        styling={alertStyle}
+      />
+
       {revealCloud1 && (
         <ChooseUsersQuick
           title={'student'}
@@ -211,7 +211,7 @@ export default function EditScheduleModal({
           group={JSON.stringify([{ role: 'Teacher' }, { role: 'Admin' }])}
           onReturn={onReturnTeacher}
           selectedUsers={users
-            .filter((user) => ((user.role === 'Teacher')||(user.role === 'Admin')))
+            .filter((user) => user.role === 'Teacher' || user.role === 'Admin')
             .map((user) => {
               return {
                 id: user.id,
@@ -221,9 +221,21 @@ export default function EditScheduleModal({
             })}
         />
       )}
-      <div className={`border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-md  flex justify-center items-center flex-col   md:w-full bg-lightMainBG dark:bg-darkMainBG backdrop-blur-md ${role == 'Student' ?"max-h-[527px] h-full":"h-[70svh] md:h-[85svh]"}`}>
-        <div  id="wrapperDiv" className="w-full h-full relative  p-1  overflow-y-auto border border-lightMainColor dark:border-darkMainColor rounded-md flex flex-col justify-center items-center">
-          <div id="containedDiv" className={`${ scrolling ? '' : 'absolute top-0 left-0'} flex flex-col w-full p-1 justify-center items-center`}>
+      <div
+        className={`border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-md  flex justify-center items-center flex-col   md:w-full bg-lightMainBG dark:bg-darkMainBG backdrop-blur-md ${
+          role == 'Student' ? 'max-h-[527px] h-full' : 'h-[70svh] md:h-[85svh]'
+        }`}
+      >
+        <div
+          id="wrapperDiv"
+          className="w-full h-full relative  p-1  overflow-y-auto border border-lightMainColor dark:border-darkMainColor rounded-md flex flex-col justify-center items-center"
+        >
+          <div
+            id="containedDiv"
+            className={`${
+              scrolling ? '' : 'absolute top-0 left-0'
+            } flex flex-col w-full p-1 justify-center items-center`}
+          >
             <h2 className="w-full text-center uppercase">
               {role == 'Student' ? 'Your event' : 'Edit/Add Schedule events'}
             </h2>
@@ -536,10 +548,12 @@ export default function EditScheduleModal({
                   );
                 }}
               >
-                {`${(event.id&&event.id>-1 )? 'Submit Edited' : 'Create New'} Event`}
+                {`${
+                  event.id && event.id > -1 ? 'Submit Edited' : 'Create New'
+                } Event`}
               </button>
             )}
-            {event.id !== undefined && event.id>-1 && role !== 'Student' && (
+            {event.id !== undefined && event.id > -1 && role !== 'Student' && (
               <button
                 className="w-[70%] btnFancy text-base text-center  rounded-md"
                 style={{ padding: '0' }}

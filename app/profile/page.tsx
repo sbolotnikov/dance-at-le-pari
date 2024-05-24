@@ -42,7 +42,6 @@ const page: FC<pageProps> = () => {
   // const [scrolling, setScrolling] = useState(true);
   // const windowSize = useDimensions();
 
-  
   useEffect(() => {
     if (!session) router.replace('/');
     if (session?.user.name) userNameRef.current!.value = session?.user.name;
@@ -169,8 +168,8 @@ const page: FC<pageProps> = () => {
         email: emailRef.current?.value,
         phone,
         password: passwordRef.current?.value,
-        color, 
-        bio
+        color,
+        bio,
       }),
     }).then(async (res) => {
       let dbStoragePath =
@@ -207,45 +206,58 @@ const page: FC<pageProps> = () => {
   };
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
-      {revealAlert && <AlertMenu onReturn={onReturn} styling={alertStyle} />}
+      <AlertMenu
+        visibility={revealAlert}
+        onReturn={onReturn}
+        styling={alertStyle}
+      />
       {revealCloud && (
-        <ChooseAvatar onReturn={onReturnAvatar} styling={alertStyle} extraSize={session?.user.role=="Admin"?true:false} />
+        <ChooseAvatar
+          onReturn={onReturnAvatar}
+          styling={alertStyle}
+          extraSize={session?.user.role == 'Admin' ? true : false}
+        />
       )}
       {loading && <LoadingScreen />}
       <div className="   shadow-2xl w-[90%]  max-w-[450px] md:w-full h-[85svh]  bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md border-0 rounded-md  p-2 md:mt-6">
-        <div id="wrapperDiv" className="w-full h-full border rounded-md border-lightMainColor dark:border-darkMainColor relative overflow-y-auto flex flex-col justify-center items-center">
-          
-          <div  id="containedDiv"  className={`absolute top-0 left-0 flex flex-col w-full p-1 justify-center items-center `}>  
+        <div
+          id="wrapperDiv"
+          className="w-full h-full border rounded-md border-lightMainColor dark:border-darkMainColor relative overflow-y-auto flex flex-col justify-center items-center"
+        >
+          <div
+            id="containedDiv"
+            className={`absolute top-0 left-0 flex flex-col w-full p-1 justify-center items-center `}
+          >
             <h2
-              className="text-center font-bold uppercase relative"
+              className="text-center font-semibold md:text-4xl uppercase relative"
               style={{ letterSpacing: '1px' }}
             >
               Your's {session?.user.role} Profile
               <button
-              type="button"
-              className="absolute top-5 right-0 h-6 w-6   md:h-8 md:w-8 rounded-sm outline-none "
-              onClick={() => {
-                signOut();
-              }}
-            >
-              <div className="group flex  cursor-pointer  hover:scale-110  flex-col items-center ">
-                <div className=" h-6 w-6 md:h-8 md:w-8 fill-none group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
-                  <ShowIcon icon={'Logout'} stroke={'2'} />
+                type="button"
+                className="absolute top-1 -right-10 md:top-1.5 md:right-3 h-6 w-6   md:h-8 md:w-8 rounded-sm outline-none "
+                onClick={() => {
+                  signOut();
+                }}
+              >
+                <div className="group flex  cursor-pointer  hover:scale-110  flex-col items-center ">
+                  <div className=" h-6 w-6 md:h-8 md:w-8 fill-none group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
+                    <ShowIcon icon={'Logout'} stroke={'2'} />
+                  </div>
+                  <p className=" tracking-widest mx-3  group-hover:inline-flex text-sm ">
+                    {'Logout'}
+                  </p>
                 </div>
-                <p className=" tracking-widest mx-3  group-hover:inline-flex ">
-                  {'Logout'}
-                </p>
-              </div>
-            </button>
+              </button>
             </h2>
             <div className="relative flex justify-center items-center outline-none   w-full my-14 mx-auto">
               {userURL !== null && userURL !== undefined ? (
                 <div className=" h-48 w-48 md:h-52 md:w-52 fill-lightMainColor m-auto flex justify-center items-center stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
-                <ImgFromDb
-                  url={userURL}
-                  stylings="object-contain overflow-hidden rounded-md"
-                  alt="User Picture"
-                />
+                  <ImgFromDb
+                    url={userURL}
+                    stylings="object-contain overflow-hidden rounded-md"
+                    alt="User Picture"
+                  />
                 </div>
               ) : (
                 <div className=" h-48 w-48 md:h-52 md:w-52 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor overflow-hidden rounded-md ">
@@ -277,13 +289,9 @@ const page: FC<pageProps> = () => {
 
             <form onSubmit={handleSubmit}>
               <Link href={'/purchases'}>
-                <button
-                  className="btnFancy w-[90%]"
-                >
-                  Purchases
-                </button>
+                <button className="btnFancy w-[90%]">Purchases</button>
               </Link>
-             
+
               <label className="flex flex-col items-center p-1 rounded-t-md bottom-0">
                 Your Name:
                 <input

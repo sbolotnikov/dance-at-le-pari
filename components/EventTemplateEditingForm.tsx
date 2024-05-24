@@ -262,9 +262,7 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
     <>
       {revealCloud && <ChoosePicture onReturn={onReturnPicture} />}
       {revealCloud2 && <ChooseTeacher onReturn={onReturnTeacher} />}
-      {revealAlert && (
-        <AlertMenu onReturn={onReturnAlert} styling={alertStyle} />
-      )}
+        <AlertMenu visibility={revealAlert}  onReturn={onReturnAlert} styling={alertStyle} />
       <div className="border-0 rounded-md p-1  shadow-2xl w-[90%]  max-w-[450px] md:w-full h-[70svh] md:h-[85svh] my-auto bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md ">
         <div className="border rounded-md border-lightMainColor dark:border-darkMainColor p-1 w-full h-full  flex  justify-center items-center overflow-y-scroll relative ">
 

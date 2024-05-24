@@ -345,9 +345,11 @@ const FullDayScheduleView = ({
         onReturn();
       }}
     >
-      {revealAlert && (
-        <AlertMenu onReturn={onReturnAlert} styling={alertStyle} />
-      )}
+      <AlertMenu
+        visibility={revealAlert}
+        onReturn={onReturnAlert}
+        styling={alertStyle}
+      />
       <ContextMenu
         items={contextMenuItems}
         contextMenuRef={contextMenuRef}

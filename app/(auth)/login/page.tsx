@@ -60,12 +60,13 @@ const page: FC<pageProps> = ({}) => {
         <div id="wrapperDiv" className=" w-full h-full border rounded-md border-lightMainColor dark:border-darkMainColor relative overflow-y-auto flex flex-col justify-center items-center">
           <div id="containedDiv" className={` ${scrolling?"":"absolute top-0 left-0"}
            flex flex-col items-center justify-between  w-full `}>
+            
             <h2
-              className="text-center font-bold uppercase"
-              style={{ letterSpacing: '1px' }}
-            >
-              login
-            </h2>
+            className="text-center font-semibold md:text-4xl uppercase"
+            style={{ letterSpacing: '1px' }}
+          >
+             login
+          </h2>
             <div className=" h-20 w-20 md:h-28 md:w-28 mb-6 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor m-auto">
               <ShowIcon icon={'Login'} stroke={'0.1'} />
             </div>

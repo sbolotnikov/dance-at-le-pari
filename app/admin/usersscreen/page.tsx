@@ -54,7 +54,9 @@ function page() {
     }).then((res) => {
       res.json().then((data) => {
         console.log(data);
-        let dataArray=data.sort((a:UserType,b:UserType) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
+        let dataArray = data.sort((a: UserType, b: UserType) =>
+          a.name > b.name ? 1 : b.name > a.name ? -1 : 0
+        );
         setUsers(data);
         setUsersDisplay(data);
       });
@@ -77,7 +79,7 @@ function page() {
     });
     setRevealAlert(true);
   };
-  const handleImgUpdate = (id:number, img:string) =>{
+  const handleImgUpdate = (id: number, img: string) => {
     console.log(id, img);
     setAlertStyle({
       variantHead: 'danger',
@@ -90,8 +92,8 @@ function page() {
       inputField: '',
     });
     setRevealAvatarSelect(true);
-    setSelectedUser(users.filter(user => user.id === id)[0]);
-  }
+    setSelectedUser(users.filter((user) => user.id === id)[0]);
+  };
   const onReturn = (decision1: string) => {
     setRevealAlert(false);
     if (decision1 == 'Confirm') {
@@ -115,7 +117,7 @@ function page() {
     }
     if (decision1 == 'Upload') {
       console.log('file link', fileLink);
-      
+
       fetch('/api/admin/profile_img_update', {
         method: 'PUT',
         headers: {
@@ -126,7 +128,6 @@ function page() {
           image: fileLink,
         }),
       }).then(async (res) => {
-         
         if (
           selectedUser.image != null &&
           !selectedUser.image!.includes('http')
@@ -145,22 +146,26 @@ function page() {
             button2: '',
             inputField: '',
           });
-  
+
           setRevealAlert(true);
           console.log(res);
         }
       });
-
-
-
-      
     }
   };
   return (
     <PageWrapper className="absolute top-0 left-0 w-full flex justify-center items-center">
-      {revealAlert && <AlertMenu onReturn={onReturn} styling={alertStyle} />}
+      <AlertMenu
+        visibility={revealAlert}
+        onReturn={onReturn}
+        styling={alertStyle}
+      />
       {revealAvatarSelect && (
-        <ChooseAvatar onReturn={onReturnAvatar} styling={alertStyle} extraSize={true} />
+        <ChooseAvatar
+          onReturn={onReturnAvatar}
+          styling={alertStyle}
+          extraSize={true}
+        />
       )}
       <div className="w-full max-w-[1400px] border-0 flex flex-row mt-12 md:mt-20 justify-center items-center flex-wrap bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
         <div className="flex flex-col items-center justify-center border rounded-md border-lightMainColor dark:border-darkMainColor w-full h-full ">

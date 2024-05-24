@@ -76,7 +76,7 @@ export default function Page({ params }: { params: { id: string } }) {
       ? setScrolling(true)
       : setScrolling(false);
   }, [eventData, windowSize.height]);
- 
+
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
       {revealBuyTicketModal && (
@@ -165,10 +165,11 @@ export default function Page({ params }: { params: { id: string } }) {
           }}
         />
       )}
-      {revealAlert && (
-        <AlertMenu onReturn={onReturnAlert} styling={alertStyle} />
-      )}
-
+      <AlertMenu
+        visibility={revealAlert}
+        onReturn={onReturnAlert}
+        styling={alertStyle}
+      />
       <div className="   shadow-2xl w-[90%]  max-w-[450px] md:w-full h-[85svh]  bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md border-0 rounded-md  p-2 md:mt-6">
         <div
           id="wrapperDiv"
@@ -216,9 +217,7 @@ export default function Page({ params }: { params: { id: string } }) {
                       className=" outline-none border-none fill-editcolor  stroke-editcolor  rounded-md border-editcolor p-1 w-8 h-8"
                       onClick={(e) => {
                         e.preventDefault();
-                        location.replace(
-                          '/admin/editevent/' + params.id
-                        );
+                        location.replace('/admin/editevent/' + params.id);
                         return;
                       }}
                     >

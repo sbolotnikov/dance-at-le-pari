@@ -145,9 +145,9 @@ export default function Page({ params }: { params: { id: string } }) {
           selectedIndex={tabIndex}
           className="w-full h-full p-1 flex flex-col border rounded-md border-lightMainColor dark:border-darkMainColor"
           onSelect={(index: number) => setTabIndex(index)}
-        >
+        > 
           <h2
-            className="text-center font-bold uppercase"
+            className="text-center font-semibold md:text-4xl uppercase"
             style={{ letterSpacing: '1px' }}
           >
             Our Studio
