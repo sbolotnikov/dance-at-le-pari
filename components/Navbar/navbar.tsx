@@ -306,7 +306,7 @@ const Navbar = ({ path, locale, children }: Props) => {
   ];
   return (
     <nav className="navbar w-screen h-[100svh] overflow-hidden">
-      <div className=" absolute inset-0 flex flex-col items-center justify-center ">
+      <div className=" absolute inset-0 flex flex-col items-center justify-center z-[-5]">
         <Logo
           shadow={
             darkMode

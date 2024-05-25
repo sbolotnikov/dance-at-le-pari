@@ -19,7 +19,7 @@ function SongDetails({onDanceClick}:Props) {
           console.log('choice:', choice, dances[choice]);
         }}
       />
-      <h1 className=' text-7xl font-[Birthstone] text-red-600'>{songChoice.name}</h1>
+      <h1 className=' text-7xl font-DancingScript text-red-600'>{songChoice.name}</h1>
 
       {songChoice &&
         songChoice.songs.map((item, index) => {
