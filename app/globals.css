@@ -146,6 +146,15 @@ body {
   }
 }
 
+
+
+.cards__item { 
+   
+  transform-origin: -50% -50%;
+  transform:  translate( var(--item-y), var(--item-x) )  ;
+}
+
+
 .teamMember {
   transform-style: preserve-3d;
   -webkit-transform-style: preserve-3d;

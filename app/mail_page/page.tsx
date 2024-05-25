@@ -132,9 +132,12 @@ const page: FC<pageProps> = () => {
             onSubmit={handleSubmit}
             className="w-full h-full rounded-md flex flex-col justify-between  items-center   "
           >
-            <h1 className=" font-semibold text-center uppercase text-lg">
+            <h2
+              className="text-center font-semibold md:text-4xl uppercase"
+              style={{ letterSpacing: '1px' }}
+            >
               Send us an Email
-            </h1>
+            </h2>
             <p className="w-full ">
               {'We would be glad to answer'}{' '}
               <strong>{process.env.NEXT_PUBLIC_TELEPHONE}</strong>.
