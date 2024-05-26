@@ -99,6 +99,11 @@ const Navbar = ({ path, locale, children }: Props) => {
           icon: 'Home2',
         },
         {
+          url: '/blog/0/1',
+          title: 'Blog',
+          icon: 'Blog',
+        },
+        {
           url: '/signin',
           title: 'Register',
           icon: 'Register',
@@ -130,6 +135,11 @@ const Navbar = ({ path, locale, children }: Props) => {
           url: '/schedule/0',
           title: 'Schedule Tool',
           icon: 'Schedule',
+        },
+        {
+          url: '/blog/0/1',
+          title: 'Blog',
+          icon: 'Blog',
         },
         {
           url: '/admin/usersscreen',
@@ -168,6 +178,11 @@ const Navbar = ({ path, locale, children }: Props) => {
           url: '/schedule/0',
           title: 'Schedule Tool',
           icon: 'Schedule',
+        },
+        {
+          url: '/blog/0/1',
+          title: 'Blog',
+          icon: 'Blog',
         },
       ];
     }
@@ -306,7 +321,7 @@ const Navbar = ({ path, locale, children }: Props) => {
   ];
   return (
     <nav className="navbar w-screen h-[100svh] overflow-hidden">
-      <div className=" absolute inset-0 flex flex-col items-center justify-center z-[-5]">
+      <div className=" absolute inset-0 flex flex-col items-center justify-end z-[-5] pb-14">
         <Logo
           shadow={
             darkMode

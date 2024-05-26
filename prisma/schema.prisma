@@ -29,6 +29,8 @@ model User {
   sessions Session[]
   accounts Account[]
   purchases Purchase[]
+  comments Comment[]
+  posts Post[]
 }
 model EventTemplate {
   id Int @id @default(autoincrement())
@@ -77,7 +79,40 @@ model Event {
    seatmap String?
    specialEvent Boolean @default(false)
 }
+model Category {
+  id    String  @id @default(cuid()) @map("_id")
+  slug  String  @unique
+  title String
+  img   String?
+  Posts Post[]
+}
 
+model Post {
+  id        String    @id @default(cuid()) @map("_id")
+  createdAt DateTime  @default(now())
+  slug      String    @unique
+  title     String
+  desc      String
+  img       String?
+  views     Int       @default(0)
+  catSlug   String
+  userID    Int
+  cat       Category  @relation(fields: [catSlug], references: [slug])
+  userEmail String
+  user      User @relation(fields: [userID], references: [id] )
+  comments  Comment[]
+}
+
+model Comment {
+  id        String   @id @default(cuid()) @map("_id")
+  createdAt DateTime @default(now())
+  desc      String
+  userEmail String
+  userID    Int
+  user      User @relation(fields: [userID], references: [id] )
+  postSlug  String
+  post      Post     @relation(fields: [postSlug], references: [slug])
+}
 model ScheduleEvent {
    id Int @id @default(autoincrement())
    date String

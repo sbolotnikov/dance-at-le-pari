@@ -62,14 +62,14 @@ const page: FC<pageProps> = ({}) => {
     },
     {
       id: 78,
-      name: 'Bronze package',
+      name: 'Plus package',
       tag: '$475',
       description:
         '<ul><li>Learn the proper 5-7 basic steps to your chosen song</li><li>Our most budget friendly package</li></ul>',
     },
     {
       id: 79,
-      name: 'Silver package',
+      name: 'Premium package',
       tag: '$925',
       description:
         '<ul><li>Learn 10-15 basic steps to your chosen song</li><li>Complimentary choreography to your chosen song</li><li>Learn tricks to bring your first dance to an even higher level</li></ul>',
@@ -139,7 +139,7 @@ const page: FC<pageProps> = ({}) => {
         <div className="w-full m-2  rounded-md md:grid md:grid-cols-3 md:gap-1">
           <div className="h-[250px] w-[250px] m-auto">
             <Iframe
-              url="https://www.youtube.com/embed/O_y1uix4GkA?autoplay=1&amp;&amp;controls=1&amp;loop=0&amp;origin=https%3A%2F%2Fwww.leparidancenter.com&amp;playsinline=1&amp;enablejsapi=1&amp;widgetid=3"
+              url="https://www.youtube.com/embed/O_y1uix4GkA?&amp;&amp;controls=1&amp;loop=0&amp;origin=https%3A%2F%2Fwww.leparidancenter.com&amp;playsinline=1&amp;enablejsapi=1&amp;widgetid=3"
               width="100%"
               height="100%"
               title="Best Dance Studio in New Jersey. Wedding event/ Special events rental.  Dance events in New Jersey."
@@ -202,9 +202,7 @@ const page: FC<pageProps> = ({}) => {
                   return (
                     <div
                       key={'package' + index}
-                      className={`m-3 p-2  flex flex-col justify-center items-center text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md ${
-                        item.id == bestPackage ? 'border-red-600' : ''
-                      } border-2`}
+                      className={`m-3 p-2  flex flex-col justify-center items-center text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md  border-2`}
                     >
                       {item.id == bestPackage && (
                         <p
@@ -214,9 +212,7 @@ const page: FC<pageProps> = ({}) => {
                         </p>
                       )}
                       <h1
-                        className={`text-2xl  text-center   text-shadow  dark:text-shadow-light ${
-                          item.id == bestPackage ? 'text-red-600' : ''
-                        }`}
+                        className={`text-2xl  text-center   text-shadow  dark:text-shadow-light`}
                       >
                         {item.name}
                       </h1>
@@ -235,11 +231,11 @@ const page: FC<pageProps> = ({}) => {
                       ></div>
                       <ImgFromDb
                         url={item.image}
-                        stylings="object-contain w-[250px] h-[250px]"
+                        stylings="object-contain w-[250px] h-[250px] aspect-square"
                         alt={'Package Image' + index}
                       />
                       <div
-                        className="w-full btnFancy my-1 text-base text-center  rounded-md"
+                        className="w-full btnFancy my-1 text-base text-center  rounded-md "
                         style={{ padding: '0' }}
                         onClick={async () => {
                           // let info = await get_package(item.id);
