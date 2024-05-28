@@ -14,9 +14,10 @@ import { TBlogPost } from '@/types/screen-settings';
 type Props = {
   visibility: boolean;
   post: TBlogPost | null;
+  categories:{slug: string,title: string}[];
   onReturn: () => void;
 };
-const CreatePostModal = ({ visibility, post, onReturn }: Props) => {
+const CreatePostModal = ({ visibility, post,categories, onReturn }: Props) => {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [file1, setFile] = useState(post?.img || '');
@@ -46,6 +47,7 @@ const CreatePostModal = ({ visibility, post, onReturn }: Props) => {
       session?.user?.id,
       slugify(title)
     );
+    if (post == null){
     const res = await fetch('/api/posts', {
       method: 'POST',
       body: JSON.stringify({
@@ -63,6 +65,28 @@ const CreatePostModal = ({ visibility, post, onReturn }: Props) => {
       console.log(data);
       router.push(`/posts/${data.post.slug}`);
     }
+  } else {
+    const res = await fetch('/api/posts', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: post.id,
+        title,
+        desc: value,
+        img: file1,
+        slug: post.slug,
+        userID: session?.user?.id,
+        catSlug: catSlug, //If not selected, choose the general category
+      }),
+    });
+    if (res.status === 200) {
+      const data = await res.json();
+      console.log(data);
+      router.push(`/posts/${data.post.slug}`);
+    }
+  }
   };
   const onReturnPicture = (decision1: string, fileLink: string) => {
     if (decision1 == 'Close') {
@@ -111,12 +135,17 @@ const CreatePostModal = ({ visibility, post, onReturn }: Props) => {
             <label className="flex flex-col items-center text-lightMainColor dark:text-darkMainColor">
               {' '}
               Blog Category
+               
               <select
-                className="dark:bg-lightMainBG bg-darkMainBG dark:text-lightMainColor text-darkMainColor"
+                className="dark:bg-lightMainBG bg-darkMainBG dark:text-lightMainColor text-darkMainColor rounded-md outline-none"
                 onChange={(e) => setCatSlug(e.target.value)}
+                value={ catSlug }
               >
-                <option value="welcome">welcome</option>
-                <option value="weddings">for wedding couples</option>
+                {categories.map((category) => (
+                  <option key={category.slug} value={category.slug}>
+                    {category.title}
+                  </option>
+                ))}
               </select>
             </label>
             <div className="w-full h-40 flex  justify-center items-center">

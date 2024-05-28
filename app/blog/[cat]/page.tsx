@@ -1,10 +1,10 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { PageWrapper } from '@/components/page-wrapper';
 import ShowIcon from '@/components/svg/showIcon';
 import { useDimensions } from '@/hooks/useDimensions';
 import BlogCardList from '@/components/BlogCardList';
-import Pagination from '@/components/Pagination';
+// import Pagination from '@/components/Pagination';
 import { useSession } from 'next-auth/react';
 import CreatePostModal from '@/components/CreatePostModal';
 import AlertMenu from '@/components/alertMenu';
@@ -17,12 +17,11 @@ export default function Page(params: {
   params: { cat: string; page: string };
 }) {
   console.log(params);
-  const [pageCount, setPageCount] = useState(0);
-  const POST_PER_PAGE = 2;
-  const [hasNext, setHasNext] = useState(false);
+  const [postsCount, setPostsCount] = useState(0);
   const [revealModal, setRevealModal] = useState(false);
   const [revealAlert, setRevealAlert] = useState(false);
   const [selectedId, setSelectedId] = useState('');
+  const [categories, setCategories] = useState<{slug: string,title: string}[]>([]);
   const [loading, setLoading] = useState(false);
   const [alertStyle, setAlertStyle] = useState({
     variantHead: '',
@@ -34,18 +33,20 @@ export default function Page(params: {
     button2: '',
     inputField: '',
   });
-
-  const hasPrev = POST_PER_PAGE * (parseInt(params.params.page) - 1) > 0;
+ 
   const { data: session } = useSession();
   const router = useRouter();
   const [posts, setPosts] = useState<TBlogPost[]>([]);
   const [selectedPost, setSelectedPost] = useState<TBlogPost|null>(null);
+  const windowSize = useDimensions();
+  useEffect(() => {
+     (windowSize.height!<700)? document.getElementById('icon')!.style.setProperty('display', `none`): document.getElementById('icon')!.style.setProperty('display', `block`);
+    
+  },[windowSize.height,document]);
   useEffect(() => {
     setLoading(true);
     fetch(
-      `/api/posts?page=${params.params.page}&cat=${
-        params.params.cat !== '0' ? params.params.cat : ''
-      }`,
+      `/api/posts?cat=${params.params.cat !== '0' ? params.params.cat : ''}`,
       {
         cache: 'no-store',
       }
@@ -53,18 +54,33 @@ export default function Page(params: {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        setPosts(data.posts);
-        setHasNext(
-          POST_PER_PAGE * (parseInt(params.params.page) - 1) + POST_PER_PAGE <
-            data.count
-        );
-        setPageCount(Math.ceil(data.count / POST_PER_PAGE));
-        setLoading(false);
+        setPosts(data.posts.sort((a:any, b:any) => (a.createdAt < b.createdAt ? 1 : b.createdAt < a.createdAt ? -1 : 0)));        
+        setPostsCount(data.count);
+        fetch(
+          `/api/categories`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            setCategories(data.categories.sort((a:any, b:any) => (a.title < b.title ? 1 : b.title < a.title ? -1 : 0)));        
+            setLoading(false);
+          })
+          .catch((error) => {
+            console.log(error);
+            setLoading(false);
+          });
       })
       .catch((error) => {
         console.log(error);
         setLoading(false);
       });
+
   }, []);
   const onReturnAlert = async (decision1: string) => {
     setRevealAlert(false);
@@ -81,7 +97,7 @@ export default function Page(params: {
           id:  selectedId,
         }),
       }).then((res) => {
-       router.push('/blog/0/1');
+       router.push('/blog/0');
 
       });
     }
@@ -93,6 +109,7 @@ export default function Page(params: {
         <CreatePostModal
           visibility={revealModal}
           post={selectedPost}
+          categories={categories}
           onReturn={() => {
             setRevealModal(false);
           }}
@@ -116,10 +133,10 @@ export default function Page(params: {
           </div>
           {(session?.user.role === 'Admin' ||
             session?.user.role === 'Teacher') && (
-            <div className="group flex  cursor-pointer  flex-col justify-center items-center absolute left-0 top-8 md:top-8">
-              <div className="  h-6 w-6 md:h-10 md:w-10 relative hover:scale-110 group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
+            <div className="group flex  cursor-pointer  flex-col justify-center items-center absolute right-1 top-1 md:top-8">
+              <div className="  h-10 w-10 md:h-14 md:w-14 relative hover:scale-110 group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
                 <div
-                  className="cursor-pointer h-6 w-6 md:h-10 md:w-10 border-2 rounded-md  bg-editcolor m-auto "
+                  className="cursor-pointer h-10 w-10 md:h-14 md:w-14 border-2 rounded-md  bg-editcolor m-auto "
                   onClick={(e) => {
                     e.preventDefault();
                     setRevealModal(true);
@@ -133,13 +150,35 @@ export default function Page(params: {
               </p>
             </div>
           )}
-          <Pagination
-            cat={params.params.cat}
-            page={parseInt(params.params.page)}
-            hasPrev={hasPrev}
-            hasNext={hasNext}
-            pageCount={pageCount}
-          />
+          <div className="flex flex-row justify-center items-center w-full">
+          <label className="flex flex-col items-center text-lightMainColor dark:text-darkMainColor">
+              {' '}
+              Blog Category
+              <select
+                className="dark:bg-lightMainBG bg-darkMainBG dark:text-lightMainColor text-darkMainColor rounded-md outline-none"
+                onChange={(e) => router.push(`/blog/${e.target.value}`)}
+                value={ params.params.cat }
+              >
+                <option value="0">All</option>
+                {categories.map((category) => (
+                  <option key={category.slug} value={category.slug}>
+                    {category.title}
+                  </option>
+                ))}
+              </select>
+              total posts : {postsCount}
+            </label>
+            <button
+            className="shadow-lg pointer border-0 outline-none rounded"
+            onClick={(e) => {
+               e.preventDefault();
+               setRevealAlert(true);
+            }}
+            style={{ padding: '5px 5px', margin: '5px 5px' }}
+          >
+            Edit
+          </button>
+          </div>
           <BlogCardList
             posts={posts}
             user={{

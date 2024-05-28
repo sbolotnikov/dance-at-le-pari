@@ -4,15 +4,10 @@ import { NextResponse } from "next/server";
 
 export const GET = async (req: Request) => {
   const { searchParams } = new URL(req.url);
+ 
+  const cat = searchParams.get("cat"); 
 
-  const page = (searchParams.get("page")!=null)?parseInt(searchParams.get("page")!):1;
-  const cat = searchParams.get("cat");
-
-  const POST_PER_PAGE = 2;
-
-  const query = {
-    take: POST_PER_PAGE,
-    skip: POST_PER_PAGE * (page - 1),
+  const query = { 
     where: {
       ...(cat && { catSlug: cat }),
     },
@@ -34,7 +29,28 @@ export const GET = async (req: Request) => {
   }
 };
 
+// UPDATE A POST
+export const PUT = async (req: Request) => {
+   
 
+  try {
+    const data = await req.json();
+    const {id,title,desc,img,slug,userID,catSlug} = data;
+    const post = await prisma.post.update({
+      where: {
+        id:id
+      },
+      data:{title,desc,img,slug,userID,catSlug}
+    });
+    await prisma.$disconnect()
+    return new NextResponse(JSON.stringify({post,  status: 200 }));
+  } catch (err) {
+    console.log(err);
+    return new NextResponse(
+      JSON.stringify({ message: "Something went wrong!" ,  status: 500 })
+    );
+  }
+};
 
 
 

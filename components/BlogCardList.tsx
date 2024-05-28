@@ -40,7 +40,7 @@ const BlogCardList = ({ posts,user,onReturn }: Props) => {
                   </div>
                   {((user.role == 'Admin') ||(user.id == item.userID)) && (
                     <button
-                      className=" outline-none border-none fill-alertcolor  stroke-alertcolor  rounded-md border-alertcolor mt-2  w-8 h-8 absolute top-0 right-0"
+                      className=" outline-none border-none fill-alertcolor  stroke-alertcolor  rounded-md border-alertcolor mt-2  w-8 h-8 absolute top-5 right-0"
                       onClick={(e) => {
                         e.preventDefault();
                         onReturn(item.id, "Delete");                 
@@ -51,7 +51,7 @@ const BlogCardList = ({ posts,user,onReturn }: Props) => {
                   )}
                   {((user.role == 'Admin') ||(user.id == item.userID)) && (
                     <button
-                      className=" outline-none border-none fill-editcolor  stroke-editcolor  rounded-md border-editcolor p-1 w-10 h-10 absolute top-0 right-8"
+                      className=" outline-none border-none fill-editcolor  stroke-editcolor  rounded-md border-editcolor p-1 w-10 h-10 absolute top-5 right-8"
                       onClick={(e) => {
                         e.preventDefault();
                         onReturn(item.id, "Edit");  
@@ -82,12 +82,11 @@ const BlogCardList = ({ posts,user,onReturn }: Props) => {
                       dangerouslySetInnerHTML={{
                         __html: item?.desc.substring(0, 120)+'...',
                       }}
-                    />
-                    <p>Views: {item.views}</p>
+                    />      
                     <Link href={`/posts/${item.slug}`} className="">
                       Read More
                     </Link>
-
+                    <p>Views: {item.views}</p>
                   </div>
                   </div>
                 </div>

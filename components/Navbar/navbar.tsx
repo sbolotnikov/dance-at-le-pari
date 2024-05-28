@@ -99,7 +99,7 @@ const Navbar = ({ path, locale, children }: Props) => {
           icon: 'Home2',
         },
         {
-          url: '/blog/0/1',
+          url: '/blog/0',
           title: 'Blog',
           icon: 'Blog',
         },
@@ -137,7 +137,7 @@ const Navbar = ({ path, locale, children }: Props) => {
           icon: 'Schedule',
         },
         {
-          url: '/blog/0/1',
+          url: '/blog/0',
           title: 'Blog',
           icon: 'Blog',
         },
@@ -180,7 +180,7 @@ const Navbar = ({ path, locale, children }: Props) => {
           icon: 'Schedule',
         },
         {
-          url: '/blog/0/1',
+          url: '/blog/0',
           title: 'Blog',
           icon: 'Blog',
         },
