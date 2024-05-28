@@ -109,7 +109,7 @@ const CreatePostModal = ({ visibility, post,categories, onReturn }: Props) => {
     >
       {revealCloud && <ChoosePicture onReturn={onReturnPicture} />}
       <div
-        className={`border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-md  flex justify-center items-center flex-col   md:w-full bg-lightMainBG dark:bg-darkMainBG backdrop-blur-md  h-[70svh] md:h-[85svh]
+        className={`border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-[1170px]  flex justify-center items-center flex-col   md:w-[80svw] bg-lightMainBG dark:bg-darkMainBG backdrop-blur-md  h-[70svh] md:h-[85svh]
         }`}
       >
         <div
@@ -120,6 +120,12 @@ const CreatePostModal = ({ visibility, post,categories, onReturn }: Props) => {
             id="containedDiv"
             className={`absolute top-0 left-0 flex flex-col w-full p-1 justify-center items-center`}
           >
+            <h2
+            className="text-center font-semibold md:text-4xl uppercase"
+            style={{ letterSpacing: '1px' }}
+          >
+            Create/Edit Posts Modal
+          </h2>
             <label className="flex flex-col items-center">
               {' '}
               Blog Title{' '}

@@ -11,6 +11,8 @@ import AlertMenu from '@/components/alertMenu';
 import LoadingScreen from '@/components/LoadingScreen';
 import { useRouter } from 'next/navigation';
 import { TBlogPost } from '@/types/screen-settings';
+import EditCategoriesModal from '@/components/EditCategoriesModal';
+import sleep from '@/utils/functions';
 interface pageProps {}
 
 export default function Page(params: {
@@ -19,9 +21,10 @@ export default function Page(params: {
   console.log(params);
   const [postsCount, setPostsCount] = useState(0);
   const [revealModal, setRevealModal] = useState(false);
+  const [revealModal1, setRevealModal1] = useState(false);
   const [revealAlert, setRevealAlert] = useState(false);
   const [selectedId, setSelectedId] = useState('');
-  const [categories, setCategories] = useState<{slug: string,title: string}[]>([]);
+  const [categories, setCategories] = useState<{id:string,slug: string,title: string}[]>([]);
   const [loading, setLoading] = useState(false);
   const [alertStyle, setAlertStyle] = useState({
     variantHead: '',
@@ -111,10 +114,24 @@ export default function Page(params: {
           post={selectedPost}
           categories={categories}
           onReturn={() => {
+            sleep(1200).then(() => {
             setRevealModal(false);
+            });
           }}
         />
       )}
+      {revealModal1 && (
+        <EditCategoriesModal
+          visibility={revealModal1}
+          categories={categories}
+          onReturn={() => {
+            sleep(1200).then(() => {
+              setRevealModal1(false);
+            });
+          }}
+        />
+      )
+    }
       <AlertMenu visibility={revealAlert}  onReturn={onReturnAlert} styling={alertStyle} />
       {loading && <LoadingScreen />}
       <div className="border-0 rounded-md p-2 mt-6 shadow-2xl w-[95%] h-[70svh] md:h-[85svh] max-w-5xl md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
@@ -168,16 +185,16 @@ export default function Page(params: {
               </select>
               total posts : {postsCount}
             </label>
-            <button
+            {session?.user.role=='Admin'&&<button
             className="shadow-lg pointer border-0 outline-none rounded"
             onClick={(e) => {
                e.preventDefault();
-               setRevealAlert(true);
+               setRevealModal1(true);
             }}
             style={{ padding: '5px 5px', margin: '5px 5px' }}
           >
             Edit
-          </button>
+          </button>}
           </div>
           <BlogCardList
             posts={posts}
