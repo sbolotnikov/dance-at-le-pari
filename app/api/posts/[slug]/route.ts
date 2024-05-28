@@ -12,7 +12,7 @@ export const GET = async (req: Request, params: {params:{ slug: string }}) => {
       data: { views: { increment: 1 } },
       include: { user: true },
     });
-
+    await prisma.$disconnect()
     return new NextResponse(JSON.stringify({post,  status: 200 }));
   } catch (err) {
     console.log(err);

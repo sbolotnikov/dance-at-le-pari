@@ -42,7 +42,7 @@ export default function Page(params: { params: { slug: string } }) {
                   <div className="flex flex-row justify-around items-center">
                     <ImgFromDb
                       url={post.user.image}
-                      stylings=" w-[85%] float-left m-2 rounded-md"
+                      stylings=" w-24 float-left m-2 rounded-md"
                       alt="Author Picture"
                     />
                     <div className="flex flex-col ">
@@ -56,11 +56,11 @@ export default function Page(params: { params: { slug: string } }) {
                       </span>
                     </div>
                   </div>
-                  <div className="flex flex-col justify-around items-center">
+                  <div className="flex flex-col justify-around items-center ">
                     {post.img && (
                       <ImgFromDb
                         url={post.img}
-                        stylings="h-auto w-72 float-left m-2 rounded-md"
+                        stylings="h-auto w-80 float-left m-2 rounded-md"
                         alt="Post Picture"
                       />
                     )}

@@ -19,18 +19,12 @@ export const GET = async (req: Request) => {
     include:{user:true}
   };
 
-
-
-
-
-
-  
-  
   try {
     const [posts, count] = await prisma.$transaction([
       prisma.post.findMany(query),
       prisma.post.count({ where: query.where }),
     ]);
+    await prisma.$disconnect()
     return new NextResponse(JSON.stringify({ posts, count ,  status: 200}));
   } catch (err) {
     console.log(err);
@@ -58,7 +52,7 @@ export const POST = async (req: Request) => {
     const post = await prisma.post.create({
       data: { ...body },
     });
-
+    await prisma.$disconnect()
     return new NextResponse(JSON.stringify({post,  status: 200 }));
   } catch (err) {
     console.log(err);
@@ -67,3 +61,4 @@ export const POST = async (req: Request) => {
     );
   }
 };
+

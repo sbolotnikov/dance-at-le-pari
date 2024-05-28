@@ -98,7 +98,6 @@ model Post {
   catSlug   String
   userID    Int
   cat       Category  @relation(fields: [catSlug], references: [slug])
-  userEmail String
   user      User @relation(fields: [userID], references: [id] )
   comments  Comment[]
 }

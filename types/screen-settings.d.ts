@@ -17,6 +17,18 @@ export interface IScreenSettings {
     eventtype: string;
   }
   type TEventArray = TEvent[];
+  type TBlogPost = {
+      img: string;
+      createdAt: string;
+      catSlug: string;
+      slug: string;
+      title: string;
+      desc: string;
+      id: string;
+      views: number;
+      userID: number;
+      user: { name: string; image: string };
+  }
   type TDay ={
     value: string,
     event: TEventArray | null;
