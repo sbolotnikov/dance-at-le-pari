@@ -11,6 +11,7 @@ import ChoosePicture from './ChoosePicture';
 import ImgFromDb from './ImgFromDb';
 import ShowIcon from './svg/showIcon';
 import { TBlogPost } from '@/types/screen-settings';
+import { slugify } from '@/utils/functions';
 type Props = {
   visibility: boolean;
   post: TBlogPost | null;
@@ -30,14 +31,7 @@ const CreatePostModal = ({ visibility, post,categories, onReturn }: Props) => {
     router.push('/');
   }
 
-  const slugify = (str: string) => {
-    return str
-      .toLowerCase()
-      .trim()
-      .replace(/[^\w\s-]/g, '')
-      .replace(/[\s_-]+/g, '-')
-      .replace(/^-+|-+$/g, '');
-  };
+
   const handleSubmit = async () => {
     console.log(
       title,

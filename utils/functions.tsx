@@ -2,6 +2,16 @@ const sleep = (n:number)=> {
     return new Promise((resolve) => setTimeout(resolve, n));
   }
   export default sleep;
+
+  export const slugify = (str: string) => {
+    return str
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, '')
+      .replace(/[\s_-]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+  };
+
 export const get_package = async (n:number[])=> {
    return fetch('/api/get_template', {
     method: 'POST',

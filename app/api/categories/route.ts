@@ -19,6 +19,28 @@ export const GET = async (req: Request) => {
 
 
 
+// UPDATE A POST
+export const PUT = async (req: Request) => {
+   
+
+  try {
+    const data = await req.json();
+    const {id,title,slug} = data;
+    const post = await prisma.category.update({
+      where: {
+        id:id
+      },
+      data:{title,slug}
+    });
+    await prisma.$disconnect()
+    return new NextResponse(JSON.stringify({post,  status: 200 }));
+  } catch (err) {
+    console.log(err);
+    return new NextResponse(
+      JSON.stringify({ message: "Something went wrong!" ,  status: 500 })
+    );
+  }
+};
 
 
 
