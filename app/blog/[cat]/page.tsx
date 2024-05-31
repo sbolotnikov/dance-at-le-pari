@@ -153,7 +153,7 @@ export default function Page(params: {
             <div className="group flex  cursor-pointer  flex-col justify-center items-center absolute right-1 top-1 md:top-8">
               <div className="  h-10 w-10 md:h-14 md:w-14 relative hover:scale-110 group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
                 <div
-                  className="cursor-pointer h-10 w-10 md:h-14 md:w-14 border-2 rounded-md  bg-editcolor m-auto "
+                  className="cursor-pointer h-10 w-10 md:h-14 md:w-14 border-2 rounded-full  bg-editcolor m-auto "
                   onClick={(e) => {
                     e.preventDefault();
                     setRevealModal(true);
@@ -163,7 +163,7 @@ export default function Page(params: {
                 </div>
               </div>
               <p className="hidden tracking-widest mx-3 transition duration-300 ease-in-out absolute -right-4 -bottom-1.5 md:-bottom-4 rounded-md text-center text-editcolor text-[6px] md:text-base md:dark:bg-lightMainBG    opacity-100 group-hover:inline-flex md:block md:opacity-0 md:group-hover:opacity-100 ">
-                Add_Post
+                Add.Post
               </p>
             </div>
           )}

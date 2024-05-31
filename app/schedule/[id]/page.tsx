@@ -189,7 +189,9 @@ export default function Page({ params }: { params: { id: string } }) {
           role={session?.user.role!}
           users={users}
           onReturn={async (n, del) => {
-            setRevealModal(false);
+            sleep(1200).then(() => {
+              setRevealModal(false);
+            });
             let dateArr = [] as string[];
             if (n !== null) {
               setLoading(true);
@@ -314,7 +316,7 @@ export default function Page({ params }: { params: { id: string } }) {
               <div className="group flex  cursor-pointer  flex-col items-center absolute right-0 -top-8 md:-top-8">
                 <div className="  h-6 w-6 md:h-10 md:w-10 relative hover:scale-110 group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
                   <div
-                    className="cursor-pointer h-6 w-6 md:h-10 md:w-10 border-2 rounded-md  bg-editcolor m-auto "
+                    className="cursor-pointer h-6 w-6 md:h-10 md:w-10 border-2 rounded-full  bg-editcolor m-auto "
                     onClick={(e) => {
                       e.preventDefault();
                       setSelectedEvent({} as TEventSchedule);

@@ -151,7 +151,7 @@ export default function Home() {
                         height={250}
                         alt="Logo"
                       />
-                      
+                       
                     </div>
                   </Link>
                 );

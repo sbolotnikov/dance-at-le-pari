@@ -103,11 +103,6 @@ const Navbar = ({ path, locale, children }: Props) => {
           title: 'Blog',
           icon: 'Blog',
         },
-        {
-          url: '/signin',
-          title: 'Register',
-          icon: 'Register',
-        },
       ];
     } else if (session.user.role == 'Admin') {
       linksArray = [
@@ -146,11 +141,7 @@ const Navbar = ({ path, locale, children }: Props) => {
           title: 'Users Screen',
           icon: 'Users',
         },
-        {
-          url: '/admin/eventedit',
-          title: 'Add events',
-          icon: 'Plus',
-        },
+       
       ];
     } else {
       linksArray = [
@@ -270,20 +261,6 @@ const Navbar = ({ path, locale, children }: Props) => {
   }, [items]);
   let barArray = [
     {
-      link: 'tel:1-8482440512',
-      additionalStyle: '',
-      icon: 'Phone',
-      stroke: '2',
-      text: '(848)244-0512',
-    },
-    {
-      link: '/mail_page',
-      additionalStyle: 'fill-darkMainColor',
-      icon: 'Email',
-      stroke: '0.5',
-      text: 'lepari34@gmail.com',
-    },
-    {
       additionalStyle: '',
       icon: 'GMaps',
       stroke: '1',
@@ -318,6 +295,20 @@ const Navbar = ({ path, locale, children }: Props) => {
       stroke: '1.5',
       text: '',
     },
+    {
+      link: '/mail_page',
+      additionalStyle: 'fill-darkMainColor',
+      icon: 'Email',
+      stroke: '0.5',
+      text: 'lepari34@gmail.com',
+    },
+    {
+      link: 'tel:1-8482440512',
+      additionalStyle: '',
+      icon: 'Phone',
+      stroke: '2',
+      text: '(848)244-0512',
+    }
   ];
   return (
     <nav className="navbar w-screen h-[100svh] overflow-hidden">
@@ -471,7 +462,7 @@ const Navbar = ({ path, locale, children }: Props) => {
                     <ShowIcon icon={'ShoppingCart'} stroke={'1'} />
                   </div>
                   <span className="absolute -top-3 -right-3 h-5 w-5 pt-1 bg-yellow-600 text-center text-xs rounded-full  font-bold">
-                      {items ? items.length : 0}
+                      {items ? items.map(item=>item.amount).reduce((a, b) => a + b, 0): 0}
                   </span>
                 </div>
                 <p className="hidden tracking-widest mx-3 transition duration-300 ease-in-out opacity-100 rounded-md text-darkMainColor md:bg-lightMainBG md:dark:bg-lightMainColor md:dark:text-darkMainColor md:text-lightMainColor group-hover:inline-flex md:block md:opacity-0 md:group-hover:opacity-100 ">

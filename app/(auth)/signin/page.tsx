@@ -71,7 +71,7 @@ const page: FC<pageProps> = ({}) => {
               <ShowIcon icon={'Register'} stroke={'0.1'} />
             </div>
             <form
-              className="flex flex-col items-center   p-3 bottom-0"
+              className="flex flex-col items-center   p-1 bottom-0"
               onSubmit={handleSubmit}
             >
               {error && (
@@ -119,18 +119,24 @@ const page: FC<pageProps> = ({}) => {
                 Submit
               </button>
             </form>
-            <label className="flex flex-col items-center justify-center  mx-auto">
-              {' '}
-              Already have an account?
+            <label className="flex flex-col items-center    border-t-2">
+            Already have an account?
               <button
-                className="btnBlue1 p-2 max-w-xs"
-                onClick={() => {
-                  router.replace('/login');
-                }}
-              >
-                Login
+                type="button"
+                className={`cursor-pointer h-12 w-12 mb-1 md:h-10 md:w-10 hover:animate-bounce hover:scale-110 `}
+                onClick={() => router.push ('/login')}
+              > 
+                <div className="group flex  cursor-pointer  hover:scale-110  flex-col items-center ">
+                <div className="  h-12 w-12 fill-none rounded-full   p-1 group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
+                  <ShowIcon icon={'Login'} stroke={'1'} />
+                </div>
+                <p className=" tracking-widest mx-3 rounded-md text-lightMainColor darkMainColor    md:dark:text-darkMainColor dark:text-darkMainColor  opacity-100 group-hover:inline-flex md:block  md:group-hover:opacity-100 ">
+                  {'LogIn'}
+                </p>
+              </div>
               </button>
             </label>
+            
           </div>
         </div>
       </div>

@@ -7,13 +7,16 @@ import sleep from '@/utils/functions';
 import { TEventArray } from '@/types/screen-settings';
 import ShowIcon from '@/components/svg/showIcon';
 import { useDimensions } from '@/hooks/useDimensions';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 interface pageProps {}
 
 const page: FC<pageProps> = ({}) => {
   const [revealDayView, setRevealDayView] = useState(false);
   const [clicked, setClicked] = useState<string>();
+  const { data: session } = useSession();
   const windowSize = useDimensions();
-
+  const router = useRouter();
   const [eventsSet, setEventsSet] = useState<TEventArray>([]);
   useEffect(() => {
     // GET request
@@ -54,13 +57,32 @@ const page: FC<pageProps> = ({}) => {
         />
       )}
       <div className="border-0 rounded-md p-2 mt-6 shadow-2xl w-[95%] h-[70svh] md:h-[85svh] max-w-5xl md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
-        <div className="border rounded-md border-lightMainColor dark:border-darkMainColor w-full h-full   p-2 flex flex-col">
+        <div className="border rounded-md border-lightMainColor dark:border-darkMainColor w-full h-full   p-2 flex flex-col relative">
           <h2
             className="text-center font-semibold md:text-4xl uppercase"
             style={{ letterSpacing: '1px' }}
           >
             Calendar
           </h2>
+          {(session?.user.role === 'Admin' ||
+              session?.user.role === 'Teacher') && (
+              <div className="group flex  cursor-pointer  flex-col items-center justify-center absolute left-16 top-5 md:right-1 md:top-1 md:left-auto">
+                <div className="  h-6 w-6 md:h-10 md:w-10 relative hover:scale-110 group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
+                  <div
+                    className="cursor-pointer h-6 w-6 md:h-10 md:w-10 border-2 rounded-full  bg-editcolor m-auto "
+                    onClick={(e) => {
+                      e.preventDefault();
+                      router.push('/admin/eventedit');
+                    }}
+                  >
+                    <ShowIcon icon={'Plus'} stroke={'0.1'} />
+                  </div>
+                </div>
+                <p className="hidden tracking-widest mx-3 transition duration-300 ease-in-out absolute -right-4 -bottom-1.5 md:-bottom-4 rounded-md text-center text-editcolor text-[6px] md:text-base md:dark:bg-lightMainBG    opacity-100 group-hover:inline-flex md:block md:opacity-0 md:group-hover:opacity-100 ">
+                  Add.Events
+                </p>
+              </div>
+            )}
           <div
             id="icon"
             className=" h-20 w-20 md:h-28 md:w-28 fill-lightMainColor stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor m-auto"
