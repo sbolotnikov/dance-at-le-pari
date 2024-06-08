@@ -1,7 +1,6 @@
 import { prisma } from '@/lib/prisma';
 const bcrypt = require("bcryptjs");
-import { NextResponse } from 'next/server';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextResponse } from 'next/server'; 
 
 // interface ExtendedNextApiRequest extends NextApiRequest {
 //     body: {
@@ -12,13 +11,13 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 export  async function POST(
   req: Request,
-  res: NextApiResponse
+  res: NextResponse
 ) {
   
   try {
-     //Only POST mothod is accepted
+     //Only POST method is accepted
     if (req.method !== 'POST') {
-      return res.status(405).end();
+      return  new NextResponse(JSON.stringify({ message: 'Only POST method is accepted',status: 405}));
     }
     const data = await req.json();
     const {email, password} = data;
