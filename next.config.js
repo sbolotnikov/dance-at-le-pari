@@ -1,8 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    serverActions: true,
-    appDir: true,
+     
     serverComponentsExternalPackages: ['@react-pdf/renderer'],
   },
 };
@@ -20,6 +19,7 @@ module.exports = withTM({
   images: {
     domains: [
       'localhost',
+      'www.leparidancenter.com',
       'dance-at-le-pari.vercel.app',
       'lh3.googleusercontent.com',
       'i3.ytimg.com',

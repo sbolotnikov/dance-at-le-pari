@@ -3,29 +3,57 @@
 @tailwind utilities;
 
 @layer utilities {
-  @variants responsive {
-    .text-shadow {
+  .text-shadow {
+    text-shadow: 2px 2px 4px black;
+  }
+  .text-shadow-light {
+    text-shadow: 2px 2px 4px white;
+  }
+  .text-shadow-md {
+    text-shadow: 4px 4px 8px black;
+  }
+  .text-shadow-md-light {
+    text-shadow: 4px 4px 8px white;
+  }
+  .text-shadow-xl {
+    text-shadow: 15px 15px 30px black;
+  }
+  .text-shadow-xl-light {
+    text-shadow: 15px 15px 30px white;
+  }
+  .text-shadow-none {
+    text-shadow: none;
+  }
+
+  @media (min-width: 768px) {
+    .md\:text-shadow {
       text-shadow: 2px 2px 4px black;
     }
-    .text-shadow-light {
+    .md\:text-shadow-light {
       text-shadow: 2px 2px 4px white;
     }
-    .text-shadow-md {
+    .md\:text-shadow-md {
       text-shadow: 4px 4px 8px black;
     }
-    .text-shadow-md-light {
+    .md\:text-shadow-md-light {
       text-shadow: 4px 4px 8px white;
     }
-    .text-shadow-xl {
+    .md\:text-shadow-xl {
       text-shadow: 15px 15px 30px black;
     }
-    .text-shadow-xl-light {
+    .md\:text-shadow-xl-light {
       text-shadow: 15px 15px 30px white;
     }
-    .text-shadow-none {
+    .md\:text-shadow-none {
       text-shadow: none;
     }
   }
+
+   
+
+  
+
+  
 }
 :root {
   --foreground-rgb: 0, 0, 0;

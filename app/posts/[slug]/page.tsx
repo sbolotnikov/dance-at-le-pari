@@ -1,22 +1,22 @@
 'use client';
 import ImgFromDb from '@/components/ImgFromDb';
-import { PageWrapper } from '@/components/page-wrapper';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import SharePost from '@/components/SharePost';
+import { PageWrapper } from '@/components/page-wrapper'; 
+import { TPost } from '@/types/screen-settings';
+import { Metadata, ResolvingMetadata } from 'next';
+import {  useEffect, useState } from 'react';
+ // set dynamic metadata
+
+type Props = {
+  params: { slug: string } 
+}
+
+ 
 
 export default function Page(params: { params: { slug: string } }) {
-  const slug = params.params.slug;
-  const [post, setPost] = useState<{
-    img: string;
-    createdAt: string;
-    catSlug: string;
-    slug: string;
-    title: string;
-    desc: string;
-    id: string;
-    views: number;
-    user: { name: string; image: string };
-  } | null>(null);
+  const slug = params.params.slug; 
+    const [post, setPost] = useState<TPost>(null);
+
   useEffect(() => {
     fetch(`/api/posts/${slug}`, {
       cache: 'no-store',
@@ -48,6 +48,7 @@ export default function Page(params: { params: { slug: string } }) {
                         stylings=" w-24 float-left m-2 rounded-md"
                         alt="Author Picture"
                       />
+                      <img src={ 'http://localhost:3000/api/og?title=MyBlogPost&mainTopics=nodejs,javascript,react'} width={50} height={50} alt="one pic" />
                       <div className="flex flex-col ">
                         <span>{post.user.name}</span>
                         <span>
@@ -97,6 +98,8 @@ export default function Page(params: { params: { slug: string } }) {
                       <p>Views: {post.views}</p>
                     </div>
                   </div>
+                   <SharePost title={post.title} url={process.env.NEXT_PUBLIC_URL+"/posts/"+slug } quote={`Category: ${post.catSlug} \n Author: ${post.user.name} \n Click on the link below. \n`}
+                    hashtag={'#DanceAtLePari #BallroomDanceStudio'}  />
                 </div>
               )}
             </div>

@@ -8,7 +8,17 @@ export interface IScreenSettings {
     hours:string[];
     dances:TDance[];
   };
-  
+  export type TPost ={
+    img: string;
+    createdAt: string;
+    catSlug: string;
+    slug: string;
+    title: string;
+    desc: string;
+    id: string;
+    views: number;
+    user: { name: string; image: string };
+   } | null
   export type TEvent = {
     date: string;
     tag: string;

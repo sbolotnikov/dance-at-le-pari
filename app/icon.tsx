@@ -1,6 +1,6 @@
 import Logo from '@/components/svg/logo';
 import Image from 'next/image';
-import { ImageResponse } from 'next/server';
+import { ImageResponse } from 'next/og';
 
 // Route segment config
 export const runtime = 'edge';
