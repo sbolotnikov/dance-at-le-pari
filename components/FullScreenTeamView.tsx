@@ -81,7 +81,7 @@ const FullScreenTeamView = ({ pictures, index, onReturn }: Props) => {
   }, [nextActivePic]);
   useEffect(() => {
     setContainerHeight((document.getElementById(`textNext`)?.offsetHeight!>50)? document.getElementById(`textNext`)?.offsetHeight!:50);
-    console.log(document.getElementById(`textNext`)?.offsetHeight!);
+    // console.log(document.getElementById(`textNext`)?.offsetHeight!);
   },[windowSize.height, windowSize.width]);
   return (
     <AnimateModalLayout

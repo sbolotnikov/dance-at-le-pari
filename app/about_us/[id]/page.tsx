@@ -400,7 +400,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 <ShowIcon icon={'Location'} stroke={'0.1'} />
               </div>
               <div className="flex flex-col md:flex-row items-center justify-between w-full h-auto">
-                <div className="h-[400px] w-[400px]">
+                <div className="h-[400px] w-[400px]" style={{maxWidth:'100%'}}>
                   <iframe
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1513.8719849763888!2d-74.39239667245666!3d40.63552797140525!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c3b097b4d07caf%3A0x3c77409024a4ea95!2sDance%20at%20Le%20Pari%20Dance%20Studio!5e0!3m2!1sen!2sus!4v1711426211014!5m2!1sen!2sus"
                     width="400"
