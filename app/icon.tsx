@@ -1,5 +1,5 @@
 import Logo from '@/components/svg/logo';
-import Image from 'next/image';
+ 
 import { ImageResponse } from 'next/og';
 
 // Route segment config
@@ -18,18 +18,17 @@ export default function Icon() {
     (
     //   ImageResponse JSX element
     <div
-    style={{
-      fontSize: 24,
-      background: 'black',
-      width: '100%',
-      height: '100%',
+    style={{ 
+      background: 'transparent',
+      width: '32px',
+      height: '32px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      color: 'white',
+       
     }}
   >
-      <Image width={32} height={32} alt={'Logo'} src={'/favicon-32x32.png'} style={{objectFit: "contain"}}/>
+      <img width={32} height={32} alt={'Logo'} src={ 'https://dance-at-le-pari.vercel.app/favicon-32x32.png'}  />
   </div>
   
     ),

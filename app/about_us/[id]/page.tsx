@@ -16,6 +16,7 @@ import { SettingsContext } from '@/hooks/useSettings';
 import { useSession } from 'next-auth/react';
 import { useDimensions } from '@/hooks/useDimensions';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 export default function Page({ params }: { params: { id: string } }) {
   const selectedTab = params.id || null;
@@ -73,6 +74,7 @@ export default function Page({ params }: { params: { id: string } }) {
     'Location',
     'Hours ',
   ]);
+  const router = useRouter();
   const { hours } = useContext(SettingsContext) as ScreenSettingsContextType;
   const [hoursOfOperation, setHours] = useState<string[] | null>(null);
   useEffect(() => {
@@ -144,7 +146,7 @@ export default function Page({ params }: { params: { id: string } }) {
         <Tabs
           selectedIndex={tabIndex}
           className="w-full h-full p-1 flex flex-col border rounded-md border-lightMainColor dark:border-darkMainColor"
-          onSelect={(index: number) => setTabIndex(index)}
+          onSelect={(index: number) => router.push(`/about_us/${index}`)}
         > 
           <h2
             className="text-center font-semibold md:text-4xl uppercase"

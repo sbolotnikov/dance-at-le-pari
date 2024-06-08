@@ -170,7 +170,7 @@ const FullScreenTeamView = ({ pictures, index, onReturn }: Props) => {
                 {containerHeight>50 &&<div  className='w-full border rounded-md border-lightMainColor dark:border-darkMainColor relative overflow-y-scroll flex flex-col justify-center items-center'
                 style={{height: (containerHeight-15)+'px'}}
                 >
-                  <div className=" absolute top-0 left-0 flex flex-col justify-center items-center  p-2  w-[98%] mx-auto">
+                  <div className=" absolute top-0 left-0 flex flex-col justify-center items-center  p-2  w-[98%] mx-auto"  style={{minHeight: '100%'}} >
                     <strong className="font-bold text-4xl md:text-6xl text-franceBlue  text-center font-DancingScript text-shadow">
                       {item.capture}
                     </strong>

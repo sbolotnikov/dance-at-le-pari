@@ -48,7 +48,7 @@ export default function Page(params: { params: { slug: string } }) {
                         stylings=" w-24 float-left m-2 rounded-md"
                         alt="Author Picture"
                       />
-                      <img src={ 'http://localhost:3000/api/og?title=MyBlogPost&mainTopics=nodejs,javascript,react'} width={50} height={50} alt="one pic" />
+                      {/* <img src={ 'http://localhost:3000/api/og?title=MyBlogPost&mainTopics=nodejs,javascript,react'} width={50} height={50} alt="one pic" /> */}
                       <div className="flex flex-col ">
                         <span>{post.user.name}</span>
                         <span>

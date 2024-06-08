@@ -1,31 +1,12 @@
-import { prisma } from '@/lib/prisma';
-import { TPost } from '@/types/screen-settings';
+
+import { getPost } from '@/utils/functionsservers';
 import { Metadata, ResolvingMetadata } from 'next';
-import { cache } from 'react';
+
 
 type Props = {
   params: { slug: string };
 }; 
-const getPost = async (slug: string) => {
-
-
-    try {
-        const post = await prisma.post.update({
-          where: { slug },
-          data: { views: { increment: 1 } },
-          include: { user: true },
-        });
-        await prisma.$disconnect()
-        return post;
-      } catch (err) {
-        return null
-
-      }
-
-
-   
-    
-};
+ 
 export const generateMetadata = async (
   { params }: Props,
   parent: ResolvingMetadata
