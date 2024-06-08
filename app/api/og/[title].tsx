@@ -1,7 +1,12 @@
 import { ImageResponse  } from 'next/og';
+export const runtime = 'edge';
 
-export const runtime = 'edge'
-export const contentType = 'image/png'
+// Image metadata
+export const size = {
+  width: 32,
+  height: 32,
+};
+export const contentType = 'image/png';
 export default async function  GET (req: Request) {
    
     const { searchParams } = new URL(req.url);
@@ -10,7 +15,7 @@ export default async function  GET (req: Request) {
       ? searchParams.get('title')?.slice(0, 100)
       : 'DevToMars';
     const mainTopics = searchParams.get('mainTopics')?.split(',');
-    console.log(title, mainTopics);
+ 
     return new ImageResponse(
       (
         <div
@@ -101,7 +106,12 @@ export default async function  GET (req: Request) {
             </div>
           </div>
         </div>
-      )
+      ), // ImageResponse options
+      {
+        // For convenience, we can re-use the exported icons size metadata
+        // config to also set the ImageResponse's width and height.
+        ...size,
+      }
     );
   
 }

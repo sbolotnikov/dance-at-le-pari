@@ -29,7 +29,7 @@ export default function Icon() {
       color: 'white',
     }}
   >
-      {/* <Image width={32} height={32} alt={'Logo'} src={'/favicon-32x32.png'} style={{objectFit: "contain"}}/> */}
+      <Image width={32} height={32} alt={'Logo'} src={'/favicon-32x32.png'} style={{objectFit: "contain"}}/>
   </div>
   
     ),
