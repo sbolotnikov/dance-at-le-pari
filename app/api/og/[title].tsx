@@ -28,7 +28,9 @@ export default   function  GET (req: Request) {
        
     }}
   >
-      <img width={32} height={32} alt={'Logo'} src={ 'https://dance-at-le-pari.vercel.app/favicon-32x32.png'}  />
+    <div style={{ width: '300px', height: '300px', display: 'flex' }}>
+      <img width={132} height={132} alt={'Logo'} src={ 'https://dance-at-le-pari.vercel.app/favicon-32x32.png'}  />
+      </div>
   </div>
   
     ),

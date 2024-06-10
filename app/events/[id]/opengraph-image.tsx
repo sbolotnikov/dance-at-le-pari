@@ -1,4 +1,4 @@
-import {  getPicture, getPost } from '@/utils/functionsservers';
+import {  getEvent, getPicture, getPost } from '@/utils/functionsservers';
 import { ImageResponse } from 'next/og';
 export const alt = 'My Blog Post';
 export const size = {
@@ -8,20 +8,20 @@ export const size = {
 export const contentType = 'image/png';
 
 export default async function Image({
-  params: { slug },
+  params: { id },
 }: {
-  params: { slug: string };
+  params: { id: string };
 }) {
   // fetch data
-  const post = await getPost(slug);
+  const event1 = await getEvent(parseInt(id));
   let img: string | null | undefined = null;
   if (
-    post?.img !== null &&
-    post?.img !== undefined &&
-    !post?.img!.includes('http')
+    event1?.image !== null &&
+    event1?.image !== undefined &&
+    !event1?.image!.includes('http')
   )
-    img = await getPicture(post?.img);
-  else img = post?.img;
+    img = await getPicture(event1?.image);
+  else img = event1?.image;
 
   return new ImageResponse(
     (
@@ -33,7 +33,7 @@ export default async function Image({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '45px',
+          padding: '25px',
           flexDirection: 'column',
         }}
       >
@@ -50,7 +50,7 @@ export default async function Image({
             fontWeight: 500,
           }}
         >
-          {post?.title}
+          {event1?.title}
         </div>
         <div style={{ width: '600px', height: '400px', display: 'flex' }}>
           <img
@@ -78,14 +78,15 @@ export default async function Image({
           <div
             style={{
               backgroundClip: 'text',
+              width: '70%',
               color: 'transparent',
               backgroundImage: 'linear-gradient(to right, #ec4899, #8b5cf6)',
               fontWeight: 700,
-              fontSize: 30,
+              fontSize: 40,
               marginLeft: '20px',
             }}
           >
-            {'Posted by : ' + post?.user.name}
+            { new Date(event1?.date!).toLocaleDateString('en-us', {  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})+" "+  new Date(event1?.date!).toLocaleTimeString('en-us', { timeStyle: 'short', })} 
           </div>
 
           <div
@@ -94,27 +95,24 @@ export default async function Image({
               flexDirection: 'row',
               justifyContent: 'flex-end',
               justifyItems: 'center',
-              width: '50%',
-              flexWrap: 'wrap',
+              width: '30%', 
               marginRight: '20px',
               marginTop: '10px',
             }}
           >
-            {['keyword1', 'keyword2', 'keyword3'].map((topic, i) => (
-              <div
-                key={i}
+            
+              <div 
                 style={{
                   color: 'black',
-                  fontSize: 20,
+                  fontSize: 35,
                   padding: '5px',
                   margin: '3px',
                   backgroundColor: 'white',
                   borderRadius: '8px',
                 }}
               >
-                {topic}
-              </div>
-            ))}
+                {event1?.template.eventtype}
+              </div> 
           </div>
         </div>
       </div>

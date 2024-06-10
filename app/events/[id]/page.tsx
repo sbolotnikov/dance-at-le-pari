@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addItem } from '@/slices/cartSlice';
 import { useDimensions } from '@/hooks/useDimensions';
+import SharePost from '@/components/SharePost';
 
 export default function Page({ params }: { params: { id: string } }) {
   const [eventData, setEventData] = useState<TFullEvent>();
@@ -190,11 +191,13 @@ export default function Page({ params }: { params: { id: string } }) {
                   >
                     Event:
                   </h2>
+                  <SharePost title={eventData.title!} url={process.env.NEXT_PUBLIC_URL+"/events/"+params.id } quote={eventData!.eventtype +" event \n Date: " + new Date(eventData.date!).toLocaleDateString('en-us', {  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})+" "+  new Date(eventData.date!).toLocaleTimeString('en-us', { timeStyle: 'short', })+`\n Click on the link below. \n`}
+                    hashtag={eventData!.eventtype=='Party'?"#SocialDance #PartyDance #DanceParty":"#GroupClass #GroupDance"+'#DanceAtLePari #BallroomDanceStudio'}  />
                   {session?.user.role == 'Admin' && (
                     <button
                       className=" outline-none border-none fill-alertcolor  stroke-alertcolor  rounded-md border-alertcolor mt-2  w-8 h-8"
                       onClick={(e) => {
-                        e.preventDefault();
+                        e.preventDefault()
                         setAlertStyle({
                           variantHead: 'danger',
                           heading: 'Warning',

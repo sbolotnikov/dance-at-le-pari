@@ -27,3 +27,17 @@ export const getPicture = async (id: string) => {
       return null
     }
 };
+export const getEvent = async (id: number) => {
+
+
+    try {
+        const post = await prisma.event.findUnique({
+          where: { id }, 
+          include: { template: true },
+        });
+        await prisma.$disconnect()
+        return post;
+      } catch (err) {
+        return null
+      }
+};
