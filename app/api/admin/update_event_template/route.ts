@@ -11,7 +11,7 @@ export  async function PUT(
   try {
 
     const data = await req.json();
-    const {eventtype,length, price,amount, image, tag, title, location, description,visible, priceOptions,teachersid,id} = data;
+    const {eventtype,length,amount, image, tag, title, location, description,visible, priceOptions,teachersid,id} = data;
     const optionsToDelete = await prisma.priceOptions.deleteMany({
       where: {
         templateID: id,
@@ -21,7 +21,7 @@ export  async function PUT(
         where: {
             id: id,
           },
-        data:{eventtype,length:parseInt(length), price:parseFloat(price),amount, image, tag,  title, location, description, visible,teachersid }
+        data:{eventtype,length:parseInt(length),amount, image, tag,  title, location, description, visible,teachersid }
       })
       if(priceOptions){
         for (const option of priceOptions) {

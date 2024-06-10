@@ -10,7 +10,10 @@ export async function GET() {
     },
   });
   let teachersIds: number[] = [];
+  let minPriceOptions: number[] =[];
   for (let i = 0; i < event1.length; i++) {
+    const options = await prisma.priceOptions.findMany({where:{ templateID: event1[i].templateID} })
+    minPriceOptions.push(Math.min(...options.map((option) => option.price)))
     if (event1[i].teachersid[0] != undefined)
       teachersIds.push(event1[i].teachersid[0]);
   }
@@ -18,6 +21,7 @@ export async function GET() {
     where: {
       id: { in: teachersIds },
     },
+    
   });
   console.log(teachers);
   await prisma.$disconnect();
@@ -26,7 +30,7 @@ export async function GET() {
       JSON.stringify({ message: 'No such event exist', status: 422 })
     );
   }
-  const eventJSON = event1.map((item) => {
+  const eventJSON = event1.map((item,index) => {
     return {
       date: item.date,
       tag: item.tag,
@@ -34,8 +38,8 @@ export async function GET() {
       eventtype: item.eventtype,
       image: item.image,
       id: item.id,
-      length: item.length,
-      price: item.price,
+      length: item.length, 
+      minprice:minPriceOptions[index],
       teacher:
         item.teachersid[0] != undefined
           ? teachers.filter((i) => i.id === item.teachersid[0])[0].name

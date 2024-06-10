@@ -23,10 +23,8 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
   const [teacher, setTeacher] = useState<TTeacherInfo | null>();
   const [loading, setLoading] = useState(false);
   const [revealAlert, setRevealAlert] = useState(false);
-  const [length1, setLength] = useState(0);
-  const [amount, setAmount] = useState(1);
+  const [length1, setLength] = useState(0); 
   const [priceOptions, setPriceOptions] = useState<TPriceOption[] | null>(null)
-  const [price, setPrice] = useState(0.0);
   const [title, setTitle] = useState('');
   const [tag, setTag] = useState('');
   const [visible, setVisible] = useState(false);
@@ -70,11 +68,8 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
           setEventType(data.template.eventtype);
           setDescription(data.template.description);
           setEventTypeLocation(data.template.location);
-          setImage(data.template.image);
-          console.log(data.template.price);
-          setLength(data.template.length);
-          setPrice(data.template.price);
-          setAmount(data.template.amount);
+          setImage(data.template.image); 
+          setLength(data.template.length); 
           setTitle(data.template.title);
           setTag(data.template.tag);
           setVisible(data.template.visible);
@@ -130,10 +125,9 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
   };
   const handleSubmit = () => {
     // event.preventDefault();
-    console.log(length1, price, title, tag, description);
+    console.log(length1, title, tag, description);
     let validationError = '';
-    document.querySelector('#length1')!.classList.remove('invalid_input');
-    document.querySelector('#price')!.classList.remove('invalid_input');
+    document.querySelector('#length1')!.classList.remove('invalid_input'); 
     document.querySelector('#title')!.classList.remove('invalid_input');
     document.querySelector('#tag')!.classList.remove('invalid_input');
     document.querySelector('#description')!.classList.remove('invalid_input');
@@ -142,11 +136,7 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
       validationError = 'Enter length in range 30 min to 6 hours';
       // make name input red
       document.querySelector('#length1')!.classList.add('invalid_input');
-    } else if (price < 0 || price > 10000) {
-      validationError = 'Enter price in range $0 to $10000';
-      // make name input red
-      document.querySelector('#price')!.classList.add('invalid_input');
-    } else if (tag.length > 60 || tag.length < 2) {
+    }  else if (tag.length > 60 || tag.length < 2) {
       validationError = 'Enter tag in range of 3 to 60 symbols';
       // make message input red
       document.querySelector('#tag')!.classList.add('invalid_input');
@@ -181,13 +171,11 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
         body: JSON.stringify({
           eventtype,
           length: length1,
-          price,
           image,
           tag,
           title,
           location,
-          description,
-          amount,
+          description, 
           priceOptions,
           visible,
           teachersid:
@@ -224,8 +212,6 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
         body: JSON.stringify({
           eventtype,
           length: length1,
-          price,
-          amount,
           image,
           tag,
           title,
@@ -388,35 +374,7 @@ const EventTemplateEditingForm = ({ onReturn, template }: Props) => {
                 Price Options
                  <PriceOptions options={priceOptions} onChange={(options:TPriceOption[] | null )=>{options!==null?setPriceOptions([...options]):setPriceOptions(null)}}/>
               </label>
-              <label className="flex flex-row justify-between items-center mb-1">
-                Price
-                <input
-                  className=" outline-none border-none rounded-md w-1/2  text-lightMainColor p-0.5 mx-1"
-                  id="price"
-                  name="price"
-                  type="number"
-                  value={price}
-                  onChange={(e) => {
-                    setPrice(parseFloat(e.target.value));
-                  }}
-                  required
-                />
-              </label>
-              <label className="flex flex-row justify-between items-center mb-1">
-                Amount
-                <input
-                  className=" outline-none border-none rounded-md w-1/2  text-lightMainColor p-0.5 mx-1"
-                  id="price"
-                  name="price"
-                  type="number"
-                  value={amount}
-                  min={1}
-                  onChange={(e) => {
-                    setAmount(parseInt(e.target.value));
-                  }}
-                  required
-                />
-              </label>
+              
               <label className="flex flex-row justify-between items-center mb-1">
                 Title
                 <input

@@ -129,8 +129,7 @@ console.log("Event Data:",eventData)
                     eventData!.date,
                     eventData!.image,
                     eventData!.eventtype,
-                    eventData!.tag,
-                    eventData!.price,
+                    eventData!.tag, 
                     seatsArray.length,
                     -parseInt(params.id)
                   );
@@ -145,10 +144,10 @@ console.log("Event Data:",eventData)
                       activityID: -parseInt(params.id),
                       image: eventData!.image!,
                       eventtype: eventData!.eventtype,
-                      tag: eventData!.tag,
-                      price: eventData!.price,
+                      tag: eventData!.tag, 
                       invoice: 'None',
                       purchasedAt: 'None',
+                      price: priceOptions[0].price,
                       seat: seatsArray[i].seat,
                       table: seatsArray[i].table,
                       date: eventData!.date,
@@ -165,7 +164,7 @@ console.log("Event Data:",eventData)
                             image: eventData!.image!,
                             eventtype: eventData!.eventtype,
                             tag: eventData!.tag,
-                            price: eventData!.price,
+                            price: priceOptions[0].price,
                             amount: 1,
                             seat: seatsArray[i].seat,
                             table: seatsArray[i].table,
@@ -313,8 +312,7 @@ console.log("Event Data:",eventData)
                   {'Description:'}&nbsp;{eventData!.description}
                 </h2>
                 <h2 className="w-full text-left ">
-                  {'Price: $'}
-                  {eventData!.price}
+                  {`Price: ${eventData!.eventtype=="Group"?"from":" "} $ ${Math.min(...priceOptions.map((option) => option.price))}`}
                 </h2>
                 <h2 className="w-full text-left">
                   {'Location:'}&nbsp;{eventData!.location}

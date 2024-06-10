@@ -192,7 +192,7 @@ const Schedule = ({ eventsSet, onReturn }: Props) => {
                           })}
                         </h3>
                         <h3 className="text-left">{item.description}</h3>
-                        <h3 className="text-left">{'Price: $' + item.price}</h3>
+                        <h3 className="text-left">{`Price: ${item.eventtype=="Group"?"from":" "} $ ${item.minprice}` }</h3>
                         <ImgFromDb
                           url={item.image!}
                           stylings="object-contain m-auto"

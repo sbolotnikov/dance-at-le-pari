@@ -68,8 +68,7 @@ export interface IScreenSettings {
   type TFullEvent = {
     eventtype: EventType;
     length:number;
-    color: string | null;
-    price: number;
+    color: string | null; 
     image: string | null;
     tag: string;
     title: string | null;
@@ -90,9 +89,9 @@ description:string | null,
 eventtype:EventType,
 id:number,
 image:string | null,
-length:number,
-price:number,
+length:number, 
 tag:string,
+minprice:number,
 teacher:string | null,
 
   }
@@ -110,8 +109,7 @@ teacher:string | null,
   eventtype:string,
   id:number;
    image:string;
-   length:number;
-   price:number;
+   length:number; 
    teachersid:number[];
    title:string | null;
    location:string | null;
@@ -156,8 +154,6 @@ teacher:string | null,
     id:number | null;
     tag: string;
     description: string;    
-    amount: number;
-    price: number;
     options: TPriceOption[] | null;
     image: string;
     eventtype: string;

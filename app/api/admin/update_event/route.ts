@@ -12,8 +12,7 @@ export  async function PUT(
 
     const data = await req.json();
     const {eventtype,
-        length,
-        price,
+        length, 
         image,
         seatmap,
         tag,
@@ -41,8 +40,7 @@ export  async function PUT(
             date:eventDateTime,
             // visible,
             teachersid,
-            length:parseInt(length), 
-            price:parseFloat(price),}
+            length:parseInt(length) }
       })
     await prisma.$disconnect()
     //Send success response

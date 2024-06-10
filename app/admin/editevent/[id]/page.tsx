@@ -30,8 +30,7 @@ export default function Page({ params }: { params: { id: string } }) {
   const [location, setEventTypeLocation] = useState('Main ballroom');
   const [description, setDescription] = useState('');
   const [teacher, setTeacher] = useState<TTeacherInfo | null>();
-  const [length1, setLength] = useState(0);
-  const [price, setPrice] = useState(0.0);
+  const [length1, setLength] = useState(0); 
   const [title, setTitle] = useState('');
   const [tag, setTag] = useState('');
   const [specialEvent, setSpecialEvent] = useState(false);
@@ -270,8 +269,7 @@ export default function Page({ params }: { params: { id: string } }) {
           name: data.teacher,
           image: data.teacher_img,
         });
-        setLength(data.length);
-        setPrice(data.price);
+        setLength(data.length); 
         setTitle(data.title);
         setTag(data.tag);
         // setVisible(data.visible);
@@ -292,10 +290,9 @@ export default function Page({ params }: { params: { id: string } }) {
   }, [loadState]);
   const handleSubmit = (event: React.SyntheticEvent) => {
     event.preventDefault();
-    console.log(length1, price, title, tag, description);
+    console.log(length1,  title, tag, description);
     let validationError = '';
-    document.querySelector('#length1')!.classList.remove('invalid_input');
-    document.querySelector('#price')!.classList.remove('invalid_input');
+    document.querySelector('#length1')!.classList.remove('invalid_input'); 
     document.querySelector('#title')!.classList.remove('invalid_input');
     document.querySelector('#tag')!.classList.remove('invalid_input');
     document.querySelector('#description')!.classList.remove('invalid_input');
@@ -304,11 +301,7 @@ export default function Page({ params }: { params: { id: string } }) {
       validationError = 'Enter length in range 30 min to 6 hours';
       // make name input red
       document.querySelector('#length1')!.classList.add('invalid_input');
-    } else if (price < 0 || price > 10000) {
-      validationError = 'Enter price in range $0 to $10000';
-      // make name input red
-      document.querySelector('#price')!.classList.add('invalid_input');
-    } else if (tag.length > 60 || tag.length < 2) {
+    }  else if (tag.length > 60 || tag.length < 2) {
       validationError = 'Enter tag in range of 3 to 60 symbols';
       // make message input red
       document.querySelector('#tag')!.classList.add('invalid_input');
@@ -338,7 +331,6 @@ export default function Page({ params }: { params: { id: string } }) {
       body: JSON.stringify({
         eventtype,
         length: length1,
-        price,
         image,
         seatmap,
         tag,
@@ -530,20 +522,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 required
               />
             </label>
-            <label className="flex flex-row justify-between items-center mb-1">
-              Price
-              <input
-                className=" outline-none border-none rounded-md w-1/2  text-lightMainColor p-0.5 mx-1"
-                id="price"
-                name="price"
-                type="number"
-                value={price}
-                onChange={(e) => {
-                  setPrice(parseFloat(e.target.value));
-                }}
-                required
-              />
-            </label>
+            
             <label className="flex flex-row justify-between items-center mb-1">
               Title
               <input
@@ -678,8 +657,7 @@ export default function Page({ params }: { params: { id: string } }) {
               id={parseInt(params.id)}
               image={image}
               eventtype={eventtype}
-              tag={tag}
-              price={price}
+              tag={tag} 
               date={eventDateTime}
               tables={eventData?.tables!}
               onReturn={(style1: string, text1: string) => {

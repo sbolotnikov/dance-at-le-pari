@@ -8,13 +8,12 @@ type Props = {
   tables: number[];
   image: string;
   eventtype: string;
-  tag: string;
-  price:number;
+  tag: string; 
   date:string;
   onReturn: (style: string, text: string) => void;
 };
 
-const EditSeatsForEvent = ({ id,image,  eventtype, tag,price,date, tables, onReturn }: Props) => {
+const EditSeatsForEvent = ({ id,image,  eventtype, tag,date, tables, onReturn }: Props) => {
   const [eventSeatMap, setEventSeatMap] = useState<string[]>([]);
   const [name, setName] = useState<string | undefined>('');
   const [editedInput, setEditedInput] = useState<string>('');
@@ -58,7 +57,7 @@ const EditSeatsForEvent = ({ id,image,  eventtype, tag,price,date, tables, onRet
             data[i].personNote != null && data[i].personNote != ''
               ? (arr2[data[i].seat] = data[i].personNote)
               : (arr2[data[i].seat] = data[i].name);
-            if (((data[i].personNote == null)||(data[i].personNote == "")) && data[i].name == null) (arr2[data[i].seat] = 'Unknown purcahser');
+            if (((data[i].personNote == null)||(data[i].personNote == "")) && data[i].name == null) (arr2[data[i].seat] = 'Unknown purchaser');
             arr[data[i].table] = arr2.toString();
           }
 
@@ -230,7 +229,7 @@ const EditSeatsForEvent = ({ id,image,  eventtype, tag,price,date, tables, onRet
                                         image,
                                         eventtype,
                                         tag,
-                                        price, 
+                                        price:0, 
                                         date
                                       }),
                                     })

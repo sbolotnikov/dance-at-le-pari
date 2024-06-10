@@ -33,8 +33,7 @@ export async function GET() {
           timeStyle: 'short',
         }) +
         ' ' +
-        event.tag,
-      price: event.price,
+        event.tag, 
       description: event.description,
     };
   });

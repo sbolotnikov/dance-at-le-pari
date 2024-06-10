@@ -8,7 +8,7 @@ export  async function POST(
 ) {
     const data = await req.json();
     
-    const {date, eventtype, tag, image, templateID, tables,seatmap,length,price,teachersid,title,location,description,visible,repeating,interval,until} = data;
+    const {date, eventtype, tag, image, templateID, tables,seatmap,length,teachersid,title,location,description,visible,repeating,interval,until} = data;
     let dateArr = [] as string[];
     dateArr.push(date);
     
@@ -44,13 +44,13 @@ export  async function POST(
            
         i++;
       }
-      // console.log(dateArr.map((date) =>{ return{ date, eventtype, tag, image, templateID:parseInt(templateID), tables,seatmap,length,price,teachersid,title,location,description,visible 
+      // console.log(dateArr.map((date) =>{ return{ date, eventtype, tag, image, templateID:parseInt(templateID), tables,seatmap,length,teachersid,title,location,description,visible 
       // }}));
     }
 
     try {
     const createdTemplate = await prisma.event.createMany({
-      data: dateArr.map((date) =>{ return{ date, eventtype, tag, image, templateID:parseInt(templateID), tables,seatmap,length,price,teachersid,title,location,description,visible 
+      data: dateArr.map((date) =>{ return{ date, eventtype, tag, image, templateID:parseInt(templateID), tables,seatmap,length,teachersid,title,location,description,visible 
     }})
   })
     await prisma.$disconnect()
