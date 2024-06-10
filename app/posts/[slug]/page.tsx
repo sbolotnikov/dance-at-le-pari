@@ -1,21 +1,22 @@
 'use client';
 import ImgFromDb from '@/components/ImgFromDb';
-import SharePost from '@/components/SharePost';
-import { PageWrapper } from '@/components/page-wrapper'; 
+import SharePostModal from '@/components/SharePostModal';
+import SharePost from '@/components/SharePostModal';
+import { PageWrapper } from '@/components/page-wrapper';
+import ShowIcon from '@/components/svg/showIcon';
 import { TPost } from '@/types/screen-settings';
 import { Metadata, ResolvingMetadata } from 'next';
-import {  useEffect, useState } from 'react';
- // set dynamic metadata
+import { useEffect, useState } from 'react';
+// set dynamic metadata
 
 type Props = {
-  params: { slug: string } 
-}
-
- 
+  params: { slug: string };
+};
 
 export default function Page(params: { params: { slug: string } }) {
-  const slug = params.params.slug; 
-    const [post, setPost] = useState<TPost>(null);
+  const slug = params.params.slug;
+  const [post, setPost] = useState<TPost>(null);
+  const [revealSharingModal, setRevealSharingModal] = useState(false);
 
   useEffect(() => {
     fetch(`/api/posts/${slug}`, {
@@ -33,6 +34,17 @@ export default function Page(params: { params: { slug: string } }) {
 
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center ">
+           {revealSharingModal && (
+        <SharePostModal
+        title={post!.title}
+        url={process.env.NEXT_PUBLIC_URL + '/posts/' + slug}
+        quote={`Category: ${post!.catSlug} \n Author: ${post!.user.name} \n Click on the link below. \n`}
+        hashtag={'#DanceAtLePari #BallroomDanceStudio'}
+          onReturn={() => setRevealSharingModal(false)}
+          visibility={revealSharingModal}
+          
+        />
+      )}
       <div className="border-0 rounded-md p-2 mt-6 shadow-2xl w-[95%] h-[70svh] md:h-[85svh] max-w-5xl md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
         <div className="border rounded-md border-lightMainColor dark:border-darkMainColor w-full h-full   p-2 flex flex-col justify-start items-center relative">
           <div className="w-full h-full relative overflow-auto  ">
@@ -63,6 +75,16 @@ export default function Page(params: { params: { slug: string } }) {
                         </span>
                       </div>
                     </div>
+                    <button
+                    className=" outline-none border-none   rounded-md  mt-2  w-8 h-8"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setRevealSharingModal(!revealSharingModal);
+                      return;
+                    }}
+                  >
+                    <ShowIcon icon={'Share'} stroke={'2'} />
+                  </button>
                     <button
                       className="shadow-lg pointer border-0 outline-none rounded"
                       onClick={(e) => {
@@ -98,8 +120,7 @@ export default function Page(params: { params: { slug: string } }) {
                       <p>Views: {post.views}</p>
                     </div>
                   </div>
-                   <SharePost title={post.title} url={process.env.NEXT_PUBLIC_URL+"/posts/"+slug } quote={`Category: ${post.catSlug} \n Author: ${post.user.name} \n Click on the link below. \n`}
-                    hashtag={'#DanceAtLePari #BallroomDanceStudio'}  />
+                  
                 </div>
               )}
             </div>

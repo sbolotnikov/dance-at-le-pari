@@ -33,8 +33,8 @@ export const metadata:Metadata = {
  
 manifest: '/site.webmanifest',
 metadataBase: new URL(process.env.NEXTAUTH_URL+""),
-title: 'Dance at Le Pari Dance Studio | Fanwood, NJ, USA', 
-openGraph:{title:'Dance at Le Pari Dance Studio | United States', url:process.env.NEXTAUTH_URL+""},
+title:{template:'%s',default:'Dance at Le Pari Dance Studio | Fanwood, NJ, USA'}, 
+openGraph:{title:{template:'%s',default:'Dance at Le Pari Dance Studio | United States'}},
 };
 
 export default function RootLayoutFC({

@@ -23,6 +23,16 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/api/admin/users", "hooks/useDate.tsx", "components/Schedule.tsx", "components/PDF/pdf.tsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "app/api/admin/users",
+    "hooks/useDate.tsx",
+    "components/Schedule.tsx",
+    "components/PDF/pdf.tsx",
+    "components/SharePostModal.tsx"
+  ],
   "exclude": ["node_modules"]
 }

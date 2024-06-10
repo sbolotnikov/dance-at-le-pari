@@ -11,12 +11,13 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addItem } from '@/slices/cartSlice';
 import { useDimensions } from '@/hooks/useDimensions';
-import SharePost from '@/components/SharePost';
+import SharePostModal from '@/components/SharePostModal';
 
 export default function Page({ params }: { params: { id: string } }) {
   const [eventData, setEventData] = useState<TFullEvent>();
   const [revealBuyTicketModal, setRevealBuyTicketModal] = useState(false);
   const [revealAlert, setRevealAlert] = useState(false);
+  const [revealSharingModal, setRevealSharingModal] = useState(false);
   const [scrolling, setScrolling] = useState(true);
   const windowSize = useDimensions();
   const [alertStyle, setAlertStyle] = useState({
@@ -77,9 +78,36 @@ export default function Page({ params }: { params: { id: string } }) {
       ? setScrolling(true)
       : setScrolling(false);
   }, [eventData, windowSize.height]);
-
+console.log("modal visible:",revealSharingModal)
   return (
-    <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
+    <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">       
+        {eventData && revealSharingModal &&<SharePostModal
+          title={eventData.title!}
+          onReturn={() => sleep(1200).then(() => {setRevealSharingModal(false)})}
+          visibility={revealSharingModal}
+          url={process.env.NEXT_PUBLIC_URL + '/events/' + params.id}
+          quote={
+            eventData!.eventtype +
+            ' event \n Date: ' +
+            new Date(eventData.date!).toLocaleDateString('en-us', {
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            }) +
+            ' ' +
+            new Date(eventData.date!).toLocaleTimeString('en-us', {
+              timeStyle: 'short',
+            }) +
+            `\n Click on the link below. \n`
+          }
+          hashtag={
+            eventData.eventtype == 'Party'
+              ? 'SocialDance PartyDance DanceParty'
+              : 'GroupClass GroupDance' + 'DanceAtLePari BallroomDanceStudio'
+          }
+        />}
+      
       {revealBuyTicketModal && (
         <BuyTicketModal
           seatmap={eventData!.seatmap}
@@ -191,13 +219,21 @@ export default function Page({ params }: { params: { id: string } }) {
                   >
                     Event:
                   </h2>
-                  <SharePost title={eventData.title!} url={process.env.NEXT_PUBLIC_URL+"/events/"+params.id } quote={eventData!.eventtype +" event \n Date: " + new Date(eventData.date!).toLocaleDateString('en-us', {  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})+" "+  new Date(eventData.date!).toLocaleTimeString('en-us', { timeStyle: 'short', })+`\n Click on the link below. \n`}
-                    hashtag={eventData!.eventtype=='Party'?"#SocialDance #PartyDance #DanceParty":"#GroupClass #GroupDance"+'#DanceAtLePari #BallroomDanceStudio'}  />
+                  <button
+                    className=" outline-none border-none   rounded-md  mt-2  w-8 h-8"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setRevealSharingModal(true);
+                      
+                    }}
+                  >
+                    <ShowIcon icon={'Share'} stroke={'2'} />
+                  </button>
                   {session?.user.role == 'Admin' && (
                     <button
                       className=" outline-none border-none fill-alertcolor  stroke-alertcolor  rounded-md border-alertcolor mt-2  w-8 h-8"
                       onClick={(e) => {
-                        e.preventDefault()
+                        e.preventDefault();
                         setAlertStyle({
                           variantHead: 'danger',
                           heading: 'Warning',
