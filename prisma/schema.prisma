@@ -37,8 +37,7 @@ model EventTemplate {
   eventtype EventType @default(Group)
   length Int
   amount Int @default(1)
-  color String?
-  price Float
+  color String? 
   image String?
   tag String
   title String?
@@ -66,8 +65,7 @@ model Event {
    tag String
    image String?
    eventtype EventType @default(Group)
-   length Int
-   price Float
+   length Int 
    teachersid Int[]
    title String?
    location String?
