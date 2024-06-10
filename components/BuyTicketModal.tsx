@@ -4,7 +4,7 @@ import ShowIcon from './svg/showIcon';
 import ImgFromDb from './ImgFromDb';
 import InputBox from './InputBox';
 import { PaymentForm, CreditCard } from 'react-square-web-payments-sdk';
-import { TableSeat } from '@/types/screen-settings';
+import { TPriceOption, TableSeat } from '@/types/screen-settings';
 import { useSession } from 'next-auth/react';
 import AnimateModalLayout from './AnimateModalLayout';
 import { useDimensions } from '@/hooks/useDimensions';
@@ -14,9 +14,9 @@ type Props = {
   tables: number[] | null;
   tableName: string | null;
   id: number;
-  price: number;
+  priceOptions: TPriceOption[];
   eventImage: string | null;
-  onReturn: (seats: TableSeat[]) => void;
+  onReturn: (seats: TableSeat[], option:number | undefined) => void;
 };
 
 export default function BuyTicketModal({
@@ -25,7 +25,7 @@ export default function BuyTicketModal({
   eventImage,
   tableName,
   id,
-  price,
+  priceOptions,
   onReturn,
 }: Props) {
   const { data: session } = useSession();
@@ -35,6 +35,7 @@ export default function BuyTicketModal({
   const [currentSeat, setCurrentSeat] = useState(-1);
   const [isVisible, setIsVisible] = useState(true);
   const [chosenTable, setChosenTable] = useState(0);
+  const [choosenOption, setChoosenOption] = useState(0);
   const [tickets, setTickets] = useState(0);
   const [eventSeatMap, setEventSeatMap] = useState<string[]>([]);
   const [scrolling, setScrolling] = useState(true);
@@ -149,7 +150,7 @@ export default function BuyTicketModal({
       visibility={isVisible}
       onReturn={() => {
         setIsVisible(false);
-        onReturn([]);
+        onReturn([], undefined);
       }}
     >
       <div className={`${seatmap!== null?'h-[73%] w-[75%]':"w-full max-w-xl h-full max-h-[300px]"} md:w-[50%] bg-darkMainColor dark:bg-lightMainColor rounded-md  p-1`}>
@@ -172,29 +173,30 @@ export default function BuyTicketModal({
               </div>
             ) : (
               <div className="w-full h-full flex flex-col justify-center items-center">
-                <h2 className="w-full text-center">Enter your ticket amount</h2>
-                <InputBox
-                  startValue={0}
-                  setWidth={8}
-                  increment={1}
-                  onChange={(n) => {
-                    setTickets(n);
-                    console.log(n);
-                    let array1: TableSeat[] = [];
-                    for (let i = 0; i < n; i++) {
-                      array1[i] = { table: -1, seat: -1 };
-                    }
-                    setChosenSeats([...array1]);
-                    console.log(array1);
-                  }}
-                />
-                <h3>Total:${price * tickets}</h3>
+                <h2 className="w-full text-center">Choose your price option</h2>
+                
+                 {priceOptions !== null && (
+          <select
+            id="priceOptions"
+            className="bg-main-bg mb-2 rounded-md text-ellipsis bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor p-1 w-3/4"
+            onChange={(e) => {
+              e.preventDefault;
+              setChoosenOption(parseInt(e.target.value));
+            }}
+          >
+            {priceOptions.map((option, index) => (
+              <option key={index} value={index}>
+                {option.tag + ' $' + option.price}
+              </option>
+            ))}
+          </select>
+        )} 
                 <button
                   className="w-[50%] btnFancy my-auto text-base text-center  rounded-md"
                   style={{ padding: '0' }}
                   onClick={() => {
                     setIsVisible(false);
-                    onReturn(chosenSeats);
+                    onReturn([{ table: -1, seat: -1 }],choosenOption);
                   }}
                 >
                   {'Add to Cart'}
@@ -324,16 +326,16 @@ export default function BuyTicketModal({
                   </div>
                 </div>
                 <h3>
-                  Total: ${price}*{tickets}
+                  Total: ${priceOptions[0].price}*{tickets}
                   {chosenSeats.length == 1 ? ' ticket = ' : ' tickets = '}$
-                  {price * tickets}
+                  {priceOptions[0].price * tickets}
                 </h3>
                 <button
                   className="w-[50%] btnFancy text-base text-center  rounded-md"
                   style={{ padding: '0' }}
                   onClick={() => {
                     setIsVisible(false);
-                    onReturn(chosenSeats);
+                    onReturn(chosenSeats,undefined);
                   }}
                 >
                   {'Add to Cart'}

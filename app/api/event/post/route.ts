@@ -9,12 +9,19 @@ export async function POST(req: Request) {
     const event1 = await prisma.event.findUnique({
         where: {
           id:parseInt(id),
-        }
+          
+        },
       });
+      const priceOptions = await prisma.priceOptions.findMany({
+        where: {
+          templateID:event1?.templateID!,
+          
+        },
+      })
     console.log(event1);
     if ((event1?.teachersid.length==undefined)||(event1?.teachersid.length==0)){
       await prisma.$disconnect()
-    return new NextResponse(JSON.stringify({teacher:"", bio:"", teacher_img:"",...event1}), {
+    return new NextResponse(JSON.stringify({teacher:"", bio:"", teacher_img:"",priceOptions,...event1}), {
       status: 201,
     });
 
@@ -31,7 +38,7 @@ export async function POST(req: Request) {
         JSON.stringify({ message: 'No such event exist',status: 422}),
       );
     }
-  return new NextResponse(JSON.stringify({ teacher:teacher1?.name, bio:teacher1?.bio, teacher_img:teacher1?.image,...event1}), {
+  return new NextResponse(JSON.stringify({ teacher:teacher1?.name, bio:teacher1?.bio,priceOptions, teacher_img:teacher1?.image,...event1}), {
     status: 201,
   });
 }

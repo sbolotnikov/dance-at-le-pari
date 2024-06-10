@@ -4,7 +4,7 @@ import ImgFromDb from '@/components/ImgFromDb';
 import AlertMenu from '@/components/alertMenu';
 import { PageWrapper } from '@/components/page-wrapper';
 import ShowIcon from '@/components/svg/showIcon';
-import { TFullEvent } from '@/types/screen-settings';
+import { TFullEvent, TPriceOption } from '@/types/screen-settings';
 import sleep from '@/utils/functions';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
@@ -18,6 +18,7 @@ export default function Page({ params }: { params: { id: string } }) {
   const [revealBuyTicketModal, setRevealBuyTicketModal] = useState(false);
   const [revealAlert, setRevealAlert] = useState(false);
   const [revealSharingModal, setRevealSharingModal] = useState(false);
+  const [priceOptions, setPriceOptions] = useState<TPriceOption[]>([]);
   const [scrolling, setScrolling] = useState(true);
   const windowSize = useDimensions();
   const [alertStyle, setAlertStyle] = useState({
@@ -66,6 +67,7 @@ export default function Page({ params }: { params: { id: string } }) {
       .then((data) => {
         setEventData(data);
         setTemplateID(data.templateID);
+        setPriceOptions(data.priceOptions);
       })
       .catch((error) => {
         console.log(error);
@@ -78,7 +80,7 @@ export default function Page({ params }: { params: { id: string } }) {
       ? setScrolling(true)
       : setScrolling(false);
   }, [eventData, windowSize.height]);
-console.log("modal visible:",revealSharingModal)
+console.log("Event Data:",eventData)
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">       
         {eventData && revealSharingModal &&<SharePostModal
@@ -114,9 +116,9 @@ console.log("modal visible:",revealSharingModal)
           tables={eventData!.tables}
           tableName={eventData!.tableName}
           eventImage={eventData!.image}
-          price={eventData!.price}
+          priceOptions={priceOptions}
           id={parseInt(params.id)}
-          onReturn={async (seatsArray) => {
+          onReturn={async (seatsArray,option1) => {
             console.log(seatsArray);
             if (seatsArray.length > 0) {
               if (eventData!.tables!.length > 0) {
@@ -179,8 +181,8 @@ console.log("modal visible:",revealSharingModal)
                     image: eventData!.image!,
                     eventtype: eventData!.eventtype,
                     tag: eventData!.tag,
-                    price: eventData!.price * seatsArray.length,
-                    amount: seatsArray.length,
+                    price: priceOptions[option1!].price,
+                    amount: priceOptions[option1!].amount,
                     seat: null,
                     table: null,
                     date: null,

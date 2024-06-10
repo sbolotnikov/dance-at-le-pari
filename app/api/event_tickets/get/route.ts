@@ -6,6 +6,15 @@ export async function POST(req: Request) {
     const data = await req.json();
     const {id} = data;
     console.log(id)
+    const overpending=await prisma.purchase.deleteMany({
+      where: {
+          status:"Pending",
+          createdAt: {
+              lt:new Date(Date.now() -10*60*1000),
+          }
+      },
+    });   
+    // earlier then 10 not wise because they might be in the cart
     const tickets = await prisma.purchase.findMany({
         where: {
           activityID:-1*id,
