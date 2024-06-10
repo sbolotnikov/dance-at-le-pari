@@ -44,13 +44,13 @@ const PaymentPageForm = ({ paymentsArray, role, specialEvent, onReturn }: Props)
               </div>
             </div>
             <div className="w-[49%] flex flex-row justify-around items-center">
-              {payment.options!.length>0 ?<p>{payment.options &&<PriceOptionSelect options={payment.options} onChange={(option:number )=>{ 
+              <p>{payment.options &&<PriceOptionSelect options={payment.options} onChange={(option:number )=>{ 
                 console.log(option); 
                 let arr = options; 
                 arr[index]=option;
                 console.log(arr);
                 setOptions([...arr]);
-                }}/>}</p>:<p className="w-[45%] text-base text-center">${payment.price}</p>}
+                }}/>}</p> 
               <div className="w-[50%] flex flex-col justify-around items-center">
                 {specialEvent?(
                   <Link href={`/events/${payment.id}`} >
