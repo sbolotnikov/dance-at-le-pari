@@ -17,8 +17,7 @@ import { useSession } from 'next-auth/react';
 import { useDimensions } from '@/hooks/useDimensions';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import SharePostModal from '@/components/SharePostModal';
-import page from '@/app/(auth)/login/page';
+import SharePostModal from '@/components/SharePostModal'; 
 
 export default function Page({ params }: { params: { id: string } }) {
   const tabsArray = [

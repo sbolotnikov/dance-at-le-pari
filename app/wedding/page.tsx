@@ -13,6 +13,8 @@ import Iframe from 'react-iframe';
 import { useDispatch } from 'react-redux';
 import { TPriceOption, TTemplateNew } from '@/types/screen-settings';
 import Image from 'next/image';
+import SharePostModal from '@/components/SharePostModal';
+import ShowIcon from '@/components/svg/showIcon';
 
 interface pageProps {}
 
@@ -21,6 +23,7 @@ const page: FC<pageProps> = ({}) => {
   const dispatch = useDispatch();
   const emailRef = useRef<HTMLInputElement>(null);
   const [revealAlert, setRevealAlert] = useState(false);
+  const [revealSharingModal, setRevealSharingModal] = useState(false);
   const [packages, setPackages] = useState<{tag: string;
     eventtype: string;
     id: number;
@@ -105,6 +108,14 @@ const page: FC<pageProps> = ({}) => {
   }, []);
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
+      <SharePostModal
+        title={"Page: Wedding Dance Lessons in studio | Dance at Le Pari Studio"}
+        url={process.env.NEXT_PUBLIC_URL + '/wedding'}
+        quote={`Description: Weddings are very stressful! We are ready to help! Your wedding dance should be very beautiful, recorded for many years! We offer wedding dance lessons inside of the studio: bachelorette dance lessons, group dance classes, father daughter dance lessons and many more!  \n Click on the link below. \n`}
+        hashtag={" WeddingDance    DanceLePariDanceCenter"}
+          onReturn={() => setRevealSharingModal(false)}
+          visibility={revealSharingModal} 
+        />
       {revealAlert && <InfoPopup onReturn={onReturn} styling={alertStyle} />}
       <div
         className="border-0 rounded-md p-4  shadow-2xl w-[90%] h-[85svh]  max-w-[850px] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md overflow-auto"
@@ -122,6 +133,16 @@ const page: FC<pageProps> = ({}) => {
           >
             DANCE LESSONS
           </h2>
+          <button
+            className=" outline-none border-none absolute right-0 top-0  rounded-md  mt-2  w-8 h-8"
+            onClick={(e) => {
+              e.preventDefault();
+              setRevealSharingModal(!revealSharingModal);
+              return;
+            }}
+          >
+            <ShowIcon icon={'Share'} stroke={'2'} />
+          </button>
         <div className="w-full   rounded-md md:grid md:grid-cols-4 md:gap-2">
           <Image
             src="/images/vendorBadge_AsSeenOnWeb.png"

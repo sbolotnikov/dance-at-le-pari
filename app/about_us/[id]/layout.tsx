@@ -36,9 +36,9 @@ export const generateMetadata = async (
 //   const previousImages = (await parent).openGraph?.images || [];
  
    return {  
-    openGraph: { title: "Post: "+pageArray[index1].title +" | Dance at Le Pari Studio", url: `${process.env.NEXTAUTH_URL}/about_us/${slug}` },
+    openGraph: { title: "Page: "+pageArray[index1].title +" | Dance at Le Pari Studio", url: `${process.env.NEXTAUTH_URL}/about_us/${slug}` },
     description: pageArray[index1].description  ,
-    title: "Post: "+pageArray[index1].title +" | Dance at Le Pari Studio"
+    title: "Page: "+pageArray[index1].title +" | Dance at Le Pari Studio"
     
   };
 };

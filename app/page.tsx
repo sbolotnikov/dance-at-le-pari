@@ -38,7 +38,7 @@ export default function Home() {
       path: '/images/weddingcouple.jpg',
       link: '/wedding',
     },
-    { name: 'Dance Styles', path: '/images/style.jpg', link: '/dancestyle' },
+    { name: 'Dance Blog', path: '/images/style.jpg', link: '/blog/0' },
     {
       name: 'Competitive Dance',
       path: '/images/competitive.jpg',

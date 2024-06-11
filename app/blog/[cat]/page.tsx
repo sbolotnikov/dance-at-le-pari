@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation';
 import { TBlogPost } from '@/types/screen-settings';
 import EditCategoriesModal from '@/components/EditCategoriesModal';
 import sleep from '@/utils/functions';
+import SharePostModal from '@/components/SharePostModal';
 interface pageProps {}
 
 export default function Page(params: {
@@ -23,6 +24,7 @@ export default function Page(params: {
   const [revealModal, setRevealModal] = useState(false);
   const [revealModal1, setRevealModal1] = useState(false);
   const [revealAlert, setRevealAlert] = useState(false);
+  const [revealSharingModal, setRevealSharingModal] = useState(false);
   const [selectedId, setSelectedId] = useState('');
   const [categories, setCategories] = useState<{id:string,slug: string,title: string}[]>([]);
   const [loading, setLoading] = useState(false);
@@ -108,6 +110,15 @@ export default function Page(params: {
 
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center ">
+      <SharePostModal
+        title={"Page: Blog | Dance at Le Pari Studio"}
+        url={process.env.NEXT_PUBLIC_URL + '/blog/0'}
+        quote={`Description: This site is blog about dancing and everything that connects to dancing. Tips, tricks, additional information, experts info on dancing experience and knowledge. \n Click on the link below. \n`}
+        hashtag={" DanceAtLePariBlog  DanceBlog  LePariDanceCenterBlog  DanceAtLePari"}
+          onReturn={() => setRevealSharingModal(false)}
+          visibility={revealSharingModal}
+          
+        />
       {revealModal && (
         <CreatePostModal
           visibility={revealModal}
@@ -148,9 +159,19 @@ export default function Page(params: {
           >
             <ShowIcon icon={'Blog'} stroke={'0.1'} />
           </div>
+          <button
+            className=" outline-none border-none absolute right-1 top-1  rounded-md  mt-2  w-8 h-8"
+            onClick={(e) => {
+              e.preventDefault();
+              setRevealSharingModal(!revealSharingModal);
+              return;
+            }}
+          >
+            <ShowIcon icon={'Share'} stroke={'2'} />
+          </button>
           {(session?.user.role === 'Admin' ||
             session?.user.role === 'Teacher') && (
-            <div className="group flex  cursor-pointer  flex-col justify-center items-center absolute right-1 top-1 md:top-8">
+            <div className="group flex  cursor-pointer  flex-col justify-center items-center absolute right-10 top-1 md:top-8">
               <div className="  h-10 w-10 md:h-14 md:w-14 relative hover:scale-110 group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
                 <div
                   className="cursor-pointer h-10 w-10 md:h-14 md:w-14 border-2 rounded-full  bg-editcolor m-auto "

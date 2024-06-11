@@ -9,10 +9,12 @@ import ShowIcon from '@/components/svg/showIcon';
 import { useDimensions } from '@/hooks/useDimensions';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import SharePostModal from '@/components/SharePostModal';
 interface pageProps {}
 
 const page: FC<pageProps> = ({}) => {
   const [revealDayView, setRevealDayView] = useState(false);
+  const [revealSharingModal, setRevealSharingModal] = useState(false);
   const [clicked, setClicked] = useState<string>();
   const { data: session } = useSession();
   const windowSize = useDimensions();
@@ -43,6 +45,15 @@ const page: FC<pageProps> = ({}) => {
   // {color:"#e09c6b",date:'2023-09-09T19:00:00',tag:"Party", id:0},{color:"#612326",date:'2023-09-18T19:00:00',tag:"Group", id:1},{color:"#35da9b",date:'2023-09-18T14:00:00',tag:"early Party", id:2}, {color:"#6123f6",date:'2023-09-18T18:00:00',tag:"Cha-Cha", id:3},{color:"#9c15e4",date:'2023-09-18T15:00:00',tag:"Bachata", id:4}
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center ">
+      <SharePostModal
+        title={"Page: Calendar | Dance at Le Pari Studio"}
+        url={process.env.NEXT_PUBLIC_URL + '/calendar'}
+        quote={`Description: Dance Events in New Jersey! Best Dance Studio in NJ with many dance options.  You want to have fun, go out dancing or find smth different to do, come to us! We offer dance events running every week as well as many dance classes to join! Dance Events and Dance Classes Calendar. \n Click on the link below. \n`}
+        hashtag={" DanceAtLePariCalendar EventsCalendar DanceCalendar  LePariDanceCenter"}
+          onReturn={() => setRevealSharingModal(false)}
+          visibility={revealSharingModal}
+          
+        />
       {revealDayView && (
         <FullDayCalendarView
           events={eventsSet.filter(
@@ -64,6 +75,16 @@ const page: FC<pageProps> = ({}) => {
           >
             Calendar
           </h2>
+          <button
+            className=" outline-none border-none absolute right-0 top-0  rounded-md  mt-2  w-8 h-8"
+            onClick={(e) => {
+              e.preventDefault();
+              setRevealSharingModal(!revealSharingModal);
+              return;
+            }}
+          >
+            <ShowIcon icon={'Share'} stroke={'2'} />
+          </button>
           {(session?.user.role === 'Admin' ||
               session?.user.role === 'Teacher') && (
               <div className="group flex  cursor-pointer  flex-col items-center justify-center absolute left-16 top-5 md:right-1 md:top-1 md:left-auto">

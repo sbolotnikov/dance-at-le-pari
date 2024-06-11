@@ -14,6 +14,7 @@ import { useDimensions } from '@/hooks/useDimensions';
 import sleep from '@/utils/functions';
 import ShowIcon from '@/components/svg/showIcon';
 import { useRouter } from 'next/navigation';
+import SharePostModal from '@/components/SharePostModal';
 interface pageProps {}
 
 const page: FC<pageProps> = ({}) => {
@@ -21,6 +22,7 @@ const page: FC<pageProps> = ({}) => {
   const [tabIndex, setTabIndex] = useState(0);
   const [templateID, setTemplateID] = useState(-1);
   const [revealTemplateEdit, setRevealTemplateEdit] = useState(false);
+  const [revealSharingModal, setRevealSharingModal] = useState(false);
   const [products, setProducts] = useState<TPaymentType[]>([]);
   const [specialEvents, setSpecialEvents] = useState<TPaymentType[]>([]);
   const [alertStyle, setAlertStyle] = useState({
@@ -166,6 +168,14 @@ const page: FC<pageProps> = ({}) => {
   }, [session?.user.role!]);
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
+      <SharePostModal
+        title={"Page: Activities | Dance at Le Pari Studio"}
+        url={process.env.NEXT_PUBLIC_URL + '/dancing'}
+        quote={`Description:All studio activities. Can pay for all services online as contactless method of payment: online &amp; in studio groups &amp; privates, dance social party admission, dance host cost, online &amp; in studio wedding dance lessons, floor fee. You can find Privacy Policy of Le Pari Dance Center.  \n Click on the link below. \n`}
+        hashtag={" DanceAtLePariActivities DanceActivities   DanceLePariDanceCenter"}
+          onReturn={() => setRevealSharingModal(false)}
+          visibility={revealSharingModal} 
+        />
       <AlertMenu
         visibility={revealAlert}
         onReturn={onReturn}
@@ -208,12 +218,22 @@ const page: FC<pageProps> = ({}) => {
                 All prices include credit card fees
               </h2>
               <button
-                className=" btnFancy mx-auto text-base text-center w-28 rounded-md absolute top-0 right-0"
+                className=" btnFancy mx-auto text-base text-center w-28 rounded-md absolute top-0 left-0"
                 style={{ padding: '0', margin: '5px 5px' }}
                 onClick={() => setRevealPDF(true)}
               >
                 Terms & Conditions
               </button>
+              <button
+            className=" outline-none border-none absolute right-0 top-0  rounded-md  mt-2  w-8 h-8"
+            onClick={(e) => {
+              e.preventDefault();
+              setRevealSharingModal(!revealSharingModal);
+              return;
+            }}
+          >
+            <ShowIcon icon={'Share'} stroke={'2'} />
+          </button>
             </div>
             <TabList
               className="h-[2.43rem] w-full  flex flex-row justify-between items-start flex-wrap rounded-t-md  dark:bg-lightMainBG  bg-darkMainBG"
