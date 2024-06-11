@@ -111,9 +111,9 @@ export default function Page(params: {
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center ">
       <SharePostModal
-        title={"Page: Blog | Dance at Le Pari Studio"}
-        url={process.env.NEXT_PUBLIC_URL + '/blog/0'}
-        quote={`Description: This site is blog about dancing and everything that connects to dancing. Tips, tricks, additional information, experts info on dancing experience and knowledge. \n Click on the link below. \n`}
+        title={`${(params.params.cat!='0')?categories.filter((item)=>item.slug==params.params.cat)[0].title:"All"} Categor${(params.params.cat!='0')?'y':"ies"} of Blog | Dance at Le Pari Studio`}
+        url={process.env.NEXT_PUBLIC_URL + '/blog/' + params.params.cat}
+        quote={`Description: This is a blog about dancing and everything that connects to dancing. Tips, tricks, additional information, experts info on dancing experience and knowledge. \n Click on the link below. \n`}
         hashtag={" DanceAtLePariBlog  DanceBlog  LePariDanceCenterBlog  DanceAtLePari"}
           onReturn={() => setRevealSharingModal(false)}
           visibility={revealSharingModal}
