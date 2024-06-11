@@ -133,6 +133,9 @@ const page: FC<pageProps> = ({}) => {
           >
             DANCE LESSONS
           </h2>
+          <div className=" h-32 w-32 m-auto">
+              <ShowIcon icon={'Wedding'} stroke={'0.05'} fillSvg='#3B50C6'/>
+            </div>
           <button
             className=" outline-none border-none absolute right-0 top-0  rounded-md  mt-2  w-8 h-8"
             onClick={(e) => {

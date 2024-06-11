@@ -34,7 +34,7 @@ export default function Image() {
             fontSize: 60,
             fontStyle: 'italic',
             letterSpacing: '-0.025em',
-            color: 'red',
+            color: 'white',
             textAlign: 'justify',
             lineHeight: 1.4,
             textDecoration: 'underline',
@@ -45,7 +45,7 @@ export default function Image() {
           {"Wedding Dance Lessons in studio"}
         </div>
         <div style={{ width: '400px', height: '400px', display: 'flex'}}>
-        <ShowIcon icon={'Activities'} stroke={'0.1'} widthSvg={400} heightSvg={400} fillSvg={'white'}/>
+        <ShowIcon icon={'Wedding'} stroke={'0.05'} widthSvg={400} heightSvg={400} fillSvg='red'/>
         </div>
 
        
