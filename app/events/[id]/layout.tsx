@@ -30,7 +30,7 @@ export const generateMetadata = async (
   };
 };
 
-export default function PostLayout({
+export default function EventLayout({
   children,
   params,
 }: {
@@ -39,5 +39,5 @@ export default function PostLayout({
     slug: string;
   };
 }) {
-  return <section>{children}</section>;
+  return <div className="w-full h-full" >{children}</div>;
 }

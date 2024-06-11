@@ -34,17 +34,16 @@ export default function Page(params: { params: { slug: string } }) {
 
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center ">
-           {revealSharingModal && (
-        <SharePostModal
-        title={post!.title}
+            
+        {post &&<SharePostModal
+        title={post.title}
         url={process.env.NEXT_PUBLIC_URL + '/posts/' + slug}
-        quote={`Category: ${post!.catSlug} \n Author: ${post!.user.name} \n Click on the link below. \n`}
+        quote={`Category: ${post.catSlug} \n Author: ${post.user.name} \n Click on the link below. \n`}
         hashtag={'#DanceAtLePari #BallroomDanceStudio'}
           onReturn={() => setRevealSharingModal(false)}
           visibility={revealSharingModal}
           
-        />
-      )}
+        />} 
       <div className="border-0 rounded-md p-2 mt-6 shadow-2xl w-[95%] h-[70svh] md:h-[85svh] max-w-5xl md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
         <div className="border rounded-md border-lightMainColor dark:border-darkMainColor w-full h-full   p-2 flex flex-col justify-start items-center relative">
           <div className="w-full h-full relative overflow-auto  ">

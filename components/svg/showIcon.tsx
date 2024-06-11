@@ -1,8 +1,11 @@
 type Props = {
   icon: string;
   stroke?: string | undefined;
+  widthSvg?: number | undefined;
+  heightSvg?: number | undefined;
+  fillSvg?:string | undefined | undefined
 };
-const ShowIcon = ({ icon, stroke }: Props) => {
+const ShowIcon = ({ icon, stroke, widthSvg, heightSvg, fillSvg }: Props) => {
   const showComponent = (icon: string) => {
     if (icon == 'Register') {
       return (
@@ -802,8 +805,11 @@ const ShowIcon = ({ icon, stroke }: Props) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
+      viewBox="0 0 24 24"      
       strokeWidth={stroke}
+      height={heightSvg!}
+      width={widthSvg!}
+      fill={fillSvg}
     >
       {showComponent(icon)}
     </svg>

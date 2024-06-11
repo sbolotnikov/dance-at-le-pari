@@ -19,7 +19,28 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 export default function Page({ params }: { params: { id: string } }) {
-  const selectedTab = params.id || null;
+  const tabsArray = [
+    'Welcome',
+    'Our Team',
+    'Studio Tour',
+    'Location',
+    'Hours ',
+  ];
+  const slugArray=[
+    'welcome',
+    'our-team',
+   'studio-tour',
+    'location',
+    'hours',
+  ];
+  const selectedTab = slugArray.indexOf(params.id) || null;
+    const tabIndex =
+    selectedTab !== null &&
+      selectedTab >= 0 &&
+      selectedTab < 5
+      ? selectedTab
+      : 0
+  
   type TTeamMember = {
     id: number;
     name: string;
@@ -44,13 +65,7 @@ export default function Page({ params }: { params: { id: string } }) {
     '/images/Front Room (Studio B).webp',
     '/images/Kitchen.webp',
   ];
-  const [tabIndex, setTabIndex] = useState(
-    selectedTab !== null &&
-      parseInt(selectedTab) >= 0 &&
-      parseInt(selectedTab) < 5
-      ? parseInt(selectedTab)
-      : 0
-  );
+
   const windowSize = useDimensions();
   const [alertStyle, setAlertStyle] = useState({
     variantHead: '',
@@ -67,13 +82,7 @@ export default function Page({ params }: { params: { id: string } }) {
     { bio: string; urlData: string; capture: string; role: string }[]
   >([]);
   const [revealAlert, setRevealAlert] = useState(false);
-  const [tabsArray, setTabsArray] = useState([
-    'About Us',
-    'Our Team',
-    'Studio Tour',
-    'Location',
-    'Hours ',
-  ]);
+
   const router = useRouter();
   const { hours } = useContext(SettingsContext) as ScreenSettingsContextType;
   const [hoursOfOperation, setHours] = useState<string[] | null>(null);
@@ -146,7 +155,7 @@ export default function Page({ params }: { params: { id: string } }) {
         <Tabs
           selectedIndex={tabIndex}
           className="w-full h-full p-1 flex flex-col border rounded-md border-lightMainColor dark:border-darkMainColor"
-          onSelect={(index: number) => router.push(`/about_us/${index}`)}
+          onSelect={(index: number) => router.push(`/about_us/${slugArray[index]}`)}
         > 
           <h2
             className="text-center font-semibold md:text-4xl uppercase"
@@ -253,7 +262,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 song of choice to perform on the most important day of their
                 life. First Dance! <br/><br/><b>Zumba and fitness exercises:</b> offered to
                 provide recreational and fitness exercises to community to stay
-                fit. <br/><br/>SO START NOW! DON'T WAIT! <a href='/about_us/4'>CONTACT US!</a>
+                fit. <br/><br/>SO START NOW! DON'T WAIT! <a href='/about_us/hours'>CONTACT US!</a>
               </p>
               </div> 
 
@@ -416,7 +425,7 @@ export default function Page({ params }: { params: { id: string } }) {
                   <p>34 South Avenue, Fanwood, NJ 07023</p>
 
                   <h2>HOURS OF OPERATION:</h2>
-                  <a href="/about_us/3" className="cursor-pointer">
+                  <a href="/about_us/hours" className="cursor-pointer">
                     click here
                   </a>
 

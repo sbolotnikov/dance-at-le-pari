@@ -43,7 +43,7 @@ const page: FC<pageProps> = ({}) => {
   ]);
   const dispatch = useDispatch();
   const router = useRouter();
-  const windowSize = useDimensions();
+  
   const tabsIndexArray = ['Private', 'Group', 'Floor_Fee', 'Party'];
   const actionTemplateChoice = (
     action1: string,
@@ -136,6 +136,7 @@ const page: FC<pageProps> = ({}) => {
         console.log(error);
       });
   }, []);
+  const windowSize = useDimensions();
   useEffect(() => {
     fetch('/api/get_products', {
       method: 'GET',

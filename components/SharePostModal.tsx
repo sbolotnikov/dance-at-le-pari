@@ -37,7 +37,7 @@ function SharePostModal({
       width: '50px !important',
     },
   };
-  const [isVisible, setIsVisible] = useState(visibility);
+  // const [isVisible, setIsVisible] = useState(visibility);
   console.log(visibility);
   return (
     //   <AnimateModalLayout
@@ -47,7 +47,7 @@ function SharePostModal({
     //   }}
     // >
     <AnimatePresence>
-      {isVisible && (
+      {visibility && (
         <motion.div
           initial={{ opacity: 0, x: -600 }}
           transition={{
@@ -117,7 +117,6 @@ function SharePostModal({
               className="w-full btnFancy my-1 text-base text-center  rounded-md"
               style={{ padding: '0' }}
               onClick={() => {
-                setIsVisible(false);
                 onReturn();
               }}
             >

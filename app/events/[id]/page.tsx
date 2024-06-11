@@ -83,7 +83,7 @@ export default function Page({ params }: { params: { id: string } }) {
 console.log("Event Data:",eventData)
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">       
-        {eventData && revealSharingModal &&<SharePostModal
+        {eventData &&<SharePostModal
           title={eventData.title!}
           onReturn={() => sleep(1200).then(() => {setRevealSharingModal(false)})}
           visibility={revealSharingModal}
