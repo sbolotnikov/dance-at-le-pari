@@ -17,13 +17,10 @@ export const generateMetadata = async (
 };
 
 export default function PageLayout({
-  children,
-  params,
+  children, 
 }: {
   children: React.ReactNode;
-  params: {
-    slug: string;
-  };
+ 
 }) {
   return <section>{children}</section>;
 }

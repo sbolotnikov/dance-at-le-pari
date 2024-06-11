@@ -6,7 +6,6 @@ import { Metadata, ResolvingMetadata } from 'next';
 type Props = {
   params: { slug: string };
 }; 
- 
 export const generateMetadata = async (
   { params }: Props,
   parent: ResolvingMetadata

@@ -1,10 +1,13 @@
 import { Metadata, ResolvingMetadata } from 'next';
+type Props = {
+    params: { cat: string };
+  }; 
 export const generateMetadata = async (
-  
+    { params }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> => {
   // read route params
- 
+  const slug = params.cat;
  
   // optionally access and extend (rather than replace) parent metadata
 //   const previousImages = (await parent).openGraph?.images || [];
@@ -22,7 +25,7 @@ export default function PageLayout({
 }: {
   children: React.ReactNode;
   params: {
-    slug: string;
+    cat: string;
   };
 }) {
   return <section>{children}</section>;

@@ -9,7 +9,11 @@ export const size = {
 };
 export const contentType = 'image/png';
 
-export default function Image() {
+export default function Image({
+    params: { cat },
+}: {
+  params: { cat: string };
+}) {
   // fetch data
    
   
