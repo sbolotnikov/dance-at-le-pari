@@ -87,7 +87,7 @@ const page: FC<pageProps> = ({}) => {
           </button>
           {(session?.user.role === 'Admin' ||
               session?.user.role === 'Teacher') && (
-              <div className="group flex  cursor-pointer  flex-col items-center justify-center absolute left-16 top-5 md:right-1 md:top-1 md:left-auto">
+              <div className="group flex  cursor-pointer  flex-col items-center justify-center absolute right-16 top-5  md:left-auto">
                 <div className="  h-6 w-6 md:h-10 md:w-10 relative hover:scale-110 group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
                   <div
                     className="cursor-pointer h-6 w-6 md:h-10 md:w-10 border-2 rounded-full  bg-editcolor m-auto "

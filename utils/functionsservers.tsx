@@ -14,6 +14,19 @@ import { prisma } from "@/lib/prisma";
         return null
       }
 };
+export const getCategory = async (slug: string) => {
+
+
+  try {
+      const category = await prisma.category.findUnique({
+        where: { slug }, 
+      });
+      await prisma.$disconnect()
+      return category;
+    } catch (err) {
+      return null
+    }
+};
 export const getPicture = async (id: string) => {
 
 

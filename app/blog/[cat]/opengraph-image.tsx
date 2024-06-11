@@ -1,5 +1,6 @@
  
 import ShowIcon from '@/components/svg/showIcon';
+import { getCategory } from '@/utils/functionsservers';
 import { ImageResponse } from 'next/og';
 import { title } from 'process';
 export const alt = 'My Blog Post';
@@ -9,14 +10,15 @@ export const size = {
 };
 export const contentType = 'image/png';
 
-export default function Image({
+export default async function Image({
     params: { cat },
-}: {
-  params: { cat: string };
-}) {
+  }: {
+    params: { cat: string };
+  }) {
   // fetch data
    
-  
+  let category1: any
+  if (cat!='0') category1 = await getCategory(cat)
     
   return new ImageResponse(
     (
@@ -46,7 +48,7 @@ export default function Image({
             fontWeight: 500,
           }}
         >
-          {"Dance Blog"}
+          {`${(cat!='0')?category1?.title:"All"} Categor${(cat!='0')?'y':"ies"} of Dance Blog`}
         </div>
         <div style={{ width: '400px', height: '400px', display: 'flex'}}>
         <ShowIcon icon={'Blog'} stroke={'0.1'} widthSvg={400} heightSvg={400} fillSvg={'red'}/>
