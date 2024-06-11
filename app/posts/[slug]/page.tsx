@@ -39,7 +39,7 @@ export default function Page(params: { params: { slug: string } }) {
         title={post.title}
         url={process.env.NEXT_PUBLIC_URL + '/posts/' + slug}
         quote={`Category: ${post.catSlug} \n Author: ${post.user.name} \n Click on the link below. \n`}
-        hashtag={'#DanceAtLePari #BallroomDanceStudio'}
+        hashtag={'DanceAtLePariBlog BallroomDanceStudioBlog'}
           onReturn={() => setRevealSharingModal(false)}
           visibility={revealSharingModal}
           

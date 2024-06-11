@@ -106,7 +106,7 @@ console.log("Event Data:",eventData)
           hashtag={
             eventData.eventtype == 'Party'
               ? 'SocialDance PartyDance DanceParty'
-              : 'GroupClass GroupDance' + 'DanceAtLePari BallroomDanceStudio'
+              : 'GroupClass GroupDance' + 'DanceAtLePari BallroomDanceStudio DanceStudio BallroomDance LePariDanceCenter'
           }
         />}
       

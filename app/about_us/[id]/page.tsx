@@ -17,6 +17,8 @@ import { useSession } from 'next-auth/react';
 import { useDimensions } from '@/hooks/useDimensions';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import SharePostModal from '@/components/SharePostModal';
+import page from '@/app/(auth)/login/page';
 
 export default function Page({ params }: { params: { id: string } }) {
   const tabsArray = [
@@ -26,21 +28,18 @@ export default function Page({ params }: { params: { id: string } }) {
     'Location',
     'Hours ',
   ];
-  const slugArray=[
-    'welcome',
-    'our-team',
-   'studio-tour',
-    'location',
-    'hours',
-  ];
+  const slugArray = ['welcome', 'our-team', 'studio-tour', 'location', 'hours'];
+  const pageArray = [{title: "Welcome to Studio", description: "Welcome message to dancers or people who wants to learn how to dance", keywords:"WelcomePage HelloPage WelcomeMessage"},
+    {title: "Our Professional Team", description: "Our world-awarded dance instructors specialize in teaching from beginner to advanced levels, adults and kids on all types of dancing: ballroom, latin, argentine tango, hustle, west coast swing, salsa. etc. Specialist of wedding dance instructions. Biography of ballroom, latin, argentine tango, hustle, west coast swing instructors, teachers, manager and owner of dance studio" ,keywords:"ProTeachers ProInstructor ProBallroomBio Teachers Instructors DanceInstructors ArgentineTangoTeacher WestCoastSwingTeacher HustleTeacher BallroomPro BallroomTeacher"},
+    {title: "Studio Interior/Exterior tour", description: "Dance Studio pictures: Inside or Outside tour. Explore our dance studio via pictures & video! Le Pari Dance Center -the place to visit, the place to dance at, the place to learn!",keywords:"StudioInterior Tour Interior Exterior"},
+    {title: "Our Location", description: "Close to major roads, free parking. Easy to get to: 34 South Avenue, Fanwood, NJ 07023. Location, directions, address, contact information of the Le Pari Dance Fitness Center",keywords:" Location Address Contact"},
+    {title: "Hours Of Operation", description: "hours of operation, opening and closing time of the dance center, contact information",keywords:"Hours Contacts OpenTime CloseTime" }];  
   const selectedTab = slugArray.indexOf(params.id) || null;
-    const tabIndex =
-    selectedTab !== null &&
-      selectedTab >= 0 &&
-      selectedTab < 5
+  const tabIndex =
+    selectedTab !== null && selectedTab >= 0 && selectedTab < 5
       ? selectedTab
-      : 0
-  
+      : 0;
+
   type TTeamMember = {
     id: number;
     name: string;
@@ -86,6 +85,7 @@ export default function Page({ params }: { params: { id: string } }) {
   const router = useRouter();
   const { hours } = useContext(SettingsContext) as ScreenSettingsContextType;
   const [hoursOfOperation, setHours] = useState<string[] | null>(null);
+  const [revealSharingModal, setRevealSharingModal] = useState(false);
   useEffect(() => {
     setHours(hours);
   }, [hours]);
@@ -140,6 +140,15 @@ export default function Page({ params }: { params: { id: string } }) {
           }}
         />
       )}
+          <SharePostModal
+        title={pageArray[tabIndex].title+" | Dance At Le Pari Studio"}
+        url={process.env.NEXT_PUBLIC_URL + '/about_us/' + params.id}
+        quote={`Description: ${pageArray[tabIndex].description}  \n Click on the link below. \n`}
+        hashtag={pageArray[tabIndex].keywords+" DanceAtLePari BallroomDanceStudio DanceStudio BallroomDance LePariDanceCenter"}
+          onReturn={() => setRevealSharingModal(false)}
+          visibility={revealSharingModal}
+          
+        />
       {revealGallery2 && (
         <FullScreenTeamView
           pictures={team}
@@ -154,11 +163,13 @@ export default function Page({ params }: { params: { id: string } }) {
       <div className="border-0 rounded-md p-2  shadow-2xl w-[95%] h-[70svh] md:h-[85svh] max-w-5xl md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md ">
         <Tabs
           selectedIndex={tabIndex}
-          className="w-full h-full p-1 flex flex-col border rounded-md border-lightMainColor dark:border-darkMainColor"
-          onSelect={(index: number) => router.push(`/about_us/${slugArray[index]}`)}
-        > 
+          className="w-full h-full relative p-1 flex flex-col border rounded-md border-lightMainColor dark:border-darkMainColor"
+          onSelect={(index: number) =>
+            router.push(`/about_us/${slugArray[index]}`)
+          }
+        >
           <h2
-            className="text-center font-semibold md:text-4xl uppercase"
+            className="text-center font-semibold md:text-4xl uppercase mb-5"
             style={{ letterSpacing: '1px' }}
           >
             Our Studio
@@ -166,7 +177,16 @@ export default function Page({ params }: { params: { id: string } }) {
           <div className=" h-16 w-16 m-auto hidden md:block">
             <ShowIcon icon={'Home2'} stroke={'0.1'} />
           </div>
-
+          <button
+            className=" outline-none border-none absolute right-0 top-0  rounded-md  mt-2  w-8 h-8"
+            onClick={(e) => {
+              e.preventDefault();
+              setRevealSharingModal(!revealSharingModal);
+              return;
+            }}
+          >
+            <ShowIcon icon={'Share'} stroke={'2'} />
+          </button>
           <TabList
             className="h-[2.43rem] w-full p-0.5 flex flex-row justify-between items-start flex-wrap rounded-t-md  dark:bg-lightMainBG  bg-darkMainBG"
             style={{
@@ -201,17 +221,17 @@ export default function Page({ params }: { params: { id: string } }) {
             className={`w-full h-full relative flex flex-col overflow-auto ${
               tabIndex != 0 ? 'hidden' : ''
             }`}
-          > 
-              <div className='w-full absolute top-0 left-0'>
+          >
+            <div className="w-full absolute top-0 left-0">
               <div className="w-full rounded-md md:grid md:grid-cols-4 md:gap-2 ">
-                <div className='w-full h-[160px] p-2 self-center'>
-                <Image
-                  src="/images/couple.webp"
-                  alt="couple dancing image"
-                  width={225}
-                  height={150}
-                  className=" m-auto drop-shadow-xl border-2 outline-lightMainColor dark:outline-darkMainColor rounded-md "
-                />
+                <div className="w-full h-[160px] p-2 self-center">
+                  <Image
+                    src="/images/couple.webp"
+                    alt="couple dancing image"
+                    width={225}
+                    height={150}
+                    className=" m-auto drop-shadow-xl border-2 outline-lightMainColor dark:outline-darkMainColor rounded-md "
+                  />
                 </div>
                 <p className="w-full text-left flex justify-start items-center md:col-start-2 md:col-span-3">
                   Dance at Le Pari is located at 34 South Ave. in Fanwood. Dance
@@ -219,19 +239,22 @@ export default function Page({ params }: { params: { id: string } }) {
                   residents to explore the beautiful art of ballroom dancing, to
                   meet each other and spend time together within family, friends
                   and community.
-                  <br /><br/>
+                  <br />
+                  <br />
                   Name “Le Pari” symbolizes love for ballroom dancing as the
                   city of Paris symbolizes love and romance throughout the
                   world. “Le Pari” is the place uniting everyone who loves to
                   dance.
-                  <br /><br/>
+                  <br />
+                  <br />
                   Our beautiful venue has large oak sprung wood floors over
                   4,000 sq. feet with recessed lightning, large sitting area,
                   built-in sound system, separate practice studios, large screen
                   projection television, kitchen area and much more. Dance at Le
                   Pari has qualified experienced instructors much to offer for
                   Fanwood and the surrounding areas!
-                  <br/><br/>
+                  <br />
+                  <br />
                 </p>
               </div>
               <p className="w-full">
@@ -244,27 +267,39 @@ export default function Page({ params }: { params: { id: string } }) {
                 building service projects. Owner, Paul Horvath an amateur dancer
                 himself, said, “Ballroom dancing has a way of bringing people
                 together.” “Dancing is this art form that involves everyone,
-                whether you’re young, old, small or tall,” he said.<br/><br/> As Paul
-                describes the mission of “Dance at Le Pari” is to show love and
-                warmth towards each person that we meet here…He said: “We
-                welcome diversity of all kinds! Le Pari is the place where
-                everything (status, job, money, nationality, etc.) is put aside
-                and people are united by their passion to dance. Le Pari is the
-                place to meet new friends and have fun together.” <br/><br/> So what can
-                the community of Fanwood can expect from this magnificent venue? <br/><br/>
-                Many things such as: <br/><br/> <b>Socials:</b> offered to everyone, beginners
-                and/or advanced ballroom/latin dancers where people can enjoy DJ
-                hosted parties in a welcoming atmosphere. Please check our
-                calendar for all social events. <br/><br/><b>Group and Private classes:</b> for
-                someone to advance or start from beginning learning the art of
-                ballroom dancing. <br/><br/> <b>Wedding and other special event instructions:</b>
+                whether you’re young, old, small or tall,” he said.
+                <br />
+                <br /> As Paul describes the mission of “Dance at Le Pari” is to
+                show love and warmth towards each person that we meet here…He
+                said: “We welcome diversity of all kinds! Le Pari is the place
+                where everything (status, job, money, nationality, etc.) is put
+                aside and people are united by their passion to dance. Le Pari
+                is the place to meet new friends and have fun together.” <br />
+                <br /> So what can the community of Fanwood can expect from this
+                magnificent venue? <br />
+                <br />
+                Many things such as: <br />
+                <br /> <b>Socials:</b> offered to everyone, beginners and/or
+                advanced ballroom/latin dancers where people can enjoy DJ hosted
+                parties in a welcoming atmosphere. Please check our calendar for
+                all social events. <br />
+                <br />
+                <b>Group and Private classes:</b> for someone to advance or
+                start from beginning learning the art of ballroom dancing.{' '}
+                <br />
+                <br /> <b>Wedding and other special event instructions:</b>
                 for couples soon to be married a choreographed routine to their
                 song of choice to perform on the most important day of their
-                life. First Dance! <br/><br/><b>Zumba and fitness exercises:</b> offered to
-                provide recreational and fitness exercises to community to stay
-                fit. <br/><br/>SO START NOW! DON'T WAIT! <a href='/about_us/hours'>CONTACT US!</a>
+                life. First Dance! <br />
+                <br />
+                <b>Zumba and fitness exercises:</b> offered to provide
+                recreational and fitness exercises to community to stay fit.{' '}
+                <br />
+                <br />
+                SO START NOW! DON'T WAIT!{' '}
+                <a href="/about_us/hours">CONTACT US!</a>
               </p>
-              </div> 
+            </div>
 
             <p className="text-lightMainBG dark:text-darkMainBG text-[0.1rem]">
               {'hello'}
@@ -409,7 +444,10 @@ export default function Page({ params }: { params: { id: string } }) {
                 <ShowIcon icon={'Location'} stroke={'0.1'} />
               </div>
               <div className="flex flex-col md:flex-row items-center justify-between w-full h-auto">
-                <div className="h-[400px] w-[400px]" style={{maxWidth:'100%'}}>
+                <div
+                  className="h-[400px] w-[400px]"
+                  style={{ maxWidth: '100%' }}
+                >
                   <iframe
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1513.8719849763888!2d-74.39239667245666!3d40.63552797140525!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c3b097b4d07caf%3A0x3c77409024a4ea95!2sDance%20at%20Le%20Pari%20Dance%20Studio!5e0!3m2!1sen!2sus!4v1711426211014!5m2!1sen!2sus"
                     width="400"
