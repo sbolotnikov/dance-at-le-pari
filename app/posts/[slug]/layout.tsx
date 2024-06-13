@@ -21,7 +21,7 @@ export const generateMetadata = async (
   return {  
     openGraph: { title: "Post: "+post!.title +" | Dance at Le Pari Blog", url: `${process.env.NEXTAUTH_URL}/posts/${slug}` },
     description: post ? post.title : 'default post title',
-
+    keywords: post?.keywords,
     // openGraph: {
     //   images: ['/some-specific-page-image.jpg', ...previousImages],
     // },

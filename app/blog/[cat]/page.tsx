@@ -219,6 +219,7 @@ export default function Page(params: {
           </div>
           <BlogCardList
             posts={posts}
+            category={params.params.cat}
             user={{
               role: session?.user.role ? session?.user.role : '',
               id: session?.user.id ? session?.user.id : 0,

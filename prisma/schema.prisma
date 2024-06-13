@@ -94,6 +94,7 @@ model Post {
   img       String?
   views     Int       @default(0)
   catSlug   String
+  keywords  String @default("")
   userID    Int
   cat       Category  @relation(fields: [catSlug], references: [slug])
   user      User @relation(fields: [userID], references: [id] )

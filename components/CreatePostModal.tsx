@@ -23,6 +23,7 @@ const CreatePostModal = ({ visibility, post,categories, onReturn }: Props) => {
   const router = useRouter();
   const [file1, setFile] = useState(post?.img || '');
   const [value, setValue] = useState(post?.desc || '');
+  const [keywords, setKeywords] = useState(post?.keywords || '');
   const [title, setTitle] = useState(post?.title || '');
   const [revealCloud, setRevealCloud] = useState(false);
   const [catSlug, setCatSlug] = useState(post?.catSlug || 'welcome');
@@ -47,6 +48,7 @@ const CreatePostModal = ({ visibility, post,categories, onReturn }: Props) => {
       body: JSON.stringify({
         title,
         desc: value,
+        keywords,
         img: file1,
         slug: slugify(title),
         userID: session?.user?.id,
@@ -69,6 +71,7 @@ const CreatePostModal = ({ visibility, post,categories, onReturn }: Props) => {
         id: post.id,
         title,
         desc: value,
+        keywords,
         img: file1,
         slug: post.slug,
         userID: session?.user?.id,
@@ -120,7 +123,7 @@ const CreatePostModal = ({ visibility, post,categories, onReturn }: Props) => {
           >
             Create/Edit Posts Modal
           </h2>
-            <label className="flex flex-col items-center">
+            <label className="flex flex-col items-center w-full">
               {' '}
               Blog Title{' '}
               <input
@@ -131,7 +134,17 @@ const CreatePostModal = ({ visibility, post,categories, onReturn }: Props) => {
                 onChange={(e) => setTitle(e.target.value)}
               />
             </label>
-
+            <label className="flex flex-col items-center w-full">
+              {' '}
+              Blog Keywords{' '}
+              <input
+                type="text"
+                placeholder="Keywords"
+                value={keywords}
+                className="dark:bg-lightMainBG bg-darkMainBG dark:text-lightMainColor text-darkMainColor w-full p-1 rounded-md"
+                onChange={(e) => setKeywords(e.target.value)}
+              />
+            </label>
             <label className="flex flex-col items-center text-lightMainColor dark:text-darkMainColor">
               {' '}
               Blog Category

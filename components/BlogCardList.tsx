@@ -7,9 +7,10 @@ import { TBlogPost } from '@/types/screen-settings';
 type Props = {
   posts:TBlogPost[];
   user:{role:string; id:number}
+  category:string;
   onReturn:(val1:string, val2:string)=>void;
 };
-const BlogCardList = ({ posts,user,onReturn }: Props) => {
+const BlogCardList = ({ posts,user,category, onReturn }: Props) => {
  
   const windowSize = useDimensions();
   return ( 
@@ -20,8 +21,9 @@ const BlogCardList = ({ posts,user,onReturn }: Props) => {
           {posts.length > 0 &&
             posts?.map(
               (item) => (
-                <div key={item.id} className="flex flex-col justify-start items-start relative w-full">
-                  <div className="flex flex-row justify-around items-center">
+                <div key={item.id} className="flex flex-col justify-start items-start relative w-full border-b-2 border-dashed border-lightMainColor/50 dark:border-darkMainColor/50">
+                  <Link href={`/posts/${item.slug}`} className="">
+                  <div className="w-full flex flex-row justify-start items-center">
                     <ImgFromDb
                       url={item.user.image}
                       stylings="h-12 w-12 float-left m-2 rounded-md"
@@ -70,25 +72,24 @@ const BlogCardList = ({ posts,user,onReturn }: Props) => {
                       /> 
                   )}
                   <div className="">
-                    <div className="">
+                    {category=="0" &&<div className="">
                       Category: <span className="">{item.catSlug}</span>
-                    </div>
-                    <Link href={`/posts/${item.slug}`}>
-                      <h1 className="text-4xl italic font-semibold text-red-600">{item.title}</h1>
-                    </Link>
-                    
+                    </div> }
+                      <h1 className="text-4xl italic font-semibold text-red-600">{item.title}</h1>                    
                     <div
                       className="w-full  "
                       dangerouslySetInnerHTML={{
                         __html: item?.desc.substring(0, 120)+'...',
                       }}
                     />      
-                    <Link href={`/posts/${item.slug}`} className="">
+                    
                       Read More
-                    </Link>
+                    
+                    <p className="text-lg font-semibold text-alertcolor">Keywords: {item.keywords}</p>
                     <p>Views: {item.views}</p>
                   </div>
                   </div>
+                  </Link>
                 </div>
               )
             )}

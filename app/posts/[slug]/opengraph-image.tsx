@@ -33,7 +33,7 @@ export default async function Image({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '45px',
+          padding: '25px',
           flexDirection: 'column',
         }}
       >
@@ -62,6 +62,7 @@ export default async function Image({
               width: '100%',
               height: '100%',
               objectFit: 'contain',
+              borderRadius: '10px',
             }}
           />
         </div>
@@ -72,14 +73,14 @@ export default async function Image({
             flexDirection: 'row',
             gap: '10px',
             alignItems: 'center',
-            fontFamily: 'Inter, sans-serif',
+            justifyContent: 'space-between',
           }}
         >  
           <div
             style={{
               backgroundClip: 'text',
               color: 'transparent',
-              backgroundImage: 'linear-gradient(to right, #ec4899, #8b5cf6)',
+              backgroundImage: 'linear-gradient(to right, #e21c1c, #fcf9f9)',
               fontWeight: 700,
               fontSize: 30,
               marginLeft: '20px',
@@ -100,7 +101,7 @@ export default async function Image({
               marginTop: '10px',
             }}
           >
-            {['keyword1', 'keyword2', 'keyword3'].map((topic, i) => (
+            {post?.keywords.split(",").filter((item,index)=>index<3).map((topic, i) => (
               <div
                 key={i}
                 style={{

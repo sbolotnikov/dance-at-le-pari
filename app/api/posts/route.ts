@@ -35,12 +35,12 @@ export const PUT = async (req: Request) => {
 
   try {
     const data = await req.json();
-    const {id,title,desc,img,slug,userID,catSlug} = data;
+    const {id,title,desc,img,slug,keywords,userID,catSlug} = data;
     const post = await prisma.post.update({
       where: {
         id:id
       },
-      data:{title,desc,img,slug,userID,catSlug}
+      data:{title,desc,img,slug,userID,keywords,catSlug}
     });
     await prisma.$disconnect()
     return new NextResponse(JSON.stringify({post,  status: 200 }));
@@ -51,14 +51,6 @@ export const PUT = async (req: Request) => {
     );
   }
 };
-
-
-
-
-
-
-
-
 // CREATE A POST
 export const POST = async (req: Request) => {
    

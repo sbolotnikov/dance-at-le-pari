@@ -5,7 +5,7 @@ import SharePostModal from '@/components/SharePostModal';
 import SharePost from '@/components/SharePostModal';
 import { PageWrapper } from '@/components/page-wrapper';
 import ShowIcon from '@/components/svg/showIcon';
-import { TPost } from '@/types/screen-settings';
+import { TBlogPost } from '@/types/screen-settings';
 import { useEffect, useState } from 'react';
 // set dynamic metadata
 
@@ -15,7 +15,7 @@ type Props = {
 
 export default function Page(params: { params: { slug: string } }) {
   const slug = params.params.slug;
-  const [post, setPost] = useState<TPost>(null);
+  const [post, setPost] = useState<TBlogPost | null>(null);
   const [revealSharingModal, setRevealSharingModal] = useState(false);
 
   useEffect(() => {
@@ -39,7 +39,7 @@ export default function Page(params: { params: { slug: string } }) {
           title={post.title}
           url={process.env.NEXT_PUBLIC_URL + '/posts/' + slug}
           quote={`Category: ${post.catSlug} \n Author: ${post.user.name} \n Click on the link below. \n`}
-          hashtag={'DanceAtLePariBlog BallroomDanceStudioBlog'}
+          hashtag={post.keywords+', '+'DanceAtLePariBlog, BallroomDanceStudioBlog, '+post.user.name}
           onReturn={() => setRevealSharingModal(false)}
           visibility={revealSharingModal}
         />
@@ -111,14 +111,14 @@ export default function Page(params: { params: { slug: string } }) {
                       <h1 className="text-4xl italic font-semibold text-red-600">
                         {post.title}
                       </h1>
+                      <div className="flex flex-row justify-around items-center w-full italic text-alertcolor">Keywords: {post.keywords}</div>
+                      <p>Views: {post.views}</p>
                       <div
                         className="w-full  "
                         dangerouslySetInnerHTML={{
                           __html: post.desc,
                         }}
-                      />
-                      <p>Views: {post.views}</p>
-                     
+                      />               
                   </div>
                   <Comments postSlug={slug} />
                 </div>
