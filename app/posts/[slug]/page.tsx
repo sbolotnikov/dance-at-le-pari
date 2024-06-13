@@ -1,11 +1,11 @@
 'use client';
+import Comments from '@/components/Comments';
 import ImgFromDb from '@/components/ImgFromDb';
 import SharePostModal from '@/components/SharePostModal';
 import SharePost from '@/components/SharePostModal';
 import { PageWrapper } from '@/components/page-wrapper';
 import ShowIcon from '@/components/svg/showIcon';
 import { TPost } from '@/types/screen-settings';
-import { Metadata, ResolvingMetadata } from 'next';
 import { useEffect, useState } from 'react';
 // set dynamic metadata
 
@@ -34,16 +34,16 @@ export default function Page(params: { params: { slug: string } }) {
 
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center ">
-            
-        {post &&<SharePostModal
-        title={post.title}
-        url={process.env.NEXT_PUBLIC_URL + '/posts/' + slug}
-        quote={`Category: ${post.catSlug} \n Author: ${post.user.name} \n Click on the link below. \n`}
-        hashtag={'DanceAtLePariBlog BallroomDanceStudioBlog'}
+      {post && (
+        <SharePostModal
+          title={post.title}
+          url={process.env.NEXT_PUBLIC_URL + '/posts/' + slug}
+          quote={`Category: ${post.catSlug} \n Author: ${post.user.name} \n Click on the link below. \n`}
+          hashtag={'DanceAtLePariBlog BallroomDanceStudioBlog'}
           onReturn={() => setRevealSharingModal(false)}
           visibility={revealSharingModal}
-          
-        />} 
+        />
+      )}
       <div className="border-0 rounded-md p-2 mt-6 shadow-2xl w-[95%] h-[70svh] md:h-[85svh] max-w-5xl md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
         <div className="border rounded-md border-lightMainColor dark:border-darkMainColor w-full h-full   p-2 flex flex-col justify-start items-center relative">
           <div className="w-full h-full relative overflow-auto  ">
@@ -51,7 +51,7 @@ export default function Page(params: { params: { slug: string } }) {
               className={` absolute top-0 left-0 w-full flex justify-center items-center`}
             >
               {post && (
-                <div className="flex flex-col justify-start items-start">
+                <div className="flex flex-col justify-start items-start w-full">
                   <div className="flex flex-row justify-between items-center w-full">
                     <div className="flex flex-row justify-around items-center">
                       <ImgFromDb
@@ -74,38 +74,39 @@ export default function Page(params: { params: { slug: string } }) {
                         </span>
                       </div>
                     </div>
-                    <button
-                    className=" outline-none border-none   rounded-md  mt-2  w-8 h-8"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setRevealSharingModal(!revealSharingModal);
-                      return;
-                    }}
-                  >
-                    <ShowIcon icon={'Share'} stroke={'2'} />
-                  </button>
-                    <button
-                      className="shadow-lg pointer border-0 outline-none rounded"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        window.history.back();
-                      }}
-                      style={{ padding: '5px 5px', margin: '5px 5px' }}
-                    >
-                      Back
-                    </button>
+                    <div className="flex flex-row items-center justify-center">
+                      <button
+                        className=" outline-none border-none   rounded-md  mt-2  w-8 h-8"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setRevealSharingModal(!revealSharingModal);
+                          return;
+                        }}
+                      >
+                        <ShowIcon icon={'Share'} stroke={'2'} />
+                      </button>
+                      <button
+                        className="shadow-lg pointer border-0 outline-none rounded"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          window.history.back();
+                        }}
+                        style={{ padding: '5px 5px', margin: '5px 5px' }}
+                      >
+                        Back
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex flex-col justify-around items-center ">
+                  <div className="flex flex-col justify-around items-center w-full">
                     {post.img && (
                       <ImgFromDb
                         url={post.img}
                         stylings="h-auto w-80 float-left m-2 rounded-md"
                         alt="Post Picture"
                       />
-                    )}
-                    <div className="">
-                      <div className="">
-                        Category: <span className="">{post.catSlug}</span>
+                    )} 
+                      <div className="text-blue-500 dark:text-blue-300 text-xl font-semibold">
+                        Category: <span className="italic">{post.catSlug}</span>
                       </div>
                       <h1 className="text-4xl italic font-semibold text-red-600">
                         {post.title}
@@ -117,14 +118,12 @@ export default function Page(params: { params: { slug: string } }) {
                         }}
                       />
                       <p>Views: {post.views}</p>
-                    </div>
+                     
                   </div>
-                  
+                  <Comments postSlug={slug} />
                 </div>
               )}
             </div>
-
-            {/* <Comments postSlug={slug}/> */}
 
             {/* <Menu /> */}
           </div>
