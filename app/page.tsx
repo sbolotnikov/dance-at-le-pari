@@ -16,7 +16,7 @@ export default function Home() {
   const [bigScreen, setBigScreen] = useState(false);
   useEffect(() => {
     if (windowSize.width !== undefined) {
-      windowSize.width! > 1023 && windowSize.height! > 767
+      windowSize.width! > 700 && windowSize.height! > 700
         ? setBigScreen(true)
         : setBigScreen(false);
     }
@@ -113,42 +113,41 @@ export default function Home() {
                     style={
                       {
                         '--item-x':
-                          Math.round(
-                            250 *
+                          Math.round(  windowSize.width!/8*
                               Math.cos(
                                 degrees_to_radians(
                                   (index * 360) / departmentsArray.length - 150
                                 )
                               )
                           ) -
-                          130 +
-                          'px',
+                          Math.round(windowSize.width!/13)+'px',
                         '--item-y':
                           Math.round(
-                            400 *
+                            windowSize.height!/1.5 *
                               Math.sin(
                                 degrees_to_radians(
                                   (index * 360) / departmentsArray.length - 150
                                 )
                               )
                           ) -
-                          120 +
+                         Math.round(windowSize.height!/6.4)+
                           'px',
                       } as React.CSSProperties
                     }
                   >
                     <div
-                      className={` w-[230px] p-2  flex flex-col justify-center  items-center text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG    shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2`}
+                      className={` w-[${Math.round(windowSize.width!/5.5)}px] p-2  flex flex-col justify-center  items-center text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG    shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2`}
                     >
                       
                       <h1 className=" text-2xl  text-center   text-shadow  dark:text-shadow-light ">
                         {item.name}
                       </h1>
                       <Image
-                        className="rounded-md overflow-hidden "
+                        className="rounded-md overflow-hidden max-h-[250px] max-w-[250px]"
                         src={item.path}
-                        width={250}
-                        height={250}
+                        width={Math.round(windowSize.width!/6)}
+                        height={Math.round(windowSize.width!/6)}
+                        
                         alt="Logo"
                       />
                        
