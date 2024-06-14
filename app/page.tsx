@@ -6,14 +6,14 @@ import { useContext, useEffect, useState } from 'react';
 import BannerGallery from '@/components/BannerGallery';
 import { ScreenSettingsContextType } from '@/types/screen-settings';
 import { SettingsContext } from '@/hooks/useSettings';
-import { useDimensions } from '@/hooks/useDimensions';
-import { Divider } from 'react-square-web-payments-sdk';
+import { useDimensions } from '@/hooks/useDimensions'; 
 
 export default function Home() {
   // const [events, setEvents] = useState<TEventArray | null>(null);
   const { events } = useContext(SettingsContext) as ScreenSettingsContextType;
   const windowSize = useDimensions();
   const [bigScreen, setBigScreen] = useState(false);
+  const [containerSize, setContainerSize] = useState({width:0,height:0});
   useEffect(() => {
     if (windowSize.width !== undefined) {
       windowSize.width! > 700 && windowSize.height! > 700
@@ -21,7 +21,14 @@ export default function Home() {
         : setBigScreen(false);
     }
     console.log((windowSize.height! * 4) / 5 / 3);
+    
   }, [windowSize.width]);
+  
+  useEffect(() => {
+    setContainerSize({width:document.getElementById('containerBig')?.offsetWidth!,height:document.getElementById('containerBig')?.offsetHeight!})
+    
+  }, [document.getElementById('containerBig')?.offsetWidth!]);
+  console.log(containerSize);
   function degrees_to_radians(degrees: number) {
     // Store the value of pi.
     var pi = Math.PI;
@@ -90,53 +97,57 @@ export default function Home() {
             })}
           </div>
         ) : (
-          <div className=" w-full h-full absolute  top-0 left-0  min-h-[700px] min-w-[1000px]">
+          <div id="containerBig" className=" w-full h-full absolute  top-0 left-0  ">
             <div className=" w-full h-full relative  flex justify-center items-center ">
               <div
                 id="text"
-                className="text-lightMainColor bg-lightMainBG/60 dark:text-darkMainColor dark:bg-darkMainBG/60 mt-3 p-1 md:p-4 shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2"
+                className="text-lightMainColor bg-lightMainBG/60 dark:text-darkMainColor dark:bg-darkMainBG/60 mt-8  p-1  shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2"
               >
-                <h1 className="font-bold text-5xl md:text-7xl text-franceBlue  text-center font-DancingScript text-shadow  dark:text-shadow-light  ">
+                <h1 className={`font-bold   text-franceBlue  text-center font-DancingScript text-shadow  dark:text-shadow-light p-3 `} 
+                style={{ fontSize: `${Math.round(45+(windowSize.width!-700)*0.04)}px`,lineHeight:'0.75' }}
+                > 
                   Dance at Le Pari
                 </h1>
-                <p className="text-center md:text-2xl text-xl text-shadow  dark:text-shadow-light">
+                <p className="text-center  text-shadow  dark:text-shadow-light"
+                style={{ fontSize: `${Math.round(20+(windowSize.width!-700)*0.006)}px` }}
+                >
                   {' '}
                   The place that brings People <br /> together through Dancing
                 </p>
               </div>
-              {departmentsArray.map((item, index) => {
+              {containerSize.width && departmentsArray.map((item, index) => {
                 return (
-                  <Link
-                    key={'Links' + index}
+                    <Link  
+                    key={'Links' + index}            
                     href={item.link}
-                    className="cards__item absolute top-[50%] left-[50%]"
+                    className={`cards__item absolute top-0 left-0`}
                     style={
                       {
                         '--item-x':
-                          Math.round(  windowSize.width!/8*
+                          Math.round(  containerSize.width!/3*
                               Math.cos(
                                 degrees_to_radians(
-                                  (index * 360) / departmentsArray.length - 150
+                                  (index * 360) / departmentsArray.length - 240
                                 )
                               )
                           ) -
-                          Math.round(windowSize.width!/13)+'px',
+                          Math.round(containerSize.width!/6/2)+Math.round(containerSize.width!/2)+'px',
                         '--item-y':
                           Math.round(
-                            windowSize.height!/1.5 *
+                            containerSize.height!/3 *
                               Math.sin(
                                 degrees_to_radians(
-                                  (index * 360) / departmentsArray.length - 150
+                                  (index * 360) / departmentsArray.length - 240
                                 )
                               )
                           ) -
-                         Math.round(windowSize.height!/6.4)+
+                         Math.round(containerSize.width!/6/2)+Math.round(containerSize.height!/2) +
                           'px',
                       } as React.CSSProperties
                     }
                   >
                     <div
-                      className={` w-[${Math.round(windowSize.width!/5.5)}px] p-2  flex flex-col justify-center  items-center text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG    shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2`}
+                      className={` w-[${Math.round(containerSize.width!/5.5)}px] p-2  flex flex-col justify-center  items-center text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG    shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2`}
                     >
                       
                       <h1 className=" text-2xl  text-center   text-shadow  dark:text-shadow-light ">
@@ -145,14 +156,14 @@ export default function Home() {
                       <Image
                         className="rounded-md overflow-hidden max-h-[250px] max-w-[250px]"
                         src={item.path}
-                        width={Math.round(windowSize.width!/6)}
-                        height={Math.round(windowSize.width!/6)}
+                        width={Math.round(containerSize.width!/6)}
+                        height={Math.round(containerSize.width!/6)}
                         
-                        alt="Logo"
+                        alt={item.name+' picture'}
                       />
                        
                     </div>
-                  </Link>
+                  </Link> 
                 );
               })}
             </div>
