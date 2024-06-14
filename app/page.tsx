@@ -104,7 +104,7 @@ export default function Home() {
                 className="text-lightMainColor bg-lightMainBG/60 dark:text-darkMainColor dark:bg-darkMainBG/60 mt-8  p-1  shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2"
               >
                 <h1 className={`font-bold   text-franceBlue  text-center font-DancingScript text-shadow  dark:text-shadow-light p-3 `} 
-                style={{ fontSize: `${Math.round(45+(windowSize.width!-700)*0.04)}px`,lineHeight:'0.75' }}
+                style={{ fontSize: `${Math.round(45 )}px`,lineHeight:'0.75' }}
                 > 
                   Dance at Le Pari
                 </h1>
@@ -124,7 +124,7 @@ export default function Home() {
                     style={
                       {
                         '--item-x':
-                          Math.round(  containerSize.width!/3*
+                          Math.round(  containerSize.width!/2.9*
                               Math.cos(
                                 degrees_to_radians(
                                   (index * 360) / departmentsArray.length - 240
@@ -147,7 +147,7 @@ export default function Home() {
                     }
                   >
                     <div
-                      className={` w-[${Math.round(containerSize.width!/5.5)}px] p-2  flex flex-col justify-center  items-center text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG    shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2`}
+                      className={` w-[${Math.round(containerSize.width!/5.5)}px] p-2 max-w-[260px] flex flex-col justify-center  items-center text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG    shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2`}
                     >
                       
                       <h1 className=" text-2xl  text-center   text-shadow  dark:text-shadow-light ">
