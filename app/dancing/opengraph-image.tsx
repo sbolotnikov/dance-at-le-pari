@@ -2,7 +2,7 @@
 import ShowIcon from '@/components/svg/showIcon';
 import { ImageResponse } from 'next/og';
 import { title } from 'process';
-export const alt = 'My Blog Post';
+export const alt = 'Activity';
 export const size = {
   width: 1200,
   height: 630,

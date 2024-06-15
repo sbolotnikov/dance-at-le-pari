@@ -66,6 +66,18 @@ export default function RootLayoutFC({
       lang="en"
       className={`min-h-screen  light antialiased ${latoFont.className} ${dancingScript.variable}`}
     >
+      <link
+  rel="icon"
+  href="/icon?<generated>"
+  type="image/<generated>"
+  sizes="<generated>"
+/>
+<link
+  rel="apple-touch-icon"
+  href="/apple-icon?<generated>"
+  type="image/<generated>"
+  sizes="<generated>"
+/>
       {/* <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" /> */}
       {/* <meta name="msapplication-TileColor" content="#da532c" />
           <meta name="theme-color" content="#ffffff" />
