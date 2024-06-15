@@ -27,7 +27,7 @@ export default function Home() {
   useEffect(() => {
     setContainerSize({width:document.getElementById('containerBig')?.offsetWidth!,height:document.getElementById('containerBig')?.offsetHeight!})
     
-  }, [document.getElementById('containerBig')?.offsetWidth!]);
+  }, [document.getElementById('containerBig')?.offsetWidth]);
   console.log(containerSize);
   function degrees_to_radians(degrees: number) {
     // Store the value of pi.
@@ -61,9 +61,9 @@ export default function Home() {
       {!bigScreen && windowSize.height!>560  && (
         <div
           id="text"
-          className="blurFilter text-lightMainColor bg-lightMainBG/75 dark:text-darkMainColor dark:bg-darkMainBG/75 mt-3 p-1 md:p-4 shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2"
+          className="blurFilter  text-lightMainColor   dark:text-darkMainColor   mt-3 p-3 md:p-4 shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2"
         >
-          <h1 className="font-bold text-5xl md:text-7xl text-franceBlue  text-center font-DancingScript text-shadow  dark:text-shadow-light  ">
+          <h1 className="font-bold text-5xl md:text-7xl text-franceBlue  text-center font-DancingScript text-shadow  dark:text-shadow-light ">
             Dance at Le Pari
           </h1>
           <p className="text-center md:text-2xl text-xl text-shadow  dark:text-shadow-light">
@@ -80,7 +80,7 @@ export default function Home() {
               return (
                 <Link key={'Links' + index} href={item.link}>
                   <div className="blurFilter w-[230px] m-3 p-2  flex flex-col justify-center items-center text-lightMainColor bg-lightMainBG/75 dark:text-darkMainColor dark:bg-darkMainBG/75    shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2">
-                    <h1 className=" text-2xl  text-center   text-shadow  dark:text-shadow-light ">
+                    <h1 className="  text-2xl  text-center   text-shadow  dark:text-shadow-light ">
                       {item.name}
                     </h1>
 
@@ -101,7 +101,7 @@ export default function Home() {
             <div className=" w-full h-full relative  flex justify-center items-center ">
               <div
                 id="text"
-                className="blurFilter cards__item absolute -top-12 -left-48 card text-lightMainColor bg-lightMainBG/60 dark:text-darkMainColor dark:bg-darkMainBG/60  shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2"
+                className="blurFilter bgGradientSize50 cards__item absolute -top-12 -left-48 card text-lightMainColor bg-lightMainBG/60 dark:text-darkMainColor dark:bg-darkMainBG/60  shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2"
                 style={{'--item-x': `${Math.round(containerSize.width!*0.5)}px`, '--item-y': `${Math.round(containerSize.height!*0.5)}px`} as React.CSSProperties}
               >
                 <h1 className={`font-bold   text-franceBlue  text-center font-DancingScript text-shadow  dark:text-shadow-light p-3 `} 

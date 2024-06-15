@@ -147,7 +147,7 @@ const FullDayScheduleView = ({
             day: 'numeric',
           }) +
           'T' +
-          dt.toLocaleString('es-CL').split(' ')[1].slice(0, -3);
+          dt.toLocaleTimeString('it-IT').slice(0, -3);
       }
       let counter = 0;
       // getting first uncrossed sequence, then second till runout of records
@@ -177,18 +177,33 @@ const FullDayScheduleView = ({
       });
       for (let i = 0; i < evArrayFinal.length; i++) {
         for (let j = i + 1; j < evArrayFinal.length; j++) {
-          if (evArrayFinal[i].date2 >= evArrayFinal[j].date) {
+          if ((evArrayFinal[i].date2 > evArrayFinal[j].date)) {
             evArrayFinal[i].crossed++;
             evArrayFinal[j].crossed++;
           }
         }
       }
+      for (let i = 0; i < evArrayFinal.length; i++) {
+        for (let j = i + 1; j < evArrayFinal.length; j++) {
+          if ((evArrayFinal[i].date2 > evArrayFinal[j].date)&&(evArrayFinal[i].crossed < evArrayFinal[j].crossed)) {
+             evArrayFinal[i].crossed=evArrayFinal[j].crossed;
+          }
+        }
+      }
 
+      for (let i = evArrayFinal.length-1; i >=0 ; i--) {
+        for (let j = i - 1; j >= 0; j--) {
+          if ((evArrayFinal[i].date < evArrayFinal[j].date2)&&(evArrayFinal[i].crossed < evArrayFinal[j].crossed)) {
+             evArrayFinal[i].crossed=evArrayFinal[j].crossed;
+          }
+        }
+      }
       console.log(counter, evArrayFinal);
       for (let i = 0; i < evArrayFinal.length; i++) {
-        if (evArrayFinal[i].crossed > counter)
-          evArrayFinal[i].crossed = counter;
-        if (evArrayFinal[i].crossed == 0) evArrayFinal[i].crossed = 1;
+        evArrayFinal[i].crossed++
+        // if (evArrayFinal[i].crossed > counter)
+        //   evArrayFinal[i].crossed = counter;
+        // if (evArrayFinal[i].crossed == 0) evArrayFinal[i].crossed = 1;
       }
       setDisplayedEvents(evArrayFinal);
     } else setDisplayedEvents([]);

@@ -177,12 +177,15 @@ body {
 .blurFilter {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter:blur(12px);
-  /* background-image: linear-gradient(
+
+}
+.bgGradientSize50 {
+  background-image: linear-gradient(
     120deg,
     rgba(255, 255, 255, 0.3),
     rgba(0, 0, 0, 0.2)
   );
-  background-size: 25px 25px; */
+  background-size: 50px 50px;
 }
 .noblurFilter {
   backdrop-filter:none;
