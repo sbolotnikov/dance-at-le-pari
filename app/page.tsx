@@ -101,7 +101,8 @@ export default function Home() {
             <div className=" w-full h-full relative  flex justify-center items-center ">
               <div
                 id="text"
-                className="text-lightMainColor bg-lightMainBG/60 dark:text-darkMainColor dark:bg-darkMainBG/60 mt-8  p-1  shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2"
+                className="cards__item absolute -top-12 -left-48 card text-lightMainColor bg-lightMainBG/60 dark:text-darkMainColor dark:bg-darkMainBG/60  shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2"
+                style={{'--item-x': `${Math.round(containerSize.width!*0.5)}px`, '--item-y': `${Math.round(containerSize.height!*0.5)}px`} as React.CSSProperties}
               >
                 <h1 className={`font-bold   text-franceBlue  text-center font-DancingScript text-shadow  dark:text-shadow-light p-3 `} 
                 style={{ fontSize: `${Math.round(45 )}px`,lineHeight:'0.75' }}
@@ -134,7 +135,7 @@ export default function Home() {
                           Math.round(containerSize.width!/6/2)+Math.round(containerSize.width!/2)+'px',
                         '--item-y':
                           Math.round(
-                            containerSize.height!/3 *
+                            containerSize.height!/2.89 *
                               Math.sin(
                                 degrees_to_radians(
                                   (index * 360) / departmentsArray.length - 240
@@ -150,14 +151,14 @@ export default function Home() {
                       className={` w-[${Math.round(containerSize.width!/5.5)}px] p-2 max-w-[260px] flex flex-col justify-center  items-center text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG    shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2`}
                     >
                       
-                      <h1 className=" text-2xl  text-center   text-shadow  dark:text-shadow-light ">
+                      <h1 className=" text-xl  text-center   text-shadow  dark:text-shadow-light ">
                         {item.name}
                       </h1>
                       <Image
                         className="rounded-md overflow-hidden max-h-[250px] max-w-[250px]"
                         src={item.path}
                         width={Math.round(containerSize.width!/6)}
-                        height={Math.round(containerSize.width!/6)}
+                        height={Math.round(containerSize.height!/3.1)}
                         
                         alt={item.name+' picture'}
                       />
