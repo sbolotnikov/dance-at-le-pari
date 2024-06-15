@@ -81,7 +81,7 @@ export default function ReceiptModal({ visibility, invoice, onReturn }: Props) {
         onReturn(false, true, null);
       }}
     >
-      <div className="border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-5xl  flex justify-center items-center flex-col  h-[70svh] md:h-[85svh] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
+      <div className="blurFilter border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-5xl  flex justify-center items-center flex-col  h-[70svh] md:h-[85svh] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70">
         <button
           className="w-full btnFancy my-1 text-base text-center  rounded-md"
           style={{ padding: '0' }}

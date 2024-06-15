@@ -174,8 +174,21 @@ body {
   }
 }
 
-
-
+.blurFilter {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  /* background-image: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.3),
+    rgba(0, 0, 0, 0.2)
+  );
+  background-size: 25px 25px; */
+}
+.noblurFilter {
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
+  /* background-image: none; */
+}
 .cards__item { 
    
   transform-origin: -50% -50%;

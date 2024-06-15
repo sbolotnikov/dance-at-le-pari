@@ -150,7 +150,7 @@ const page: FC<pageProps> = ({}) => {
         onReturn={onReturnAlert}
         styling={alertStyle}
       />
-      <div className="   shadow-2xl w-[90%]  max-w-[1000px] md:w-full h-[70svh] md:h-[85svh] bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md border-0 rounded-md  p-2 mt-6">
+      <div className="blurFilter  shadow-2xl w-[90%]  max-w-[1000px] md:w-full h-[70svh] md:h-[85svh] bg-lightMainBG/70 dark:bg-darkMainBG/70 border-0 rounded-md  p-2 mt-6">
         <div className="w-full h-full border rounded-md border-lightMainColor dark:border-darkMainColor flex flex-col justify-center items-center">
           <div className=" flex flex-col w-full h-full  p-1 justify-center items-center ">
             <h3 className="w-full uppercase xs:text-md sm:text-xl phone:text-2xl tablet:text-3xl text-center">

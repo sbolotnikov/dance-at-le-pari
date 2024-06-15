@@ -74,7 +74,7 @@ export default function ChooseTemplates(props: TAlertType) {
   }, []);
   return (
     <div
-      className="w-[100vw] h-[100svh] absolute flex justify-center items-center bg-slate-500/70 left-0 z-[1001] backdrop-blur-md"
+      className="blurFilter w-[100vw] h-[100svh] absolute flex justify-center items-center bg-slate-500/70 left-0 z-[1001]"
       style={{ top: el!.scrollTop }}
     >
       <AlertMenu

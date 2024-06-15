@@ -61,7 +61,7 @@ export default function Home() {
       {!bigScreen && windowSize.height!>560  && (
         <div
           id="text"
-          className="text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG mt-3 p-1 md:p-4 shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2"
+          className="blurFilter text-lightMainColor bg-lightMainBG/75 dark:text-darkMainColor dark:bg-darkMainBG/75 mt-3 p-1 md:p-4 shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2"
         >
           <h1 className="font-bold text-5xl md:text-7xl text-franceBlue  text-center font-DancingScript text-shadow  dark:text-shadow-light  ">
             Dance at Le Pari
@@ -79,7 +79,7 @@ export default function Home() {
             {departmentsArray.map((item, index) => {
               return (
                 <Link key={'Links' + index} href={item.link}>
-                  <div className="w-[230px] m-3 p-2  flex flex-col justify-center items-center text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG    shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2">
+                  <div className="blurFilter w-[230px] m-3 p-2  flex flex-col justify-center items-center text-lightMainColor bg-lightMainBG/75 dark:text-darkMainColor dark:bg-darkMainBG/75    shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2">
                     <h1 className=" text-2xl  text-center   text-shadow  dark:text-shadow-light ">
                       {item.name}
                     </h1>
@@ -101,7 +101,7 @@ export default function Home() {
             <div className=" w-full h-full relative  flex justify-center items-center ">
               <div
                 id="text"
-                className="cards__item absolute -top-12 -left-48 card text-lightMainColor bg-lightMainBG/60 dark:text-darkMainColor dark:bg-darkMainBG/60  shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2"
+                className="blurFilter cards__item absolute -top-12 -left-48 card text-lightMainColor bg-lightMainBG/60 dark:text-darkMainColor dark:bg-darkMainBG/60  shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2"
                 style={{'--item-x': `${Math.round(containerSize.width!*0.5)}px`, '--item-y': `${Math.round(containerSize.height!*0.5)}px`} as React.CSSProperties}
               >
                 <h1 className={`font-bold   text-franceBlue  text-center font-DancingScript text-shadow  dark:text-shadow-light p-3 `} 

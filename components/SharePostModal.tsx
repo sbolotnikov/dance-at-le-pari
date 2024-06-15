@@ -65,9 +65,9 @@ function SharePostModal({
             rotateX: ['0deg', '0deg', '89deg', '89deg', '90deg'],
             x: ['0vw', '0vw', '0vw', '0vw', '-100vw'],
           }}
-          className="animatePageMainDiv w-[100vw] h-[100svh] absolute flex flex-col justify-center items-center bg-slate-500/70 left-0 z-[1001] backdrop-blur-md"
+          className=" animatePageMainDiv w-[100vw] h-[100svh] absolute flex flex-col justify-center items-center bg-slate-500/70 left-0 z-[1001]"
         >
-          <div className="border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-xl  flex justify-start items-center flex-col  h-[30svh] md:h-[30svh] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
+          <div className="blurFilter border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-xl  flex justify-start items-center flex-col  h-[30svh] md:h-[30svh] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70">
             <h2 className="w-full text-center uppercase m-4">
               {'Share on Media'}
             </h2>

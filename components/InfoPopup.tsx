@@ -37,7 +37,7 @@ export default function InfoPopup({ styling, onReturn }: Props) {
   }, []);
   return (
     <div
-      className="absolute left-0 h-[100svh] w-[100svw] flex justify-center items-center z-[1001] backdrop-blur-sm"
+      className="blurFilter absolute left-0 h-[100svh] w-[100svw] flex justify-center items-center z-[1001]"
       style={{ top: el!.scrollTop }}
     >
       <AnimatePresence>

@@ -1,7 +1,7 @@
 'use client'
 function Loading() {
   return (
-    <div className="absolute w-full h-full inset-0 z-2000  backdrop-blur-md">
+    <div className="blurFilter absolute w-full h-full inset-0 z-2000">
       <center className="grid place-items-center h-full">
         <div>
         {/* <img src={'/icons/logo light dark back.svg'} className="w-1/4 mb-2 max-w-lg" /> */}

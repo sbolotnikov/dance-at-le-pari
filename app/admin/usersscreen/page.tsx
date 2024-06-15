@@ -167,7 +167,7 @@ function page() {
           extraSize={true}
         />
       )}
-      <div className="w-full max-w-[1400px] border-0 flex flex-row mt-12 md:mt-20 justify-center items-center flex-wrap bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
+      <div className="blurFilter w-full max-w-[1400px] border-0 flex flex-row mt-12 md:mt-20 justify-center items-center flex-wrap bg-lightMainBG/70 dark:bg-darkMainBG/70">
         <div className="flex flex-col items-center justify-center border rounded-md border-lightMainColor dark:border-darkMainColor w-full h-full ">
           <h3 className="w-full xs:text-md sm:text-xl phone:text-2xl tablet:text-3xl text-center">
             Table of project Users's Roles

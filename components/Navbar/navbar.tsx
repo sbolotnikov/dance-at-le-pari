@@ -352,7 +352,7 @@ const Navbar = ({ path, locale, children }: Props) => {
         </div>
         <ul
           id="navBarContainer"
-          className="navbar__list bg-darkMainBG/25 translate-x-80 backdrop-blur-md md:dark:bg-transparent md:bg-transparent dark:bg-lightMainBG/25 md:translate-x-0  md:backdrop-filter-none transition  duration-1000 ease-in-out"
+          className="blurFilter md:noblurFilter navbar__list bg-darkMainBG/25 translate-x-80 md:dark:bg-transparent md:bg-transparent dark:bg-lightMainBG/25 md:translate-x-0 transition  duration-1000 ease-in-out"
         >
           {navbarLinks.map((item, index) => {
             return (

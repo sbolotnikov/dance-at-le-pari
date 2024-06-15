@@ -125,7 +125,7 @@ export default function AlertMenu(props: AlertType) {
             rotateX: ['0deg', '0deg', '89deg', '89deg', '90deg'],
             x: ['0vw', '0vw', '0vw', '0vw', '-100vw'],
           }}
-          className="animatePageMainDiv w-[100vw] h-[100svh] absolute flex flex-col justify-center items-center bg-slate-500/70 left-0 z-[1001] backdrop-blur-md"
+          className="blurFilter animatePageMainDiv w-[100vw] h-[100svh] absolute flex flex-col justify-center items-center bg-slate-500/70 left-0 z-[1001]"
         >
           <div
             className="w-[100vw] h-[100svh] absolute flex justify-center items-center  left-0 z-[1001]"

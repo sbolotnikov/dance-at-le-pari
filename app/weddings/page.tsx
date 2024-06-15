@@ -122,7 +122,7 @@ const page: FC<pageProps> = ({}) => {
       />
       {revealAlert && <InfoPopup onReturn={onReturn} styling={alertStyle} />}
       <div
-        className="border-0 rounded-md p-4  shadow-2xl w-[90%] h-[85svh]  max-w-[850px] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md overflow-auto"
+        className="blurFilter border-0 rounded-md p-4  shadow-2xl w-[90%] h-[85svh]  max-w-[850px] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 overflow-auto"
         // style={{ boxShadow: '0 0 150px rgb(113, 113, 109 / 50%),inset 0 0 20px #242422' }}
       >
         <h2

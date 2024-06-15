@@ -379,7 +379,7 @@ export default function Page({ params }: { params: { id: string } }) {
       )}
       {revealCloud2 && <ChooseTeacher onReturn={onReturnTeacher} />}
       {loading && <LoadingScreen />}
-      <div className="border-0 rounded-md px-4 pt-4 shadow-2xl w-[90%] max-w-[1350px] h-[85%] overflow-y-auto md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md">
+      <div className="blurFilter border-0 rounded-md px-4 pt-4 shadow-2xl w-[90%] max-w-[1350px] h-[85%] overflow-y-auto md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70">
         <div
           className={`  min-w-full   flex flex-col flex-wrap items-center justify-center absolute top-0 right-0 `}
         >

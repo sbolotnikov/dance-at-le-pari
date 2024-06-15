@@ -359,7 +359,7 @@ const FullDayScheduleView = ({
       />
 
       <div
-        className={`border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-xl  flex justify-center items-center flex-col   md:w-full bg-lightMainBG dark:bg-darkMainBG backdrop-blur-md h-[70svh] md:h-[85svh]`}
+        className={`blurFilter border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-xl  flex justify-center items-center flex-col   md:w-full bg-lightMainBG dark:bg-darkMainBG h-[70svh] md:h-[85svh]`}
       >
         <div
           id="wrapperDiv"

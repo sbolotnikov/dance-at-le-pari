@@ -133,7 +133,7 @@ const page: FC<pageProps> = ({}) => {
       ) : (
         <div
           id="outerWrapper"
-          className="   shadow-2xl w-[90%]  max-w-[450px] md:w-full h-[75svh] md:h-[85svh] bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md border-0 rounded-md  p-2 mt-6 md:mb-2"
+          className=" blurFilter  shadow-2xl w-[90%]  max-w-[450px] md:w-full h-[75svh] md:h-[85svh] bg-lightMainBG/70 dark:bg-darkMainBG/70 border-0 rounded-md  p-2 mt-6 md:mb-2"
         >
           <div
             id="wrapperDiv"

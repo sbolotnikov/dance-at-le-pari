@@ -90,7 +90,7 @@ const page: FC<pageProps> = ({}) => {
       />
       <div
         id="outerWrapper"
-        className="border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-5xl  flex justify-center items-center flex-col  h-[80svh] md:h-[85svh] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md"
+        className="blurFilter border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-5xl  flex justify-center items-center flex-col  h-[80svh] md:h-[85svh] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70"
       >
         <div
           id="wrapperDiv"

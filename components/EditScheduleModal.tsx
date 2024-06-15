@@ -222,7 +222,7 @@ export default function EditScheduleModal({
         />
       )}
       <div
-        className={`border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-md  flex justify-center items-center flex-col   md:w-full bg-lightMainBG dark:bg-darkMainBG backdrop-blur-md ${
+        className={`blurFilter border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-md  flex justify-center items-center flex-col   md:w-full bg-lightMainBG dark:bg-darkMainBG ${
           role == 'Student' ? 'max-h-[527px] h-full' : 'h-[70svh] md:h-[85svh]'
         }`}
       >

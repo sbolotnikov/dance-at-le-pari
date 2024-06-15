@@ -35,7 +35,6 @@ const page: FC<pageProps> = ({}) => {
     if (pass.length < 6) {
       return setError('Passwords should be at least 6 symbols long');
     }
-    // try {
     setError('');
     setLoading(true);
     signIn('credentials', {
@@ -56,7 +55,9 @@ const page: FC<pageProps> = ({}) => {
   }, [windowSize.height]);
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
-      <div className="border-0 rounded-md p-1 mt-4 shadow-2xl w-[90%] max-h-[660px]  max-w-[450px] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 backdrop-blur-md h-[70svh] md:h-[85svh] relative overflow-y-auto">
+      <div className="blurFilter border-0 rounded-md p-1 mt-4 shadow-2xl w-[90%] max-h-[660px]  max-w-[450px] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70  h-[70svh] md:h-[85svh] relative overflow-y-auto"
+       
+      >
         <div id="wrapperDiv" className=" w-full h-full border rounded-md border-lightMainColor dark:border-darkMainColor relative overflow-y-auto flex flex-col justify-center items-center">
           <div id="containedDiv" className={` ${scrolling?"":"absolute top-0 left-0"}
            flex flex-col items-center justify-between  w-full `}>
