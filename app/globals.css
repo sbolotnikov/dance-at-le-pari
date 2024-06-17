@@ -194,10 +194,13 @@ body {
 }
 .cards__item { 
    
-  transform-origin: -50% -50%;
   transform:  translate( var(--item-x), var(--item-y) )  ;
 }
-
+.centerOrigin {
+   
+  object-position: 50% 50%;
+ 
+}
 
 .teamMember {
   transform-style: preserve-3d;
