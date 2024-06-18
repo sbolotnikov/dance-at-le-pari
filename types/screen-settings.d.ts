@@ -26,6 +26,13 @@ export type TEvent = {
   eventtype: string;
 };
 type TEventArray = TEvent[];
+type TUser = {
+  id: number;
+  name: string;
+  image: string | null;
+  role: string;
+  color: string | null;
+};
 type TBlogPost = {
   img: string;
   createdAt: string;

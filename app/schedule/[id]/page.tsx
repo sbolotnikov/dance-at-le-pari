@@ -5,14 +5,15 @@ import { PageWrapper } from '../../../components/page-wrapper';
 import { useSession } from 'next-auth/react';
 import AlertMenu from '@/components/alertMenu';
 import { CalendarHeader } from '@/components/CalendarHeader';
-import { TEventSchedule, TEventScheduleArray } from '@/types/screen-settings';
+import { TEventSchedule, TEventScheduleArray, TUser } from '@/types/screen-settings';
 import ShowIcon from '@/components/svg/showIcon';
 import { DaySchedule } from '@/components/DaySchedule';
 import { useScheduleDate } from '@/hooks/useScheduleDate';
 import EditScheduleModal from '@/components/EditScheduleModal';
 import { useDimensions } from '@/hooks/useDimensions';
 import sleep from '@/utils/functions';
-import FullDayScheduleView from '@/components/FullDayScheduleView';
+import FullDayScheduleView from '@/components/FullDayScheduleView'; 
+import PayrollModal from '@/components/PayrollModal';
 
 export default function Page({ params }: { params: { id: string } }) {
   let selectedDate = null;
@@ -23,6 +24,7 @@ export default function Page({ params }: { params: { id: string } }) {
   const { data: session } = useSession();
   const [revealAlert, setRevealAlert] = useState(false);
   const [revealModal, setRevealModal] = useState(false);
+  const [revealModal1, setRevealModal1] = useState(false);
   const [alertStyle, setAlertStyle] = useState({
     variantHead: '',
     heading: '',
@@ -43,15 +45,7 @@ export default function Page({ params }: { params: { id: string } }) {
     selectedDate !== null ? selectedDate : ''
   );
   const windowSize = useDimensions();
-  const [users, setUsers] = useState<
-    {
-      id: number;
-      name: string;
-      image: string | null;
-      role: string;
-      color: string | null;
-    }[]
-  >([]);
+  const [users, setUsers] = useState<TUser[]>([]);
   const { days, dateDisplay } = useScheduleDate(events, nav);
   const weekdayName = [
     'Sunday',
@@ -182,6 +176,18 @@ export default function Page({ params }: { params: { id: string } }) {
           }}
         />
       )}
+      
+        {revealModal1 && (<PayrollModal 
+        events={events.filter(item=>((item.eventtype === 'Group') ||(item.eventtype === 'Private')))}
+        users={users}
+        visibility={revealModal1} 
+          role={session?.user.role!}
+          onReturn={() => {
+            sleep(1200).then(() => {
+              setRevealModal1(false);
+            });
+          }}
+        />)}
       {revealModal && (
         <EditScheduleModal
           visibility={revealModal}
@@ -313,7 +319,7 @@ export default function Page({ params }: { params: { id: string } }) {
           <div className="w-full h-full  flex flex-col relative">
             {(session?.user.role === 'Admin' ||
               session?.user.role === 'Teacher') && (
-              <div className="group flex  cursor-pointer  flex-col items-center absolute right-0 -top-8 md:-top-8">
+              <div className="group flex  cursor-pointer  flex-col items-center absolute right-4 -top-7 md:-top-10">
                 <div className="  h-6 w-6 md:h-10 md:w-10 relative hover:scale-110 group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
                   <div
                     className="cursor-pointer h-6 w-6 md:h-10 md:w-10 border-2 rounded-full  bg-editcolor m-auto "
@@ -326,11 +332,31 @@ export default function Page({ params }: { params: { id: string } }) {
                     <ShowIcon icon={'Plus'} stroke={'0.1'} />
                   </div>
                 </div>
-                <p className="hidden tracking-widest mx-3 transition duration-300 ease-in-out absolute -right-4 -bottom-1.5 md:-bottom-4 rounded-md text-center text-editcolor text-[6px] md:text-base md:dark:bg-lightMainBG    opacity-100 group-hover:inline-flex md:block md:opacity-0 md:group-hover:opacity-100 ">
+                <p className="hidden tracking-widest mx-3 transition duration-300 ease-in-out absolute -right-4 -bottom-1.5 md:-bottom-6 rounded-md text-center text-editcolor text-[6px] md:text-base md:dark:bg-lightMainBG    opacity-100 group-hover:inline-flex md:block md:opacity-0 md:group-hover:opacity-100 ">
                   Add_Event
                 </p>
               </div>
             )}
+                       {(session?.user.role === 'Admin' ||
+              session?.user.role === 'Teacher') && (
+              <div className="group flex  cursor-pointer  flex-col items-center absolute left-3 -top-7 md:-top-10">
+                <div className="  h-6 w-6 md:h-10 md:w-10 relative hover:scale-110 group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
+                  <div
+                    className="cursor-pointer h-6 w-6 md:h-10 md:w-10 border-2 rounded-full   m-auto "
+                    onClick={(e) => {
+                      e.preventDefault();                     
+                      setRevealModal1(true);
+                    }}
+                  >
+                    <ShowIcon icon={'Summary'} stroke={'0.1'} />
+                  </div>
+                </div>
+                <p className="hidden tracking-widest mx-3 transition duration-300 ease-in-out absolute -left-4 -bottom-1.5 md:-bottom-6 text-lightMainColor rounded-md text-center text-[6px] md:text-base md:dark:bg-lightMainBG    opacity-100 group-hover:inline-flex md:block md:opacity-0 md:group-hover:opacity-100 ">
+                  Summary.XLS
+                </p>
+              </div>
+            )}
+            <div className=" mt-2 md:mt-4">
             <CalendarHeader
               dateDisplay={dateDisplay}
               defaultView={true}
@@ -338,6 +364,7 @@ export default function Page({ params }: { params: { id: string } }) {
               onBack={() => setNav(nav - 1)}
               onStyle={(n) => {}}
             />
+            </div>
             <div className="w-full h-full relative overflow-auto border rounded-md border-lightMainColor dark:border-darkMainColor">
               <div id="container1" className={` absolute top-0 left-0`}>
                 <div

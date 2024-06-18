@@ -1,5 +1,5 @@
 import { MouseEvent, useContext, useEffect, useRef, useState } from 'react';
-import { TEventSchedule } from '@/types/screen-settings';
+import { TEventSchedule, TUser } from '@/types/screen-settings';
 import AlertMenu from './alertMenu';
 import AnimateModalLayout from './AnimateModalLayout';
 import { ContextMenu } from './ContextMenu';
@@ -7,13 +7,7 @@ import { useDimensions } from '@/hooks/useDimensions';
 import { useOnOutsideClick } from '@/hooks/useOnOutsideClick';
 import { PopupContext, PopupContextType } from '@/hooks/usePopupContext';
 import { useRouter } from 'next/navigation';
-type User = {
-  id: number;
-  name: string;
-  image: string | null;
-  role: string;
-  color: string | null;
-};
+
 type Props = {
   events: TEventSchedule[];
   onReturn: () => void;
@@ -24,7 +18,7 @@ type Props = {
     location: string
   ) => void;
   day: string | undefined;
-  users: User[];
+  users: TUser[];
 };
 type DisplayEvent = {
   date: string;
