@@ -72,6 +72,12 @@ type TDaySchedule = {
   isCurrentDay: boolean;
   date: string;
 };
+type TTableData ={
+  date:string,
+   note:string, 
+   lessons:number | null, 
+   groups:number | null,
+}
 type TFullEvent = {
   eventtype: EventType;
   length: number;

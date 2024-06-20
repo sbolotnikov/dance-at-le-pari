@@ -43,7 +43,7 @@ export default function AnimateModalLayout( {visibility,onReturn, children}:Prop
                   onReturn();
                 }}
               >
-            <div className=" h-8 w-8 mt-3s   fill-darkMainColor stroke-darkMainColor">
+            <div className=" h-8 w-8 mt-3   fill-darkMainColor stroke-darkMainColor">
               <ShowIcon icon={'Close'} stroke={'2'} />
             </div>
           </button>        

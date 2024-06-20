@@ -180,7 +180,8 @@ export default function Page({ params }: { params: { id: string } }) {
         {revealModal1 && (<PayrollModal 
         events={events.filter(item=>((item.eventtype === 'Group') ||(item.eventtype === 'Private')))}
         users={users}
-        visibility={revealModal1} 
+        visibility={revealModal1}
+          userID ={session?.user.id!}  
           role={session?.user.role!}
           onReturn={() => {
             sleep(1200).then(() => {
@@ -340,9 +341,9 @@ export default function Page({ params }: { params: { id: string } }) {
                        {(session?.user.role === 'Admin' ||
               session?.user.role === 'Teacher') && (
               <div className="group flex  cursor-pointer  flex-col items-center absolute left-3 -top-7 md:-top-10">
-                <div className="  h-6 w-6 md:h-10 md:w-10 relative hover:scale-110 group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
+                <div className="  h-6 w-6 md:h-10 md:w-10 relative hover:scale-110 group-hover:animate-bounce fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
                   <div
-                    className="cursor-pointer h-6 w-6 md:h-10 md:w-10 border-2 rounded-full   m-auto "
+                    className="cursor-pointer h-6 w-6 md:h-10 md:w-10 border-2 rounded-md   m-auto "
                     onClick={(e) => {
                       e.preventDefault();                     
                       setRevealModal1(true);

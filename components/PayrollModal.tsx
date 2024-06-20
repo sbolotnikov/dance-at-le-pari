@@ -1,11 +1,16 @@
 import { useRef, useState } from 'react';
 import AnimateModalLayout from './AnimateModalLayout';
-import { TEventScheduleArray, TUser } from '@/types/screen-settings';
-import * as XLSX from 'xlsx';
+import {
+  TEventScheduleArray,
+  TTableData,
+  TUser,
+} from '@/types/screen-settings';
+import * as XLSX from 'xlsx'; 
 
 type Props = {
   visibility: boolean;
   role: string;
+  userID: number;
   events: TEventScheduleArray;
   users: TUser[];
   onReturn: () => void;
@@ -21,27 +26,52 @@ type TExcelJSON = {
   totalLessonAmount: number;
   totalGroupsAmount: number;
 };
-const PayrollModal = ({ visibility, role, events, users, onReturn }: Props) => {
+const PayrollModal = ({ visibility, role,userID, events, users, onReturn }: Props) => {
   const [isVisible, setIsVisible] = useState(visibility);
   const dateRef1 = useRef<HTMLInputElement>(null);
   const dateRef2 = useRef<HTMLInputElement>(null);
+  const [tableData, setTableData] = useState<TTableData[]>([]);
   const [lessonLength, setLessonLength] = useState(45);
-  const [teacher, setTeacher] = useState(-1);
+  const [teacher, setTeacher] = useState(role==='Teacher'?userID:-1);
   const [excelJSON, setExcelJSON] = useState<TExcelJSON[]>([]);
 
   const uniqueValues = (nums: any[]) => Array.from(new Set(nums));
+
+
   const handleOnExport = () => {
     let wb = XLSX.utils.book_new();
-    let ws = XLSX.utils.json_to_sheet(excelJSON);
-    XLSX.utils.book_append_sheet(wb, ws, 'Totals');
-    for (let i = 0; i < excelJSON.length; i++) {
- 
-        let ws = XLSX.utils.json_to_sheet(excelJSON[i].daysSchedule);
-        XLSX.utils.book_append_sheet(wb, ws, excelJSON[i].name);
-      
+    let totalsTable: {
+      name: string;
+      lessonAmount: number;
+      groupsAmount: number;
+    }[] = [];
+    for (let i = 0; i < excelJSON.length; i++){
+      let name = excelJSON[i].name;
+      let lessonAmount = excelJSON[i].totalLessonAmount;
+      let groupsAmount = excelJSON[i].totalGroupsAmount; 
+      let obj = {
+        name: name,
+        lessonAmount: lessonAmount,
+        groupsAmount: groupsAmount,
+      };
+      totalsTable.push(obj); 
     }
-    XLSX.writeFile(wb, 'Time Sheet.xlsx');
+    totalsTable.push({name: 'Total: ', lessonAmount: totalsTable.map((item) => item.lessonAmount).reduce((a, b) => a + b, 0), groupsAmount: totalsTable.map((item) => item.groupsAmount).reduce((a, b) => a + b, 0) });
+    if (teacher === -1) {
+    let ws = XLSX.utils.json_to_sheet(totalsTable);
+    XLSX.utils.book_append_sheet(wb, ws, 'Totals'); 
+    ws = XLSX.utils.json_to_sheet(tableData);
+      XLSX.utils.book_append_sheet(wb, ws, "Details");
+    XLSX.writeFile(wb, `Time Sheet ${dateRef1.current?.value} to ${dateRef2.current?.value}.xlsx`);
+    }else{
+     let ws = XLSX.utils.json_to_sheet(tableData);
+      XLSX.utils.book_append_sheet(wb, ws, "Details");
+    XLSX.writeFile(wb, `Time Sheet ${totalsTable[0].name} ${dateRef1.current?.value} to ${dateRef2.current?.value}.xlsx`);
+    }
   };
+
+
+
   const prepareJSON = (
     events: TEventScheduleArray,
     name: string
@@ -66,7 +96,21 @@ const PayrollModal = ({ visibility, role, events, users, onReturn }: Props) => {
       ).length;
       let finalEvents = events1.map((event) => ({
         tag:
-          event.date.split('T')[1] + ' ' + event.eventtype + ': ' + event.tag +" "+ ((event.eventtype!=='Group')&&(event.studentid[0]>=0))? users.filter(user=> user.id===event.studentid[0])[0].name :'',
+          event.eventtype !== 'Group' &&
+          event.studentid[0] !== undefined &&
+          users.filter((user) => user.id === event.studentid[0])[0]
+            ? event.date.split('T')[1] +
+              ' ' +
+              event.eventtype +
+              ': ' +
+              event.tag +
+              ' ' +
+              users.filter((user) => user.id === event.studentid[0])[0].name
+            : event.date.split('T')[1] +
+              ' ' +
+              event.eventtype +
+              ': ' +
+              event.tag,
         amount: event.eventtype == 'Group' ? 1 : event.length / lessonLength,
       }));
       obj1.push({
@@ -82,8 +126,11 @@ const PayrollModal = ({ visibility, role, events, users, onReturn }: Props) => {
     let totalGroupsAmount = obj1
       .map((item) => item.groupsAmount)
       .reduce((a, b) => a + b, 0);
+
     return { name, daysSchedule: obj1, totalLessonAmount, totalGroupsAmount };
   };
+
+
   const prepareAllJSON = () => {
     let teachers = users
       .filter((user) => user.role === 'Teacher' || user.role === 'Admin')
@@ -110,19 +157,86 @@ const PayrollModal = ({ visibility, role, events, users, onReturn }: Props) => {
                 new Date(dateRef2.current?.value! + 'T23:59:59')
           );
         let temp1 = excelJSON;
-        let teacherDataObj= prepareJSON(
+        let teacherDataObj = prepareJSON(
           items.sort((a, b) =>
             a.date > b.date ? 1 : b.date > a.date ? -1 : 0
           ),
           teachers[i].name
-        )
-        if ((teacherDataObj.totalGroupsAmount>0)||(teacherDataObj.totalLessonAmount>0)){
-        if (temp1.map((item) => item.name).indexOf(teachers[i].name) === -1) {
-        temp1.push(teacherDataObj );
-        setExcelJSON([...temp1]);
-        }}
+        );
+        if (
+          teacherDataObj.totalGroupsAmount > 0 ||
+          teacherDataObj.totalLessonAmount > 0
+        ) {
+          if (temp1.map((item) => item.name).indexOf(teachers[i].name) === -1) {
+            prepareTableView(teacherDataObj,true);
+             
+            temp1.push(teacherDataObj);
+            setExcelJSON([...temp1]);
+          }
+        }
       }
   };
+
+  const prepareTableView = (teacherDataObj:TExcelJSON, multipleUsers:boolean ) =>{
+    let tableDataTemp: TTableData[] 
+    multipleUsers?tableDataTemp= tableData : tableDataTemp = [];
+            tableDataTemp.push({
+              date: '.',
+              note: " ",
+              lessons: null,
+              groups: null,
+            });
+            tableDataTemp.push({
+              date: '.',
+              note: " ",
+              lessons: null,
+              groups: null,
+            });
+            tableDataTemp.push({
+              date: '',
+              note: teacherDataObj.name,
+              lessons: Math.round(teacherDataObj.totalLessonAmount*100)/100,
+              groups: teacherDataObj.totalGroupsAmount,
+            });
+            for (let i = 0; i < teacherDataObj.daysSchedule.length; i++) {
+              tableDataTemp.push({
+                date:  new Date( teacherDataObj.daysSchedule[i].dateString +" 5:00:00.1").toLocaleDateString('en-us', {
+                  weekday: 'short',
+                  year: 'numeric',
+                  month: 'numeric',
+                  day: 'numeric',
+                }) ,
+
+
+
+                note: '',
+                lessons: Math.round(teacherDataObj.daysSchedule[i].lessonAmount*100)/100,
+                groups: teacherDataObj.daysSchedule[i].groupsAmount,
+              });
+              for (
+                let j = 0;
+                j < teacherDataObj.daysSchedule[i].events.length;
+                j++
+              ) {
+                tableDataTemp.push({
+                  date: '',
+                  note: teacherDataObj.daysSchedule[i].events[j].tag,
+                  lessons: teacherDataObj.daysSchedule[i].events[
+                    j
+                  ].tag.includes('Private')
+                    ? Math.round(teacherDataObj.daysSchedule[i].events[j].amount*100)/100
+                    : 0,
+                  groups: teacherDataObj.daysSchedule[i].events[j].tag.includes(
+                    'Group'
+                  )
+                    ? teacherDataObj.daysSchedule[i].events[j].amount
+                    : 0,
+                });
+              }
+            }
+            tableDataTemp=[ ...tableDataTemp]
+            setTableData([...tableDataTemp]);
+  }
   console.log(excelJSON);
 
   return (
@@ -156,6 +270,7 @@ const PayrollModal = ({ visibility, role, events, users, onReturn }: Props) => {
                   type="date"
                   onChange={(e) => {
                     e.preventDefault();
+                    setTableData([] as TTableData[]);
                     let items = events;
                     if (teacher !== -1) {
                       items = items.filter(
@@ -177,7 +292,9 @@ const PayrollModal = ({ visibility, role, events, users, onReturn }: Props) => {
                           ),
                           users.filter((user) => user.id === teacher)[0].name
                         )
-                      );   
+                      );
+                      
+                      prepareTableView(temp1[0],false);
                       setExcelJSON([...temp1]);
                     } else {
                       setExcelJSON([] as TExcelJSON[]);
@@ -194,6 +311,7 @@ const PayrollModal = ({ visibility, role, events, users, onReturn }: Props) => {
                   type="date"
                   onChange={(e) => {
                     e.preventDefault();
+                    setTableData([] as TTableData[]);
                     let items = events;
                     if (teacher !== -1) {
                       items = items.filter(
@@ -214,7 +332,8 @@ const PayrollModal = ({ visibility, role, events, users, onReturn }: Props) => {
                           ),
                           users.filter((user) => user.id === teacher)[0].name
                         )
-                      ); 
+                      );
+                      prepareTableView(temp1[0],false);
                       setExcelJSON([...temp1]);
                     } else {
                       setExcelJSON([] as TExcelJSON[]);
@@ -227,7 +346,7 @@ const PayrollModal = ({ visibility, role, events, users, onReturn }: Props) => {
             <label className="flex flex-col m-auto justify-between items-center">
               Instructor
               <select
-                className=" mb-2 rounded-md text-ellipsis  dark:text-darkMainColor text-menuBGColor "
+                className=" mb-2 rounded-md text-ellipsis  dark:text-darkMainColor text-menuBGColor dark:bg-menuBGColor"
                 style={{
                   backgroundColor:
                     teacher == undefined || teacher == null
@@ -237,6 +356,8 @@ const PayrollModal = ({ visibility, role, events, users, onReturn }: Props) => {
                 value={teacher!}
                 onChange={(e) => {
                   setTeacher(parseInt(e.target.value));
+                  let t1: TTableData[] = [];
+                  setTableData([...t1]);
                   let items = events;
                   if (e.target.value !== '-1') {
                     items = items.filter(
@@ -260,7 +381,8 @@ const PayrollModal = ({ visibility, role, events, users, onReturn }: Props) => {
                           (user) => user.id === parseInt(e.target.value)
                         )[0].name
                       )
-                    ); 
+                    );
+                    prepareTableView(temp1[0],false);
                     setExcelJSON([...temp1]);
                   } else {
                     setExcelJSON([] as TExcelJSON[]);
@@ -268,7 +390,7 @@ const PayrollModal = ({ visibility, role, events, users, onReturn }: Props) => {
                   }
                 }}
               >
-                <option
+                {role!=="Teacher" &&<option
                   key={'all teachers'}
                   value={-1}
                   style={{
@@ -276,10 +398,10 @@ const PayrollModal = ({ visibility, role, events, users, onReturn }: Props) => {
                   }}
                 >
                   {'All Instructors'}
-                </option>
+                </option>}
                 {users
                   .filter(
-                    (user) => user.role === 'Teacher' || user.role === 'Admin'
+                    (user) => role!=="Teacher"? user.role === 'Teacher' || user.role === 'Admin': user.id==userID
                   )
                   .sort((a: any, b: any) => {
                     if (a.name > b.name) return 1;
@@ -302,11 +424,26 @@ const PayrollModal = ({ visibility, role, events, users, onReturn }: Props) => {
               </select>
             </label>
             <button
-              className="btnFancy m-2 p-2 bg-lightMainColor dark:bg-darkMainColor text-lightMainBG dark:text-darkMainBG rounded-md"
+              className="btnFancy m-2 p-2   bg-darkMainColor text-lightMainBG rounded-md"
               onClick={handleOnExport}
             >
               Export
             </button>
+            <div className="flex flex-col w-full">
+              {tableData &&
+                teacher &&
+                tableData.map((row, index) => (
+                  <div
+                    key={'row_' + index}
+                    className="flex flex-row justify-between"
+                  >
+                    <div className="w-1/6 flex-wrap">{row.date}</div>
+                    <div className="w-1/3 flex-wrap">{row.note}</div>
+                    <div className="w-1/12 flex-wrap">{row.lessons}</div>
+                    <div className="w-1/12 flex-wrap">{row.groups}</div>
+                  </div>
+                ))}
+            </div>
           </div>
         </div>
       </div>
