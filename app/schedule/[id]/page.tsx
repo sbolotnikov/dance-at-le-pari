@@ -348,7 +348,7 @@ export default function Page({ params }: { params: { id: string } }) {
                       setRevealModal1(true);
                     }}
                   >
-                    <ShowIcon icon={'Summary'} stroke={'0.1'} />
+                    <ShowIcon icon={'Summary'} stroke={'0.05'} />
                   </div>
                 </div>
                 <p className="hidden tracking-widest mx-3 transition duration-300 ease-in-out absolute -left-4 -bottom-1.5 md:-bottom-6 text-lightMainColor rounded-md text-center text-[6px] md:text-base md:dark:bg-lightMainBG    opacity-100 group-hover:inline-flex md:block md:opacity-0 md:group-hover:opacity-100 ">
