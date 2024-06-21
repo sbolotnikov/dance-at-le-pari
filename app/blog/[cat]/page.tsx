@@ -109,7 +109,7 @@ export default function Page(params: {
   };
 
   return (
-    <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center ">
+    <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center md:items-end justify-center ">
       {categories.length>0 &&<SharePostModal
         title={`${(params.params.cat!='0')?categories.filter((item)=>item.slug==params.params.cat)[0].title:"All"} Categor${(params.params.cat!='0')?'y':"ies"} of Blog | Dance at Le Pari Studio`}
         url={process.env.NEXT_PUBLIC_URL + '/blog/' + params.params.cat}
@@ -145,7 +145,7 @@ export default function Page(params: {
     }
       <AlertMenu visibility={revealAlert}  onReturn={onReturnAlert} styling={alertStyle} />
       {loading && <LoadingScreen />}
-      <div className="blurFilter border-0 rounded-md p-2 mt-6 shadow-2xl w-[95%] h-[70svh] md:h-[85svh] max-w-5xl md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70">
+      <div className="blurFilter border-0 rounded-md p-2 mt-6 shadow-2xl w-[95%] h-[70svh] md:h-[85svh] max-w-5xl md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 md:mb-3">
         <div className="border rounded-md border-lightMainColor dark:border-darkMainColor w-full h-full   p-2 flex flex-col justify-start items-center relative">
           <h2
             className="text-center font-semibold md:text-4xl uppercase"

@@ -248,7 +248,7 @@ const PayrollModal = ({ visibility, role,userID, events, users, onReturn }: Prop
       }}
     >
       <div
-        className={`blurFilter border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-3xl  flex justify-center items-center flex-col bg-lightMainBG dark:bg-darkMainBG  h-[70svh] md:h-[85svh]`}
+        className={`blurFilter border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-3xl  flex justify-center items-center flex-col bg-lightMainBG dark:bg-darkMainBG  h-[75svh] md:h-[85svh]`}
       >
         <div
           id="wrapperDiv"
@@ -430,17 +430,24 @@ const PayrollModal = ({ visibility, role,userID, events, users, onReturn }: Prop
               Export
             </button>
             <div className="flex flex-col w-full">
+            <div className="w-full flex flex-row justify-between border rounded-t-md border-lightMainColor dark:border-darkMainColor"
+                  >
+                    <div className="w-1/4 flex justify-center items-center">Date</div>
+                    <div className="w-1/2 flex justify-center items-center">Note</div>
+                    <div className="w-[12.5%] flex justify-center items-center">Lessons</div>
+                    <div className="w-[12.5%] flex justify-center items-center ">Groups</div>
+                  </div>
               {tableData &&
                 teacher &&
                 tableData.map((row, index) => (
                   <div
                     key={'row_' + index}
-                    className="flex flex-row justify-between"
+                    className="flex w-full flex-row"
                   >
-                    <div className="w-1/6 flex-wrap">{row.date}</div>
-                    <div className="w-1/3 flex-wrap">{row.note}</div>
-                    <div className="w-1/12 flex-wrap">{row.lessons}</div>
-                    <div className="w-1/12 flex-wrap">{row.groups}</div>
+                    <div className="w-1/4 flex justify-center items-center flex-wrap">{row.date}</div>
+                    <div className="w-1/2 flex justify-center items-center flex-wrap border-l border-lightMainColor dark:border-darkMainColor">{row.note}</div>
+                    <div className="w-[12.5%] flex justify-center items-center flex-wrap border-l text-center border-lightMainColor dark:border-darkMainColor">{row.lessons}</div>
+                    <div className="w-[12.5%] flex justify-center items-center flex-wrap border-l text-center border-lightMainColor dark:border-darkMainColor">{row.groups}</div>
                   </div>
                 ))}
             </div>

@@ -54,7 +54,7 @@ const page: FC<pageProps> = ({}) => {
   }, [items, windowSize.height]);
 
   return (
-    <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
+    <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center md:items-end justify-center">
       {loading && <LoadingScreen />}
       {visibleModal && (
         <ReceiptModal
@@ -90,7 +90,7 @@ const page: FC<pageProps> = ({}) => {
       />
       <div
         id="outerWrapper"
-        className="blurFilter border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-5xl  flex justify-center items-center flex-col  h-[80svh] md:h-[85svh] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70"
+        className="blurFilter border-0 rounded-md p-2  shadow-2xl w-[95svw]  max-w-5xl  flex justify-center items-center flex-col  h-[80svh] md:h-[85svh] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 md:m-3"
       >
         <div
           id="wrapperDiv"

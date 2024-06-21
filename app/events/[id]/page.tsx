@@ -82,7 +82,7 @@ export default function Page({ params }: { params: { id: string } }) {
   }, [eventData, windowSize.height]);
 console.log("Event Data:",eventData)
   return (
-    <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">       
+    <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center md:items-end justify-center">       
         {eventData &&<SharePostModal
           title={eventData.title!}
           onReturn={() => sleep(1200).then(() => {setRevealSharingModal(false)})}
@@ -200,7 +200,7 @@ console.log("Event Data:",eventData)
         onReturn={onReturnAlert}
         styling={alertStyle}
       />
-      <div className="blurFilter shadow-2xl w-[90%]  max-w-[450px] md:w-full h-[85svh]  bg-lightMainBG/70 dark:bg-darkMainBG/70 border-0 rounded-md  p-2 md:mt-6">
+      <div className="blurFilter shadow-2xl w-[90%]  max-w-[450px] md:w-full h-[85svh]  bg-lightMainBG/70 dark:bg-darkMainBG/70 border-0 rounded-md  p-2 md:mb-3">
         <div
           id="wrapperDiv"
           className="w-full h-full border rounded-md border-lightMainColor dark:border-darkMainColor relative overflow-y-auto flex flex-col justify-center items-center"

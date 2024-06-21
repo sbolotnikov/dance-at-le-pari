@@ -167,7 +167,7 @@ const page: FC<pageProps> = ({}) => {
       });
   }, [session?.user.role!]);
   return (
-    <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
+    <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center md:items-end justify-center">
       <SharePostModal
         title={"Page: Activities | Dance at Le Pari Studio"}
         url={process.env.NEXT_PUBLIC_URL + '/dancing'}
@@ -198,7 +198,7 @@ const page: FC<pageProps> = ({}) => {
           template={templateID}
         />
       ) : (
-        <div className="blurFilter border-0 rounded-md p-2  shadow-2xl w-[95%] h-[70svh] md:h-[85svh] max-w-5xl md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70">
+        <div className="  border-0 rounded-md p-2  shadow-2xl w-[95%] h-[70svh] md:h-[85svh] max-w-5xl md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 md:mb-3">
           <Tabs
             selectedIndex={tabIndex}
             className="w-full h-full flex flex-col border rounded-md relative border-lightMainColor dark:border-darkMainColor"

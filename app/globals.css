@@ -187,11 +187,7 @@ body {
   );
   background-size: 50px 50px;
 }
-.noblurFilter {
-  backdrop-filter:none;
-  -webkit-backdrop-filter:none;
-  /* background-image: none; */
-}
+ 
 .cards__item { 
    
   transform:  translate( var(--item-x), var(--item-y) )  ;

@@ -128,7 +128,7 @@ export default function Page({ params }: { params: { id: string } }) {
   }, []);
 
   return (
-    <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
+    <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center md:items-end justify-center">
       {revealGallery && (
         <FullScreenGalleryView
           pictures={picturesArray}
@@ -159,7 +159,7 @@ export default function Page({ params }: { params: { id: string } }) {
           }}
         />
       )}
-      <div className="blurFilter border-0 rounded-md p-2  shadow-2xl w-[95%] h-[70svh] md:h-[85svh] max-w-5xl md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 ">
+      <div className="blurFilter border-0 rounded-md p-2  shadow-2xl w-[95%] h-[70svh] md:h-[85svh] max-w-5xl md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 md:mb-3">
         <Tabs
           selectedIndex={tabIndex}
           className="w-full h-full relative p-1 flex flex-col border rounded-md border-lightMainColor dark:border-darkMainColor"

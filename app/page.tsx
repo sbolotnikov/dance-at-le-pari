@@ -85,13 +85,14 @@ const ContainerLoaded = () => {
                     height: Math.round(containerSize.height! / 3) + 'px',
                     maxHeight:'260px',
                     backgroundImage: `url(${item.path})`,
+                    backgroundPosition: 'center',
                     backgroundSize: 'cover',
                     '--item-x':
                       Math.round(
                         (containerSize.height  /
                           (containerSize.height > containerSize.width
-                            ? 2.8
-                            : 2.5)) *
+                            ? 3.4
+                            : 1.5)) *
                           Math.cos(
                             degrees_to_radians(
                               (index * 360) / departmentsArray.length - 240

@@ -312,7 +312,7 @@ const Navbar = ({ path, locale, children }: Props) => {
   ];
   return (
     <nav className="navbar w-screen h-[100svh] overflow-hidden">
-      <div className=" absolute inset-0 flex flex-col items-center justify-end z-[-5] pb-14">
+      <div className=" absolute inset-0 flex flex-col items-center justify-end z-[-5] pb-14 md:pb-0">
         <Logo
           shadow={
             darkMode
@@ -352,7 +352,7 @@ const Navbar = ({ path, locale, children }: Props) => {
         </div>
         <ul
           id="navBarContainer"
-          className="blurFilter md:noblurFilter navbar__list bg-darkMainBG/25 translate-x-80 md:dark:bg-transparent md:bg-transparent dark:bg-lightMainBG/25 md:translate-x-0 transition  duration-1000 ease-in-out"
+          className="blurFilterNav navbar__list bg-darkMainBG/25 translate-x-80 md:dark:bg-transparent md:bg-transparent dark:bg-lightMainBG/25 md:translate-x-0 transition  duration-1000 ease-in-out"
         >
           {navbarLinks.map((item, index) => {
             return (
@@ -474,7 +474,7 @@ const Navbar = ({ path, locale, children }: Props) => {
           }
           <button
             id="burger-toggle"
-            className={`relative m-1 flex cursor-pointer p-1.5  outline-none rounded-md hover:ring-2 hover:ring-lightAccentColor focus:ring-lightAccentColor dark:hover:ring-darkAccentColor dark:focus:ring-darkAccentColor ${
+            className={`relative m-1 flex cursor-pointer p-1.5  outline-none rounded-md hover:ring-2 bg-lightMainBG dark:bg-lightMainColor  hover:ring-lightAccentColor focus:ring-lightAccentColor dark:hover:ring-darkAccentColor dark:focus:ring-darkAccentColor ${
               windowSize.height! < 760 || windowSize.width! < 768
                 ? ''
                 : 'hidden'
