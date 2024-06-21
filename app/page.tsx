@@ -89,10 +89,8 @@ const ContainerLoaded = () => {
                     backgroundSize: 'cover',
                     '--item-x':
                       Math.round(
-                        (containerSize.height  /
-                          (containerSize.height > containerSize.width
-                            ? 3.4
-                            : 1.5)) *
+                        (containerSize.width  /
+                          2.4) *
                           Math.cos(
                             degrees_to_radians(
                               (index * 360) / departmentsArray.length - 240
