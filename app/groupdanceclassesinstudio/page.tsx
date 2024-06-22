@@ -8,7 +8,7 @@ import { useEffect } from "react"
  const page = (props: Props) => {
     const router = useRouter();
     useEffect(() => {
-       router.push("/dancing");
+       router.push("/dancing/group_classes");
     }, [])  
    return (
      <div>page</div>

@@ -9,7 +9,7 @@ import EventTemplateEditingForm from '@/components/EventTemplateEditingForm';
 import AlertMenu from '@/components/alertMenu';
 import PDFDisplay from '@/components/PDFDIsplay';
 import { useDispatch } from 'react-redux';
-import { addItem } from '../../slices/cartSlice';
+import { addItem } from '../../../slices/cartSlice';
 import { useDimensions } from '@/hooks/useDimensions';
 import sleep from '@/utils/functions';
 import ShowIcon from '@/components/svg/showIcon';
@@ -17,9 +17,8 @@ import { useRouter } from 'next/navigation';
 import SharePostModal from '@/components/SharePostModal';
 interface pageProps {}
 
-const page: FC<pageProps> = ({}) => {
+export default function Page({ params }: { params: { id: string } }) {
   const { data: session } = useSession();
-  const [tabIndex, setTabIndex] = useState(0);
   const [templateID, setTemplateID] = useState(-1);
   const [revealTemplateEdit, setRevealTemplateEdit] = useState(false);
   const [revealSharingModal, setRevealSharingModal] = useState(false);
@@ -45,8 +44,55 @@ const page: FC<pageProps> = ({}) => {
   ]);
   const dispatch = useDispatch();
   const router = useRouter();
-  
+
   const tabsIndexArray = ['Private', 'Group', 'Floor_Fee', 'Party'];
+  const slugArray = [
+    'private_lessons',
+    'group_classes',
+    'floor_fees',
+    'parties',
+    'special_events',
+  ];
+  const pageArray = [
+    {
+      title:
+        'Page: Private Lessons Packages | Activities | Dance at Le Pari Studio',
+      description:
+        'Private Dance Instructions Packages. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below. ',
+      keywords:
+        'private dance lessons, lessons packages, dance lessons packages, wedding dance lessons, wedding dance packages',
+    },
+    {
+      title: 'Page: Group Classes| Activities | Dance at Le Pari Studio',
+      description:
+        'Group classes and group packages. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below.',
+      keywords:
+        'group dance lessons, group classes packages, group lessons packages, group classes lessons, group classes dance packages',
+    },
+    {
+      title: 'Page: Floor Fees | Activities | Dance at Le Pari Studio',
+      description:
+        ' Floor fees for outside dance instructors. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below. ',
+      keywords:
+        'floor fees, rent dance space, teach dance lessons, outside dance teachers',
+    },
+    {
+      title: 'Page: Parties or Socials | Activities | Dance at Le Pari Studio',
+      description:
+        'Social Dancing Parties. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below.',
+      keywords:
+        'dance party, socials, dance social events, ballroom social, Latin Social , Hustle Party, dance parties, dance events',
+    },
+    {
+      title:
+        'Page: Special Dance Socials | Activities | Dance at Le Pari Studio',
+      description:
+        'Special Dance Events at Dance at Le Pari. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below.',
+      keywords:
+        'special Dance Events, special dance events, dance parties, dance events, ballroom social, Latin Social , Hustle Party, dance parties, dance events',
+    },
+  ];
+  const tabIndex = slugArray.indexOf(params.id) || 0;
   const actionTemplateChoice = (
     action1: string,
     item: number,
@@ -169,13 +215,15 @@ const page: FC<pageProps> = ({}) => {
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center md:items-end justify-center">
       <SharePostModal
-        title={"Page: Activities | Dance at Le Pari Studio"}
-        url={process.env.NEXT_PUBLIC_URL + '/dancing'}
-        quote={`Description:All studio activities. Can pay for all services online as contactless method of payment: online &amp; in studio groups &amp; privates, dance social party admission, dance host cost, online &amp; in studio wedding dance lessons, floor fee. You can find Privacy Policy of Le Pari Dance Center.  \n Click on the link below. \n`}
-        hashtag={" DanceAtLePariActivities DanceActivities   DanceLePariDanceCenter"}
-          onReturn={() => setRevealSharingModal(false)}
-          visibility={revealSharingModal} 
-        />
+        title={pageArray[tabIndex].title}
+        url={process.env.NEXT_PUBLIC_URL + '/dancing/'+params.id}
+        quote={ pageArray[tabIndex].description}
+        hashtag={
+          pageArray[tabIndex].keywords
+        }
+        onReturn={() => setRevealSharingModal(false)}
+        visibility={revealSharingModal}
+      />
       <AlertMenu
         visibility={revealAlert}
         onReturn={onReturn}
@@ -202,7 +250,7 @@ const page: FC<pageProps> = ({}) => {
           <Tabs
             selectedIndex={tabIndex}
             className="w-full h-full flex flex-col border rounded-md relative border-lightMainColor dark:border-darkMainColor"
-            onSelect={(index: number) => setTabIndex(index)}
+            onSelect={(index: number) => router.push(`/dancing/${slugArray[index]}`)}
           >
             <h2
               className="text-center font-semibold md:text-4xl uppercase"
@@ -225,15 +273,15 @@ const page: FC<pageProps> = ({}) => {
                 Terms & Conditions
               </button>
               <button
-            className=" outline-none border-none absolute right-0 top-0  rounded-md  mt-2  w-8 h-8"
-            onClick={(e) => {
-              e.preventDefault();
-              setRevealSharingModal(!revealSharingModal);
-              return;
-            }}
-          >
-            <ShowIcon icon={'Share'} stroke={'2'} />
-          </button>
+                className=" outline-none border-none absolute right-0 top-0  rounded-md  mt-2  w-8 h-8"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setRevealSharingModal(!revealSharingModal);
+                  return;
+                }}
+              >
+                <ShowIcon icon={'Share'} stroke={'2'} />
+              </button>
             </div>
             <TabList
               className="h-[2.43rem] w-full  flex flex-row justify-between items-start flex-wrap rounded-t-md  dark:bg-lightMainBG  bg-darkMainBG"
@@ -315,6 +363,4 @@ const page: FC<pageProps> = ({}) => {
       )}
     </PageWrapper>
   );
-};
-
-export default page;
+}

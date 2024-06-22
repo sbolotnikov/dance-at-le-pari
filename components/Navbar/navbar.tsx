@@ -64,7 +64,7 @@ const Navbar = ({ path, locale, children }: Props) => {
       icon: 'Calendar',
     },
     {
-      url: '/dancing',
+      url: '/dancing/private_lessons',
       title: 'Activities',
       icon: 'Activities',
     },
@@ -89,7 +89,7 @@ const Navbar = ({ path, locale, children }: Props) => {
           icon: 'Calendar',
         },
         {
-          url: '/dancing',
+          url: '/dancing/private_lessons',
           title: 'Activities',
           icon: 'Activities',
         },
@@ -117,7 +117,7 @@ const Navbar = ({ path, locale, children }: Props) => {
           icon: 'Calendar',
         },
         {
-          url: '/dancing',
+          url: '/dancing/private_lessons',
           title: 'Activities',
           icon: 'Activities',
         },
@@ -156,7 +156,7 @@ const Navbar = ({ path, locale, children }: Props) => {
           icon: 'Calendar',
         },
         {
-          url: '/dancing',
+          url: '/dancing/private_lessons',
           title: 'Activities',
           icon: 'Activities',
         },
@@ -211,6 +211,7 @@ const Navbar = ({ path, locale, children }: Props) => {
         : document.getElementById('profile-toggle')?.classList.remove('hidden');
       setBurgerState(!burgerState);
     }
+    console.log("height: "+windowSize.height)
     if (windowSize.height! < 760 && !isChangeOrientation) {
       // document
       //     .getElementsByClassName('navbar__list')[0]

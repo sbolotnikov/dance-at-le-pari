@@ -1,4 +1,4 @@
- 
+
 import ShowIcon from '@/components/svg/showIcon';
 import { ImageResponse } from 'next/og';
 import { title } from 'process';
@@ -16,11 +16,11 @@ export default function Image({
 }) {
   // fetch data
   const slugArray=[
-    'welcome',
-    'our-team',
-   'studio-tour',
-    'location',
-    'hours',
+    'private_lessons',
+    'group_classes',
+    'floor_fees',
+    'parties',
+    'special_events',
   ];
   const selectedIndex = slugArray.indexOf(id) || null;
     const index1 =
@@ -31,19 +31,19 @@ export default function Image({
       : 0
 //   const post = await getPost(slug);
     const titleArray=[
-      'Welcome to Dance At Le Pari Studio',
-      'Our Professional Team',
-      'Studio Interior/Exterior tour',
-      'Our Location',
-      'Hours Of Operation',
+      'Private Lessons Packages | Activities ',
+      'Group Classes| Activities',
+      'Floor Fees | Activities',
+      'Parties or Socials | Activities',
+      'Special Dance Socials | Activities',
     ];
-    const imgArray=[
-      'Home',
-      'Users',
-      'Home2',
-      'Location',
-      'ClockBallroom',
-    ];
+    // const imgArray=[
+    //   'Activities',
+    //   'Users',
+    //   'Home2',
+    //   'Location',
+    //   'ClockBallroom',
+    // ];
   return new ImageResponse(
     (
       <div
@@ -76,8 +76,25 @@ export default function Image({
         >
           {titleArray[index1]}
         </div>
+        <div
+          style={{
+            fontSize: 60,
+            fontStyle: 'italic',
+            letterSpacing: '-0.025em',
+            color: 'red',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            lineHeight: 1.4,
+            textDecoration: 'underline',
+            width: '100%',
+            fontWeight: 500,
+          }}
+        >
+          {'Dance at Le Pari Studio'}
+        </div>
         <div style={{ width: '400px', height: '400px', display: 'flex'}}>
-        <ShowIcon icon={imgArray[index1]} stroke={'0.05'} widthSvg={400} heightSvg={400} fillSvg={'red'}/>
+        <ShowIcon icon={"Activities"} stroke={'0.05'} widthSvg={400} heightSvg={400} fillSvg={'red'}/>
         </div>
 
        
