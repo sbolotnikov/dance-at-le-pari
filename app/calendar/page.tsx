@@ -70,13 +70,13 @@ const page: FC<pageProps> = ({}) => {
       <div className="blurFilter border-0 rounded-md p-2 mt-6 shadow-2xl w-[95%] h-[70svh] md:h-[85svh] max-w-5xl md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 md:mb-3">
         <div className="border rounded-md border-lightMainColor dark:border-darkMainColor w-full h-full   p-2 flex flex-col relative">
           <h2
-            className="text-center font-semibold md:text-4xl uppercase"
+            className="text-center font-semibold text-2xl md:text-4xl uppercase"
             style={{ letterSpacing: '1px' }}
           >
             Calendar
           </h2>
           <button
-            className=" outline-none border-none absolute right-0 top-0  rounded-md  mt-2  w-8 h-8"
+            className=" outline-none border-none absolute right-0 top-0  rounded-md  w-8 h-8"
             onClick={(e) => {
               e.preventDefault();
               setRevealSharingModal(!revealSharingModal);
@@ -87,7 +87,7 @@ const page: FC<pageProps> = ({}) => {
           </button>
           {(session?.user.role === 'Admin' ||
               session?.user.role === 'Teacher') && (
-              <div className="group flex  cursor-pointer  flex-col items-center justify-center absolute right-16 top-5  md:left-auto">
+              <div className="group flex  cursor-pointer  flex-col items-center justify-center absolute left-16 md:right-16 top-7 md:top-5  md:left-auto">
                 <div className="  h-6 w-6 md:h-10 md:w-10 relative hover:scale-110 group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
                   <div
                     className="cursor-pointer h-6 w-6 md:h-10 md:w-10 border-2 rounded-full  bg-editcolor m-auto "
