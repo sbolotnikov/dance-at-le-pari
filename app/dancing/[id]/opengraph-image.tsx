@@ -18,7 +18,7 @@ export default function Image({
     'group_classes',
     'floor_fees',
     'parties',
-    'special_events',
+    // 'special_events',
   ];
   const selectedIndex = slugArray.indexOf(id);
     const index1 =
@@ -32,7 +32,7 @@ export default function Image({
       'Group Classes| Activities',
       'Floor Fees | Activities',
       'Parties or Socials | Activities',
-      'Special Dance Socials | Activities',
+      // 'Special Dance Socials | Activities',
     ];
     // const imgArray=[
     //   'Activities',
