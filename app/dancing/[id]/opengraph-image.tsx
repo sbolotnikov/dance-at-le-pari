@@ -32,7 +32,7 @@ export default function Image({
       'Group Classes| Activities',
       'Floor Fees | Activities',
       'Parties or Socials | Activities',
-      // 'Special Dance Socials | Activities',
+      'Special Dance Socials | Activities',
     ];
     // const imgArray=[
     //   'Activities',
