@@ -53,45 +53,11 @@ export default function Page({ params }: { params: { id: string } }) {
     'parties',
     'special_events',
   ];
-  const pageArray = [
-    {
-      title:
-        'Page: Private Lessons Packages | Activities | Dance at Le Pari Studio',
-      description:
-        'Private Dance Instructions Packages. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below. ',
-      keywords:
-        'private dance lessons, lessons packages, dance lessons packages, wedding dance lessons, wedding dance packages',
-    },
-    {
-      title: 'Page: Group Classes| Activities | Dance at Le Pari Studio',
-      description:
-        'Group classes and group packages. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below.',
-      keywords:
-        'group dance lessons, group classes packages, group lessons packages, group classes lessons, group classes dance packages',
-    },
-    {
-      title: 'Page: Floor Fees | Activities | Dance at Le Pari Studio',
-      description:
-        ' Floor fees for outside dance instructors. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below. ',
-      keywords:
-        'floor fees, rent dance space, teach dance lessons, outside dance teachers',
-    },
-    {
-      title: 'Page: Parties or Socials | Activities | Dance at Le Pari Studio',
-      description:
-        'Social Dancing Parties. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below.',
-      keywords:
-        'dance party, socials, dance social events, ballroom social, Latin Social , Hustle Party, dance parties, dance events',
-    },
-    {
-      title:
-        'Page: Special Dance Socials | Activities | Dance at Le Pari Studio',
-      description:
-        'Special Dance Events at Dance at Le Pari. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below.',
-      keywords:
-        'special Dance Events, special dance events, dance parties, dance events, ballroom social, Latin Social , Hustle Party, dance parties, dance events',
-    },
-  ];
+  const pageArray = [{title:'Page: Private Lessons Packages | Activities | Dance at Le Pari Studio',description:'Private Dance Instructions Packages. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below. ', keywords: 'private dance lessons, lessons packages, dance lessons packages, wedding dance lessons, wedding dance packages'},
+    { title: 'Page: Group Classes| Activities | Dance at Le Pari Studio', description: 'Group classes and group packages. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below.',keywords: 'group dance lessons, group classes packages, group lessons packages, group classes lessons, group classes dance packages'},
+    { title: 'Page: Floor Fees | Activities | Dance at Le Pari Studio', description:'Floor fees for outside dance instructors. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below. ', keywords:'floor fees, rent dance space, teach dance lessons, outside dance teachers'},
+    { title: 'Page: Parties or Socials | Activities | Dance at Le Pari Studio', description: 'Social Dancing Parties. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below.', keywords: 'dance party, socials, dance social events, ballroom social, Latin Social , Hustle Party, dance parties, dance events'},
+    { title: 'Page: Special Dance Socials | Activities | Dance at Le Pari Studio', description: 'Special Dance Events at Dance at Le Pari. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below.', keywords:'special Dance Events, special dance events, dance parties, dance events, ballroom social, Latin Social , Hustle Party, dance parties, dance events'}];
   const tabIndex = slugArray.indexOf(params.id) || 0;
   const actionTemplateChoice = (
     action1: string,
@@ -217,10 +183,8 @@ export default function Page({ params }: { params: { id: string } }) {
       <SharePostModal
         title={pageArray[tabIndex].title}
         url={process.env.NEXT_PUBLIC_URL + '/dancing/'+params.id}
-        quote={ pageArray[tabIndex].description}
-        hashtag={
-          pageArray[tabIndex].keywords
-        }
+        quote={pageArray[tabIndex].description}
+        hashtag={pageArray[tabIndex].keywords}
         onReturn={() => setRevealSharingModal(false)}
         visibility={revealSharingModal}
       />
