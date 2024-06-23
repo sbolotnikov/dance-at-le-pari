@@ -11,7 +11,7 @@ export default function Image({
   params: { id },
 }: {
   params: { id: string };
-}) {
+}){
   // fetch data
   const slugArray=[
     'private-lessons',
@@ -20,7 +20,7 @@ export default function Image({
     'parties',
     // 'special_events',
   ];
-  const selectedIndex = slugArray.indexOf(id) || null;
+  const selectedIndex = slugArray.indexOf(id);
     const index1 =
     selectedIndex !== null &&
       selectedIndex >= 0 &&
