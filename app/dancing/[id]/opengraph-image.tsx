@@ -18,7 +18,7 @@ export default function Image({
     'group_classes',
     'floor_fees',
     'parties',
-    // 'special_events',
+    'special_events',
   ];
   const selectedIndex = slugArray.indexOf(id);
     const index1 =
