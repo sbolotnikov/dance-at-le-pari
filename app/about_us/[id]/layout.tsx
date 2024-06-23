@@ -49,7 +49,7 @@ export default function PageLayout({
 }: {
   children: React.ReactNode;
   params: {
-    slug: string;
+    id: string;
   };
 }) {
   return <section>{children}</section>;

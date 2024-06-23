@@ -58,7 +58,12 @@ export default function Page({ params }: { params: { id: string } }) {
     { title: 'Page: Floor Fees | Activities | Dance at Le Pari Studio', description:'Floor fees for outside dance instructors. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below. ', keywords:'floor fees, rent dance space, teach dance lessons, outside dance teachers'},
     { title: 'Page: Parties or Socials | Activities | Dance at Le Pari Studio', description: 'Social Dancing Parties. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below.', keywords: 'dance party, socials, dance social events, ballroom social, Latin Social , Hustle Party, dance parties, dance events'},
     { title: 'Page: Special Dance Socials | Activities | Dance at Le Pari Studio', description: 'Special Dance Events at Dance at Le Pari. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below.', keywords:'special Dance Events, special dance events, dance parties, dance events, ballroom social, Latin Social , Hustle Party, dance parties, dance events'}];
-  const tabIndex = slugArray.indexOf(params.id) || 0;
+   
+  const selectedTab = slugArray.indexOf(params.id) || null;
+  const tabIndex =
+    selectedTab !== null && selectedTab >= 0 && selectedTab < 5
+      ? selectedTab
+      : 0;
   const actionTemplateChoice = (
     action1: string,
     item: number,
