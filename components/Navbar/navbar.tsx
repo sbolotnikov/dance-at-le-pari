@@ -64,7 +64,7 @@ const Navbar = ({ path, locale, children }: Props) => {
       icon: 'Calendar',
     },
     {
-      url: '/dancing/private_lessons',
+      url: '/dancing/private-lessons',
       title: 'Activities',
       icon: 'Activities',
     },
@@ -89,7 +89,7 @@ const Navbar = ({ path, locale, children }: Props) => {
           icon: 'Calendar',
         },
         {
-          url: '/dancing/private_lessons',
+          url: '/dancing/private-lessons',
           title: 'Activities',
           icon: 'Activities',
         },
@@ -117,7 +117,7 @@ const Navbar = ({ path, locale, children }: Props) => {
           icon: 'Calendar',
         },
         {
-          url: '/dancing/private_lessons',
+          url: '/dancing/private-lessons',
           title: 'Activities',
           icon: 'Activities',
         },
@@ -156,7 +156,7 @@ const Navbar = ({ path, locale, children }: Props) => {
           icon: 'Calendar',
         },
         {
-          url: '/dancing/private_lessons',
+          url: '/dancing/private-lessons',
           title: 'Activities',
           icon: 'Activities',
         },

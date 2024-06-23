@@ -63,7 +63,7 @@ export default function PriceOptions({options, onChange }: Props) {
             }}
           >
             {priceOptions.map((option, index) => (
-              <option key={index} value={index}>
+              <option key={"PriOp"+index} value={index}>
                 {option.tag + ' $' + option.price}
               </option>
             ))}

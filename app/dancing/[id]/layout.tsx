@@ -5,13 +5,13 @@ type Props = {
   params: { id: string };
 }; 
  
-export const generateMetadata = (
+export const generateMetadata = async (
   { params }: Props,
-): Metadata => {
+): Promise<Metadata> => {
   // read route params
   const slug = params.id;
   const slugArray=[
-      'private_lessons',
+      'private-lessons',
       'group_classes',
       'floor_fees',
       'parties',

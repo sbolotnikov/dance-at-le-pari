@@ -44,7 +44,7 @@ const PaymentPageForm = ({ paymentsArray, role, specialEvent, onReturn }: Props)
               </div>
             </div>
             <div className="w-[49%] flex flex-row justify-around items-center">
-              <p>{payment.options &&<PriceOptionSelect options={payment.options} onChange={(option:number )=>{ 
+              <p>{payment.options &&<PriceOptionSelect options={payment.options} id={payment.id}  onChange={(option:number )=>{ 
                 console.log(option); 
                 let arr = options; 
                 arr[index]=option;

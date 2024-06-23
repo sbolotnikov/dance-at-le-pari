@@ -5,10 +5,10 @@ type Props = {
   params: { id: string };
 }; 
  
-export const generateMetadata = (
+export const generateMetadata = async (
   { params }: Props,
   parent: ResolvingMetadata
-): Metadata => {
+): Promise<Metadata> => {
   // read route params
   const slug = params.id;
   const slugArray=[

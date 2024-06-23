@@ -185,7 +185,7 @@ export default function BuyTicketModal({
             }}
           >
             {priceOptions.map((option, index) => (
-              <option key={index} value={index}>
+              <option key={"OptPr"+index} value={index}>
                 {option.tag + ' $' + option.price}
               </option>
             ))}

@@ -14,7 +14,7 @@ export default function Image({
 }) {
   // fetch data
   const slugArray=[
-    'private_lessons',
+    'private-lessons',
     'group_classes',
     'floor_fees',
     'parties',

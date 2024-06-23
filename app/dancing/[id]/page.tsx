@@ -1,5 +1,5 @@
 'use client';
-import { FC, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { PageWrapper } from '@/components/page-wrapper';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { useSession } from 'next-auth/react';
@@ -47,21 +47,22 @@ export default function Page({ params }: { params: { id: string } }) {
 
   const tabsIndexArray = ['Private', 'Group', 'Floor_Fee', 'Party'];
   const slugArray = [
-    'private_lessons',
+    'private-lessons',
     'group_classes',
     'floor_fees',
     'parties',
-    'special_events',
+    // 'special_events',
   ];
   const pageArray = [{title:'Page: Private Lessons Packages | Activities | Dance at Le Pari Studio',description:'Private Dance Instructions Packages. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below. ', keywords: 'private lessons, lessons packages, dance lessons packages, wedding dance packages'},
     { title: 'Page: Group Classes| Activities | Dance at Le Pari Studio', description: 'Group classes and group packages. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below.',keywords: 'group dance lessons, group classes packages, group lessons packages, group classes lessons'},
     { title: 'Page: Floor Fees | Activities | Dance at Le Pari Studio', description:'Floor fees for outside dance instructors. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below. ', keywords:'floor fees, rent dance space, teach dance lessons, outside dance teachers'},
     { title: 'Page: Parties or Socials | Activities | Dance at Le Pari Studio', description: 'Social Dancing Parties. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below.', keywords: 'dance party, socials, dance social events, ballroom social'},
-    { title: 'Page: Special Dance Socials | Activities | Dance at Le Pari Studio', description: 'Special Dance Events at Dance at Le Pari. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below.', keywords:'special dance events, dance parties, dance events, ballroom social'}];
+    // { title: 'Page: Special Dance Socials | Activities | Dance at Le Pari Studio', description: 'Special Dance Events at Dance at Le Pari. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below.', keywords:'special dance events, dance parties, dance events, ballroom social'}
+  ];
    
-  const selectedTab = slugArray.indexOf(params.id) || null;
+  const selectedTab = slugArray.indexOf(params.id);
   const tabIndex =
-    selectedTab !== null && selectedTab >= 0 && selectedTab < 5
+    (selectedTab !== null && selectedTab >= 0 && selectedTab < 5)
       ? selectedTab
       : 0;
   const actionTemplateChoice = (

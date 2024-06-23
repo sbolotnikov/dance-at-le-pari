@@ -11,7 +11,7 @@ import { useDimensions } from '@/hooks/useDimensions';
 var departmentsArray = [
   { name: 'Studio', path: '/images/ballroom.jpg', link: '/about_us/welcome' },
   { name: 'Calendar', path: '/images/calendar.jpg', link: '/calendar' },
-  { name: 'Dancing', path: '/images/social.jpg', link: '/dancing/private_lessons' },
+  { name: 'Dancing', path: '/images/social.jpg', link: '/dancing/private-lessons' },
   {
     name: 'Wedding Dance',
     path: '/images/weddingcouple.jpg',
