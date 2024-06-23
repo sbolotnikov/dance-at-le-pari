@@ -29,10 +29,10 @@ export default function Page({ params }: { params: { id: string } }) {
   ];
   const slugArray = ['welcome', 'our-team', 'studio-tour', 'location', 'hours'];
   const pageArray = [{title: "Welcome to Studio", description: "Welcome message to dancers or people who wants to learn how to dance", keywords:"WelcomePage HelloPage WelcomeMessage"},
-    {title: "Our Professional Team", description: "Our world-awarded dance instructors specialize in teaching from beginner to advanced levels, adults and kids on all types of dancing: ballroom, latin, argentine tango, hustle, west coast swing, salsa. etc. Specialist of wedding dance instructions. Biography of ballroom, latin, argentine tango, hustle, west coast swing instructors, teachers, manager and owner of dance studio" ,keywords:"ProTeachers ProInstructor ProBallroomBio Teachers Instructors DanceInstructors ArgentineTangoTeacher WestCoastSwingTeacher HustleTeacher BallroomPro BallroomTeacher"},
-    {title: "Studio Interior/Exterior tour", description: "Dance Studio pictures: Inside or Outside tour. Explore our dance studio via pictures & video! Le Pari Dance Center -the place to visit, the place to dance at, the place to learn!",keywords:"StudioInterior Tour Interior Exterior"},
-    {title: "Our Location", description: "Close to major roads, free parking. Easy to get to: 34 South Avenue, Fanwood, NJ 07023. Location, directions, address, contact information of the Le Pari Dance Fitness Center",keywords:" Location Address Contact"},
-    {title: "Hours Of Operation", description: "hours of operation, opening and closing time of the dance center, contact information",keywords:"Hours Contacts OpenTime CloseTime" }];  
+    {title: "Our Professional Team", description: "Our world-awarded dance instructors specialize in teaching from beginner to advanced levels, adults and kids on all types of dancing: ballroom, latin, argentine tango, hustle, west coast swing, salsa. etc. Specialist of wedding dance instructions. Biography of ballroom, latin, argentine tango, hustle, west coast swing instructors, teachers, manager and owner of dance studio" ,keywords:"Pro Teachers, Pro Instructor, Pro Ballroom Bio, Teachers"},
+    {title: "Studio Interior/Exterior tour", description: "Dance Studio pictures: Inside or Outside tour. Explore our dance studio via pictures & video! Le Pari Dance Center -the place to visit, the place to dance at, the place to learn!",keywords:"StudioInterior, Tour, Interior, Exterior"},
+    {title: "Our Location", description: "Close to major roads, free parking. Easy to get to: 34 South Avenue, Fanwood, NJ 07023. Location, directions, address, contact information of the Le Pari Dance Fitness Center",keywords:" Location, Address, Contact"},
+    {title: "Hours Of Operation", description: "hours of operation, opening and closing time of the dance center, contact information",keywords:"Hours, Contacts, OpenTime, CloseTime" }];  
   const selectedTab = slugArray.indexOf(params.id) || null;
   const tabIndex =
     selectedTab !== null && selectedTab >= 0 && selectedTab < 5
@@ -143,7 +143,7 @@ export default function Page({ params }: { params: { id: string } }) {
         title={pageArray[tabIndex].title+" | Dance At Le Pari Studio"}
         url={process.env.NEXT_PUBLIC_URL + '/about_us/' + params.id}
         quote={`Description: ${pageArray[tabIndex].description}  \n Click on the link below. \n`}
-        hashtag={pageArray[tabIndex].keywords+" DanceAtLePari BallroomDanceStudio DanceStudio BallroomDance LePariDanceCenter"}
+        hashtag={pageArray[tabIndex].keywords }
           onReturn={() => setRevealSharingModal(false)}
           visibility={revealSharingModal}
           

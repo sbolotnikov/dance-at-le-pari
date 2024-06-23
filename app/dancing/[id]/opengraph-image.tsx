@@ -28,7 +28,6 @@ export default function Image({
       selectedIndex < 5
       ? selectedIndex
       : 0
-//   const post = await getPost(slug);
     const titleArray=[
       'Private Lessons Packages | Activities ',
       'Group Classes| Activities',
