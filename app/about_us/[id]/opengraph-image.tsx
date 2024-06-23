@@ -1,7 +1,6 @@
  
 import ShowIcon from '@/components/svg/showIcon';
-import { ImageResponse } from 'next/og';
-import { title } from 'process';
+import { ImageResponse } from 'next/og'; 
 export const alt = 'My Blog Post';
 export const size = {
   width: 1200,

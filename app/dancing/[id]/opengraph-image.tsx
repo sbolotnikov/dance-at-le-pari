@@ -1,7 +1,6 @@
 
 import ShowIcon from '@/components/svg/showIcon';
-import { ImageResponse } from 'next/og'; 
-export const alt = 'activity';
+import { ImageResponse } from 'next/og';  
 export const size = {
   width: 1200,
   height: 630,
@@ -19,7 +18,7 @@ export default function Image({
     'group_classes',
     'floor_fees',
     'parties',
-    'special_events',
+    // 'special_events',
   ];
   const selectedIndex = slugArray.indexOf(id) || null;
     const index1 =
@@ -33,7 +32,7 @@ export default function Image({
       'Group Classes| Activities',
       'Floor Fees | Activities',
       'Parties or Socials | Activities',
-      'Special Dance Socials | Activities',
+      // 'Special Dance Socials | Activities',
     ];
     // const imgArray=[
     //   'Activities',
