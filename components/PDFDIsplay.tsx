@@ -57,7 +57,7 @@ export default function PDFDisplay({ onReturn }: DisplayType) {
  
  
         <div className="m-auto  max-w-[600px]  border-2 border-solid border-gray-400 rounded-md w-[97%] p-2 flex flex-col content-evenly">
-          {/* <DocViewer pluginRenderers={[PDFRenderer]} documents={docs} /> */}
+          <DocViewer pluginRenderers={[PDFRenderer]} documents={docs} />
           <button
             className="px-1 py-2 border-2 border-solid border-transparent rounded-sm w-full m-1 text-center "
             onClick={() => {
