@@ -148,7 +148,7 @@ body {
       transform: rotateY(360deg);
   }
 }
-.spinLogo {
+.spinLogo { 
   animation: spinLogo 6s linear infinite;
 }
 @keyframes loader {
