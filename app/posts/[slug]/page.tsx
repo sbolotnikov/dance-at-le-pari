@@ -1,12 +1,16 @@
 'use client';
 import Comments from '@/components/Comments';
 import ImgFromDb from '@/components/ImgFromDb';
+// import 'react-quill/dist/quill.snow.css';
+import "quill/dist/quill.core.css";
+
 import SharePostModal from '@/components/SharePostModal';
 import SharePost from '@/components/SharePostModal';
 import { PageWrapper } from '@/components/page-wrapper';
 import ShowIcon from '@/components/svg/showIcon';
 import { TBlogPost } from '@/types/screen-settings';
 import { useEffect, useState } from 'react';
+import ReactQuill from 'react-quill';
 // set dynamic metadata
 
 type Props = {
@@ -113,19 +117,27 @@ export default function Page(params: { params: { slug: string } }) {
                       </h1>
                       <div className="flex flex-row justify-around items-center w-full italic text-alertcolor">Keywords: {post.keywords}</div>
                       <p>Views: {post.views}</p>
-                      <div
+                      {/* <div
                         className="w-full  "
                         dangerouslySetInnerHTML={{
                           __html: post.desc,
                         }}
-                      />               
+                      />   */}
+                       <ReactQuill
+              className=" w-full border-0 rounded-md border-lightMainColor dark:border-darkMainColor"
+              theme="snow"
+              readOnly={true}
+              modules={{
+                toolbar: [],
+              }}
+              
+              value={post.desc}  
+            />             
                   </div>
                   <Comments postSlug={slug} />
                 </div>
               )}
             </div>
-
-            {/* <Menu /> */}
           </div>
         </div>
       </div>

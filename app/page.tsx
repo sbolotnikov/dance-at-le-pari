@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { PageWrapper } from '@/components/page-wrapper';
-import { useContext, useEffect, useState, useRef } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import BannerGallery from '@/components/BannerGallery';
 import { ScreenSettingsContextType } from '@/types/screen-settings';
 import { SettingsContext } from '@/hooks/useSettings';
