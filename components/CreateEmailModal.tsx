@@ -1,17 +1,12 @@
 'use client';
-
-import { Lato } from 'next/font/google';
-import { useEffect, useState } from 'react';
+ 
+import { useEffect, useRef, useState } from 'react';
 import 'react-quill/dist/quill.snow.css';
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
-import ReactQuill from 'react-quill';
+import { useSession } from 'next-auth/react'; 
 import AnimateModalLayout from './AnimateModalLayout';
-import ChoosePicture from './ChoosePicture';
-import ImgFromDb from './ImgFromDb';
-import ShowIcon from './svg/showIcon';
-import { TBlogPost } from '@/types/screen-settings';
-import { slugify } from '@/utils/functions';
+import EmailEditor, { EditorRef, EmailEditorProps, } from 'react-email-editor';
+import { save_Template } from '@/utils/functions';
 type Props = {
   visibility: boolean;  
   onReturn: () => void;
@@ -33,13 +28,25 @@ const CreateEmailModal = ({ visibility , onReturn }: Props) => {
       value, 
       session?.user?.id, 
     );
-    fetch('/api/admin/email_mass_send', {
+
+    console.log(value.replace(/<[^>]*>/g, ''))
+  };
+  const emailEditorRef = useRef<EditorRef>(null);
+
+  const exportHtml = () => {
+    const unlayer = emailEditorRef.current?.editor;
+
+    unlayer?.exportHtml((data) => {
+      const { html } = data;
+      console.log('exportHtml', html);
+
+      fetch('/api/admin/email_mass_send', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            email:"serge.bolotnikov@gmail.com", name:"Unknown",title, message:'<html><head><link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" /></head><body>' + value + '</body><script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script></html>'
+            email:"serge.bolotnikov@gmail.com", name:"Unknown",title, message: html,
         }),
       })
         .then(async (res) => {
@@ -84,10 +91,33 @@ const CreateEmailModal = ({ visibility , onReturn }: Props) => {
         .catch(async (err) => {
           console.log(err);
         });
-    console.log(value.replace(/<[^>]*>/g, ''))
+
+    });
   };
- 
-  
+
+  const onReady: EmailEditorProps['onReady'] = (unlayer) => {
+    // editor is ready
+    // you can load your template here;
+    // the design json can be obtained by calling
+    // unlayer.loadDesign(callback) or unlayer.exportHtml(callback)
+
+    // const templateJson = { DESIGN JSON GOES HERE };
+    // unlayer.loadDesign(templateJson);
+  };
+  const saveDesign = () => {
+    const unlayer = emailEditorRef.current?.editor;
+    unlayer?.exportHtml((data) => {
+        const { design} = data;
+        save_Template( JSON.stringify(design),'email template');
+      console.log('saveDesign', JSON.stringify(design))
+    })
+  }
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>)=> {
+    e.preventDefault();
+
+    console.log(e.currentTarget.files![0]);
+    
+}
   return (
     <AnimateModalLayout
       visibility={visibility}
@@ -127,44 +157,14 @@ const CreateEmailModal = ({ visibility , onReturn }: Props) => {
             <button className="btnFancy  m-2" onClick={handleSubmit}>
               Publish
             </button>
-            <ReactQuill
-              className="h-52 w-full rounded-md "
-              theme="snow"
-              modules={{
-                toolbar: [
-                  [{ 'header': [1, 2, false] }, {'font':['serif','Lato','sans-serif']}],
-                  ['bold', 'italic', 'underline','strike', 'blockquote',{'size':['small','','large','huge']},
-                    {'background':['#000000','#e60000', '#ff9900', '#ffff00','#008a00','#0066cc','#9933ff','#ffffff','#facccc','#ffebcc','#ffffcc','#cce8cc','#cce0f5', '#ebd6ff', '#bbbbbb', '#f06666','#ffc266','#ffff66','#66b966','#66a3e0','#c285ff','#888888','#a10000','#b26b00','#b2b200','#006100','#0047b2','#6b24b2','#444444','#5c0000','#663d00','#666600','#003700','#002966','#3d1466' ]}, 
+            <div>
+        <button onClick={exportHtml}>Export HTML</button>
+        <button onClick={saveDesign}>Save Design</button>
+        <input type="file" id="inputField" accept="text/*" className="w-full mb-2 rounded-md text-gray-700" 
+        onChange={handleChange}/>
+      </div>
 
-                    {'color':['#000000','#e60000', '#ff9900', '#ffff00','#008a00','#0066cc','#9933ff','#ffffff','#facccc','#ffebcc','#ffffcc','#cce8cc','#cce0f5', '#ebd6ff', '#bbbbbb', '#f06666','#ffc266','#ffff66','#66b966','#66a3e0','#c285ff','#888888','#a10000','#b26b00','#b2b200','#006100','#0047b2','#6b24b2','#444444','#5c0000','#663d00','#666600','#003700','#002966','#3d1466' ]}, 
-                    {'align':['','right','center','justify']}],
-                  [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
-                  ['link', {'image':['link', 'width','height']}, 'video'],
-                  ['clean']
-                ],
-              }}
-              formats={[
-                'size',
-                'align',
-                'color',
-                'background',
-                'header',
-                'bold',
-                'italic',
-                'underline',
-               'strike',
-                'blockquote',
-                'list',
-                'bullet',
-                'indent',
-                'link',
-                'image',
-                'video'
-              ]}
-              value={value}
-              onChange={setValue}
-              placeholder="Tell your story..."
-            />
+      <EmailEditor ref={emailEditorRef} onReady={onReady} />
 
           </div>
         </div>

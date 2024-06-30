@@ -2352,6 +2352,11 @@ file-entry-cache@^6.0.1:
   dependencies:
     flat-cache "^3.0.4"
 
+file-saver@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/file-saver/-/file-saver-2.0.5.tgz#d61cfe2ce059f414d899e9dd6d4107ee25670c38"
+  integrity sha512-P9bmyZ3h/PRG+Nzga+rbdI4OEpNDzAVyy74uVO9ATgzLK6VtAsYybF/+TOCvrc0MO793d6+42lLyZTw7/ArVzA==
+
 fill-range@^7.0.1:
   version "7.0.1"
   resolved "https://registry.npmjs.org/fill-range/-/fill-range-7.0.1.tgz"
@@ -3978,6 +3983,13 @@ react-dom@18.2.0:
     loose-envify "^1.1.0"
     scheduler "^0.23.0"
 
+react-email-editor@^1.7.11:
+  version "1.7.11"
+  resolved "https://registry.yarnpkg.com/react-email-editor/-/react-email-editor-1.7.11.tgz#dc6c908130dd97985d23f5a640b02bc4cb687094"
+  integrity sha512-AyoKKtMEPhKdqUxFX1hyJMvEO+E5fzk88uNVGHhK1ymhLpcghYLkz1+pXKLcByjR6LHkfEbrCmoYFG8zyripug==
+  dependencies:
+    unlayer-types latest
+
 react-flip-move@^3.0.4:
   version "3.0.5"
   resolved "https://registry.yarnpkg.com/react-flip-move/-/react-flip-move-3.0.5.tgz#8b87510ad32ebef01ebca94902b445f456bbc0f7"
@@ -4905,6 +4917,11 @@ unicode-trie@^2.0.0:
   dependencies:
     pako "^0.2.5"
     tiny-inflate "^1.0.0"
+
+unlayer-types@latest:
+  version "1.52.0"
+  resolved "https://registry.yarnpkg.com/unlayer-types/-/unlayer-types-1.52.0.tgz#5780eee8c1bcbf0d089d3dafdba566dceb00b815"
+  integrity sha512-+1tRK9z9Ydj+4rIaFgbiViTZVHN1TGyCGQR32lSgfuUNJLnb8hASxRkjcYmxyaYYfJo/wR9hIgd3k1kTo1DtXw==
 
 untildify@^4.0.0:
   version "4.0.0"
