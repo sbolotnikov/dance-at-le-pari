@@ -148,7 +148,14 @@ body {
       transform: rotateY(360deg);
   }
 }
+.logoTransform {
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  perspective: 1200px;
+  transform:translateZ(600px);
+}
 .spinLogo { 
+  
   animation: spinLogo 6s linear infinite;
 }
 @keyframes loader {

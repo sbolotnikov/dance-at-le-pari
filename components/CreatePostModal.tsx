@@ -96,7 +96,7 @@ const CreatePostModal = ({ visibility, post,categories, onReturn }: Props) => {
         setFile(fileLink);
       }
     }
-  };
+  }; 
   return (
     <AnimateModalLayout
       visibility={visibility}
