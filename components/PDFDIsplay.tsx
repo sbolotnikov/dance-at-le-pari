@@ -44,13 +44,26 @@ export default function PDFDisplay({ onReturn }: DisplayType) {
             id="containedDiv"
             className={` absolute top-0 left-0  flex flex-col w-full h-full p-1 justify-center items-center`}
           >
+            <h2
+              className="text-center font-semibold md:text-4xl uppercase"
+              style={{ letterSpacing: '1px' }}
+            >
+              Terms and Conditions  
+            </h2>
             <iframe
               className="w-full h-3/4"
               src="https://dance-at-le-pari.vercel.app//lp_terms.pdf"
               width="100%"
               height="75%"
             ></iframe>
-   
+           <a
+            href={'https://dance-at-le-pari.vercel.app//lp_terms.pdf'}
+            target="_blank"
+            rel="noopener noreferrer"
+            download
+          >
+            <button className="btnFancy">Download</button>
+          </a>
           </div>
         </div>
       </div>

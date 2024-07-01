@@ -156,20 +156,26 @@ const CreateEmailModal = ({ visibility, onReturn }: Props) => {
                 placeholder="Title"
                 value={title}
                 className="dark:bg-lightMainBG bg-darkMainBG dark:text-lightMainColor text-darkMainColor w-full p-1 rounded-md"
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={(e) => setTitle(e.target.value )}
               />
+              
             </label>
-            {/* <button className="btnFancy  m-2" onClick={handleSubmit}>
-              Publish
-            </button> */}
+            <label className="flex flex-col items-center w-full">
+              {' '}
+              Transform link for sharing{' '}
+              <input
+                type="text"
+                placeholder="Title"
+                value={value}
+                className="dark:bg-lightMainBG bg-darkMainBG dark:text-lightMainColor text-darkMainColor w-full p-1 rounded-md"
+                onChange={(e) => setValue(`https://drive.google.com/thumbnail?id=${e.target.value.split('/file/d/')[1].split('/')[0]}&sz=w1000`)}
+              />
+              <div className=" w-full">{value}</div>
+            </label>
             <div>
-              <button onClick={exportHtml}>Export HTML</button>
-              <button onClick={saveDesign}>Save Design</button>
-              <button
-                onClick={() => document.getElementById('inputField1')!.click()}
-              >
-                Load Design
-              </button>
+              <button className="btnFancy" onClick={exportHtml}>Send Emails</button>
+              <button className="btnFancy" onClick={saveDesign}>Save Design</button>
+              <button  className="btnFancy" onClick={() => document.getElementById('inputField1')!.click()}>Load Design</button>
               <input
                 type="file"
                 id="inputField1"
