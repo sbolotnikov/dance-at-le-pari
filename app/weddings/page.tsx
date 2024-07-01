@@ -170,7 +170,7 @@ const page: FC<pageProps> = ({}) => {
               </p>
             </div>
             <div className="w-full m-2  rounded-md md:grid md:grid-cols-3 md:gap-1">
-              <div className="h-[250px] w-[250px] m-auto">
+              <div className="h-[240px] w-[240px] m-auto">
                 <Iframe
                   url="https://www.youtube.com/embed/O_y1uix4GkA?&amp;&amp;controls=1&amp;loop=0&amp;origin=https%3A%2F%2Fwww.leparidancenter.com&amp;playsinline=1&amp;enablejsapi=1&amp;widgetid=3"
                   width="100%"

@@ -6,8 +6,8 @@ import { useSession } from 'next-auth/react';
 import PaymentPageForm from '@/components/PaymentPageForm';
 import { TPaymentType } from '@/types/screen-settings';
 import EventTemplateEditingForm from '@/components/EventTemplateEditingForm';
-import AlertMenu from '@/components/alertMenu';
-import PDFDisplay from '@/components/PDFDIsplay';
+import AlertMenu from '@/components/alertMenu'; 
+import  PDFDisplay  from "@/components/PDFDIsplay" ;
 import { useDispatch } from 'react-redux';
 import { addItem } from '../../../slices/cartSlice';
 import { useDimensions } from '@/hooks/useDimensions';
@@ -201,9 +201,11 @@ export default function Page({ params }: { params: { id: string } }) {
       />
       {revealPDF && (
         <PDFDisplay
-          onReturn={() => {
+        onReturn={() => {
+          sleep(1200).then(() => {
             setRevealPDF(false);
-          }}
+          });
+        }} 
         />
       )}
       {revealTemplateEdit == true ? (

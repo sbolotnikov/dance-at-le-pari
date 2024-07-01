@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-     
+    
     serverComponentsExternalPackages: ['@react-pdf/renderer'],
   },
 };
@@ -24,14 +24,14 @@ module.exports = withTM({
       'lh3.googleusercontent.com',
       'i3.ytimg.com',
     ],
-      remotePatterns: [
-        {
-          protocol: 'https',
-          hostname: 'i3.ytimg.com',
-          port: '',
-          pathname: '/vi/**',
-        },
-      ],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'i3.ytimg.com',
+        port: '',
+        pathname: '/vi/**',
+      },
+    ],
   },
 });
 
