@@ -152,7 +152,7 @@ body {
   transform-style: preserve-3d;
   -webkit-transform-style: preserve-3d;
   perspective: 1200px;
-  transform:translateZ(600px);
+  transform:translateZ(-600px);
 }
 .spinLogo { 
   

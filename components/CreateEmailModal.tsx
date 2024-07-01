@@ -1,36 +1,31 @@
 'use client';
- 
+
 import { useEffect, useRef, useState } from 'react';
 import 'react-quill/dist/quill.snow.css';
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react'; 
+import { useSession } from 'next-auth/react';
 import AnimateModalLayout from './AnimateModalLayout';
-import EmailEditor, { EditorRef, EmailEditorProps, } from 'react-email-editor';
+import EmailEditor, { EditorRef, EmailEditorProps } from 'react-email-editor';
 import { save_Template } from '@/utils/functions';
 type Props = {
-  visibility: boolean;  
+  visibility: boolean;
   onReturn: () => void;
 };
-const CreateEmailModal = ({ visibility , onReturn }: Props) => {
+const CreateEmailModal = ({ visibility, onReturn }: Props) => {
   const { data: session, status } = useSession();
-  const router = useRouter(); 
-  const [value, setValue] = useState( ''); 
-  const [title, setTitle] = useState( ''); 
+  const router = useRouter();
+  const [value, setValue] = useState('');
+  const [title, setTitle] = useState('');
 
   if (status === 'unauthenticated') {
     router.push('/');
   }
 
+//   const handleSubmit = async () => {
+//     console.log(title, value, session?.user?.id);
 
-  const handleSubmit = async () => {
-    console.log(
-      title,
-      value, 
-      session?.user?.id, 
-    );
-
-    console.log(value.replace(/<[^>]*>/g, ''))
-  };
+//     console.log(value.replace(/<[^>]*>/g, ''));
+//   };
   const emailEditorRef = useRef<EditorRef>(null);
 
   const exportHtml = () => {
@@ -46,52 +41,54 @@ const CreateEmailModal = ({ visibility , onReturn }: Props) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            email:"serge.bolotnikov@gmail.com", name:"Unknown",title, message: html,
+          email: 'serge.bolotnikov@gmail.com',
+          name: 'Unknown',
+          title,
+          message: html,
         }),
       })
         .then(async (res) => {
           const data = await res.json();
           console.log(data);
-        //   if (data.accepted.length > 0) {
-        //     setAlertStyle({
-        //       variantHead: 'info',
-        //       heading: 'Message',
-        //       text: 'Email sent successfully',
-        //       color1: 'success',
-        //       button1: 'Return',
-        //       color2: '',
-        //       button2: '',
-        //       inputField: '',
-        //     });
-        //     document
-        //       .querySelector('#user_name')!
-        //       .classList.remove('invalid_input');
-        //     document
-        //       .querySelector('#user_email')!
-        //       .classList.remove('invalid_input');
-        //     document.querySelector('#message')!.classList.remove('invalid_input');
-        //     target1.user_name.value = '';
-        //     target1.user_email.value = '';
-        //     target1.message.value = '';
-        //     setRevealAlert(true);
-        //   } else {
-        //     setAlertStyle({
-        //       variantHead: 'danger',
-        //       heading: 'Warning',
-        //       text: 'Email delivery fails ',
-        //       color1: 'warning',
-        //       button1: 'Return',
-        //       color2: '',
-        //       button2: '',
-        //       inputField: '',
-        //     });
-        //     setRevealAlert(true);
-        //   }
+          //   if (data.accepted.length > 0) {
+          //     setAlertStyle({
+          //       variantHead: 'info',
+          //       heading: 'Message',
+          //       text: 'Email sent successfully',
+          //       color1: 'success',
+          //       button1: 'Return',
+          //       color2: '',
+          //       button2: '',
+          //       inputField: '',
+          //     });
+          //     document
+          //       .querySelector('#user_name')!
+          //       .classList.remove('invalid_input');
+          //     document
+          //       .querySelector('#user_email')!
+          //       .classList.remove('invalid_input');
+          //     document.querySelector('#message')!.classList.remove('invalid_input');
+          //     target1.user_name.value = '';
+          //     target1.user_email.value = '';
+          //     target1.message.value = '';
+          //     setRevealAlert(true);
+          //   } else {
+          //     setAlertStyle({
+          //       variantHead: 'danger',
+          //       heading: 'Warning',
+          //       text: 'Email delivery fails ',
+          //       color1: 'warning',
+          //       button1: 'Return',
+          //       color2: '',
+          //       button2: '',
+          //       inputField: '',
+          //     });
+          //     setRevealAlert(true);
+          //   }
         })
         .catch(async (err) => {
           console.log(err);
         });
-
     });
   };
 
@@ -100,31 +97,39 @@ const CreateEmailModal = ({ visibility , onReturn }: Props) => {
     // you can load your template here;
     // the design json can be obtained by calling
     // unlayer.loadDesign(callback) or unlayer.exportHtml(callback)
-
     // const templateJson = { DESIGN JSON GOES HERE };
     // unlayer.loadDesign(templateJson);
   };
   const saveDesign = () => {
     const unlayer = emailEditorRef.current?.editor;
     unlayer?.exportHtml((data) => {
-        const { design} = data;
-        save_Template( JSON.stringify(design),'email template');
-      console.log('saveDesign', JSON.stringify(design))
-    })
-  }
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>)=> {
+      const { design } = data;
+      save_Template(JSON.stringify(design), 'email template');
+      console.log('saveDesign', JSON.stringify(design));
+    });
+  };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
 
-    console.log(e.currentTarget.files![0]);
-    
-}
+    let file1 = e.currentTarget.files![0];
+
+    const reader = new FileReader();
+    reader.onload = (function (file) {
+      return function () {
+        let res = this.result?.toString();
+        const unlayer = emailEditorRef.current?.editor;
+        unlayer?.loadDesign(JSON.parse(res !== undefined ? res : ''));
+      };
+    })(file1);
+    reader.readAsText(file1);
+  };
   return (
     <AnimateModalLayout
       visibility={visibility}
       onReturn={() => {
         onReturn();
       }}
-    > 
+    >
       <div
         className={`blurFilter border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-[1170px]  flex justify-center items-center flex-col   md:w-[80svw] bg-lightMainBG dark:bg-darkMainBG h-[70svh] md:h-[85svh]
         }`}
@@ -138,11 +143,11 @@ const CreateEmailModal = ({ visibility , onReturn }: Props) => {
             className={`absolute top-0 left-0 flex flex-col w-full p-1 justify-center items-center`}
           >
             <h2
-            className="text-center font-semibold md:text-4xl uppercase"
-            style={{ letterSpacing: '1px' }}
-          >
-            Create Email Modal
-          </h2>
+              className="text-center font-semibold md:text-4xl uppercase"
+              style={{ letterSpacing: '1px' }}
+            >
+              Create Email Modal
+            </h2>
             <label className="flex flex-col items-center w-full">
               {' '}
               Email Title{' '}
@@ -154,18 +159,28 @@ const CreateEmailModal = ({ visibility , onReturn }: Props) => {
                 onChange={(e) => setTitle(e.target.value)}
               />
             </label>
-            <button className="btnFancy  m-2" onClick={handleSubmit}>
+            {/* <button className="btnFancy  m-2" onClick={handleSubmit}>
               Publish
-            </button>
+            </button> */}
             <div>
-        <button onClick={exportHtml}>Export HTML</button>
-        <button onClick={saveDesign}>Save Design</button>
-        <input type="file" id="inputField" accept="text/*" className="w-full mb-2 rounded-md text-gray-700" 
-        onChange={handleChange}/>
-      </div>
+              <button onClick={exportHtml}>Export HTML</button>
+              <button onClick={saveDesign}>Save Design</button>
+              <button
+                onClick={() => document.getElementById('inputField1')!.click()}
+              >
+                Load Design
+              </button>
+              <input
+                type="file"
+                id="inputField1"
+                hidden
+                accept="text/*"
+                className="w-full mb-2 rounded-md text-gray-700"
+                onChange={handleChange}
+              />
+            </div>
 
-      <EmailEditor ref={emailEditorRef} onReady={onReady} />
-
+            <EmailEditor ref={emailEditorRef} onReady={onReady} />
           </div>
         </div>
       </div>

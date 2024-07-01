@@ -313,7 +313,8 @@ const Navbar = ({ path, locale, children }: Props) => {
   ];
   return (
     <nav className="navbar w-screen h-[100svh] overflow-hidden">
-      <div className=" absolute logoTransform inset-0 flex flex-col items-center justify-end z-[-5] pb-14 md:pb-0">
+      <div className=" absolute  inset-0 flex flex-col items-center justify-end z-[-5] pb-14 md:pb-0">
+        <div className="logoTransform w-full h-full flex items-center justify-end">
         <Logo
           shadow={
             darkMode
@@ -321,6 +322,7 @@ const Navbar = ({ path, locale, children }: Props) => {
               : '0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0'
           }
         />
+        </div>
       </div>
       {children}
 
