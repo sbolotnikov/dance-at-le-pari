@@ -32,6 +32,21 @@ model User {
   comments Comment[]
   posts Post[]
 }
+model Contact {
+  id   Int @id @default(autoincrement())
+  name String?
+  lastname String?
+  email String @unique
+  telephone1 String?
+  telephone2 String?
+  labels String?  
+  createdAt DateTime @default(now())  
+  status String @default("Subscribed") 
+  lastactivity String?
+  lastcontact DateTime? 
+
+  
+}
 model EventTemplate {
   id Int @id @default(autoincrement())
   eventtype EventType @default(Group)

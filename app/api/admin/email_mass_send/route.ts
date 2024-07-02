@@ -1,21 +1,33 @@
 
+import { prisma } from '@/lib/prisma';
 import { sendAnyEmail } from '@/utils/sendAnyEmail';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
   const data = await req.json();
-  const { email, name,title, message } = data;
+  const { title, message } = data;
   // await new Promise((resolve, reject) => {
+    const contacts = await prisma.contact.findMany({ where: {
+      OR: [{status:'Subscribed'}],
+     },})
+    await prisma.$disconnect()
+    let resArr=[];
+    let name1="" as string | null
+    for (let i=0; i<contacts.length; i++){
+    name1=contacts[i].name!=null?contacts[i].name+" ":""
+    name1+=contacts[i].lastname!=null?contacts[i].lastname:""
+    console.log(name1)
    const res = await sendAnyEmail({
-    email1:  email,
+    email1:  contacts[i].email,
     email2: process.env.EMAIL_SERVER_USER ? process.env.EMAIL_SERVER_USER : '',
     subject: title,
-    text:  message.replace(/<[^>]*>/g, ''),
-    html: message,
+    text:  message.replace(/<[^>]*>/g, '').replace('&NAME', name1!=null?name1:""),
+    html: message.replace('&amp;NAME', name1!=null?name1:""),
     attachments: undefined
   })
-  
- return new NextResponse( JSON.stringify(res));
+  resArr.push(res) 
+}
+ return new NextResponse( JSON.stringify(resArr));
 }
 
 

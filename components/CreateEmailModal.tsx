@@ -41,8 +41,7 @@ const CreateEmailModal = ({ visibility, onReturn }: Props) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: 'serge.bolotnikov@gmail.com',
-          name: 'Unknown',
+           
           title,
           message: html,
         }),
@@ -50,41 +49,6 @@ const CreateEmailModal = ({ visibility, onReturn }: Props) => {
         .then(async (res) => {
           const data = await res.json();
           console.log(data);
-          //   if (data.accepted.length > 0) {
-          //     setAlertStyle({
-          //       variantHead: 'info',
-          //       heading: 'Message',
-          //       text: 'Email sent successfully',
-          //       color1: 'success',
-          //       button1: 'Return',
-          //       color2: '',
-          //       button2: '',
-          //       inputField: '',
-          //     });
-          //     document
-          //       .querySelector('#user_name')!
-          //       .classList.remove('invalid_input');
-          //     document
-          //       .querySelector('#user_email')!
-          //       .classList.remove('invalid_input');
-          //     document.querySelector('#message')!.classList.remove('invalid_input');
-          //     target1.user_name.value = '';
-          //     target1.user_email.value = '';
-          //     target1.message.value = '';
-          //     setRevealAlert(true);
-          //   } else {
-          //     setAlertStyle({
-          //       variantHead: 'danger',
-          //       heading: 'Warning',
-          //       text: 'Email delivery fails ',
-          //       color1: 'warning',
-          //       button1: 'Return',
-          //       color2: '',
-          //       button2: '',
-          //       inputField: '',
-          //     });
-          //     setRevealAlert(true);
-          //   }
         })
         .catch(async (err) => {
           console.log(err);
