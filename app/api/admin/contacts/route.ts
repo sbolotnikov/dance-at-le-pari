@@ -40,7 +40,7 @@ export async function DELETE(req: Request) {
         where: {
           id:id
         },
-        data:{labels:updated1.labels?updated1.labels+", updated info":"updated info"}
+        data:{labels:updated1.labels?updated1.labels+"; updated info":"updated info"}
       });
       await prisma.$disconnect()
      console.log(updated1)

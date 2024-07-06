@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 import { PageWrapper } from '@/components/page-wrapper';
 import ShowIcon from '@/components/svg/showIcon';
 import EditContactsModal from '@/components/EditContactsModal';
+import { useDimensions } from '@/hooks/useDimensions';
 interface pageProps {}
 
 const page: FC<pageProps> = ({}) => {
@@ -18,7 +19,7 @@ const page: FC<pageProps> = ({}) => {
   const [value, setValue] = useState('');
   const [title, setTitle] = useState('');
   const [revealModal, setRevealModal] = useState(false);
-
+  const dimensions = useDimensions();
   if (status === 'unauthenticated') {
     router.push('/');
   }
@@ -102,7 +103,7 @@ const page: FC<pageProps> = ({}) => {
         />
       )}
       <div
-        className={`blurFilter border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-[1024px]  flex justify-center items-center flex-col   md:w-[80svw] bg-lightMainBG dark:bg-darkMainBG h-[70svh] md:h-[85svh]
+        className={`blurFilter border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-[1024px]  flex justify-center items-center flex-col  bg-lightMainBG dark:bg-darkMainBG h-[70svh] md:h-[85svh]
         }`}
       >
         <div
@@ -119,87 +120,85 @@ const page: FC<pageProps> = ({}) => {
             >
               Email Marketing
             </h2>
-            <div className="group flex  cursor-pointer  flex-col justify-center items-center absolute right-10 top-1">
-              <div className="  h-10 w-10 md:h-14 md:w-14 relative hover:scale-110 group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
-                <div
-                  className="cursor-pointer h-10 w-10 md:h-14 md:w-14 border-2 rounded-md m-auto "
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setRevealModal(true);
-                  }}
-                >
-                  <ShowIcon icon={'MailList'} stroke={'0.1'} />
+
+            <div className="group flex  cursor-pointer  flex-col justify-center items-center  absolute right-10 top-1">
+                  <div className="  h-10 w-10 md:h-14 md:w-14 relative hover:scale-110 group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor">
+                    <div
+                      className="cursor-pointer h-10 w-10 md:h-14 md:w-14 border-2 rounded-md m-auto "
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setRevealModal(true);
+                      }}
+                    >
+                      <ShowIcon icon={'MailList'} stroke={'0.1'} />
+                    </div>
+                  </div>
+                  <p className=" tracking-widest transition duration-300 ease-in-out absolute leftt-0 -bottom-2 md:-bottom-4  rounded-md text-center text-lightMainColor dark:text-darkMainColor text-[6px] md:text-base dark:bg-darkMainBG      group-hover:inline-flex  ">
+                    Contacts
+                  </p>
                 </div>
-              </div>
-              <div className="  h-10 w-10 md:h-14 md:w-14 relative hover:scale-110 group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
-                <p className="hidden tracking-widest mx-3 transition duration-300 ease-in-out absolute -right-4 -bottom-1.5 md:-bottom-4 rounded-md text-center text-lightMainColor dark:text-darkMainColor text-[6px] md:text-base md:dark:bg-darkMainBG opacity-100 group-hover:inline-flex md:block md:opacity-0 md:group-hover:opacity-100 ">
-                  Contacts
-                </p>
-              </div>
-              </div>
+            {dimensions.height! > 600 && (
               <div
                 id="icon"
                 className=" h-20 w-20 md:h-28 md:w-28 fill-lightMainColor stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor m-auto"
               >
                 <ShowIcon icon={'MassEmail'} stroke={'0.1'} />
               </div>
-              <label className="flex flex-col items-center w-[95%]">
-                {' '}
-                Email Title{' '}
-                <input
-                  type="text"
-                  placeholder="Title"
-                  value={title}
-                  className="dark:bg-lightMainBG bg-darkMainBG dark:text-lightMainColor text-darkMainColor w-full p-1 rounded-md"
-                  onChange={(e) => setTitle(e.target.value)}
-                />
-              </label>
-              <label className="flex flex-col items-center w-[95%]">
-                {' '}
-                Transform link for sharing{' '}
-                <input
-                  type="text"
-                  placeholder="Title"
-                  value={value}
-                  className="dark:bg-lightMainBG bg-darkMainBG dark:text-lightMainColor text-darkMainColor w-full p-1 rounded-md"
-                  onChange={(e) =>
-                    setValue(
-                      `https://drive.google.com/thumbnail?id=${
-                        e.target.value.split('/file/d/')[1].split('/')[0]
-                      }&sz=w1000`
-                    )
-                  }
-                />
-                <div className=" w-full">{value}</div>
-              </label>
-              <div>
-                <button className="btnFancy" onClick={exportHtml}>
-                  Send Emails
-                </button>
-                <button className="btnFancy" onClick={saveDesign}>
-                  Save Design
-                </button>
-                <button
-                  className="btnFancy"
-                  onClick={() =>
-                    document.getElementById('inputField1')!.click()
-                  }
-                >
-                  Load Design
-                </button>
-                <input
-                  type="file"
-                  id="inputField1"
-                  hidden
-                  accept="text/*"
-                  className="w-full mb-2 rounded-md text-gray-700"
-                  onChange={handleChange}
-                />
-              </div>
-              <EmailEditor ref={emailEditorRef} onReady={onReady} />
+            )}
+            <label className={`flex flex-col items-center w-[95%] ${(dimensions.height! < 600)?'mt-2':''}`}>
+              {' '}
+              Email Title{' '}
+              <input
+                type="text"
+                placeholder="Title"
+                value={title}
+                className="dark:bg-lightMainBG bg-darkMainBG dark:text-lightMainColor text-darkMainColor w-full p-1 rounded-md"
+                onChange={(e) => setTitle(e.target.value)}
+              />
+            </label>
+            <label className="flex flex-col items-center w-[95%]">
+              {' '}
+              Transform link for sharing{' '}
+              <input
+                type="text"
+                placeholder="Title"
+                value={value}
+                className="dark:bg-lightMainBG bg-darkMainBG dark:text-lightMainColor text-darkMainColor w-full p-1 rounded-md"
+                onChange={(e) =>
+                  setValue(
+                    `https://drive.google.com/thumbnail?id=${
+                      e.target.value.split('/file/d/')[1].split('/')[0]
+                    }&sz=w1000`
+                  )
+                }
+              />
+              <div className=" w-full">{value}</div>
+            </label>
+            <div>
+              <button className="btnFancy" onClick={exportHtml}>
+                Send Emails
+              </button>
+              <button className="btnFancy" onClick={saveDesign}>
+                Save Design
+              </button>
+              <button
+                className="btnFancy"
+                onClick={() => document.getElementById('inputField1')!.click()}
+              >
+                Load Design
+              </button>
+              <input
+                type="file"
+                id="inputField1"
+                hidden
+                accept="text/*"
+                className="w-full mb-2 rounded-md text-gray-700"
+                onChange={handleChange}
+              />
             </div>
+            <EmailEditor ref={emailEditorRef} onReady={onReady} />
           </div>
-         
+        </div>
       </div>
     </PageWrapper>
   );

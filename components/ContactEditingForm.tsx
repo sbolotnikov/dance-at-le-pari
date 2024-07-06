@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ContactType } from '@/types/screen-settings';
 import ShowIcon from './svg/showIcon';
+import { isEmailValid } from '@/utils/functions'; 
 
 type Props = {
   contact: ContactType;
@@ -18,7 +19,7 @@ const ContactEditingForm = ({
 }: Props) => {
   const [contactData, setContactData] = useState<ContactType>(contact);
   const [displayName, setDisplayName] = useState<string>('');
-  // const [editable, setEditable] = useState(false)
+  const [error1, setError] = useState("")
 
   const handleDelete = () => {
     let contactStr = displayName + '<' + contactData.email + '>';
@@ -39,6 +40,9 @@ const ContactEditingForm = ({
   }, []);
   return (
     <div className="w-full relative flex flex-row justify-center items-center flex-wrap mb-10 mx-2">
+      {error1.length>0 && <div className="w-full flex flex-row justify-center items-center flex-wrap mb-10 mx-2 text-alertcolor">
+        {error1}
+        </div>}
       {!editable ? (
         <h3 className="w-[80%] flex flex-row justify-between flex-wrap">
           <label className="flex flex-row items-center">
@@ -61,8 +65,9 @@ const ContactEditingForm = ({
             First Name
             <input
               type="text"
-              className="w-full m-1"
+              className="w-full m-1 dark:bg-lightMainBG bg-darkMainBG dark:text-lightMainColor text-darkMainColor  p-1 rounded-md"
               value={contactData.name!}
+              
               onChange={(e) => {
                 setContactData({ ...contactData, name: e.target.value });
               }}
@@ -72,7 +77,7 @@ const ContactEditingForm = ({
             Last Name
             <input
               type="text"
-              className="w-full m-1"
+              className="w-full m-1 dark:bg-lightMainBG bg-darkMainBG dark:text-lightMainColor text-darkMainColor  p-1 rounded-md"
               value={contactData.lastname!}
               onChange={(e) => {
                 setContactData({ ...contactData, lastname: e.target.value });
@@ -84,7 +89,7 @@ const ContactEditingForm = ({
             <input
               required
               type="email"
-              className="w-full m-1"
+              className="w-full m-1 dark:bg-lightMainBG bg-darkMainBG dark:text-lightMainColor text-darkMainColor  p-1 rounded-md"
               value={contactData.email}
               onChange={(e) => {
                 setContactData({ ...contactData, email: e.target.value });
@@ -95,7 +100,7 @@ const ContactEditingForm = ({
             Main Telephone
             <input
               type="text"
-              className="w-full m-1"
+              className="w-full m-1 dark:bg-lightMainBG bg-darkMainBG dark:text-lightMainColor text-darkMainColor  p-1 rounded-md"
               value={contactData.telephone1!}
               onChange={(e) => {
                 setContactData({ ...contactData, telephone1: e.target.value });
@@ -106,7 +111,7 @@ const ContactEditingForm = ({
             Additional Telephone
             <input
               type="text"
-              className="w-full m-1"
+              className="w-full m-1 dark:bg-lightMainBG bg-darkMainBG dark:text-lightMainColor text-darkMainColor  p-1 rounded-md"
               value={contactData.telephone2!}
               onChange={(e) => {
                 setContactData({ ...contactData, telephone2: e.target.value });
@@ -139,13 +144,18 @@ const ContactEditingForm = ({
             className="btnFancy"
             onClick={(e) => {
               e.preventDefault();
-              onSubmit(contactData);
+              if (isEmailValid(contactData.email)){ 
+                setError("");
+                onSubmit(contactData);
+              } else setError('Please enter a valid email address.');
+              
             }}
           >
             Submit
           </button>
         )}
       </div>
+      <hr className='w-5/6 border  border-lightMainColor dark:border-darkMainColor rounded-full'/>
     </div>
   );
 };

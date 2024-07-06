@@ -1,3 +1,4 @@
+import { ContactType } from "@/types/screen-settings";
 
 
 const sleep = (n:number)=> {
@@ -13,7 +14,46 @@ const sleep = (n:number)=> {
       .replace(/[\s_-]+/g, '-')
       .replace(/^-+|-+$/g, '');
   };
-
+  export const getDate = (date: string) => {
+    if ((date === '')||(date===undefined)||(date===null)) return null
+    let dateArr = date.split(' ');
+    let timeArr = dateArr[1];
+    console.log(date,timeArr);
+    timeArr = timeArr.split('\r')[0];
+    return new Date(dateArr[0]+'T'+timeArr+':00');
+  };
+export const csvJSON = (text: string, quoteChar: string, delimiter: string) => {
+  var rows = text.split('\n');
+  var headers = rows[0].split('\r')[0].split(delimiter); 
+  var lines = text.split('\n');
+  lines = lines.slice(1);
+  let objContact: { [key: string]: any } = {};
+  let arrObj: ContactType[] = [];
+  for (let i = 0; i < lines.length; i++) {
+    for (let j = 0; j < headers.length; j++) {
+      const key = headers[j];
+      const value = lines[i].split(delimiter)[j];
+      objContact = {
+        ...objContact,
+        [key]: value,
+      };
+    }
+    objContact.createdAt = getDate(objContact.createdAt as string);
+    objContact.lastcontact = getDate(objContact.lastcontact as string);
+    if (objContact.email) {
+      arrObj.push(objContact as ContactType);
+    }
+   
+  }
+  return arrObj;
+};
+  export const isEmailValid = (st: string) => {
+    const emailRegex = new RegExp(
+      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+      'gm'
+    );
+    return emailRegex.test(st);
+  };
 export const get_package = async (n:number[])=> {
    return fetch('/api/get_template', {
     method: 'POST',

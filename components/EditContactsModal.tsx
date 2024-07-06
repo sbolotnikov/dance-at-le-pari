@@ -8,6 +8,8 @@ import { useDimensions } from '@/hooks/useDimensions';
 import { ContactType } from '@/types/screen-settings';
 import ContactEditingForm from './ContactEditingForm';
 import AlertMenu from './alertMenu';
+import ShowIcon from './svg/showIcon';
+import sleep, { csvJSON } from '@/utils/functions';
 
 type Props = {
   visibility: boolean;
@@ -19,9 +21,13 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
   const router = useRouter();
   const [value, setValue] = useState('');
   const [title, setTitle] = useState('');
+  const [one, setOne] = useState(0);
+  const [two, setTwo] =useState(0)
   const [users, setUsers] = useState<ContactType[]>([]);
+  const [newUsers, setNewUsers] = useState<ContactType[]>([]);
   const dimensions = useDimensions();
   const [revealAlert, setRevealAlert] = useState(false);
+  const [newContact, setNewContact] = useState(false);
   const [alertStyle, setAlertStyle] = useState({
     variantHead: '',
     heading: '',
@@ -77,11 +83,76 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
         console.log(data);
       });
     });
-    // setDimensions({ height: window.innerHeight, width: window.innerWidth });
-    // document.getElementById('userContainer')?.style({height:`[${window.innerHeight-100}px]`});
+   
   }, []);
+
+  useEffect(() => {
+    let secondIndex=0
+    if (newUsers.length > 0) { 
+        for (let i = 0; i < newUsers.length; i++) {
+          if (newUsers.filter(user=>user.email===newUsers[i].email).length>1) {
+            secondIndex=newUsers.map(user=>user.email).indexOf(newUsers[i].email,i+1);
+            console.log(newUsers[i],newUsers[secondIndex]);
+            // console.log(newUsers.filter(user=>user.email===newUsers[i].email));
+            setOne(i);
+            setTwo(secondIndex)
+            setAlertStyle({
+              variantHead: 'danger',
+              heading: `Email ${newUsers[i].email} already exists`,
+              text: `Choose 1: ${newUsers[i].name} ${newUsers[i].lastname} ${newUsers[i].telephone1} ${newUsers[i].telephone2} or 2: ${newUsers[secondIndex].name} ${newUsers[secondIndex].lastname}  ${newUsers[secondIndex].telephone1} ${newUsers[secondIndex].telephone2}`,
+              color1: 'danger',
+              button1: '1',
+              color2: 'secondary',
+              button2: '2',
+              inputField: '',
+            });
+            setRevealAlert(true);
+            return; 
+          }
+        }
+        fetch('/api/admin/contacts_import', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify( newUsers),
+        }).then((data) => {
+          setNewContact(false);
+          console.log(data.json());
+          setNewUsers([]);
+          setAlertStyle({
+            variantHead: 'success',
+            heading: `Good job!`,
+            text: `Email list has been uploaded`,
+            color1: 'success',
+            button1: 'Ok',
+            color2: '',
+            button2: '',
+            inputField: '',
+          });
+          sleep(1000).then(()=>setRevealAlert(true))
+        }); 
+
+      }
+  }, [newUsers.length]);
+  
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+
+    let file1 = e.currentTarget.files![0];
+
+    const reader = new FileReader();
+    reader.onload = (function (file) {
+      return function () {
+        let res = this.result?.toString(); 
+        setNewUsers(csvJSON(res as string, "'", ','));       
+      };
+    })(file1);
+    reader.readAsText(file1);
+  };
   const onReturnAlert = (decision1: string) => {
     setRevealAlert(false);
+    sleep(1000).then(()=>{
     if (decision1 == 'Confirm') {
       fetch('/api/admin/contacts', {
         method: 'DELETE',
@@ -94,11 +165,18 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
       }).then(() => {
         location.reload();
       });
+    }else if (decision1 == "1"){
+      let arrNew=newUsers.filter((user, index)=>index!==two);
+      setNewUsers([...arrNew]);
+
+    }else if (decision1 == "2"){
+      let arrNew2=newUsers.filter((user, index)=>index!==one);
+      setNewUsers([...arrNew2]);
     } else setSelectedId(0);
+  })
   };
   return (
     <div className="absolute inset-0 ">
-
       <AnimateModalLayout
         visibility={visibility}
         onReturn={() => {
@@ -123,35 +201,64 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
               >
                 Edit Contacts Modal
               </h2>
-              <label className="flex flex-col items-center w-full">
-                {' '}
-                Email Title{' '}
+              <div className="flex flex-row w-full justify-center items-center">
+                <div className="group flex  cursor-pointer  flex-col justify-center items-center relative  mb-3">
+                  <div className="  h-10 w-10 md:h-20 md:w-20 relative hover:scale-110 group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor">
+                    <div
+                      className="cursor-pointer h-10 w-10 md:h-14 md:w-14 border-2 rounded-full  bg-editcolor m-auto "
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setNewContact(true);
+                      }}
+                    >
+                      <ShowIcon icon={'Plus'} stroke={'0.1'} />
+                    </div>
+                  </div>
+                  <p className=" tracking-widest transition duration-300 ease-in-out absolute leftt-0 -bottom-2 md:-bottom-1 rounded-md text-center text-editcolor text-[6px] md:text-base md:dark:bg-darkMainBG      group-hover:inline-flex  ">
+                    Add New
+                  </p>
+                </div>
+                <div className="group flex  cursor-pointer  flex-col justify-center items-center relative  mb-3">
+                  <div className="  h-10 w-10 md:h-20 md:w-20 relative hover:scale-110 group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor">
+                    <div
+                      className="cursor-pointer h-10 w-10 md:h-14 md:w-14 border-2 rounded-full m-auto "
+                      onClick={(e) => {
+                        e.preventDefault();
+                        document.getElementById('inputField2')!.click()
+                      }}
+                    >
+                      <ShowIcon icon={'ImportData'} stroke={'0.1'} />
+                    </div>
+                  </div>
+                  <p className=" tracking-widest transition duration-300 ease-in-out absolute leftt-0 -bottom-2 md:-bottom-1 rounded-md text-center text-lightMainColor dark:text-darkMainColor text-[6px] md:text-base dark:bg-darkMainBG      group-hover:inline-flex  ">
+                    Import
+                  </p>
+                </div>
+                <div className="group flex  cursor-pointer  flex-col justify-center items-center relative  mb-3">
+                  <div className="  h-10 w-10 md:h-20 md:w-20 relative hover:scale-110 group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor">
+                    <div
+                      className="cursor-pointer h-10 w-10 md:h-14 md:w-14 border-2 rounded-full m-auto "
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setNewContact(true);
+                      }}
+                    >
+                      <ShowIcon icon={'ExportCSV'} stroke={'0.1'} />
+                    </div>
+                  </div>
+                  <p className=" tracking-widest transition duration-300 ease-in-out absolute leftt-0 -bottom-2 md:-bottom-1 rounded-md text-center text-lightMainColor dark:text-darkMainColor text-[6px] md:text-base dark:bg-darkMainBG      group-hover:inline-flex  ">
+                    Export
+                  </p>
+                </div>
                 <input
-                  type="text"
-                  placeholder="Title"
-                  value={title}
-                  className="dark:bg-lightMainBG bg-darkMainBG dark:text-lightMainColor text-darkMainColor w-full p-1 rounded-md"
-                  onChange={(e) => setTitle(e.target.value)}
-                />
-              </label>
-              <label className="flex flex-col items-center w-full">
-                {' '}
-                Transform link for sharing{' '}
-                <input
-                  type="text"
-                  placeholder="Title"
-                  value={value}
-                  className="dark:bg-lightMainBG bg-darkMainBG dark:text-lightMainColor text-darkMainColor w-full p-1 rounded-md"
-                  onChange={(e) =>
-                    setValue(
-                      `https://drive.google.com/thumbnail?id=${
-                        e.target.value.split('/file/d/')[1].split('/')[0]
-                      }&sz=w1000`
-                    )
-                  }
-                />
-                <div className=" w-full">{value}</div>
-              </label>
+                type="file"
+                id="inputField2"
+                hidden
+                accept="*.csv"
+                className="w-full mb-2 rounded-md text-gray-700"
+                onChange={handleChange}
+              />
+              </div>
               {dimensions.height && (
                 <div
                   id="userContainer"
@@ -166,7 +273,7 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
                           editable={selectedId == item.id}
                           contact={item}
                           onDelete={handleDelete}
-                          onEdit={(id:number) => setSelectedId(id)}
+                          onEdit={(id: number) => setSelectedId(id)}
                           onSubmit={(updatedContact: ContactType) => {
                             let oldContact = users.find(
                               (contact: ContactType) =>
@@ -183,6 +290,7 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
                                 )[key];
                               }
                             }
+
                             if (Object.keys(updateObj).length === 0) return;
                             console.log(updateObj);
                             fetch('/api/admin/contacts', {
@@ -196,11 +304,52 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
                               }),
                             }).then((data) => {
                               console.log(data);
-                              setSelectedId(0); 
+                              setSelectedId(0);
                             });
-                            
                           }}
-                          />)})}
+                        />
+                      );
+                    })}
+                  {newContact && (
+                    <ContactEditingForm
+                      editable={true}
+                      contact={{
+                        id: 0,
+                        name: '',
+                        email: '',
+                        lastname: '',
+                        telephone1: '',
+                        telephone2: '',
+                        labels: null,
+                        createdAt: new Date(),
+                        status: 'Subscribed',
+                        lastactivity: null,
+                        lastcontact: null,
+                      }}
+                      onDelete={() => setNewContact(false)}
+                      onEdit={(id: number) => setSelectedId(0)}
+                      onSubmit={(newContact: ContactType) => {
+                        console.log(newContact);
+                        fetch('/api/admin/contact_create', {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json',
+                          },
+                          body: JSON.stringify({
+                            name: newContact.name,
+                            lastname: newContact.lastname,
+                            email: newContact.email,
+                            telephone1: newContact.telephone1,
+                            telephone2: newContact.telephone2,
+                          }),
+                        }).then((data) => {
+                          setNewContact(false);
+                          console.log(data.json());
+                          setSelectedId(0);
+                        });
+                      }}
+                    />
+                  )}
                 </div>
               )}
             </div>
