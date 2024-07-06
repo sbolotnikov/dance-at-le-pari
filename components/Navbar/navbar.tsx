@@ -138,10 +138,10 @@ const Navbar = ({ path, locale, children }: Props) => {
         },
         {
           url: '/admin/usersscreen',
-          title: 'Users Screen',
-          icon: 'Users',
-        },
-       
+          title: 'Dashboard',
+          icon: 'Dashboard',
+        }
+
       ];
     } else {
       linksArray = [

@@ -25,6 +25,19 @@ export type TEvent = {
   image: string;
   eventtype: string;
 };
+type ContactType={
+  id: number,
+  name: string | null,
+  lastname: string | null,
+  email: string,
+  telephone1: string | null,
+  telephone2: string | null,
+  labels: string | null,  
+  createdAt: Date, 
+  status: string, 
+  lastactivity: string | null,
+  lastcontact: Date | null, 
+}
 type TEventArray = TEvent[];
 type TUser = {
   id: number;

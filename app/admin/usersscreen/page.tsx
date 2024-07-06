@@ -6,9 +6,10 @@ import { PageWrapper } from '@/components/page-wrapper';
 import ChooseAvatar from '@/components/chooseAvatar';
 import { deleteImage } from '@/utils/picturemanipulation';
 import { useDimensions } from '@/hooks/useDimensions';
-import CreateEmailModal from '@/components/CreateEmailModal';
+import CreateEmailModal from '@/components/EditContactsModal';
 import sleep from '@/utils/functions';
 import ShowIcon from '@/components/svg/showIcon';
+import { useRouter } from 'next/navigation';
 
 interface UserType {
   name: string;
@@ -26,9 +27,10 @@ function page() {
   const [usersType, setUsersType] = useState('All');
   const [usersDisplay, setUsersDisplay] = useState<UserType[]>([]);
   const [revealAlert, setRevealAlert] = useState(false);
-  const [revealModal, setRevealModal] = useState(false);
+
   const [revealAvatarSelect, setRevealAvatarSelect] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserType>({} as UserType);
+  const router = useRouter();
   // const [dimensions, setDimensions] = useState({ height: 0, width: 0 });
   const dimensions = useDimensions();
 
@@ -158,7 +160,7 @@ function page() {
     }
   };
   return (
-    <PageWrapper className="absolute top-0 left-0 w-full flex justify-center items-center">
+    <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center md:items-end justify-center">
       <AlertMenu
         visibility={revealAlert}
         onReturn={onReturn}
@@ -170,42 +172,37 @@ function page() {
           styling={alertStyle}
           extraSize={true}
         />
-      )}     
-      {revealModal && (
-        <CreateEmailModal
-          visibility={revealModal} 
-          onReturn={() => {
-            sleep(1200).then(() => {
-            setRevealModal(false);
-            });
-          }}
-        />
       )}
-
-      <div className="blurFilter w-full max-w-[1400px] border-0 flex flex-row mt-12 md:mt-20 justify-center items-center flex-wrap bg-lightMainBG/70 dark:bg-darkMainBG/70">
-        <div className="flex flex-col items-center justify-center border rounded-md border-lightMainColor dark:border-darkMainColor w-full h-full ">
-          <h3 className="w-full xs:text-md sm:text-xl phone:text-2xl tablet:text-3xl text-center">
-            Table of project Users's Roles
-          </h3> 
-            <div className="group flex  cursor-pointer  flex-col justify-center items-center absolute right-10 top-1">
-              <div className="  h-10 w-10 md:h-14 md:w-14 relative hover:scale-110 group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
-                <div
-                  className="cursor-pointer h-10 w-10 md:h-14 md:w-14 border-2 rounded-md  stroke-editcolor m-auto "
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setRevealModal(true);
-                  }}
-                >
-                  <ShowIcon icon={'Email'} stroke={'0.1'} />
-                </div>
+      <div className="blurFilter border-0 rounded-md p-2 mt-6 shadow-2xl w-[95%] h-[70svh] md:h-[85svh] max-w-[1400px] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 md:mb-3">
+        <div className="border rounded-md border-lightMainColor dark:border-darkMainColor w-full h-full   p-2 flex flex-col relative">
+          <h2
+            className="text-center font-semibold text-2xl md:text-4xl uppercase"
+            style={{ letterSpacing: '1px' }}
+          >
+            Admin Dashboard
+          </h2>
+          <div className=" h-16 w-16 m-auto hidden md:block">
+            <ShowIcon icon={'Dashboard'} stroke={'0.1'} />
+          </div>
+          <div className="group flex  cursor-pointer  flex-col justify-center items-center absolute right-1 top-1">
+            <div className="  h-10 w-10 md:h-14 md:w-14 relative hover:scale-110 group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
+              <div
+                className="cursor-pointer h-10 w-10 md:h-14 md:w-14 border-2 rounded-md  m-auto "
+                onClick={(e) => {
+                  e.preventDefault();
+                  router.push('/admin/massemail');
+                }}
+              >
+                <ShowIcon icon={'MassEmail'} stroke={'0.15'} />
               </div>
-              <p className="hidden tracking-widest mx-3 transition duration-300 ease-in-out absolute -right-4 -bottom-1.5 md:-bottom-4 rounded-md text-center text-editcolor text-[6px] md:text-base md:dark:bg-lightMainBG    opacity-100 group-hover:inline-flex md:block md:opacity-0 md:group-hover:opacity-100 ">
-                Send_Email
-              </p>
-            </div> 
+            </div>
+            <p className="hidden tracking-widest mx-3 transition duration-300 ease-in-out absolute -right-4 -bottom-1.5 md:-bottom-4 rounded-md text-center text-lightMainColor dark:text-darkMainColor text-[6px] md:text-base      opacity-100 group-hover:inline-flex md:block md:opacity-0 md:group-hover:opacity-100 ">
+              Emailing
+            </p>
+          </div>
           <h5 className="w-full xs:text-md sm:text-lg phone:text-xl tablet:text-2xl text-center">
             {' '}
-            filter:
+            Table of project Users's Roles
             <div
               className="relative cursor-pointer"
               onMouseEnter={(e) => {

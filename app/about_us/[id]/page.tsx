@@ -27,10 +27,17 @@ export default function Page({ params }: { params: { id: string } }) {
     'Location',
     'Hours ',
   ];
+  const imgArray=[
+    'Home',
+    'Users',
+    'Home2',
+    'Location',
+    'ClockBallroom',
+  ];
   const slugArray = ['welcome', 'our-team', 'studio-tour', 'location', 'hours'];
   const pageArray = [{title: "Welcome to Studio", description: "Welcome message to dancers or people who wants to learn how to dance", keywords:"WelcomePage HelloPage WelcomeMessage"},
     {title: "Our Professional Team", description: "Our world-awarded dance instructors specialize in teaching from beginner to advanced levels, adults and kids on all types of dancing: ballroom, latin, argentine tango, hustle, west coast swing, salsa. etc. Specialist of wedding dance instructions. Biography of ballroom, latin, argentine tango, hustle, west coast swing instructors, teachers, manager and owner of dance studio" ,keywords:"Pro Teachers, Pro Instructor, Pro Ballroom Bio, Teachers"},
-    {title: "Studio Interior/Exterior tour", description: "Dance Studio pictures: Inside or Outside tour. Explore our dance studio via pictures & video! Le Pari Dance Center -the place to visit, the place to dance at, the place to learn!",keywords:"StudioInterior, Tour, Interior, Exterior"},
+    {title: "Interior/Exterior tour", description: "Dance Studio pictures: Inside or Outside tour. Explore our dance studio via pictures & video! Le Pari Dance Center -the place to visit, the place to dance at, the place to learn!",keywords:"StudioInterior, Tour, Interior, Exterior"},
     {title: "Our Location", description: "Close to major roads, free parking. Easy to get to: 34 South Avenue, Fanwood, NJ 07023. Location, directions, address, contact information of the Le Pari Dance Fitness Center",keywords:" Location, Address, Contact"},
     {title: "Hours Of Operation", description: "hours of operation, opening and closing time of the dance center, contact information",keywords:"Hours, Contacts, OpenTime, CloseTime" }];  
   const selectedTab = slugArray.indexOf(params.id) || null;
@@ -171,10 +178,10 @@ export default function Page({ params }: { params: { id: string } }) {
             className="text-center font-semibold md:text-4xl uppercase mb-5"
             style={{ letterSpacing: '1px' }}
           >
-            Our Studio
+            {pageArray[tabIndex].title}
           </h2>
           <div className=" h-16 w-16 m-auto hidden md:block">
-            <ShowIcon icon={'Home2'} stroke={'0.1'} />
+            <ShowIcon icon={imgArray[tabIndex]} stroke={'0.1'} />
           </div>
           <button
             className=" outline-none border-none absolute right-0 top-0  rounded-md  mt-2  w-8 h-8"
