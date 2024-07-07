@@ -243,7 +243,7 @@ export default function EditScheduleModal({
             id="containedDiv"
             className={`${
               scrolling ? '' : 'absolute top-0 left-0'
-            } flex flex-col w-full p-1 justify-center items-center`}
+            } flex flex-col w-full p-1 justify-center items-center ${(isFocused?"mb-24":"")}`}
           >
             <h2 className="w-full text-center uppercase">
               {role == 'Student' ? 'Your event' : 'Edit/Add Schedule events'}
@@ -522,7 +522,7 @@ export default function EditScheduleModal({
             )}
             {role !== 'Student' && (
               <button
-                className={`w-[70%] btnFancy text-base text-center  rounded-md ${(isFocused?"mb-24":"")}`}
+                className={`w-[70%] btnFancy text-base text-center  rounded-md `}
                 style={{ padding: '0' }}
                 onClick={() => {
                   if (teacher?.id == undefined) {
