@@ -48,9 +48,9 @@ const ParticleAnimation = () => {
       animateMotion.setAttribute('repeatCount', 'indefinite');
 
       animateTransform.setAttribute('attributeName', 'transform');
-      animateTransform.setAttribute('type', 'rotate');
-      animateTransform.setAttribute('from', '0 0 0');
-      animateTransform.setAttribute('to', '360 0 0');
+      animateTransform.setAttribute('type', 'rotateX');
+      animateTransform.setAttribute('from', '0 50 20');
+      animateTransform.setAttribute('to', '360 270 360');
       animateTransform.setAttribute('dur', `${animationDuration}s`);
       animateTransform.setAttribute('begin', `${randomDelay}s`);
       animateTransform.setAttribute('repeatCount', 'indefinite');

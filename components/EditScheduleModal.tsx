@@ -60,6 +60,15 @@ export default function EditScheduleModal({
     button2: '',
     inputField: '',
   });
+  const [isFocused, setIsFocused] = useState(false); 
+    
+    const handleOnFocus = () => {
+        if(windowSize.width! <= 768) setIsFocused(true); 
+    }; 
+  
+    const handleBlur = () => { 
+      if(windowSize.width! <= 768) setIsFocused(false); 
+    }; 
   useEffect(() => {
     let dt = new Date();
     if (event.id !== undefined) dt = new Date(event.date);
@@ -355,6 +364,8 @@ export default function EditScheduleModal({
                   id="title"
                   name="title"
                   type="text"
+                  onFocus={handleOnFocus} 
+                  onBlur={handleBlur} 
                   value={tag}
                   onChange={(e) => {
                     setTag(e.target.value);
@@ -511,7 +522,7 @@ export default function EditScheduleModal({
             )}
             {role !== 'Student' && (
               <button
-                className="w-[70%] btnFancy text-base text-center  rounded-md"
+                className={`w-[70%] btnFancy text-base text-center  rounded-md ${(isFocused?"mb-24":"")}`}
                 style={{ padding: '0' }}
                 onClick={() => {
                   if (teacher?.id == undefined) {

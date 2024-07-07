@@ -81,13 +81,13 @@ const ParticleAnimation = () => {
         animateTransform.setAttribute('attributeName', 'transform');
         animateTransform.setAttribute('type', 'scale');
         animateTransform.setAttribute('from', '0');
-        animateTransform.setAttribute('to', `${size/24}`);
+        animateTransform.setAttribute('to', `${size/6}`);
         animateTransform.setAttribute('dur', `${10 / particleSpeed}s`);
         animateTransform.setAttribute('repeatCount', 'indefinite');
       } else if (animationOption === 2) {
         animateTransform.setAttribute('attributeName', 'transform');
         animateTransform.setAttribute('type', 'scale');
-        animateTransform.setAttribute('from', `${size/24}`);
+        animateTransform.setAttribute('from', `${size/6}`);
         animateTransform.setAttribute('to', '0');
         animateTransform.setAttribute('dur', `${10 / particleSpeed}s`);
         animateTransform.setAttribute('repeatCount', 'indefinite');
