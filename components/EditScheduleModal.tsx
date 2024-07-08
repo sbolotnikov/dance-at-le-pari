@@ -385,6 +385,8 @@ export default function EditScheduleModal({
                   id="length1"
                   name="length1"
                   type="number"
+                  onFocus={handleOnFocus} 
+                  onBlur={handleBlur} 
                   value={length1}
                   onChange={(e) => {
                     let dateObj = Date.parse(eventDateTime1);
