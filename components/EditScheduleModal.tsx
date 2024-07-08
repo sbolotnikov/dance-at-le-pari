@@ -63,11 +63,11 @@ export default function EditScheduleModal({
   const [isFocused, setIsFocused] = useState(false); 
     
     const handleOnFocus = () => {
-        if(windowSize.width! <= 768) setIsFocused(true); 
+        if(windowSize.width! <= 768) {setIsFocused(true); document.body.classList.add("keyboard");}
     }; 
   
     const handleBlur = () => { 
-      if(windowSize.width! <= 768) setIsFocused(false); 
+      if(windowSize.width! <= 768) {setIsFocused(false); document.body.classList.remove("keyboard");}
     }; 
   useEffect(() => {
     let dt = new Date();
@@ -360,7 +360,7 @@ export default function EditScheduleModal({
               Note:
               {role !== 'Student' ? (
                 <input
-                  className=" outline-none border-none rounded-md w-3/4  text-lightMainColor p-0.5 mx-1"
+                  className=" outline-none border-none rounded-md w-3/4 text-lg text-lightMainColor p-0.5 mx-1"
                   id="title"
                   name="title"
                   type="text"
@@ -381,7 +381,7 @@ export default function EditScheduleModal({
               <label className="w-full flex flex-row justify-between items-center mb-1">
                 Length in min.
                 <input
-                  className=" outline-none border-none rounded-md  w-1/6 text-lightMainColor p-0.5 mx-1"
+                  className=" outline-none border-none rounded-md  w-1/6 text-lg text-lightMainColor p-0.5 mx-1"
                   id="length1"
                   name="length1"
                   type="number"

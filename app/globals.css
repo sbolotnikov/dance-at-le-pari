@@ -51,7 +51,9 @@
 
    
 
-  
+  body.keyboard {
+    height: calc(100% + 500px); /* add padding for keyboard */
+}
 
   
 }
