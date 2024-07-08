@@ -23,8 +23,8 @@ const sleep = (n:number)=> {
     return new Date(dateArr[0]+'T'+timeArr+':00');
   };
 export const csvJSON = (text: string, quoteChar: string, delimiter: string) => {
-  var rows = text.split('\n');
-  var headers = rows[0].split('\r')[0].split(delimiter); 
+  var rows = text.split('\r\n');
+  var headers = rows[0].split(delimiter); 
   var lines = text.split('\n');
   lines = lines.slice(1);
   let objContact: { [key: string]: any } = {};

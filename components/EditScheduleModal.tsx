@@ -243,7 +243,7 @@ export default function EditScheduleModal({
             id="containedDiv"
             className={`${
               scrolling ? '' : 'absolute top-0 left-0'
-            } flex flex-col w-full p-1 justify-center items-center ${(isFocused?"mb-24":"")}`}
+            } flex flex-col w-full p-1 justify-center items-center ${(isFocused?"mb-28":"")}`}
           >
             <h2 className="w-full text-center uppercase">
               {role == 'Student' ? 'Your event' : 'Edit/Add Schedule events'}
@@ -356,7 +356,7 @@ export default function EditScheduleModal({
               </div>
             )}
 
-            <label className="flex flex-col justify-between items-center mb-1">
+            <label className="flex flex-row justify-between items-center m-1 w-full">
               Note:
               {role !== 'Student' ? (
                 <input
@@ -377,10 +377,42 @@ export default function EditScheduleModal({
                 </h2>
               )}
             </label>
-            <label className="flex flex-row m-auto justify-between items-center">
+            {role !== 'Student' && (
+              <label className="w-full flex flex-row justify-between items-center mb-1">
+                Length in min.
+                <input
+                  className=" outline-none border-none rounded-md  w-1/6 text-lightMainColor p-0.5 mx-1"
+                  id="length1"
+                  name="length1"
+                  type="number"
+                  value={length1}
+                  onChange={(e) => {
+                    let dateObj = Date.parse(eventDateTime1);
+                    let newDateOBJ = new Date(
+                      dateObj + parseInt(e.target.value) * 60000
+                    );
+                    setEventDateTime2(
+                      newDateOBJ.toLocaleDateString('en-us', {
+                        year: 'numeric',
+                        month: 'numeric',
+                        day: 'numeric',
+                      }) +
+                        ' ' +
+                        newDateOBJ.toLocaleTimeString('en-US', {
+                          timeStyle: 'short',
+                        })
+                    );
+
+                    setLength(parseInt(e.target.value));
+                  }}
+                  required
+                />
+              </label>
+            )}
+            <label className="flex flex-row m-1 w-full justify-between items-center">
               Event type
               <select
-                className="bg-main-bg m-2 rounded-md bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor"
+                className="bg-main-bg rounded-md bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor"
                 value={eventType}
                 disabled={role == 'Student'}
                 onChange={(e) => {
@@ -393,7 +425,7 @@ export default function EditScheduleModal({
                 <option value="Private">Private lesson</option>
               </select>
             </label>
-            <label className="flex flex-col m-auto justify-between items-center">
+            <label className="flex flex-row m-1 justify-between items-center w-full">
               Location
               <select
                 className="bg-main-bg mb-2 rounded-md text-ellipsis bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor"
@@ -408,7 +440,7 @@ export default function EditScheduleModal({
                 <option value="Main ballroom">Main ballroom</option>
               </select>
             </label>
-            <label className="flex flex-row justify-between items-center">
+            <label className="flex flex-row justify-between items-center m-1 w-full">
               Start Time
               <input
                 className="flex-1 outline-none border-none rounded-md   text-lightMainColor p-0.5 mx-1"
@@ -438,41 +470,10 @@ export default function EditScheduleModal({
                 required
               />
             </label>
-            <label className="flex flex-row justify-between items-center">
-              Finish Time {eventDateTime2}
+            <label className="flex flex-row justify-between items-center m-1 w-full">
+              Finish Time <span>{eventDateTime2}</span>
             </label>
-            {role !== 'Student' && (
-              <label className="flex flex-row justify-between items-center mb-1">
-                Length in min.
-                <input
-                  className=" outline-none border-none rounded-md  w-1/2 text-lightMainColor p-0.5 mx-1"
-                  id="length1"
-                  name="length1"
-                  type="number"
-                  value={length1}
-                  onChange={(e) => {
-                    let dateObj = Date.parse(eventDateTime1);
-                    let newDateOBJ = new Date(
-                      dateObj + parseInt(e.target.value) * 60000
-                    );
-                    setEventDateTime2(
-                      newDateOBJ.toLocaleDateString('en-us', {
-                        year: 'numeric',
-                        month: 'numeric',
-                        day: 'numeric',
-                      }) +
-                        ' ' +
-                        newDateOBJ.toLocaleTimeString('en-US', {
-                          timeStyle: 'short',
-                        })
-                    );
-
-                    setLength(parseInt(e.target.value));
-                  }}
-                  required
-                />
-              </label>
-            )}
+           
             {role !== 'Student' && (
               <label className="flex flex-row justify-between items-center mb-1">
                 Repeating Event
