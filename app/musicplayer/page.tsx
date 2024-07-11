@@ -1,15 +1,5 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
-
-import {
-  PlayCircle,
-  PauseCircle,
-  StopCircle,
-  SkipBack,
-  SkipForward,
-  Settings,
-  FileAudio,
-} from 'lucide-react';
 import { PageWrapper } from '@/components/page-wrapper';
 import AnimateModalLayout from '@/components/AnimateModalLayout';
 import Slider from '@/components/Slider';
