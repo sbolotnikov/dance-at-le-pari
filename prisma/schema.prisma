@@ -41,7 +41,8 @@ model Contact {
   telephone2 String?
   labels String?  
   createdAt DateTime @default(now())  
-  status String @default("Subscribed") 
+  status String @default("Subscribed")
+  source String 
   lastactivity String?
   lastcontact DateTime? 
 
