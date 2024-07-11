@@ -136,7 +136,11 @@ const page: FC<pageProps> = () => {
       document.querySelector('#password')!.classList.add('invalid_input');
       document
         .querySelector('#passwordConfirm')!
-        .classList.add('invalid_input');
+        .classList.add('invad_input');
+    } else if (!/\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/.test(telephone)) {
+      validationError = 'Enter a valid phone number for example (123) 456 7899';
+      // make email input red
+      document.querySelector('#telephone')!.classList.add('invalid_input');
     }
     if (validationError > '') {
       setAlertStyle({
@@ -345,13 +349,12 @@ const page: FC<pageProps> = () => {
                   id="telephone"
                   type="tel"
                   placeholder="1234567890"
-                  required
-                  minLength={13}
-                  maxLength={13}
+                  required 
+                 
                   onChange={(e) => {
-                    setPhone(e.target.value.slice(3));
+                    setPhone(e.target.value);
                   }}
-                  value={'+1 ' + phone}
+                  value={phone}
                 />
               </label>
               {(session?.user.role == 'Admin' ||
