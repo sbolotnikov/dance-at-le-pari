@@ -1,5 +1,5 @@
 
-import ImageUploader from 'react-images-upload';
+// import ImageUploader from 'react-images-upload';
 import Resizer from 'react-image-file-resizer'; 
 const UploadPicture  = () => {
     
@@ -38,7 +38,7 @@ const UploadPicture  = () => {
       } 
 return <div className='m-auto w-[500px]' >
     
-    <ImageUploader
+    {/* <ImageUploader
           withIcon={false}
           withPreview={false}
           buttonText="Choose images"
@@ -46,7 +46,7 @@ return <div className='m-auto w-[500px]' >
           singleImage={true}
           imgExtension={['.jpg', '.gif', '.png', '.gif']}
           maxFileSize={5242880}
-        />
+        /> */}
     
 </div>
 
