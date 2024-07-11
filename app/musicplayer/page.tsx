@@ -4,6 +4,7 @@ import { PageWrapper } from '@/components/page-wrapper';
 import AnimateModalLayout from '@/components/AnimateModalLayout';
 import Slider from '@/components/Slider';
 import PlayerButtons from './PlayerButtons';
+import ShowIcon from '@/components/svg/showIcon';
 
 interface MusicPlayerProps {
   rateSet: number;
@@ -100,8 +101,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
   };
 
   return (
-    <div className="w-full max-w-md mx-auto">
-      <h2 className="text-2xl font-bold text-center">Music Player</h2>
+    <div className="w-full max-w-md mx-auto"> 
       <div>
         <audio
           ref={audioRef}
@@ -288,9 +288,15 @@ const page = (props: Props) => {
       <div className="blurFilter border-0 rounded-md p-2 shadow-2xl w-[90%] max-w-[450px] max-h-[85%] overflow-y-auto md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70">
         <div className="w-full h-full flex flex-col justify-center items-center border rounded-md border-lightMainColor dark:border-darkMainColor relative p-2">
           <div className="container mx-auto p-4">
-            <h1 className="text-3xl font-bold text-center mb-6">
-              Music Player
-            </h1>
+            <h3 className="w-full uppercase xs:text-md sm:text-xl phone:text-2xl tablet:text-3xl text-center">
+            Music Player
+            </h3>
+            <div
+            id="icon"
+            className=" h-20 w-20 md:h-24 md:w-24 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor m-auto"
+          >
+            <ShowIcon icon={'Music'} stroke={'0.1'} />
+          </div>
             <p className="text-center mb-4">Song Title: {musicFile.name}</p>
             <MusicPlayer
               rateSet={rate}
