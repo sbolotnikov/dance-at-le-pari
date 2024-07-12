@@ -282,12 +282,67 @@ export default function EditScheduleModal({
                 )}
               </div>
             </label>
+            <label className="flex flex-row justify-between items-center m-1 w-full">
+              Note:
+              {role !== 'Student' ? (
+                <input
+                  className=" outline-none border-none rounded-md w-3/4 text-lg text-lightMainColor p-0.5 mx-1"
+                  id="title"
+                  name="title"
+                  type="text"
+                  onFocus={handleOnFocus} 
+                  onBlur={handleBlur} 
+                  value={tag}
+                  onChange={(e) => {
+                    setTag(e.target.value);
+                  }}
+                />
+              ) : (
+                <h2 className="text-center  rounded-md w-3/4 p-0.5 mx-1">
+                  {event.tag}
+                </h2>
+              )}
+            </label>
+            {role !== 'Student' && (
+              <label className="w-full flex flex-row justify-between items-center mb-1">
+                Length in min.
+                <input
+                  className=" outline-none border-none rounded-md  w-1/6 text-lg text-lightMainColor p-0.5 mx-1"
+                  id="length1"
+                  name="length1"
+                  type="number"
+                  onFocus={handleOnFocus} 
+                  onBlur={handleBlur} 
+                  value={length1}
+                  onChange={(e) => {
+                    let dateObj = Date.parse(eventDateTime1);
+                    let newDateOBJ = new Date(
+                      dateObj + parseInt(e.target.value) * 60000
+                    );
+                    setEventDateTime2(
+                      newDateOBJ.toLocaleDateString('en-us', {
+                        year: 'numeric',
+                        month: 'numeric',
+                        day: 'numeric',
+                      }) +
+                        ' ' +
+                        newDateOBJ.toLocaleTimeString('en-US', {
+                          timeStyle: 'short',
+                        })
+                    );
+
+                    setLength(parseInt(e.target.value));
+                  }}
+                  required
+                />
+              </label>
+            )}
             {role !== 'Student' && (
               <div className="flex flex-col justify-between items-center w-full">
-                <label className="flex flex-col justify-between items-center  relative ">
-                  Choose Students
+                <div className="flex flex-row  w-full">
+                  <span>Choose Students</span>
                   <button
-                    className=" outline-none border-none fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor rounded-md  absolute p-1 -top-1 -right-8 w-8 h-8"
+                    className=" outline-none border-none fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor rounded-md  ml-2 mb-2  p-1  w-8 h-8"
                     onClick={(e) => {
                       e.preventDefault();
                       setRevealCloud1(!revealCloud1);
@@ -296,7 +351,7 @@ export default function EditScheduleModal({
                   >
                     <ShowIcon icon={'Exchange'} stroke={''} />
                   </button>
-                </label>
+                </div>
                 {/* <div className="relative flex justify-center items-center outline-none border border-lightMainColor dark:border-darkMainColor rounded-md w-24 my-6 mx-auto"> */}
 
                 <div className="w-full h-[6.1rem] relative   overflow-auto border border-lightMainColor dark:border-darkMainColor rounded-md">
@@ -354,62 +409,6 @@ export default function EditScheduleModal({
                   </div>
                 </div>
               </div>
-            )}
-
-            <label className="flex flex-row justify-between items-center m-1 w-full">
-              Note:
-              {role !== 'Student' ? (
-                <input
-                  className=" outline-none border-none rounded-md w-3/4 text-lg text-lightMainColor p-0.5 mx-1"
-                  id="title"
-                  name="title"
-                  type="text"
-                  onFocus={handleOnFocus} 
-                  onBlur={handleBlur} 
-                  value={tag}
-                  onChange={(e) => {
-                    setTag(e.target.value);
-                  }}
-                />
-              ) : (
-                <h2 className="text-center  rounded-md w-3/4 p-0.5 mx-1">
-                  {event.tag}
-                </h2>
-              )}
-            </label>
-            {role !== 'Student' && (
-              <label className="w-full flex flex-row justify-between items-center mb-1">
-                Length in min.
-                <input
-                  className=" outline-none border-none rounded-md  w-1/6 text-lg text-lightMainColor p-0.5 mx-1"
-                  id="length1"
-                  name="length1"
-                  type="number"
-                  onFocus={handleOnFocus} 
-                  onBlur={handleBlur} 
-                  value={length1}
-                  onChange={(e) => {
-                    let dateObj = Date.parse(eventDateTime1);
-                    let newDateOBJ = new Date(
-                      dateObj + parseInt(e.target.value) * 60000
-                    );
-                    setEventDateTime2(
-                      newDateOBJ.toLocaleDateString('en-us', {
-                        year: 'numeric',
-                        month: 'numeric',
-                        day: 'numeric',
-                      }) +
-                        ' ' +
-                        newDateOBJ.toLocaleTimeString('en-US', {
-                          timeStyle: 'short',
-                        })
-                    );
-
-                    setLength(parseInt(e.target.value));
-                  }}
-                  required
-                />
-              </label>
             )}
             <label className="flex flex-row m-1 w-full justify-between items-center">
               Event type

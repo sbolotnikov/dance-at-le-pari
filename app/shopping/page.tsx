@@ -13,6 +13,7 @@ import { useSession } from 'next-auth/react';
 import LoadingScreen from '@/components/LoadingScreen';
 import AlertMenu from '@/components/alertMenu';
 import { useDimensions } from '@/hooks/useDimensions';
+import Link from 'next/link';
 
 interface pageProps {}
 
@@ -180,7 +181,7 @@ const page: FC<pageProps> = ({}) => {
                 </div>
               </div>
             </div>
-            <PaymentForm
+            {(session && session.user.telephone!>"")?<PaymentForm
               applicationId={process.env.NEXT_PUBLIC_SQUARE_APLICATION_ID!}
               locationId={process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID!}
               //      createPaymentRequest={() => ({
@@ -270,7 +271,11 @@ const page: FC<pageProps> = ({}) => {
               }}
             >
               <CreditCard />
-            </PaymentForm>
+            </PaymentForm>:
+            <div className="w-full h-full flex flex-col justify-center items-center">
+              <h2>To make purchases please {!session?<span><Link href='/signin' className="font-semibold text-franceBlue hover:uppercase">register</Link> or <Link href='/login' className="font-semibold text-franceBlue hover:uppercase">login</Link> and  provide a phone number so we can contact you</span>:session.user.telephone!>""?"":<span> update your phone number in <Link href='/profile' className="font-semibold text-franceBlue hover:uppercase">Profile</Link> so we can contact you</span>}!</h2>
+              
+            </div>}
 
             <div className="m-2">{'  '}</div>
           </div>

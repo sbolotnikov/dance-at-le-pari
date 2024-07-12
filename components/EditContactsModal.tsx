@@ -110,6 +110,7 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
             return; 
           }
         }
+      
         fetch('/api/admin/contacts_import', {
           method: 'POST',
           headers: {
@@ -131,7 +132,20 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
             inputField: '',
           });
           sleep(1000).then(()=>setRevealAlert(true))
-        }); 
+        }).catch((err) => {
+          console.log(err);
+          setAlertStyle({
+            variantHead: 'danger',
+            heading: `Something went wrong`,
+            text: ``,
+            color1: 'danger',
+            button1: 'Ok',
+            color2: '',
+            button2: '',
+            inputField: '',
+          });
+          sleep(1000).then(()=>setRevealAlert(true))
+        })
 
       }
   }, [newUsers.length]);
@@ -341,12 +355,15 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
                             email: newContact.email,
                             telephone1: newContact.telephone1,
                             telephone2: newContact.telephone2,
+                            source:"manual input"
                           }),
                         }).then((data) => {
                           setNewContact(false);
                           console.log(data.json());
                           setSelectedId(0);
-                        });
+                        }).catch((err) => {
+                          console.log(err);
+                        })
                       }}
                     />
                   )}

@@ -9,16 +9,18 @@ export  async function POST(
   try {
 
     const data = await req.json();
-
-    console.log(data)
-    const createdSchedule = await prisma.contact.createMany({
-        data,
-        skipDuplicates: true,
-      })
+ 
+    // const contacts = await prisma.contact.createMany({
+    //     data
+    //   })
+      let contacts = []
+      for (let i=0;i<data.length;i++){
+        console.log(data[i])
+        contacts[i] = await prisma.contact.create({ data: data[i]})}
     await prisma.$disconnect()
     // Send success response
     return new NextResponse(
-      JSON.stringify({ message: 'Schedule event created',createdSchedule,status: 201,
+      JSON.stringify({ message: 'Contacts created',contacts,status: 201,
       }),
     );
   } catch (error) {
