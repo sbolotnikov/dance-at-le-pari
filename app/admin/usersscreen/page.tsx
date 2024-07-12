@@ -50,6 +50,7 @@ function page() {
   var filtersArray = [
     ['All', ''],
     ['Students', 'Student'],
+    ['Teachers', 'Teacher'],
     ['Administarors', 'Admin'],
   ];
 
