@@ -73,6 +73,11 @@ const Navbar = ({ path, locale, children }: Props) => {
       title: 'Studio',
       icon: 'Home2',
     },
+    {
+      url: '/gift',
+      title: 'Gift',
+      icon: 'Gift',
+    },
   ]);
   useEffect(() => {
     let linksArray = [];
@@ -102,6 +107,11 @@ const Navbar = ({ path, locale, children }: Props) => {
           url: '/blog/0',
           title: 'Blog',
           icon: 'Blog',
+        },
+        {
+          url: '/gift',
+          title: 'Gift',
+          icon: 'Gift',
         },
       ];
     } else if (session.user.role == 'Admin') {
@@ -140,7 +150,12 @@ const Navbar = ({ path, locale, children }: Props) => {
           url: '/admin/usersscreen',
           title: 'Dashboard',
           icon: 'Dashboard',
-        }
+        },
+        {
+          url: '/gift',
+          title: 'Gift',
+          icon: 'Gift',
+        },
 
       ];
     } else {
@@ -174,6 +189,11 @@ const Navbar = ({ path, locale, children }: Props) => {
           url: '/blog/0',
           title: 'Blog',
           icon: 'Blog',
+        },
+        {
+          url: '/gift',
+          title: 'Gift',
+          icon: 'Gift',
         },
       ];
     }
@@ -355,7 +375,7 @@ const Navbar = ({ path, locale, children }: Props) => {
         </div>
         <ul
           id="navBarContainer"
-          className="blurFilterNav navbar__list bg-darkMainBG/25 translate-x-80 md:dark:bg-transparent md:bg-transparent dark:bg-lightMainBG/25 md:translate-x-0 transition  duration-1000 ease-in-out"
+          className="blurFilterNav navbar__list bg-darkMainBG/25 translate-x-80 md:dark:bg-transparent md:bg-transparent dark:bg-lightMainBG/25 md:translate-x-0 transition  duration-1000 ease-in-out overflow-y-auto"
         >
           {navbarLinks.map((item, index) => {
             return (

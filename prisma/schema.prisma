@@ -159,6 +159,7 @@ model SettingVar {
   id Int @id @default(autoincrement())
   front_templates_ids Int[]
   hours String[]
+  giftCertificates String @default("[]")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

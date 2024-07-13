@@ -1,5 +1,5 @@
 import dataObject from '@/DataObject';
-import { ScreenSettingsContextType,  TDance,  TEventArray } from '@/types/screen-settings';
+import { ScreenSettingsContextType,  TDance,  TEventArray, TPriceOption } from '@/types/screen-settings';
 import { createContext, useState, useEffect } from 'react'; 
 type Props = {
     children?: React.ReactNode;
@@ -12,6 +12,8 @@ export const SettingsProvider = ({ children }: Props) => {
     const [events, setEvents] = useState<TEventArray>([]);
     const [hours, setHours] = useState<string[]>([]);
     const [dances, setDances] = useState<TDance[]>(dataObject.dances);
+    const [giftCertificates, setGiftCertificates] = useState<TPriceOption[]>([]);
+    const [gsImage, setGSImage] = useState<string>('');
     const changeTheme =(theme:boolean)=>{
         setDarkMode (theme);
     }
@@ -26,11 +28,14 @@ export const SettingsProvider = ({ children }: Props) => {
         .then((data) => {
           console.log(data); 
           setEvents(data.events)
-          setHours(data.hours)  
+          setHours(data.hours)
+          console.log(data.giftCertificates.priceOptions)
+          setGiftCertificates(data.giftCertificates.priceOptions)
+          setGSImage(data.giftCertificates.img)
         }).catch((error) => {console.log(error);})
     },[])
       return (
-        <SettingsContext.Provider value={{darkMode, changeTheme,events, hours, dances }}>
+        <SettingsContext.Provider value={{darkMode, changeTheme,events, hours, dances, giftCertificates, gsImage }}>
           { children}
         </SettingsContext.Provider>
       );

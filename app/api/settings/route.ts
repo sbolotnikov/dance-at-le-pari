@@ -10,7 +10,8 @@ export async function GET() {
           id:0,
         },
       }); 
-    const hours=settings?.hours  
+    const hours=settings?.hours 
+    const giftCertificates=JSON.parse(settings?.giftCertificates!) 
     let dt= new Date()
     const dateString = dt.toISOString().split('T')[0]+'T'+dt.toLocaleString('es-CL').split(" ")[1].slice(0,-3);
     const eventsArray = await prisma.event.findMany({
@@ -39,7 +40,7 @@ export async function GET() {
         JSON.stringify({ message: 'No such template exist',status: 422}),
       );
     }
-  return new NextResponse(JSON.stringify({events, hours} ), {
+  return new NextResponse(JSON.stringify({events, hours, giftCertificates} ), {
     status: 201,
   });
 }

@@ -112,14 +112,14 @@ const page: FC<pageProps> = ({}) => {
             <div className=" h-20 w-20 md:h-28 md:w-28 mb-6 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor m-auto">
               <ShowIcon icon={'ShoppingCart'} stroke={'0.1'} />
             </div>
-            <div className="w-full h-full overflow-y-auto mb-20">
+            <div className="w-full mb-2">
               {items.map((item, index) => {
                 return (
                   <div
                     key={index}
                     className="w-full flex flex-row justify-around items-center border-b-2 border-lightMainColor dark:border-darkMainColor"
                   >
-                    <div className="w-1/2 flex flex-row justify-center items-center">
+                    <div className="w-1/2 md:h-20 flex flex-row justify-center items-center">
                       <ImgFromDb
                         url={item.image}
                         stylings="object-contain hidden md:block md:h-20 md:w-20 m-2 rounded-full"

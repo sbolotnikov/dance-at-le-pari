@@ -7,6 +7,8 @@ export type ScreenSettingsContextType = {
   events: TEventArray;
   hours: string[];
   dances: TDance[];
+  giftCertificates:TPriceOption[]
+  gsImage: string;
 };
  
 export type TComment = {

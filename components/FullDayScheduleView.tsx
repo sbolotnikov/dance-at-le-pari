@@ -300,6 +300,7 @@ const FullDayScheduleView = ({
                 },
               }),
             });
+            router.replace('/schedule/' + day);
           }
         } else {
           if (item.id > 0) {
@@ -318,9 +319,10 @@ const FullDayScheduleView = ({
                 date: selectedTime,
               }),
             });
+            router.replace('/schedule/' + day);
           }
         }
-        router.replace('/schedule/' + day);
+        
       }
       //paste logic
     } else if (str === 'Move') {
