@@ -14,6 +14,7 @@ import { addItem } from '@/slices/cartSlice';
 import { useDispatch } from 'react-redux';
 import ChoosePicture from '@/components/ChoosePicture';
 import ImgFromDb from '@/components/ImgFromDb';
+import SharePostModal from '@/components/SharePostModal';
 type Props = {};
 
 const page = (props: Props) => {
@@ -25,6 +26,7 @@ const page = (props: Props) => {
   const [revealCloud, setRevealCloud] = useState(false);
   const [priceOptions, setPriceOptions] = useState<TPriceOption[] | null>(null);
   const [choosenOption, setChoosenOption] = useState<number>(0);
+  const [revealSharingModal, setRevealSharingModal] = useState(false);
   const dispatch = useDispatch();
   //   tag: string;
   //   price: number;
@@ -54,6 +56,16 @@ const page = (props: Props) => {
   };
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
+       <SharePostModal
+        title={
+          'Page: Gift Certificates | Dance at Le Pari Studio'
+        }
+        url={process.env.NEXT_PUBLIC_URL + '/gift'}
+        quote={`Description: Gift certificates for ballroom dance classes at Dance at le Pari. Perfect for all occasions and skill levels. Choose from group classes, private lessons, or workshops in waltz, tango, foxtrot, and more. \n Click on the link below. \n`}
+        hashtag={' giftCertificate    DanceLePariDanceCenter'}
+        onReturn={() => setRevealSharingModal(false)}
+        visibility={revealSharingModal}
+      />
       {revealCloud && <ChoosePicture onReturn={onReturnPicture} />}
       <div className="blurFilter border-0 rounded-md p-2 shadow-2xl w-[90%] max-w-[850px] h-full max-h-[85%]  md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70">
         <div className="w-full h-full flex flex-col justify-center items-center border rounded-md border-lightMainColor dark:border-darkMainColor relative p-2 overflow-y-auto">
@@ -64,7 +76,16 @@ const page = (props: Props) => {
             <div className=" h-20 w-20 md:h-24 md:w-24 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor m-auto">
               <ShowIcon icon={'Gift'} stroke={'0.1'} />
             </div>
-
+            <button
+              className=" outline-none border-none absolute right-0 top-0  rounded-md  mt-2  w-8 h-8"
+              onClick={(e) => {
+                e.preventDefault();
+                setRevealSharingModal(!revealSharingModal);
+                return;
+              }}
+            >
+              <ShowIcon icon={'Share'} stroke={'2'} />
+            </button>
             <div className="flex flex-col md:flex-row items-center justify-between w-full h-auto">
               <div className="w-full md:w-1/2  flex flex-col justify-center items-center">
                 <div
