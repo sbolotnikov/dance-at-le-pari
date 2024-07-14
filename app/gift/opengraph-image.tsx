@@ -1,8 +1,7 @@
  
 import ShowIcon from '@/components/svg/showIcon';
-import { ImageResponse } from 'next/og';
-import { title } from 'process';
-export const alt = 'My Blog Post';
+import { ImageResponse } from 'next/og'; 
+export const alt = 'Gift certificates';
 export const size = {
   width: 1200,
   height: 630,

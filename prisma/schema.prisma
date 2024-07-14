@@ -135,6 +135,7 @@ model ScheduleEvent {
    teachersid Int[]
    studentid Int[]
    location String?
+   confirmed Boolean @default(false)
 }
 model Purchase {
 id Int @id @default(autoincrement())
