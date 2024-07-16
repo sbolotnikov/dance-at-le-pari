@@ -79,7 +79,7 @@ const BannerGallery = ({ seconds, events }: Props) => {
     <div
       id="galleryContainer"
       className=" h-full w-full relative overflow-hidden rounded-md flex flex-col  "
-      style={{ zIndex: 300 }}
+      style={{ zIndex: 99 }}
     >
       { events.map((item, index) => (
         <div

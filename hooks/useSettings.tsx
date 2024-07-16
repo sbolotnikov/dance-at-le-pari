@@ -9,6 +9,7 @@ type Props = {
 export const SettingsProvider = ({ children }: Props) => {
   
     const [darkMode, setDarkMode] = useState (false);
+    const [hideNav, setHideNav] = useState (false);
     const [events, setEvents] = useState<TEventArray>([]);
     const [hours, setHours] = useState<string[]>([]);
     const [dances, setDances] = useState<TDance[]>(dataObject.dances);
@@ -16,6 +17,9 @@ export const SettingsProvider = ({ children }: Props) => {
     const [gsImage, setGSImage] = useState<string>('');
     const changeTheme =(theme:boolean)=>{
         setDarkMode (theme);
+    }
+    const changeNav = (nav:boolean) => {
+        setHideNav (nav);
     }
     useEffect(() => {
       fetch('/api/settings', {
@@ -35,7 +39,7 @@ export const SettingsProvider = ({ children }: Props) => {
         }).catch((error) => {console.log(error);})
     },[])
       return (
-        <SettingsContext.Provider value={{darkMode, changeTheme,events, hours, dances, giftCertificates, gsImage }}>
+        <SettingsContext.Provider value={{darkMode, changeTheme,hideNav, changeNav, events, hours, dances, giftCertificates, gsImage }}>
           { children}
         </SettingsContext.Provider>
       );

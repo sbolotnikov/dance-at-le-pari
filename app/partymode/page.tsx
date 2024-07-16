@@ -58,7 +58,7 @@ const page: React.FC<Props> = () => {
     savedMessages,
     textColor,
   } = usePartySettings();
-
+  console.log(videoChoice);
   const reverseColor = (str: string) => {
     console.log(str);
     let n = parseInt(str.slice(1), 16);
@@ -105,10 +105,20 @@ const page: React.FC<Props> = () => {
       }
     }
   };
-  const handleChange = (text: string | boolean | object, eventName: string) => {
-    // updateDoc(doc(db, 'competitions', id), {
-    //   [eventName]: text,
-    // });
+  const handleChange = (text: number | string | boolean | object, eventName: string) => {
+    fetch('/api/admin/update_party', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            [eventName]: text
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+        }) 
   };
 
   const onPressPicture = async (e: React.MouseEvent) => {
@@ -133,6 +143,7 @@ const page: React.FC<Props> = () => {
       <ChooseVideosModal
         videosArray={displayedVideos}
         vis={modal4Visible}
+        onClose={() => setModal4Visible(false)}
         onReturn={(ret) => {
           if (ret && ret.length > 0) {
             console.log(ret);
@@ -172,11 +183,12 @@ const page: React.FC<Props> = () => {
             }
             setModal3Visible(false);
           }}
+          onClose={()=> setModal3Visible(false)}
         />
-      )}
-      <div className="w-full h-[85vh] relative overflow-y-scroll">
-        <div className="w-full absolute top-0 left-0 flex flex-col justify-start items-center mt-14">
-          <div>
+      )} 
+      <div className="blurFilter border-0 rounded-md p-2 shadow-2xl w-[95%] max-w-[650px] max-h-[85%] h-[85%]  md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70">
+        <div className="w-full h-full flex flex-col justify-center items-center border rounded-md border-lightMainColor dark:border-darkMainColor relative p-2 overflow-auto">
+          <div className="absolute top-0 left-0 w-full h-auto p-2">
             <button
               className="w-[92%] h-48 m-1"
               onClick={(e) => onPressPicture(e)}
@@ -192,55 +204,57 @@ const page: React.FC<Props> = () => {
                 </div>
               )}
             </button>
-            <div className="w-full flex flex-row justify-center items-start">
+            <div className="w-full flex flex-row justify-center items-center">
               <div className="flex flex-col justify-center items-center">
                 <select
                   value={mode}
                   onChange={(e) => handleChange(e.target.value, 'mode')}
-                  className="w-36 h-9 bg-white rounded-lg border border-[#776548] text-[#444] text-left"
+                  className="w-20 h-9 bg-white rounded-lg border border-[#776548] text-[#444] text-left"
                 >
-                  {['Auto', 'Video', 'Heats', 'Manual', 'Default'].map(
-                    (option) => (
-                      <option key={option} value={option}>
-                        {option}
-                      </option>
-                    )
-                  )}
+                  {['Auto', 'Video', 'Manual', 'Default'].map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
                 </select>
-                <p className="text-center w-32">Choose casting mode</p>
+                <p className="text-center w-20">Choose mode</p>
               </div>
-              <div>
+              <div className="flex flex-col justify-center items-center">
                 <CountBox
-                  startValue={fontSize || 12}
-                  setWidth={4}
+                  startValue={fontSize}
+                  setWidth={10}
                   onChange={(num) => {
                     console.log(num);
-                    handleChange(num.toString(), 'fontSize');
+                    handleChange(num , 'fontSize');
                   }}
                 />
                 <p className="text-center w-24">Choose font size</p>
-              </div>
-              <div className="flex flex-col justify-center items-center h-16">
-                <button
-                  onClick={() => setModal5Visible(true)}
-                  className="w-17 bg-[#000000] text-center mt-0 ml-1 rounded-md"
-                  style={{ backgroundColor: reverseColor(textColor) }}
-                >
-                  <span
-                    className="text-xl font-semibold text-center"
-                    style={{ color: textColor }}
-                  >
-                    Text Color
-                  </span>
-                </button>
-              </div>
-              <div>
+              </div> 
+              <div className="flex flex-col justify-center items-center">
+                <div className="h-8 w-8 rounded-full overflow-hidden border-none relative">
+                  <input
+                    className=" outline-none h-10 w-10  absolute -top-1 -left-1  border-none "
+                    name="color"
+                    id="color"
+                    type="color"
+                    value={textColor}
+                    onChange={async (e) => {
+                      console.log(e.target.value);
+
+                      handleChange(e.target.value, 'textColor');
+ 
+                    }}
+                  />
+                </div>
+                <p className="text-center w-8">Text Color</p>
+                </div>
+              <div className="flex flex-col justify-center items-center">
                 <CountBox
-                  startValue={seconds || 10}
-                  setWidth={4}
+                  startValue={seconds}
+                  setWidth={10}
                   onChange={(num) => {
                     console.log(num);
-                    handleChange(num.toString(), 'seconds');
+                    handleChange(num, 'seconds');
                   }}
                 />
                 <p className="text-center w-24">Choose seconds/frame</p>
@@ -321,18 +335,18 @@ const page: React.FC<Props> = () => {
                 <p className="text-center w-48">Choose Picture for Logo</p>
               </div>
             )}
-            {displayedVideos.length>0 && (
+            {displayedVideos.length > 0 && (
               <div className="w-full flex flex-col justify-center items-center">
                 <select
                   value={videoChoice?.name || ''}
                   onChange={(e) => {
                     const selectedVideo = displayedVideos.find(
-                      (video) => video.tag === e.target.value
+                      (video) => video.name === e.target.value
                     );
                     if (selectedVideo) {
                       handleChange(
                         {
-                          name: selectedVideo.tag,
+                          name: selectedVideo.name,
                           link: selectedVideo.link,
                         },
                         'videoChoice'
@@ -342,10 +356,10 @@ const page: React.FC<Props> = () => {
                   className="w-60 h-9 bg-white rounded-lg border border-[#776548] text-[#444] text-left"
                 >
                   {displayedVideos
-                    .sort((a, b) => (a.tag > b.tag ? 1 : -1))
+                    .sort((a, b) => (a.name > b.name ? 1 : -1))
                     .map((item) => (
-                      <option key={item.tag} value={item.tag}>
-                        {item.tag}
+                      <option key={item.name} value={item.name}>
+                        {item.name}
                       </option>
                     ))}
                 </select>
@@ -426,9 +440,10 @@ const page: React.FC<Props> = () => {
                 <p className="text-center w-12">Start Show</p>
               </div>
             </div>
-          </div>
+          
           <UrgentMessageComponent
             savedMessages={savedMessages}
+            message={message}
             onChange={(text) => {
               console.log(text);
               handleChange(text, 'message');
@@ -450,6 +465,7 @@ const page: React.FC<Props> = () => {
               />
               <p className="ml-2">Show Urgent Message</p>
             </div>
+          </div>
           </div>
         </div>
       </div>

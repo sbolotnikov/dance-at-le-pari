@@ -1,10 +1,9 @@
- 
+ "use client"
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { PrismaClient, Party } from '@prisma/client';
+import {  Party } from '@prisma/client'; 
 // import pg from 'pg'
 // const { Pool, Client } = pg 
-
-const prisma = new PrismaClient();
+ 
  
 interface PartyContextType {
   image: string;
@@ -14,7 +13,7 @@ interface PartyContextType {
   fontSize: number;
   displayedPictures: { link: string; name: string }[];
   displayedVideos: {
-    tag: string;
+    name: string;
     image: string;
     link: string;
   }[]; 
@@ -33,7 +32,22 @@ export const PartyContext = createContext<PartyContextType  >({} as PartyContext
 
 export default function usePartySettings(): PartyContextType   {
   const [compArray, setCompArray] = useState<Party[]>([]); 
-
+  const [image, setImage] = useState('');  
+  const [name, setName] = useState('');
+  const [message, setMessage] = useState('');
+  const [mode, setMode] = useState('');
+  const [fontSize, setFontSize] = useState<number>(0);
+  const [displayedPictures, setDisplayedPictures] = useState<{ link: string; name: string }[]>([]);
+  const [displayedVideos, setDisplayedVideos] = useState<{ name: string; image: string; link: string;}[]>([]);
+  const [videoChoice, setVideoChoice] = useState<{ link: string; name: string }>({link: '', name: ''});
+  const [compLogo, setCompLogo] = useState<{ link: string; name: string }>({link: '', name: ''});
+  const [titleBarHider, setTitleBarHider] = useState(false);
+  const [showUrgentMessage, setShowUrgentMessage] = useState(false);
+  const [displayedPicturesAuto, setDisplayedPicturesAuto] = useState<{ link: string; name: string }[]>([]);
+  const [seconds, setSeconds] = useState(0);
+  const [manualPicture, setManualPicture] = useState<{ link: string; name: string }>({link: '', name: ''});
+  const [savedMessages, setSavedMessages] = useState<string[]>([]);
+  const [textColor, setTextColor] = useState('');
   
   
   
@@ -80,8 +94,24 @@ export default function usePartySettings(): PartyContextType   {
 //   }
   
   async function getCompArray() {
-    const partyArray = await prisma.party.findMany();
+    const partyArray = await fetch('/api/admin/get_parties').then((res) => res.json());
     console.log(partyArray)
+    setImage(partyArray[0].image),
+    setName(partyArray[0].name ),
+    setMessage(partyArray[0].message),
+    setMode(partyArray[0].mode),
+    setFontSize(partyArray[0].fontSize),
+    setDisplayedPictures(partyArray[0].displayedPictures.map((str1:string)=>JSON.parse(str1))),
+    setDisplayedVideos(partyArray[0].displayedVideos.map((str1:string)=>JSON.parse(str1))),
+    setVideoChoice(JSON.parse(partyArray[0].videoChoice)),
+    setCompLogo(JSON.parse(partyArray[0].compLogo)),
+    setTitleBarHider(partyArray[0].titleBarHider),
+    setShowUrgentMessage(partyArray[0].showUrgentMessage) ,
+    setDisplayedPicturesAuto(partyArray[0].displayedPicturesAuto.map((str1:string)=>JSON.parse(str1))) ,
+    setSeconds(partyArray[0]?.seconds),
+    setManualPicture(JSON.parse(partyArray[0].manualPicture)),
+    setSavedMessages(partyArray[0].savedMessages),
+    setTextColor(partyArray[0].textColor),
     setCompArray(partyArray);
   }
 
@@ -101,20 +131,19 @@ export default function usePartySettings(): PartyContextType   {
     mode: compArray[0]?.mode ?? '',
     fontSize: compArray[0]?.fontSize ?? 0,
     displayedPictures: compArray[0]?.displayedPictures.map((str1:string)=>JSON.parse(str1)) ?? [],
-    displayedVideos: compArray[0]?.displayedVideos.map((str1:string)=>JSON.parse(str1)) ?? { tag: '', image: '', link: '' },
+    displayedVideos: compArray[0]?.displayedVideos.map((str1:string)=>JSON.parse(str1)) ?? { name: '', image: '', link: '' },
     videoChoice:compArray[0]?.videoChoice? JSON.parse(compArray[0]?.videoChoice): { link: '', name: '' },
     compLogo: compArray[0]?.compLogo?JSON.parse(compArray[0]?.compLogo) : { link: '', name: '' },
     titleBarHider: compArray[0]?.titleBarHider ?? false,
     showUrgentMessage: compArray[0]?.showUrgentMessage ?? false,
     displayedPicturesAuto: compArray[0]?.displayedPicturesAuto.map((str1:string)=>JSON.parse(str1)) ?? [],
     seconds: compArray[0]?.seconds ?? 10,
-    manualPicture:compArray[0]?.manualPicture? JSON.parse(compArray[0]?.manualPicture) : { tag: '', image: '' },
+    manualPicture:compArray[0]?.manualPicture? JSON.parse(compArray[0]?.manualPicture) : { name: '', image: '' },
     savedMessages: compArray[0]?.savedMessages ?? [],
     textColor: compArray[0]?.textColor ?? '#000000',
   };
 
-  return ( {...value } 
-  );
+  return ( {image, name, message, mode, fontSize, displayedPictures, displayedVideos, videoChoice, compLogo, titleBarHider, showUrgentMessage, displayedPicturesAuto, seconds, manualPicture, savedMessages, textColor} );
 };
 
   

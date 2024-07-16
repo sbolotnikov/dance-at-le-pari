@@ -1,10 +1,12 @@
 'use client'; 
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 // Note: Some imports and components might need to be adjusted or replaced
 // for a web-based React application 
 import VideoPlayingComponent from './VideoPlayingComponent';
 import ManualImage from './ManualImage';
 import AutoImages from './AutoImages';
+import { SettingsContext } from '@/hooks/useSettings';
+import { ScreenSettingsContextType } from '@/types/screen-settings';
 
 type Props = {
     videoUri: { link: string; name: string }; 
@@ -43,8 +45,11 @@ type Props = {
     textColor,
     onReturn, 
   }) => {
+    const { changeNav } = useContext(SettingsContext) as ScreenSettingsContextType;
+     
     const handleSubmit = (e: React.MouseEvent, submitten: string) => {
         e.preventDefault();
+        changeNav(true);
         onReturn(submitten);
       };
     
@@ -56,7 +61,7 @@ type Props = {
           const currentDateTime = now.toLocaleString();
           setTimeNow(currentDateTime.split(',')[1]);
         }, 1000);
-    
+        !vis?changeNav(false):changeNav(true);
         return () => clearInterval(timerInterval);
       }, [vis]);
     
@@ -65,10 +70,9 @@ type Props = {
       };
     
       return (
-        <div className="flex justify-center items-center w-full h-full absolute top-0 left-0">
-          {vis && (
+        <div className={`flex justify-center items-center w-[100vw] h-[100vh] absolute top-0 z-[2000] left-0 ${!vis?"hidden":""}`} style={gradientStyle}>
             <div className="relative w-full h-full">
-              <div className="w-full h-full flex justify-start items-center" style={gradientStyle}>
+              <div className="w-full h-full flex justify-start items-center" >
                 {mode === 'Video' && (
                   <VideoPlayingComponent
                     videoUri={videoUri.link}
@@ -140,7 +144,7 @@ type Props = {
                 </div>
               </div>
             </div>
-          )}
+          
         </div>
       );
     };

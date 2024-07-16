@@ -1,9 +1,10 @@
 'use client';
 
+import AnimateModalLayout from '@/components/AnimateModalLayout';
 import React, { useEffect, useState } from 'react'; 
 
 interface Video {
-  tag: string;
+  name: string;
   image: string;
   link: string;
 }
@@ -11,10 +12,11 @@ interface Video {
 interface ChooseVideosModalProps {
   videosArray: Video[];
   vis: boolean;
-  onReturn: (videos: Video[]) => void;
+  onReturn: (videos: string[]) => void;
+  onClose: () => void;
 }
 
-const ChooseVideosModal: React.FC<ChooseVideosModalProps> = ({ videosArray, vis, onReturn }) => {
+const ChooseVideosModal: React.FC<ChooseVideosModalProps> = ({ videosArray, vis, onReturn, onClose }) => {
   const [displayVideos, setDisplayVideos] = useState<Video[]>([]);
   const [videoLink, setVideoLink] = useState('');
   const [videoThumbnailLink, setVideoThumbnailLink] = useState('');
@@ -22,13 +24,13 @@ const ChooseVideosModal: React.FC<ChooseVideosModalProps> = ({ videosArray, vis,
   const [videoText, setVideoText] = useState('');
 
   useEffect(() => {
-    setDisplayVideos(videosArray || []);
+    setDisplayVideos(videosArray);
   }, [videosArray]);
 
   const handleSubmit = (e: React.FormEvent, action: 'Save' | 'Close') => {
     e.preventDefault();
     if (action === 'Save') {
-      onReturn(displayVideos);
+      onReturn(displayVideos.map((item)=>JSON.stringify(item)));
     } else {
       onReturn([]);
     }
@@ -36,7 +38,7 @@ const ChooseVideosModal: React.FC<ChooseVideosModalProps> = ({ videosArray, vis,
 
   const addVideo = () => {
     const newVideo: Video = {
-      tag: videoText,
+      name: videoText,
       image: videoThumbnailLink,
       link: videoLink,
     };
@@ -52,8 +54,24 @@ const ChooseVideosModal: React.FC<ChooseVideosModalProps> = ({ videosArray, vis,
   if (!vis) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30">
-      <div className="bg-white w-11/12 h-5/6 max-w-3xl rounded-md shadow-lg overflow-y-auto p-4">
+    <AnimateModalLayout
+      visibility={vis}
+      onReturn={() => {
+        onClose();
+      }}
+    > 
+      <div
+        className={`blurFilter border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-[1170px]  flex justify-center items-center flex-col   md:w-[80svw] bg-lightMainBG dark:bg-darkMainBG h-[70svh] md:h-[85svh]
+        }`}
+      >
+        <div
+          id="wrapperDiv"
+          className="w-full h-full relative  p-1  overflow-y-auto border border-lightMainColor dark:border-darkMainColor rounded-md flex flex-col justify-center items-center"
+        >
+          <div
+            id="containedDiv"
+            className={`absolute top-0 left-0 flex flex-col w-full p-1 justify-center items-center`}
+          > 
         <h2 className="text-center text-xl font-bold mb-4">Available Videos</h2>
 
         <div className="border border-black p-2 rounded-md h-32 overflow-y-auto mb-4">
@@ -61,7 +79,7 @@ const ChooseVideosModal: React.FC<ChooseVideosModalProps> = ({ videosArray, vis,
             {displayVideos.map((item, i) => (
               <div key={`videocasting${i}`} className="m-1 mr-4 flex flex-col items-center">
                 <div className="relative">
-                  <img src={item.image} alt={item.tag} className="h-16 w-16 md:h-20 md:w-20 bg-gray-300 p-2 rounded-sm" />
+                  <img src={item.image} alt={item.name} className="h-16 w-16 md:h-20 md:w-20 bg-gray-300 p-2 rounded-sm" />
                   <button
                     onClick={() => removeVideo(i)}
                     className="absolute top-0 right-0 text-red-500 hover:text-red-700"
@@ -69,7 +87,7 @@ const ChooseVideosModal: React.FC<ChooseVideosModalProps> = ({ videosArray, vis,
                      {'Del'}
                   </button>
                 </div>
-                <p className="mt-1 text-center max-w-[100px] truncate">{item.tag}</p>
+                <p className="mt-1 text-center max-w-[100px] truncate">{item.name}</p>
               </div>
             ))}
           </div>
@@ -159,6 +177,8 @@ const ChooseVideosModal: React.FC<ChooseVideosModalProps> = ({ videosArray, vis,
         </button>
       </div>
     </div>
+    </div>
+    </AnimateModalLayout>
   );
 };
 

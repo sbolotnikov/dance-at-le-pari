@@ -1,5 +1,6 @@
 'use client';
 
+import AnimateModalLayout from '@/components/AnimateModalLayout';
 import React, { useState, useEffect } from 'react';
 
 interface ColorChoiceModalProps {
@@ -30,21 +31,30 @@ const ColorChoiceModal: React.FC<ColorChoiceModalProps> = ({
   if (!vis) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30">
-      <div className="bg-white w-11/12 max-w-2xl h-3/5 rounded-md shadow-lg flex flex-col items-center justify-between p-6">
-        <div className="w-full max-w-md flex flex-col items-center">
+    <AnimateModalLayout
+      visibility={vis}
+      onReturn={() => {
+        onClose(true);
+      }}
+    > 
+      <div
+        className={`blurFilter border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-[1170px]  flex justify-center items-center flex-col   md:w-[80svw] bg-lightMainBG dark:bg-darkMainBG h-[70svh] md:h-[85svh]
+        }`}
+      >
+        <div
+          id="wrapperDiv"
+          className="w-full h-full relative  p-1  overflow-y-auto border border-lightMainColor dark:border-darkMainColor rounded-md flex flex-col justify-center items-center"
+        >
+          <div
+            id="containedDiv"
+            className={`absolute top-0 left-0 flex flex-col w-full p-1 justify-center items-center`}
+          > 
           <input
             type="color"
             value={color}
             onChange={handleColorChange}
-            className="w-full h-48 mb-4"
-          />
-          <input
-            type="text"
-            value={color}
-            onChange={handleColorChange}
-            className="mt-4 p-2 border rounded w-full text-center"
-          />
+            className="w-full h-24 mb-4"
+          /> 
         </div>
         <div className="mt-4 w-full flex justify-center">
           <div
@@ -52,14 +62,9 @@ const ColorChoiceModal: React.FC<ColorChoiceModalProps> = ({
             style={{ backgroundColor: color }}
           ></div>
         </div>
-        <button
-          onClick={() => onClose(true)}
-          className="mt-6 px-4 py-2 bg-purple-800 text-white rounded hover:bg-purple-700 transition-colors"
-        >
-          Close
-        </button>
       </div>
     </div>
+    </AnimateModalLayout>
   );
 };
 

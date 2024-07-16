@@ -1,5 +1,7 @@
 'use client';
 
+import AnimateModalLayout from '@/components/AnimateModalLayout';
+import Image from 'next/image';
 import React, { useState, useEffect } from 'react'; 
 
 interface Picture {
@@ -11,7 +13,8 @@ type Props = {
   displayPics: Picture[];
   galleryType: 'manual' | 'auto';
   vis: boolean;
-  onReturn: (pictures: Picture[]  ) => void;
+  onReturn: (pictures: string[]  ) => void;
+  onClose:()=>void;
 }
 
 const ChoosePicturesModal: React.FC<Props> = ({
@@ -19,6 +22,7 @@ const ChoosePicturesModal: React.FC<Props> = ({
   galleryType,
   vis,
   onReturn,
+  onClose
 }) => {
   const [displayPictures, setDisplayPictures] = useState<Picture[] >([]);
   const [pictureLink, setPictureLink] = useState('');
@@ -31,7 +35,7 @@ const ChoosePicturesModal: React.FC<Props> = ({
 
   const handleSubmit = (submitType: 'Save' | 'Close') => {
     if (submitType === 'Save') {
-      onReturn(displayPictures);
+      onReturn(displayPictures.map((item)=>JSON.stringify(item)));
     } else {
       onReturn([]);
     }
@@ -63,8 +67,24 @@ const ChoosePicturesModal: React.FC<Props> = ({
   if (!vis) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30">
-      <div className="bg-white w-11/12 max-w-2xl h-5/6 rounded-md shadow-lg flex flex-col items-center p-6 overflow-y-auto">
+    <AnimateModalLayout
+      visibility={vis}
+      onReturn={() => {
+        onClose();
+      }}
+    > 
+      <div
+        className={`blurFilter border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-[1170px]  flex justify-center items-center flex-col   md:w-[80svw] bg-lightMainBG dark:bg-darkMainBG h-[70svh] md:h-[85svh]
+        }`}
+      >
+        <div
+          id="wrapperDiv"
+          className="w-full h-full relative  p-1  overflow-y-auto border border-lightMainColor dark:border-darkMainColor rounded-md flex flex-col justify-center items-center"
+        >
+          <div
+            id="containedDiv"
+            className={`absolute top-0 left-0 flex flex-col w-full p-1 justify-center items-center`}
+          > 
         <h2 className="text-xl font-bold mb-4">Available pictures</h2>
 
         <div className="w-full h-28 border border-black p-1 rounded-md overflow-x-auto mb-4">
@@ -72,8 +92,8 @@ const ChoosePicturesModal: React.FC<Props> = ({
             {displayPictures.map((item, i) => (
               <div key={`picturescasting${i}`} className="relative m-1">
                 <img 
-                  src={typeof item === 'string' ? item : item.link} 
-                  alt={typeof item === 'string' ? `Picture ${i}` : item.name}
+                  src={ item.link} 
+                  alt={galleryType === 'auto' ? `Picture ${i}` : item.name}
                   className="h-16 w-16 bg-gray-300 p-1 rounded-sm"
                 />
                 <button 
@@ -82,7 +102,7 @@ const ChoosePicturesModal: React.FC<Props> = ({
                 >
                   Del
                 </button>
-                {galleryType === "manual" && typeof item !== 'string' && (
+                {galleryType === "manual"  && (
                   <p className="mt-1 text-center max-w-[100px] truncate">{item.name}</p>
                 )}
               </div>
@@ -94,7 +114,9 @@ const ChoosePicturesModal: React.FC<Props> = ({
           <img 
             src={pictureLink} 
             alt="Preview" 
-            className="h-16 w-16 bg-gray-300 rounded-sm mb-2"
+            width={64}
+            height={64}
+            className=" bg-gray-300 rounded-sm mb-2"
           />
           
           <select
@@ -145,7 +167,9 @@ const ChoosePicturesModal: React.FC<Props> = ({
           Close
         </button>
       </div>
+      </div>
     </div>
+    </AnimateModalLayout>
   );
 };
 

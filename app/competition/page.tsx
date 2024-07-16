@@ -2,6 +2,7 @@
 import { FC } from 'react';
 import { useRouter } from 'next/navigation';
 import { PageWrapper } from '@/components/page-wrapper';
+import ShowIcon from '@/components/svg/showIcon';
 interface pageProps {}
 
 const page: FC<pageProps> = ({}) => {
@@ -20,6 +21,20 @@ const page: FC<pageProps> = ({}) => {
           >
             Competitions
           </h2>
+          <div className="flex flex-wrap justify-start items-start h-full w-full">
+          <button
+            className="flex flex-col justify-center items-center h-28 w-28 p-1 border shadow-2xl rounded-md"
+            onClick={() => router.replace('/musicplayer')}
+          >
+            <div className=" h-full w-full  border border-lightMainColor dark:border-darkMainColor/70 rounded-md">
+               
+            <div className=" h-16 w-16 m-auto">
+              <ShowIcon icon={'Music'} stroke={'0.1'} />
+            </div>
+            <p className="text-center">Music Player</p>
+            </div>
+          </button>
+          </div>
         </div>
       </div>
     </PageWrapper>

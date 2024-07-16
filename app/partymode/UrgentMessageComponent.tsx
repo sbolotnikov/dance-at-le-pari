@@ -6,15 +6,16 @@ interface UrgentMessageComponentProps {
   onChange: (message: string) => void;
   onMessageArrayChange: (messages: string[]) => void;
   savedMessages: string[];
+  message: string;
 }
 
 const UrgentMessageComponent: React.FC<UrgentMessageComponentProps> = ({
   onChange,
   onMessageArrayChange,
-  savedMessages,
+  savedMessages,message
 }) => {
   const [openList, setOpenList] = useState(false);
-  const [urgentMessage, setUrgentMessage] = useState('');
+  const [urgentMessage, setUrgentMessage] = useState(message);
 
   const handleMessageChange = (text: string) => {
     setUrgentMessage(text);
@@ -34,7 +35,7 @@ const UrgentMessageComponent: React.FC<UrgentMessageComponentProps> = ({
       <input
         className="h-11 w-full pl-3 rounded-full border-2 border-[#C9AB78] focus:outline-none focus:border-[#A58A5C]"
         placeholder="Enter urgent message"
-        value={urgentMessage}
+        value={message}
         onChange={(e) => handleMessageChange(e.target.value)}
       />
       <button

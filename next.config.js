@@ -23,6 +23,7 @@ module.exports = withTM({
       'dance-at-le-pari.vercel.app',
       'lh3.googleusercontent.com',
       'i3.ytimg.com',
+      'drive.google.com'
     ],
     remotePatterns: [
       {
@@ -31,6 +32,12 @@ module.exports = withTM({
         port: '',
         pathname: '/vi/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'drive.google.com', 
+        pathname: '**',
+      },
+
     ],
   },
 });
