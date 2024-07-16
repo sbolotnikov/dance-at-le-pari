@@ -1,14 +1,14 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-type Props={
+type Props = {
   seconds: number;
   image1: string;
   text1: string;
   compLogo: string;
   videoBG: string;
   titleBarHider: boolean;
-}
+};
 
 const ManualImage: React.FC<Props> = ({
   seconds,
@@ -26,7 +26,7 @@ const ManualImage: React.FC<Props> = ({
   const [animate, setAnimate] = useState(false);
 
   useEffect(() => {
-    setActivePic(prevActivePic => prevActivePic + 1);
+    setActivePic((prevActivePic) => prevActivePic + 1);
     setActPic(image1);
     setActText(text1);
     setAnimate(true);
@@ -47,7 +47,9 @@ const ManualImage: React.FC<Props> = ({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const videoBGtrans = `${videoBG.split('&playlist')[0]}&mute=1&playlist${videoBG.split('&playlist')[1]}`;
+  const videoBGtrans = `${videoBG.split('&playlist')[0]}&mute=1&playlist${
+    videoBG.split('&playlist')[1]
+  }`;
 
   return (
     <div className="w-full h-full flex justify-start items-center relative">
@@ -61,7 +63,7 @@ const ManualImage: React.FC<Props> = ({
 
       <div
         className={`absolute inset-0 m-auto w-full h-full transition-opacity duration-1000 ${
-          animate ? 'opacity-100' : 'opacity-0'
+          animate ? 'opacity-0' : 'opacity-100'
         }`}
       >
         {image1 && (
@@ -105,7 +107,7 @@ const ManualImage: React.FC<Props> = ({
       <div className="absolute inset-0 m-auto w-full h-full flex justify-center items-center">
         <div
           className={`transition-all duration-1000 ${
-            animate ? 'w-[1650px] h-[1650px] opacity-0' : 'w-0 h-0 opacity-100'
+            animate ?  'w-0 h-0 opacity-100': 'w-[1650px] h-[1650px] opacity-0'
           }`}
         >
           <img src={compLogo} className="h-full w-full" alt="Company Logo" />

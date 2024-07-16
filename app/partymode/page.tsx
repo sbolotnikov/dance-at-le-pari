@@ -270,10 +270,10 @@ const page: React.FC<Props> = () => {
                     );
                     if (selectedPicture) {
                       handleChange(
-                        {
+                        JSON.stringify({
                           name: selectedPicture.name,
                           link: selectedPicture.link,
-                        },
+                        }),
                         'manualPicture'
                       );
                     }
@@ -314,10 +314,10 @@ const page: React.FC<Props> = () => {
                     );
                     if (selectedLogo) {
                       handleChange(
-                        {
+                        JSON.stringify({
                           name: selectedLogo.name,
                           link: selectedLogo.link,
-                        },
+                        }),
                         'compLogo'
                       );
                     }
@@ -338,19 +338,13 @@ const page: React.FC<Props> = () => {
             {displayedVideos.length > 0 && (
               <div className="w-full flex flex-col justify-center items-center">
                 <select
-                  value={videoChoice?.name || ''}
+                  value={videoChoice.name}
                   onChange={(e) => {
                     const selectedVideo = displayedVideos.find(
                       (video) => video.name === e.target.value
                     );
                     if (selectedVideo) {
-                      handleChange(
-                        {
-                          name: selectedVideo.name,
-                          link: selectedVideo.link,
-                        },
-                        'videoChoice'
-                      );
+                      handleChange(JSON.stringify({name: selectedVideo.name,link: selectedVideo.link,}),'videoChoice');
                     }
                   }}
                   className="w-60 h-9 bg-white rounded-lg border border-[#776548] text-[#444] text-left"
