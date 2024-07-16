@@ -350,7 +350,7 @@ const Navbar = ({ path, locale, children }: Props) => {
         className=" w-full  flex-row justify-end md:justify-between"
         style={{ height: '100%' }}
       >
-        <div className={`fixed bottom-0 right-0 w-screen bg-franceBlue  flex justify-between px-3 items-center md:relative md:flex-1 md:justify-around ${burgerState?"md:h-0 md:-translate-y-8 md:transition  md:duration-1000 md:ease-in-out":"md:h-8"} h-12  `
+        <div className={`fixed bottom-0 right-0 w-screen bg-franceBlue  flex justify-between px-3 items-center md:relative md:flex-1 md:justify-around ${burgerState?"md:h-0 md:-translate-y-8 md:transition  md:duration-1000 md:ease-in-out":"md:h-8"} h-12 z-[99] `
         // md:-translate-y-8 md:transition  md:duration-1000 md:ease-in-out
         }>
           {barArray.map((item, index) => {
@@ -375,7 +375,7 @@ const Navbar = ({ path, locale, children }: Props) => {
         </div>
         <ul
           id="navBarContainer"
-          className="blurFilterNav navbar__list bg-darkMainBG/25 translate-x-80 md:dark:bg-transparent md:bg-transparent dark:bg-lightMainBG/25 md:translate-x-0 transition  duration-1000 ease-in-out overflow-y-auto"
+          className="blurFilterNav navbar__list bg-darkMainBG/25 h-20 translate-x-80 md:dark:bg-transparent md:bg-transparent dark:bg-lightMainBG/25 md:translate-x-0 transition  duration-1000 ease-in-out overflow-y-auto z-[100] "
         >
           {navbarLinks.map((item, index) => {
             return (

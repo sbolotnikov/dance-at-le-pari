@@ -59,8 +59,10 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@types/pg": "^8.11.6",
     "@types/uuid": "^9.0.2",
     "eslint": "8.45.0",
-    "eslint-config-next": "13.4.10"
+    "eslint-config-next": "13.4.10",
+    "pg": "^8.12.0"
   }
 }

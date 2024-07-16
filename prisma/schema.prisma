@@ -156,6 +156,25 @@ amount Int @default (1)
 date String?
 user User? @relation(fields: [userID], references: [id] )
 }
+model Party {
+  id Int @id @default(autoincrement())
+  image String
+  name String
+  message String
+  mode String
+  fontSize Int @default(12)
+  displayedPictures String[]
+  displayedVideos String[]
+  videoChoice String
+  compLogo String
+  titleBarHider Boolean @default(false)
+  showUrgentMessage Boolean @default(false)
+  displayedPicturesAuto String[]
+  seconds Int @default(10)
+  manualPicture String
+  savedMessages String[]
+  textColor String
+}
 model SettingVar {
   id Int @id @default(autoincrement())
   front_templates_ids Int[]
