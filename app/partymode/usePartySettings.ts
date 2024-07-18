@@ -1,8 +1,15 @@
  "use client"
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useRef,  useState, useEffect } from 'react';
 import {  Party } from '@prisma/client'; 
-// import pg from 'pg'
-// const { Pool, Client } = pg 
+import { createClient } from '@supabase/supabase-js';
+import { useRouter } from 'next/router';
+
+// interface Message {
+//   id: string;
+//   userId: string;
+//   text: string;
+//   timestamp: number;
+// }
  
  
 interface PartyContextType {
@@ -31,6 +38,7 @@ interface PartyContextType {
 export const PartyContext = createContext<PartyContextType  >({} as PartyContextType );
 
 export default function usePartySettings(): PartyContextType   {
+  const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_KEY! );
   const [compArray, setCompArray] = useState<Party[]>([]); 
   const [image, setImage] = useState('');  
   const [name, setName] = useState('');
@@ -51,47 +59,8 @@ export default function usePartySettings(): PartyContextType   {
   
   
   
-  
-//   async function listenForChanges() {
-//     const pool = new Pool({
-//         connectionString: process.env.DIRECT_URL,
-//       })
-       
-//       await pool.query('LISTEN party_changes')
-//       await pool.end()
-       
-//       const client = new Client({
-//         connectionString: process.env.DIRECT_URL,
-//       })
-       
-//       await client.connect()
-
-//     try {
-//       await client.query('LISTEN party_changes');
-//       console.log('Listening for changes on the Party table...');
-  
-//       client.on('notification', async (msg:any) => {
-//         const payload = JSON.parse(msg.payload);
-//         console.log('Change detected:', payload);
-  
-//         if (payload.action === 'INSERT') {
-//           console.log('New party added:', payload.data);
-//         } else if (payload.action === 'UPDATE') {
-//           console.log('Party updated:', payload.data);
-//         } else if (payload.action === 'DELETE') {
-//           console.log('Party deleted:', payload.data);
-//         }
-//       });
-  
-//       setInterval(() => {
-//         client.query('SELECT 1');
-//       }, 60000);
-  
-//     } catch (err) {
-//       console.error('Error setting up listener:', err);
-//       client.end()
-//     }
-//   }
+  const router = useRouter();
+  useEffect(() => {
   
   async function getCompArray() {
     const partyArray = await fetch('/api/admin/get_parties').then((res) => res.json());
@@ -114,15 +83,78 @@ export default function usePartySettings(): PartyContextType   {
     setTextColor(partyArray[0].textColor),
     setCompArray(partyArray);
   }
+  getCompArray()
+    // Set up real-time listener
+    const channel = supabase
+      .channel('party_changes')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'Party' },
+        (payload) => {
+          console.log('Change received!', payload);
+          getCompArray();
+        }
+      )
+      .subscribe();
 
-
-
-
-  useEffect(() => { 
-    getCompArray() 
-    // listenForChanges();
-  }, []);
+    // Cleanup function
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [router]);
+  // const [socket, setSocket] = useState<Socket | null>(null);
+  // const [messages, setMessages] = useState<Message[]>([]); 
  
+  // const [userId, setUserId] = useState('');
+  // const [isConnected, setIsConnected] = useState(false);
+
+  // useEffect(() => {
+    // const newSocket = io('https://io-server-omega.vercel.app', {
+    //   path: '/api/socketio',
+    //   transports: ['websocket'], // Force WebSocket transport
+    //   withCredentials: true, // This is important for CORS
+    // });
+
+    // newSocket.on('connect', () => {
+    //   console.log('Connected to server');
+    //   setIsConnected(true);
+    //   setUserId("vasya");
+    // });
+
+    // newSocket.on('connect_error', (error) => {
+    //   console.error('Connection error:', error);
+    //   setIsConnected(false);
+    // });
+
+    // newSocket.on('disconnect', () => {
+    //   console.log('Disconnected from server');
+    //   setIsConnected(false);
+    // });
+
+    // newSocket.on('previous messages', (prevMessages: Message[]) => {
+    //   setMessages(prevMessages);
+    // });
+
+    // newSocket.on('new message', (message: Message) => {
+    //   setMessages((prevMessages) => [...prevMessages, message]);
+    // });
+
+    // newSocket.on('error', (error: string) => {
+    //   console.error('Server error:', error);
+    //   alert(error);
+    // });
+
+    // setSocket(newSocket);
+
+    // return () => {
+    //   newSocket.disconnect();
+    // };
+  // }, []);
+  // socket?.emit('join room', { room: 'party123', codeword: process.env.NEXT_PUBLIC_CODEWORD });
+  // useEffect(() => {
+  //   getCompArray();
+  //   console.log("messages:",messages)
+  // }, [messages]);
 
   const value: PartyContextType = {
     image: compArray[0]?.image ?? '',
@@ -131,23 +163,33 @@ export default function usePartySettings(): PartyContextType   {
     mode: compArray[0]?.mode ?? '',
     fontSize: compArray[0]?.fontSize ?? 0,
     displayedPictures: compArray[0]?.displayedPictures.map((str1:string)=>JSON.parse(str1)) ?? [],
-    displayedVideos: compArray[0]?.displayedVideos.map((str1:string)=>JSON.parse(str1)) ?? { name: '', image: '', link: '' },
+    displayedVideos: compArray[0]?.displayedVideos.map((str1:string)=>JSON.parse(str1)) ?? [],
     videoChoice:compArray[0]?.videoChoice? JSON.parse(compArray[0]?.videoChoice): { link: '', name: '' },
     compLogo: compArray[0]?.compLogo?JSON.parse(compArray[0]?.compLogo) : { link: '', name: '' },
     titleBarHider: compArray[0]?.titleBarHider ?? false,
     showUrgentMessage: compArray[0]?.showUrgentMessage ?? false,
     displayedPicturesAuto: compArray[0]?.displayedPicturesAuto.map((str1:string)=>JSON.parse(str1)) ?? [],
     seconds: compArray[0]?.seconds ?? 10,
-    manualPicture:compArray[0]?.manualPicture? JSON.parse(compArray[0]?.manualPicture) : { name: '', image: '' },
+    manualPicture:compArray[0]?.manualPicture? JSON.parse(compArray[0]?.manualPicture) : { link: '', name: '' },
     savedMessages: compArray[0]?.savedMessages ?? [],
     textColor: compArray[0]?.textColor ?? '#000000',
   };
 
-  return ( {image, name, message, mode, fontSize, displayedPictures, displayedVideos, videoChoice, compLogo, titleBarHider, showUrgentMessage, displayedPicturesAuto, seconds, manualPicture, savedMessages, textColor} );
-};
+  return { image, name, message, mode, fontSize, displayedPictures, displayedVideos, videoChoice, compLogo, titleBarHider, showUrgentMessage, displayedPicturesAuto, seconds, manualPicture, savedMessages, textColor };
+}
+  
+
+
+
+
+ 
+
+ 
+ 
 
   
- 
+
+
 
 
 

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 // import { doc, updateDoc } from 'firebase/firestore';
 // import { db } from '../firebase';
 // import useCompetition from '../hooks/useCompetition';
@@ -14,6 +14,7 @@ import ChoosePicturesModal from './ChoosePicturesModal';
 import UrgentMessageComponent from './UrgentMessageComponent';
 import CountBox from './CountBox';
 import usePartySettings from './usePartySettings';
+import { io, Socket } from 'socket.io-client'; 
 
 type Props = {
   // Add any props if needed
@@ -105,6 +106,80 @@ const page: React.FC<Props> = () => {
       }
     }
   };
+  // interface Message {
+  //   id: string;
+  //   userId: string;
+  //   text: string;
+  //   timestamp: number;
+  // }
+   
+  // const [socket, setSocket] = useState<Socket | null>(null);
+  // const [messages, setMessages] = useState<Message[]>([]); 
+ 
+  // const [userId, setUserId] = useState('');
+  // const [isConnected, setIsConnected] = useState(false);
+  // const [connectionStatus, setConnectionStatus] = useState('Disconnected');
+
+  useEffect(() => {
+    // const newSocket = io('https://io-server-omega.vercel.app', {
+    //   path: '/api/socketio',
+    //   transports: ['websocket', 'polling'], 
+    //   withCredentials: true,
+    //   forceNew: true,
+    //   timeout: 10000, 
+    // });
+
+    // newSocket.on('connect', () => {
+    //   console.log('Connected to server');
+    //   setIsConnected(true);
+    //   setUserId("Vasya");
+    //   setConnectionStatus(`Connected (${newSocket.io.engine.transport.name})`);
+    // });
+
+    // newSocket.on('connect_error', (error) => {
+    //   console.error('Connection error:', error);
+    //   setIsConnected(false);
+    //   setConnectionStatus(`Connection error: ${error.message}`);
+    // });
+
+    // newSocket.io.on('error', (error) => {
+    //   console.error('Socket.IO error:', error);
+    //   setConnectionStatus(`Socket.IO error: ${error.message}`);
+    // });
+
+    // newSocket.io.on('reconnect_attempt', (attempt) => {
+    //   console.log(`Reconnection attempt ${attempt}`);
+    //   setConnectionStatus(`Reconnecting (attempt ${attempt})`);
+    // });
+
+    // newSocket.on('disconnect', (reason) => {
+    //   console.log('Disconnected from server:', reason);
+    //   setIsConnected(false);
+    //   setConnectionStatus(`Disconnected: ${reason}`);
+    // });
+
+    // newSocket.on('previous messages', (prevMessages: Message[]) => {
+    //   setMessages(prevMessages);
+    // });
+
+    // newSocket.on('new message', (message: Message) => {
+    //   setMessages((prevMessages) => [...prevMessages, message]);
+    // });
+
+    // newSocket.on('error', (error: string) => {
+    //   console.error('Server error:', error);
+    //   alert(error);
+    // });
+
+    // setSocket(newSocket);
+
+    // return () => {
+    //   newSocket.disconnect();
+    // };
+  }, []);
+  // socket?.emit('join room', { room: 'party123', codeword: process.env.NEXT_PUBLIC_CODEWORD });
+ 
+
   const handleChange = (text: number | string | boolean | object, eventName: string) => {
     fetch('/api/admin/update_party', {
         method: 'PUT',
@@ -118,6 +193,8 @@ const page: React.FC<Props> = () => {
         .then((response) => response.json())
         .then((data) => {
           console.log(data);
+          
+
         }) 
   };
 
