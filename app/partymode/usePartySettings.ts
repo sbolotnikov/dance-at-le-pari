@@ -2,7 +2,7 @@
 import { createContext, useRef,  useState, useEffect } from 'react';
 import {  Party } from '@prisma/client'; 
 import { createClient } from '@supabase/supabase-js';
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
 
 // interface Message {
 //   id: string;
@@ -58,9 +58,7 @@ export default function usePartySettings(): PartyContextType   {
   const [textColor, setTextColor] = useState('');
   
   
-  
-  const router = useRouter();
-  useEffect(() => {
+   
   
   async function getCompArray() {
     const partyArray = await fetch('/api/admin/get_parties').then((res) => res.json());
@@ -98,63 +96,12 @@ export default function usePartySettings(): PartyContextType   {
       .subscribe();
 
     // Cleanup function
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [router]);
-  // const [socket, setSocket] = useState<Socket | null>(null);
-  // const [messages, setMessages] = useState<Message[]>([]); 
- 
-  // const [userId, setUserId] = useState('');
-  // const [isConnected, setIsConnected] = useState(false);
-
-  // useEffect(() => {
-    // const newSocket = io('https://io-server-omega.vercel.app', {
-    //   path: '/api/socketio',
-    //   transports: ['websocket'], // Force WebSocket transport
-    //   withCredentials: true, // This is important for CORS
-    // });
-
-    // newSocket.on('connect', () => {
-    //   console.log('Connected to server');
-    //   setIsConnected(true);
-    //   setUserId("vasya");
-    // });
-
-    // newSocket.on('connect_error', (error) => {
-    //   console.error('Connection error:', error);
-    //   setIsConnected(false);
-    // });
-
-    // newSocket.on('disconnect', () => {
-    //   console.log('Disconnected from server');
-    //   setIsConnected(false);
-    // });
-
-    // newSocket.on('previous messages', (prevMessages: Message[]) => {
-    //   setMessages(prevMessages);
-    // });
-
-    // newSocket.on('new message', (message: Message) => {
-    //   setMessages((prevMessages) => [...prevMessages, message]);
-    // });
-
-    // newSocket.on('error', (error: string) => {
-    //   console.error('Server error:', error);
-    //   alert(error);
-    // });
-
-    // setSocket(newSocket);
-
     // return () => {
-    //   newSocket.disconnect();
+      supabase.removeChannel(channel);
     // };
   // }, []);
-  // socket?.emit('join room', { room: 'party123', codeword: process.env.NEXT_PUBLIC_CODEWORD });
-  // useEffect(() => {
-  //   getCompArray();
-  //   console.log("messages:",messages)
-  // }, [messages]);
+  
+ 
 
   const value: PartyContextType = {
     image: compArray[0]?.image ?? '',
