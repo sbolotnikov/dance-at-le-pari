@@ -14,7 +14,7 @@ import ChoosePicturesModal from './ChoosePicturesModal';
 import UrgentMessageComponent from './UrgentMessageComponent';
 import CountBox from './CountBox';
 import usePartySettings from './usePartySettings';
-import { io, Socket } from 'socket.io-client'; 
+ 
 
 type Props = {
   // Add any props if needed
