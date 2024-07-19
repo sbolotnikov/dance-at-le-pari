@@ -14,6 +14,7 @@ import ChoosePicturesModal from './ChoosePicturesModal';
 import UrgentMessageComponent from './UrgentMessageComponent';
 import CountBox from './CountBox';
 import usePartySettings from './usePartySettings';
+// import { createClient } from '@supabase/supabase-js';
  
 
 type Props = {
@@ -26,6 +27,7 @@ const page: React.FC<Props> = () => {
   const [modal3Visible, setModal3Visible] = useState(false);
   const [modal4Visible, setModal4Visible] = useState(false);
   const [modal5Visible, setModal5Visible] = useState(false);
+  const [refreshVar, setRefreshVar] = useState(false);
   const [galleryType, setGalleryType] = useState<'auto' | 'manual' | null>(
     null
   );
@@ -36,11 +38,42 @@ const page: React.FC<Props> = () => {
     }[]
   >([]);
   const [videoSearchText, setVideoSearchText] = useState('');
-
+  // const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_KEY! );
   useEffect(() => {
     setModal1Visible(true);
+    // const channel = supabase
+    //   .channel('party_changes')
+    //   .on(
+    //     'postgres_changes',
+    //     { event: '*', schema: 'public', table: 'Party' },
+    //     (payload) => {
+    //       console.log('Change received!', payload);
+    //       setRefreshVar((prev) => !prev);
+    //     }
+    //   )
+    //   .subscribe();
+    //       // Cleanup function
+    // return () => {
+    //   supabase.removeChannel(channel);
+    // }
   }, []);
+  useEffect(() => {
+    let timerInterval: any;
+    if (modalVisible){
 
+      
+           timerInterval = setInterval(function () {
+            
+            setRefreshVar((prev) => !prev);     
+    
+            }, 1000);
+
+
+    }else{
+      clearInterval(timerInterval);
+    }
+
+  }, [modalVisible]); 
   const {
     image,
     name,
@@ -58,8 +91,23 @@ const page: React.FC<Props> = () => {
     showUrgentMessage,
     savedMessages,
     textColor,
-  } = usePartySettings();
-  console.log(videoChoice);
+  } = usePartySettings(refreshVar); 
+  console.log(image,
+    name,
+    message,
+    mode,
+    fontSize,
+    displayedPictures,
+    displayedPicturesAuto,
+    seconds,
+    manualPicture,
+    displayedVideos,
+    videoChoice,
+    compLogo,
+    titleBarHider,
+    showUrgentMessage,
+    savedMessages,
+    textColor,)
   const reverseColor = (str: string) => {
     console.log(str);
     let n = parseInt(str.slice(1), 16);
@@ -106,78 +154,7 @@ const page: React.FC<Props> = () => {
       }
     }
   };
-  // interface Message {
-  //   id: string;
-  //   userId: string;
-  //   text: string;
-  //   timestamp: number;
-  // }
-   
-  // const [socket, setSocket] = useState<Socket | null>(null);
-  // const [messages, setMessages] = useState<Message[]>([]); 
- 
-  // const [userId, setUserId] = useState('');
-  // const [isConnected, setIsConnected] = useState(false);
-  // const [connectionStatus, setConnectionStatus] = useState('Disconnected');
-
-  useEffect(() => {
-    // const newSocket = io('https://io-server-omega.vercel.app', {
-    //   path: '/api/socketio',
-    //   transports: ['websocket', 'polling'], 
-    //   withCredentials: true,
-    //   forceNew: true,
-    //   timeout: 10000, 
-    // });
-
-    // newSocket.on('connect', () => {
-    //   console.log('Connected to server');
-    //   setIsConnected(true);
-    //   setUserId("Vasya");
-    //   setConnectionStatus(`Connected (${newSocket.io.engine.transport.name})`);
-    // });
-
-    // newSocket.on('connect_error', (error) => {
-    //   console.error('Connection error:', error);
-    //   setIsConnected(false);
-    //   setConnectionStatus(`Connection error: ${error.message}`);
-    // });
-
-    // newSocket.io.on('error', (error) => {
-    //   console.error('Socket.IO error:', error);
-    //   setConnectionStatus(`Socket.IO error: ${error.message}`);
-    // });
-
-    // newSocket.io.on('reconnect_attempt', (attempt) => {
-    //   console.log(`Reconnection attempt ${attempt}`);
-    //   setConnectionStatus(`Reconnecting (attempt ${attempt})`);
-    // });
-
-    // newSocket.on('disconnect', (reason) => {
-    //   console.log('Disconnected from server:', reason);
-    //   setIsConnected(false);
-    //   setConnectionStatus(`Disconnected: ${reason}`);
-    // });
-
-    // newSocket.on('previous messages', (prevMessages: Message[]) => {
-    //   setMessages(prevMessages);
-    // });
-
-    // newSocket.on('new message', (message: Message) => {
-    //   setMessages((prevMessages) => [...prevMessages, message]);
-    // });
-
-    // newSocket.on('error', (error: string) => {
-    //   console.error('Server error:', error);
-    //   alert(error);
-    // });
-
-    // setSocket(newSocket);
-
-    // return () => {
-    //   newSocket.disconnect();
-    // };
-  }, []);
-  // socket?.emit('join room', { room: 'party123', codeword: process.env.NEXT_PUBLIC_CODEWORD });
+  
  
 
   const handleChange = (text: number | string | boolean | object, eventName: string) => {
@@ -193,6 +170,7 @@ const page: React.FC<Props> = () => {
         .then((response) => response.json())
         .then((data) => {
           console.log(data);
+          setRefreshVar(!refreshVar);
           
 
         }) 

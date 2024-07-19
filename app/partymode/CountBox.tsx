@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { start } from 'repl';
+ 
 
 interface CountBoxProps {
   startValue: number;
@@ -10,7 +10,7 @@ interface CountBoxProps {
 }
 
 const CountBox: React.FC<CountBoxProps> = ({ startValue, setWidth, onChange }) => {
- console.log(startValue)
+ 
   const changeNumber = (isAdd: boolean) => {
     const increment = isAdd ? 1 : startValue > 0 ? -1 : 0;
     const newValue = startValue + increment;

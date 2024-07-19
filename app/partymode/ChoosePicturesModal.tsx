@@ -59,9 +59,7 @@ const ChoosePicturesModal: React.FC<Props> = ({
     if (pictureLinkType === 'GDrive Link') {
       const id = text.split('/file/d/')[1]?.split('/')[0];
       setPictureLink(`https://drive.google.com/thumbnail?id=${id}&sz=w1000`);
-    } else {
-      setPictureLink(text);
-    }
+    } else setPictureLink(text)
   };
 
   if (!vis) return null;
@@ -131,7 +129,7 @@ const ChoosePicturesModal: React.FC<Props> = ({
           <input
             type="text"
             placeholder="Enter picture link"
-            value={pictureLink}
+            value={pictureLink} 
             onChange={(e) => handlePictureLinkChange(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded mb-2"
           />
