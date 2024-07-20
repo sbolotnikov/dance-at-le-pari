@@ -24,7 +24,8 @@ type Props = {
     titleBarHider: boolean;
     showUrgentMessage: boolean;
     textColor: string;
-    onReturn: (submitten: string) => void; 
+    onReturn: (submitten: string) => void;
+    onRenewInterval: () => void;
   }
 
   const ShowPlayingModal: React.FC<Props> = ({
@@ -43,7 +44,8 @@ type Props = {
     titleBarHider,
     showUrgentMessage,
     textColor,
-    onReturn, 
+    onReturn,
+    onRenewInterval 
   }) => {
     const { changeNav } = useContext(SettingsContext) as ScreenSettingsContextType;
      
@@ -54,7 +56,7 @@ type Props = {
       };
     
       const [timeNow, setTimeNow] = useState('');
-    
+      const [refreshVar, setRefreshVar] = useState(false);
       useEffect(() => {
         const timerInterval = setInterval(() => {
           const now = new Date();
@@ -63,10 +65,10 @@ type Props = {
         }, 1000);
         !vis?changeNav(false):changeNav(true);
         return () => clearInterval(timerInterval);
-      }, [vis]);
+      }, [vis, refreshVar]);
     
       const gradientStyle = {
-        background: 'linear-gradient(135deg, yellow, red, brown, red, yellow)',
+        background: 'linear-gradient(135deg, white, red, blue, red, white)',
       };
     
       return (
@@ -89,6 +91,7 @@ type Props = {
                     text1={manualPicture.name}
                     compLogo={compLogo.link}
                     titleBarHider={titleBarHider}
+                    onRenewInterval={()=>{setRefreshVar(!refreshVar); onRenewInterval();}}
                   />
                 )}
                 {mode === 'Manual' && (

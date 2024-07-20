@@ -9,9 +9,10 @@ type Props = {
     videoBG: string;
     titleBarHider: boolean;
     picsArray: string[];
+    onRenewInterval: ()=>void
 }
  
-    const AutoImages = ({ picsArray, seconds, text1,compLogo,videoBG, titleBarHider }:Props) => {
+    const AutoImages = ({ picsArray, seconds, text1,compLogo,videoBG, titleBarHider, onRenewInterval }:Props) => {
       const [activePic, setActivePic] = useState(0);
       let timerIntervalID: any;
       const nextActive = (num:number) => {
@@ -33,6 +34,7 @@ type Props = {
             window.clearTimeout(id); // will do nothing if no timeout with id is present
         }
         console.log('interval cleared in useEffect');
+        onRenewInterval();
         setActivePic(0);
         nextActive(0);
       }, []);

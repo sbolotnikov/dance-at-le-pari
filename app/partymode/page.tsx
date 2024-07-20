@@ -1,11 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-// import { doc, updateDoc } from 'firebase/firestore';
-// import { db } from '../firebase';
-// import useCompetition from '../hooks/useCompetition';
-
-// import { pickImage, deleteOldImage } from '../utils';
+import { useState, useEffect } from 'react'; 
 import { PageWrapper } from '@/components/page-wrapper';
 import ChooseVideosModal from './ChooseVideosModal';
 import ShowPlayingModal from './ShowPlayingModal';
@@ -13,8 +8,7 @@ import ColorChoiceModal from './ColorChoiceModal';
 import ChoosePicturesModal from './ChoosePicturesModal';
 import UrgentMessageComponent from './UrgentMessageComponent';
 import CountBox from './CountBox';
-import usePartySettings from './usePartySettings';
-// import { createClient } from '@supabase/supabase-js';
+import usePartySettings from './usePartySettings'; 
  
 
 type Props = {
@@ -28,6 +22,7 @@ const page: React.FC<Props> = () => {
   const [modal4Visible, setModal4Visible] = useState(false);
   const [modal5Visible, setModal5Visible] = useState(false);
   const [refreshVar, setRefreshVar] = useState(false);
+  const [refreshVar2, setRefreshVar2] = useState(false);
   const [galleryType, setGalleryType] = useState<'auto' | 'manual' | null>(
     null
   );
@@ -37,25 +32,10 @@ const page: React.FC<Props> = () => {
       name: string;
     }[]
   >([]);
-  const [videoSearchText, setVideoSearchText] = useState('');
-  // const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_KEY! );
+  const [videoSearchText, setVideoSearchText] = useState(''); 
   useEffect(() => {
     setModal1Visible(true);
-    // const channel = supabase
-    //   .channel('party_changes')
-    //   .on(
-    //     'postgres_changes',
-    //     { event: '*', schema: 'public', table: 'Party' },
-    //     (payload) => {
-    //       console.log('Change received!', payload);
-    //       setRefreshVar((prev) => !prev);
-    //     }
-    //   )
-    //   .subscribe();
-    //       // Cleanup function
-    // return () => {
-    //   supabase.removeChannel(channel);
-    // }
+   
   }, []);
   useEffect(() => {
     let timerInterval: any;
@@ -73,7 +53,7 @@ const page: React.FC<Props> = () => {
       clearInterval(timerInterval);
     }
 
-  }, [modalVisible]); 
+  }, [modalVisible, refreshVar2]); 
   const {
     image,
     name,
@@ -178,9 +158,7 @@ const page: React.FC<Props> = () => {
 
   const onPressPicture = async (e: React.MouseEvent) => {
     e.preventDefault();
-    let picURL = '';
-    //  picURL = await pickImage('competitions', '', 300);
-    // deleteOldImage('competitions', image);
+    let picURL = ''; 
     handleChange(picURL, 'image');
   };
 
@@ -224,6 +202,7 @@ const page: React.FC<Props> = () => {
         showUrgentMessage={showUrgentMessage}
         textColor={textColor}
         onReturn={() => setModalVisible(false)}
+        onRenewInterval={() => setRefreshVar2(!refreshVar2)}
       />
       {galleryType && (
         <ChoosePicturesModal
@@ -422,12 +401,7 @@ const page: React.FC<Props> = () => {
                     value={videoSearchText}
                   />
                 </div>
-
-                {/* <TextBox
-                    placeholder="Video search tool"
-                    onChange={(e) => setVideoSearchText(e.target.value)}
-                    value={videoSearchText}
-                  /> */}
+ 
                 <button
                   className="btnFancy w-[48%] bg-[#3D1152] my-1"
                   onClick={async (e) => {

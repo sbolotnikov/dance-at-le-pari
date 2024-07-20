@@ -1,16 +1,6 @@
 "use client"
-import { createContext, useRef,  useState, useEffect } from 'react';
-import {  Party } from '@prisma/client'; 
-
-// import { useRouter } from 'next/router';
-
-// interface Message {
-//   id: string;
-//   userId: string;
-//   text: string;
-//   timestamp: number;
-// }
- 
+import { createContext, useState, useEffect } from 'react';
+  
  
 interface PartyContextType {
   image: string;
@@ -38,8 +28,7 @@ interface PartyContextType {
 export const PartyContext = createContext<PartyContextType  >({} as PartyContextType );
 
 export default function usePartySettings(refreshVar:boolean): PartyContextType   {
-  
-  const [compArray, setCompArray] = useState<Party[]>([]); 
+   
   const [image, setImage] = useState('');  
   const [name, setName] = useState('');
   const [message, setMessage] = useState('');
@@ -66,65 +55,26 @@ export default function usePartySettings(refreshVar:boolean): PartyContextType  
     then((res) => res.json())
     .then ((partyArray)=>{
       console.log(partyArray)
-      setImage(partyArray[0].image),
-      setName(partyArray[0].name ),
-      setMessage(partyArray[0].message),
-      setMode(partyArray[0].mode),
-      setFontSize(partyArray[0].fontSize),
-      setDisplayedPictures(partyArray[0].displayedPictures.map((str1:string)=>JSON.parse(str1))),
-      setDisplayedVideos(partyArray[0].displayedVideos.map((str1:string)=>JSON.parse(str1))),
-      setVideoChoice(JSON.parse(partyArray[0].videoChoice)),
-      setCompLogo(JSON.parse(partyArray[0].compLogo)),
-      setTitleBarHider(partyArray[0].titleBarHider),
-      setShowUrgentMessage(partyArray[0].showUrgentMessage) ,
-      setDisplayedPicturesAuto(partyArray[0].displayedPicturesAuto.map((str1:string)=>JSON.parse(str1))) ,
-      setSeconds(partyArray[0]?.seconds),
-      setManualPicture(JSON.parse(partyArray[0].manualPicture)),
-      setSavedMessages(partyArray[0].savedMessages),
-      setTextColor(partyArray[0].textColor),
-      setCompArray(partyArray);
+      setImage(partyArray[0].image)
+      setName(partyArray[0].name )
+      setMessage(partyArray[0].message)
+      setMode(partyArray[0].mode)
+      setFontSize(partyArray[0].fontSize)
+      setDisplayedPictures(partyArray[0].displayedPictures.map((str1:string)=>JSON.parse(str1)))
+      setDisplayedVideos(partyArray[0].displayedVideos.map((str1:string)=>JSON.parse(str1)))
+      setVideoChoice(JSON.parse(partyArray[0].videoChoice))
+      setCompLogo(JSON.parse(partyArray[0].compLogo))
+      setTitleBarHider(partyArray[0].titleBarHider)
+      setShowUrgentMessage(partyArray[0].showUrgentMessage)
+      setDisplayedPicturesAuto(partyArray[0].displayedPicturesAuto.map((str1:string)=>JSON.parse(str1))) 
+      setSeconds(partyArray[0]?.seconds)
+      setManualPicture(JSON.parse(partyArray[0].manualPicture))
+      setSavedMessages(partyArray[0].savedMessages)
+      setTextColor(partyArray[0].textColor) 
     })
  
   } ,[refreshVar]);
-    // Set up real-time listener
-    // const channel = supabase
-    //   .channel('party_changes')
-    //   .on(
-    //     'postgres_changes',
-    //     { event: '*', schema: 'public', table: 'Party' },
-    //     (payload) => {
-    //       console.log('Change received!', payload);
-    //       // getCompArray();
-    //     }
-    //   )
-    //   .subscribe();
-
-    // Cleanup function
-    // return () => {
-      // supabase.removeChannel(channel);
-    // };
-  // }, []);
   
- 
-
-  // const value: PartyContextType = {
-  //   image: compArray[0]?.image ?? '',
-  //   name: compArray[0]?.name ?? '',
-  //   message: compArray[0]?.message ?? '',
-  //   mode: compArray[0]?.mode ?? '',
-  //   fontSize: compArray[0]?.fontSize ?? 0,
-  //   displayedPictures: compArray[0]?.displayedPictures.map((str1:string)=>JSON.parse(str1)) ?? [],
-  //   displayedVideos: compArray[0]?.displayedVideos.map((str1:string)=>JSON.parse(str1)) ?? [],
-  //   videoChoice:compArray[0]?.videoChoice? JSON.parse(compArray[0]?.videoChoice): { link: '', name: '' },
-  //   compLogo: compArray[0]?.compLogo?JSON.parse(compArray[0]?.compLogo) : { link: '', name: '' },
-  //   titleBarHider: compArray[0]?.titleBarHider ?? false,
-  //   showUrgentMessage: compArray[0]?.showUrgentMessage ?? false,
-  //   displayedPicturesAuto: compArray[0]?.displayedPicturesAuto.map((str1:string)=>JSON.parse(str1)) ?? [],
-  //   seconds: compArray[0]?.seconds ?? 10,
-  //   manualPicture:compArray[0]?.manualPicture? JSON.parse(compArray[0]?.manualPicture) : { link: '', name: '' },
-  //   savedMessages: compArray[0]?.savedMessages ?? [],
-  //   textColor: compArray[0]?.textColor ?? '#000000',
-  // };
 
   return { image, name, message, mode, fontSize, displayedPictures, displayedVideos, videoChoice, compLogo, titleBarHider, showUrgentMessage, displayedPicturesAuto, seconds, manualPicture, savedMessages, textColor };
 }
