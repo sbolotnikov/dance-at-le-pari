@@ -1,13 +1,17 @@
 'use client';
-import { FC } from 'react';
+import { FC, use, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { PageWrapper } from '@/components/page-wrapper';
 import ShowIcon from '@/components/svg/showIcon';
+import { useSession } from 'next-auth/react';
 interface pageProps {}
 
 const page: FC<pageProps> = ({}) => {
   const router = useRouter();
-
+  const { data: session } = useSession();
+  useEffect(() => {
+    console.log(document.getElementById("svg1")?.children[0].children[0].children[0].getAttribute("d"))
+  },[])
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center md:items-end justify-center">
       <div
@@ -34,6 +38,18 @@ const page: FC<pageProps> = ({}) => {
             <p className="text-center">Music Player</p>
             </div>
           </button>
+          {(session?.user.role == 'Admin')&&<button
+            className="flex flex-col justify-center items-center h-28 w-28 p-1 border shadow-2xl rounded-md"
+            onClick={() => router.replace('/partymode')}
+          >
+            <div className=" h-full w-full  border border-lightMainColor dark:border-darkMainColor/70 rounded-md">
+               
+            <div id="svg1" className=" h-16 w-16 m-auto" >
+              <ShowIcon icon={'ClockLatin'} stroke={'0.1'} />
+            </div>
+            <p className="text-center">Party Mode</p>
+            </div>
+          </button>}
           </div>
         </div>
       </div>

@@ -12,7 +12,7 @@ interface CountBoxProps {
 const CountBox: React.FC<CountBoxProps> = ({ startValue, setWidth, onChange }) => {
  
   const changeNumber = (isAdd: boolean) => {
-    const increment = isAdd ? 1 : startValue > 0 ? -1 : 0;
+    const increment = isAdd ? 1 : startValue > 0 ? -1 : 1;
     const newValue = startValue + increment;
     onChange(newValue);
   };
@@ -34,7 +34,7 @@ const CountBox: React.FC<CountBoxProps> = ({ startValue, setWidth, onChange }) =
       </button>
       <input
         type="text"
-        className={`h-8 w-${setWidth} text-center border border-gray-300 rounded`}
+        className={`h-8 w-${setWidth} text-center border border-gray-300 rounded dark:bg-lightMainColor`}
         onBlur={handleInputChange}
         defaultValue={startValue}
       />

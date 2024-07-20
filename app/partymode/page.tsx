@@ -1,15 +1,16 @@
 'use client';
 
-import { useState, useEffect } from 'react'; 
+import { useState, useEffect, use } from 'react';
 import { PageWrapper } from '@/components/page-wrapper';
 import ChooseVideosModal from './ChooseVideosModal';
 import ShowPlayingModal from './ShowPlayingModal';
 import ColorChoiceModal from './ColorChoiceModal';
-import ChoosePicturesModal from './ChoosePicturesModal';
-import UrgentMessageComponent from './UrgentMessageComponent';
+import ChoosePicturesModal from './ChoosePicturesModal'; 
 import CountBox from './CountBox';
-import usePartySettings from './usePartySettings'; 
+import usePartySettings from './usePartySettings';
+import ChooseMessageModal from './ChooseMessageModal';
  
+import { useSession } from 'next-auth/react';
 
 type Props = {
   // Add any props if needed
@@ -23,6 +24,7 @@ const page: React.FC<Props> = () => {
   const [modal5Visible, setModal5Visible] = useState(false);
   const [refreshVar, setRefreshVar] = useState(false);
   const [refreshVar2, setRefreshVar2] = useState(false);
+  const { data: session } = useSession();
   const [galleryType, setGalleryType] = useState<'auto' | 'manual' | null>(
     null
   );
@@ -32,28 +34,18 @@ const page: React.FC<Props> = () => {
       name: string;
     }[]
   >([]);
-  const [videoSearchText, setVideoSearchText] = useState(''); 
-  useEffect(() => {
-    setModal1Visible(true);
-   
-  }, []);
+  const [videoSearchText, setVideoSearchText] = useState('');
+
   useEffect(() => {
     let timerInterval: any;
-    if (modalVisible){
-
-      
-           timerInterval = setInterval(function () {
-            
-            setRefreshVar((prev) => !prev);     
-    
-            }, 1000);
-
-
-    }else{
+    if (modalVisible) {
+      timerInterval = setInterval(function () {
+        setRefreshVar((prev) => !prev);
+      }, 1000);
+    } else {
       clearInterval(timerInterval);
     }
-
-  }, [modalVisible, refreshVar2]); 
+  }, [modalVisible, refreshVar2]);
   const {
     image,
     name,
@@ -71,8 +63,9 @@ const page: React.FC<Props> = () => {
     showUrgentMessage,
     savedMessages,
     textColor,
-  } = usePartySettings(refreshVar); 
-  console.log(image,
+  } = usePartySettings(refreshVar);
+  console.log(
+    image,
     name,
     message,
     mode,
@@ -87,7 +80,8 @@ const page: React.FC<Props> = () => {
     titleBarHider,
     showUrgentMessage,
     savedMessages,
-    textColor,)
+    textColor
+  );
   const reverseColor = (str: string) => {
     console.log(str);
     let n = parseInt(str.slice(1), 16);
@@ -112,56 +106,64 @@ const page: React.FC<Props> = () => {
     return '#' + rev.toString(16);
   };
 
-  const videoSearch = async (link: string) => {
-    try {
-      const data = await fetch(
-        'https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=10&q=' +
-          link +
-          '&key=' +
-          process.env.REACT_APP_FIREBASE_APIKEY,
-        {
-          cache: 'no-cache',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-      const res = await data.json();
-      return res.items;
-    } catch (error) {
-      if (error) {
-        return error;
-      }
-    }
-  };
-  
- 
+  // const videoSearch = async (link: string) => {
+  //   try {
+  //     const data = await fetch(
+  //       'https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=10&q=' +
+  //         link +
+  //         '&key=' +
+  //         process.env.REACT_APP_FIREBASE_APIKEY,
+  //       {
+  //         cache: 'no-cache',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //       }
+  //     );
+  //     const res = await data.json();
+  //     return res.items;
+  //   } catch (error) {
+  //     if (error) {
+  //       return error;
+  //     }
+  //   }
+  // };
 
-  const handleChange = (text: number | string | boolean | object, eventName: string) => {
+  const handleChange = (
+    text: number | string | boolean | object,
+    eventName: string
+  ) => {
+    if (session?.user.role == 'Admin')
     fetch('/api/admin/update_party', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            [eventName]: text
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
-          setRefreshVar(!refreshVar);
-          
-
-        }) 
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        [eventName]: text,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setRefreshVar(!refreshVar);
+      });
   };
 
   const onPressPicture = async (e: React.MouseEvent) => {
     e.preventDefault();
-    let picURL = ''; 
-    handleChange(picURL, 'image');
+    let picURL = '';
+    // handleChange(picURL, 'image');
   };
+useEffect(() => {
+if (session?.user.role !== 'Admin') {
+  alert('You are not authorized to view this page')
+  window.location.href = '/competition';}
+},[])
+ 
 
+ 
+   
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
       <ColorChoiceModal
@@ -185,25 +187,27 @@ const page: React.FC<Props> = () => {
           setModal4Visible(false);
         }}
       />
-      <ShowPlayingModal
-        videoUri={videoChoice}
-        manualPicture={manualPicture}
-        displayedPicturesAuto={displayedPicturesAuto}
-        button1="Ok"
-        compName={name}
-        heatNum={''}
-        vis={modalVisible}
-        mode={mode}
-        fontSize={fontSize}
-        seconds={seconds}
-        message={message}
-        compLogo={compLogo}
-        titleBarHider={titleBarHider}
-        showUrgentMessage={showUrgentMessage}
-        textColor={textColor}
-        onReturn={() => setModalVisible(false)}
-        onRenewInterval={() => setRefreshVar2(!refreshVar2)}
-      />
+      {modalVisible && (
+        <ShowPlayingModal
+          videoUri={videoChoice}
+          manualPicture={manualPicture}
+          displayedPicturesAuto={displayedPicturesAuto}
+          button1="Ok"
+          compName={name}
+          heatNum={''}
+          vis={modalVisible}
+          mode={mode}
+          fontSize={fontSize}
+          seconds={seconds}
+          message={message}
+          compLogo={compLogo}
+          titleBarHider={titleBarHider}
+          showUrgentMessage={showUrgentMessage}
+          textColor={textColor}
+          onReturn={() => setModalVisible(false)}
+          onRenewInterval={() => setRefreshVar2(!refreshVar2)}
+        />
+      )}
       {galleryType && (
         <ChoosePicturesModal
           displayPics={galleryArr}
@@ -217,12 +221,27 @@ const page: React.FC<Props> = () => {
             }
             setModal3Visible(false);
           }}
-          onClose={()=> setModal3Visible(false)}
+          onClose={() => setModal3Visible(false)}
         />
-      )} 
+      )}
+      <ChooseMessageModal
+        savedMessages={savedMessages}
+        message={message}
+        onChange={(text) => {
+          console.log(text);
+          handleChange(text, 'message');
+          setModal1Visible(false)
+        }}
+        onMessageArrayChange={(array) => {
+          console.log(array);
+          handleChange(array, 'savedMessages');
+        }}
+        vis={modal1Visible}
+        onClose={() => setModal1Visible(false)}
+      />
       <div className="blurFilter border-0 rounded-md p-2 shadow-2xl w-[95%] max-w-[650px] max-h-[85%] h-[85%]  md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70">
         <div className="w-full h-full flex flex-col justify-center items-center border rounded-md border-lightMainColor dark:border-darkMainColor relative p-2 overflow-auto">
-          <div className="absolute top-0 left-0 w-full h-auto p-2">
+          {(session?.user.role == 'Admin')&&<div className="absolute top-0 left-0 w-full p-2 flex flex-col justify-center items-center">
             <button
               className="w-[92%] h-48 m-1"
               onClick={(e) => onPressPicture(e)}
@@ -259,11 +278,11 @@ const page: React.FC<Props> = () => {
                   setWidth={10}
                   onChange={(num) => {
                     console.log(num);
-                    handleChange(num , 'fontSize');
+                    handleChange(num, 'fontSize');
                   }}
                 />
                 <p className="text-center w-24">Choose font size</p>
-              </div> 
+              </div>
               <div className="flex flex-col justify-center items-center">
                 <div className="h-8 w-8 rounded-full overflow-hidden border-none relative">
                   <input
@@ -276,12 +295,11 @@ const page: React.FC<Props> = () => {
                       console.log(e.target.value);
 
                       handleChange(e.target.value, 'textColor');
- 
                     }}
                   />
                 </div>
-                <p className="text-center w-8">Text Color</p>
-                </div>
+                {/* <p className="text-center w-8">Text Color</p> */}
+              </div>
               <div className="flex flex-col justify-center items-center">
                 <CountBox
                   startValue={seconds}
@@ -361,8 +379,8 @@ const page: React.FC<Props> = () => {
                   {displayedPictures
                     .sort((a, b) => (a.name! > b.name! ? 1 : -1))
                     .map((item) => (
-                      <option key={item.name} value={item.name}>
-                        {item.name}
+                      <option key={item.name} value={item.name} className='w-full h-14 flex flex-row justify-between items-center'>
+                        <span>{item.name}</span>
                       </option>
                     ))}
                 </select>
@@ -378,7 +396,13 @@ const page: React.FC<Props> = () => {
                       (video) => video.name === e.target.value
                     );
                     if (selectedVideo) {
-                      handleChange(JSON.stringify({name: selectedVideo.name,link: selectedVideo.link,}),'videoChoice');
+                      handleChange(
+                        JSON.stringify({
+                          name: selectedVideo.name,
+                          link: selectedVideo.link,
+                        }),
+                        'videoChoice'
+                      );
                     }
                   }}
                   className="w-60 h-9 bg-white rounded-lg border border-[#776548] text-[#444] text-left"
@@ -392,39 +416,13 @@ const page: React.FC<Props> = () => {
                     ))}
                 </select>
                 <p className="text-center w-48">Choose Video</p>
-
-                <div className="h-11 w-[92%] rounded-full mt-5 bg-white justify-center items-start">
-                  <input
-                    className={`mt-0 h-11 pl-3 w-full rounded-full border-2 border-[#C9AB78]`}
-                    placeholder="Video search tool"
-                    onChange={(e) => setVideoSearchText(e.target.value)}
-                    value={videoSearchText}
-                  />
-                </div>
  
-                <button
-                  className="btnFancy w-[48%] bg-[#3D1152] my-1"
-                  onClick={async (e) => {
-                    e.preventDefault();
-                    const data1 = await videoSearch(videoSearchText);
-                    console.log(data1);
-                    if (data1 && data1.length > 0) {
-                      handleChange(
-                        {
-                          name: videoSearchText,
-                          link: `https://www.youtube.com/embed/${data1[0].id.videoId}?autoplay=1&mute=1&loop=1&playlist=${data1[0].id.videoId}`,
-                        },
-                        'videoChoice'
-                      );
-                    }
-                  }}
-                  title="Search"
-                />
               </div>
             )}
-            <div className="w-full flex flex-row justify-center items-start">
-              <div
-                className="flex flex-col justify-center items-center"
+            <div className="w-full flex flex-row justify-between items-center">
+              <button 
+                className="btnFancy w-20 min-h-[5rem] " 
+                style={{padding:0, margin:0}}
                 onClick={(e) => {
                   e.preventDefault();
                   setGalleryType('manual');
@@ -432,10 +430,11 @@ const page: React.FC<Props> = () => {
                   setModal3Visible(true);
                 }}
               >
-                <p className="text-center w-24">Choose pictures for manual</p>
-              </div>
-              <div
-                className="flex flex-col justify-center items-center"
+                <p className="text-center text-sm italic">Choose pictures for manual</p>
+              </button>
+              <button 
+                className="btnFancy w-20 min-h-[5rem]" 
+                style={{padding:0, margin:0}}
                 onClick={(e) => {
                   e.preventDefault();
                   setGalleryType('auto');
@@ -444,52 +443,55 @@ const page: React.FC<Props> = () => {
                   setModal3Visible(true);
                 }}
               >
-                <p className="text-center w-24">Choose pictures for auto</p>
-              </div>
-              <div
+                <p className="text-center text-sm italic">Choose pictures for auto</p>
+              </button>
+              <button 
+                className="btnFancy w-20 min-h-[5rem]" 
+                style={{padding:0, margin:0}}
                 onClick={(e) => {
                   e.preventDefault();
                   setModal4Visible(true);
                 }}
               >
-                <p className="text-center italic">Choose videos</p>
-              </div>
-              <div
+                <p className="text-center text-sm italic">Choose videos</p>
+              </button>
+              <button 
+                className="btnFancy w-20 min-h-[5rem]" 
+                style={{padding:0, margin:0}}
                 onClick={(e) => {
                   e.preventDefault();
                   setModalVisible(true);
                 }}
               >
-                <p className="text-center w-12">Start Show</p>
+                <p className="text-center text-sm italic">Start Show</p>
+              </button>
+            </div>
+            <div className="w-full flex flex-col justify-center items-center">
+            <p className="w-full text-center">{message}</p>
+            <button
+              className="btnFancy cursor-pointer"
+              onClick={(e) => {
+                e.preventDefault();
+                setModal1Visible(true);
+              }}
+            >
+              <p className="text-center italic">Choose message</p>
+            </button>
+            </div>
+            <div className="w-full flex flex-col justify-center items-center">
+              <div className="flex flex-row mb-2.5 mt-2.5">
+                <input
+                  type="checkbox"
+                  checked={showUrgentMessage}
+                  onChange={(e) =>
+                    handleChange(e.target.checked, 'showUrgentMessage')
+                  }
+                  className="self-center"
+                />
+                <p className="ml-2">Show Urgent Message</p>
               </div>
             </div>
-          
-          <UrgentMessageComponent
-            savedMessages={savedMessages}
-            message={message}
-            onChange={(text) => {
-              console.log(text);
-              handleChange(text, 'message');
-            }}
-            onMessageArrayChange={(array) => {
-              console.log(array);
-              handleChange(array, 'savedMessages');
-            }}
-          />
-          <div className="w-full flex flex-col justify-center items-center">
-            <div className="flex flex-row mb-2.5 mt-2.5">
-              <input
-                type="checkbox"
-                checked={showUrgentMessage}
-                onChange={(e) =>
-                  handleChange(e.target.checked, 'showUrgentMessage')
-                }
-                className="self-center"
-              />
-              <p className="ml-2">Show Urgent Message</p>
-            </div>
-          </div>
-          </div>
+          </div>}
         </div>
       </div>
     </PageWrapper>
