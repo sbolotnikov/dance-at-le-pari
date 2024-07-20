@@ -156,8 +156,7 @@ const page: React.FC<Props> = () => {
     // handleChange(picURL, 'image');
   };
 useEffect(() => {
-if (session?.user.role !== 'Admin') {
-  alert('You are not authorized to view this page')
+if (session?.user.role !== 'Admin') { 
   window.location.href = '/competition';}
 },[])
  
