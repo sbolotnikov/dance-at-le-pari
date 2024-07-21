@@ -18,6 +18,7 @@ const page: FC<pageProps> = ({}) => {
   const router = useRouter();
   const [value, setValue] = useState('');
   const [title, setTitle] = useState('');
+  const [vis, setVis] = useState(false);
   const [revealModal, setRevealModal] = useState(false);
   const dimensions = useDimensions();
   if (status === 'unauthenticated') {
@@ -174,9 +175,12 @@ const page: FC<pageProps> = ({}) => {
               />
               <div className=" w-full">{value}</div>
             </label>
-            <div>
+            <div className="w-full">
               <button className="btnFancy" onClick={exportHtml}>
                 Send Emails
+              </button>
+              <button className="btnFancy" onClick={()=>setVis(true)}>
+                Send test Email
               </button>
               <button className="btnFancy" onClick={saveDesign}>
                 Save Design
@@ -196,6 +200,21 @@ const page: FC<pageProps> = ({}) => {
                 onChange={handleChange}
               />
             </div>
+            {vis &&<label className="flex flex-row items-center">
+                Email
+                <input
+                  className="flex-1 outline-none border-none rounded-md   text-lightMainColor p-0.5 mx-1"
+                  id="email"
+                  type="email" 
+                  required
+                />
+                <button className="btnFancy" onClick={()=>{
+                  setVis(false)
+
+                }}>
+                Send
+              </button>
+              </label>}
             <EmailEditor ref={emailEditorRef} onReady={onReady} />
           </div>
         </div>
