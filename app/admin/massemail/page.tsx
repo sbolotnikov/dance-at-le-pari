@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import 'react-quill/dist/quill.snow.css';
 import { useSession } from 'next-auth/react';
 import EmailEditor, { EditorRef, EmailEditorProps } from 'react-email-editor';
-import sleep, { save_Template } from '@/utils/functions';
+import sleep, { isEmailValid, save_Template } from '@/utils/functions';
 import { FC } from 'react';
 import { useRouter } from 'next/navigation';
 import { PageWrapper } from '@/components/page-wrapper';
@@ -58,7 +58,33 @@ const page: FC<pageProps> = ({}) => {
         });
     });
   };
+  const sendTestEmail = (email:string) => {
+    const unlayer = emailEditorRef.current?.editor;
 
+    unlayer?.exportHtml((data) => {
+      const { html } = data;
+      console.log('exportHtml', html);
+
+      fetch('/api/admin/email_test_send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title,
+          message: html,
+          email
+        }),
+      })
+        .then(async (res) => {
+          const data = await res.json();
+          console.log(data);
+        })
+        .catch(async (err) => {
+          console.log(err);
+        });
+    });
+  };
   const onReady: EmailEditorProps['onReady'] = (unlayer) => {
     // editor is ready
     // you can load your template here;
@@ -209,7 +235,10 @@ const page: FC<pageProps> = ({}) => {
                   required
                 />
                 <button className="btnFancy" onClick={()=>{
-                  setVis(false)
+                  setVis(false);
+                  let email=(document.getElementById('email') as HTMLInputElement).value;
+                  if (isEmailValid(email)) sendTestEmail(email)
+                    else alert('Invalid email')
 
                 }}>
                 Send
