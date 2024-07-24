@@ -48,6 +48,71 @@ export default function usePartySettings(refreshVar:boolean): PartyContextType  
   
   
    
+  // const [snapshot, loading, err] = useCollection(
+  //   query(collection(db, 'competitions')),
+  //   {
+  //     snapshotListenOptions: { includeMetadataChanges: true },
+  //   }
+  // );
+  // const [compArray, setCompArray] = useState({
+  //   image: '',
+  //   dates: '',
+  //   currentHeat: '',
+  //   name: '',
+  //   message: '',
+  //   id: '',
+  //   program: '',
+  //   programFileName: '',
+  //   mode:'',
+  //   fontSize:"",
+  //   displayedPictures:[],
+  //   displayedVideos:[],
+  //   videoChoice:{},
+  //   videoBGChoice:{},
+  //   compLogo:{},
+  //   displayedPicturesAuto:[],
+  //   manualPicture:{},
+  //   seconds:0,
+  //   titleBarHider:false,
+  //   showUrgentMessage:false,
+  //   savedMessages:[],
+  //   textColor:"",
+  // });
+  // const [compID, setCompID] = useState('');
+
+  // useEffect(() => {
+  //   if (snapshot) {
+  //     let arr = [];
+  //     snapshot.docs.forEach((doc1) => {
+  //       arr.push({
+  //         ...doc1.data(),
+  //         id: doc1.id,
+  //       });
+  //     });
+  //     setCompArray(arr.filter((x)=>x.id==compID));
+
+     
+  //   }
+  // }, [snapshot]);
+  // useEffect(() => {
+  //   console.log("in useEffect" +compID)
+  //   if (snapshot) {
+  //     let arr = [];
+  //     snapshot.docs.forEach((doc1) => {
+  //       arr.push({
+  //         ...doc1.data(),
+  //         id: doc1.id,
+  //       });
+  //     });
+  //     setCompArray(arr.filter((x)=>x.id==compID));
+
+     
+  //   }
+  // }, [compID]);
+
+
+
+
   useEffect(() => {
       
      

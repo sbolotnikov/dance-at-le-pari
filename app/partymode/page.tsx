@@ -134,6 +134,13 @@ const page: React.FC<Props> = () => {
     eventName: string
   ) => {
     if (session?.user.role == 'Admin')
+
+
+      // updateDoc(doc(db, 'competitions', id), {
+      //   [eventName]: text,
+      // });
+
+
     fetch('/api/admin/update_party', {
       method: 'PUT',
       headers: {
