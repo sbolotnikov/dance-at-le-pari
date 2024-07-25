@@ -28,7 +28,6 @@ const ChooseMessageModal: React.FC<Props> = ({
   onClose,
 }) => {
   const [displayMessages, setDisplayMessages] = useState<string[]>([]);
- console.log(message)
   const [messageText, setMessageText] = useState(message);
 
   useEffect(() => {

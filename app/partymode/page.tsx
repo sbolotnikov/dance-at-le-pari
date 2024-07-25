@@ -9,7 +9,8 @@ import ChoosePicturesModal from './ChoosePicturesModal';
 import CountBox from './CountBox';
 import usePartySettings from './usePartySettings';
 import ChooseMessageModal from './ChooseMessageModal';
- 
+import { doc, updateDoc } from 'firebase/firestore';
+import { db } from '@/firebase'; 
 import { useSession } from 'next-auth/react';
 
 type Props = {
@@ -24,6 +25,22 @@ const page: React.FC<Props> = () => {
   const [modal5Visible, setModal5Visible] = useState(false);
   const [refreshVar, setRefreshVar] = useState(false);
   const [refreshVar2, setRefreshVar2] = useState(false);
+  // const [image, setImage] = useState('');  
+  // const [name, setName] = useState('');
+  // const [message, setMessage] = useState('');
+  // const [mode, setMode] = useState('');
+  // const [fontSize, setFontSize] = useState<number>(0);
+  // const [displayedPictures, setDisplayedPictures] = useState<{ link: string; name: string }[]>([]);
+  // const [displayedVideos, setDisplayedVideos] = useState<{ name: string; image: string; link: string;}[]>([]);
+  // const [videoChoice, setVideoChoice] = useState<{ link: string; name: string }>({link: '', name: ''});
+  // const [compLogo, setCompLogo] = useState<{ link: string; name: string }>({link: '', name: ''});
+  // const [titleBarHider, setTitleBarHider] = useState(false);
+  // const [showUrgentMessage, setShowUrgentMessage] = useState(false);
+  // const [displayedPicturesAuto, setDisplayedPicturesAuto] = useState<{ link: string; name: string }[]>([]);
+  // const [seconds, setSeconds] = useState(0);
+  // const [manualPicture, setManualPicture] = useState<{ link: string; name: string }>({link: '', name: ''});
+  // const [savedMessages, setSavedMessages] = useState<string[]>([]);
+  // const [textColor, setTextColor] = useState('');
   const { data: session } = useSession();
   const [galleryType, setGalleryType] = useState<'auto' | 'manual' | null>(
     null
@@ -46,6 +63,28 @@ const page: React.FC<Props> = () => {
       clearInterval(timerInterval);
     }
   }, [modalVisible, refreshVar2]);
+  // const {
+  //   partyArray, setCompID
+  // } = usePartySettings();
+  // useEffect(() => {
+  //   setImage(partyArray.image);
+  //   setName(partyArray.name);
+  //   setMessage(partyArray.message);
+  //   setMode(partyArray.mode);
+  //   setFontSize(partyArray.fontSize);
+  //   setDisplayedPictures([...partyArray.displayedPictures]);
+  //   setDisplayedPicturesAuto([...partyArray.displayedPicturesAuto]);
+  //   setSeconds(partyArray.seconds);
+  //   setManualPicture(partyArray.manualPicture);
+  //   setDisplayedVideos(partyArray.displayedVideos);
+  //   setVideoChoice(partyArray.videoChoice);
+  //   setCompLogo(partyArray.compLogo);
+  //   setTitleBarHider(partyArray.titleBarHider);
+  //   setShowUrgentMessage(partyArray.showUrgentMessage);
+  //   setSavedMessages(partyArray.savedMessages);
+  //   setTextColor(partyArray.textColor);
+  //   console.log("in page",partyArray)
+  // }, [partyArray]);
   const {
     image,
     name,
@@ -63,7 +102,9 @@ const page: React.FC<Props> = () => {
     showUrgentMessage,
     savedMessages,
     textColor,
-  } = usePartySettings(refreshVar);
+    setCompID
+  } = usePartySettings();
+ 
   console.log(
     image,
     name,
@@ -136,25 +177,25 @@ const page: React.FC<Props> = () => {
     if (session?.user.role == 'Admin')
 
 
-      // updateDoc(doc(db, 'competitions', id), {
-      //   [eventName]: text,
-      // });
-
-
-    fetch('/api/admin/update_party', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+      updateDoc(doc(db, 'parties', 'GDnQcmDtWquVfojn8ljX'), {
         [eventName]: text,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        setRefreshVar(!refreshVar);
       });
+
+
+    // fetch('/api/admin/update_party', {
+    //   method: 'PUT',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify({
+    //     [eventName]: text,
+    //   }),
+    // })
+    //   .then((response) => response.json())
+    //   .then((data) => {
+    //     console.log(data);
+    //     setRefreshVar(!refreshVar);
+    //   });
   };
 
   const onPressPicture = async (e: React.MouseEvent) => {
@@ -265,7 +306,7 @@ if (session?.user.role !== 'Admin') {
             </button>
             <div className="w-full flex flex-row justify-center items-center">
               <div className="flex flex-col justify-center items-center">
-                <select
+                {mode &&<select
                   value={mode}
                   onChange={(e) => handleChange(e.target.value, 'mode')}
                   className="w-20 h-9 bg-white rounded-lg border border-[#776548] text-[#444] text-left"
@@ -275,23 +316,24 @@ if (session?.user.role !== 'Admin') {
                       {option}
                     </option>
                   ))}
-                </select>
+                </select>}
                 <p className="text-center w-20">Choose mode</p>
               </div>
               <div className="flex flex-col justify-center items-center">
-                <CountBox
+                {fontSize&&<CountBox
                   startValue={fontSize}
                   setWidth={10}
+                  name={"fontSize"}
                   onChange={(num) => {
                     console.log(num);
                     handleChange(num, 'fontSize');
                   }}
-                />
+                />}
                 <p className="text-center w-24">Choose font size</p>
               </div>
               <div className="flex flex-col justify-center items-center">
                 <div className="h-8 w-8 rounded-full overflow-hidden border-none relative">
-                  <input
+                  {textColor &&<input
                     className=" outline-none h-10 w-10  absolute -top-1 -left-1  border-none "
                     name="color"
                     id="color"
@@ -302,23 +344,24 @@ if (session?.user.role !== 'Admin') {
 
                       handleChange(e.target.value, 'textColor');
                     }}
-                  />
+                  />}
                 </div>
-                {/* <p className="text-center w-8">Text Color</p> */}
+                <p className="text-center w-8">Text Color</p>
               </div>
               <div className="flex flex-col justify-center items-center">
-                <CountBox
+                {seconds &&<CountBox
                   startValue={seconds}
                   setWidth={10}
+                  name={"secondsLength"}
                   onChange={(num) => {
                     console.log(num);
                     handleChange(num, 'seconds');
                   }}
-                />
+                />}
                 <p className="text-center w-24">Choose seconds/frame</p>
               </div>
             </div>
-            {displayedPictures && (
+            {displayedPictures && manualPicture && (
               <div className="w-full flex flex-col justify-center items-center">
                 <select
                   value={manualPicture?.name || ''}
@@ -328,10 +371,10 @@ if (session?.user.role !== 'Admin') {
                     );
                     if (selectedPicture) {
                       handleChange(
-                        JSON.stringify({
+                        {
                           name: selectedPicture.name,
                           link: selectedPicture.link,
-                        }),
+                        },
                         'manualPicture'
                       );
                     }
@@ -372,10 +415,10 @@ if (session?.user.role !== 'Admin') {
                     );
                     if (selectedLogo) {
                       handleChange(
-                        JSON.stringify({
+                        {
                           name: selectedLogo.name,
                           link: selectedLogo.link,
-                        }),
+                        },
                         'compLogo'
                       );
                     }
@@ -386,7 +429,7 @@ if (session?.user.role !== 'Admin') {
                     .sort((a, b) => (a.name! > b.name! ? 1 : -1))
                     .map((item) => (
                       <option key={item.name} value={item.name} className='w-full h-14 flex flex-row justify-between items-center'>
-                        <span>{item.name}</span>
+                        {item.name}
                       </option>
                     ))}
                 </select>
@@ -403,10 +446,10 @@ if (session?.user.role !== 'Admin') {
                     );
                     if (selectedVideo) {
                       handleChange(
-                        JSON.stringify({
+                        {
                           name: selectedVideo.name,
                           link: selectedVideo.link,
-                        }),
+                        },
                         'videoChoice'
                       );
                     }
