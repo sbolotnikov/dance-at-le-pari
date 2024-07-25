@@ -20,12 +20,22 @@ interface PartyContextType {
   compLogo: { link: string; name: string };
   titleBarHider: boolean;
   showUrgentMessage: boolean;
+  showSVGAnimation: boolean;
   displayedPicturesAuto: { link: string; name: string }[];
   seconds: number;
   manualPicture: { link: string; name: string };
   savedMessages: string[];
   textColor: string;
   id: string;
+  animationSpeed: number;
+  speedVariation: number;
+    particleCount: number;
+    maxSize: number;
+    animationOption:number;
+    rainAngle: number;
+    originX: number;
+    originY: number;
+    particleTypes:string[];
 }
 interface ReturnPartyContextType {
   image: string;
@@ -43,11 +53,21 @@ interface ReturnPartyContextType {
   compLogo: { link: string; name: string };
   titleBarHider: boolean;
   showUrgentMessage: boolean;
+  showSVGAnimation: boolean;
   displayedPicturesAuto: { link: string; name: string }[];
   seconds: number;
   manualPicture: { link: string; name: string };
   savedMessages: string[];
   textColor: string;
+  animationSpeed: number;
+  speedVariation: number;
+  particleCount: number;
+  maxSize: number;
+  animationOption:number;
+  rainAngle: number;
+  originX: number;
+  originY: number;
+  particleTypes:string[];
   setCompID: (id: string) => void;
 
 } 
@@ -68,12 +88,22 @@ export default function usePartySettings(): ReturnPartyContextType {
     compLogo:{link:"",name:""},
     titleBarHider:false,
     showUrgentMessage:false,
+    showSVGAnimation:false,
     displayedPicturesAuto:[],  
     seconds:0, 
     manualPicture:{link:"",name:""},
     savedMessages:[],
     textColor:"",
     id:"",
+    animationSpeed: 0,
+    speedVariation: 0,
+    particleCount: 0,
+    maxSize: 0,
+    animationOption:0,
+    rainAngle: 0,
+    originX: 0,
+    originY: 0,
+    particleTypes:["star",'snowflake', 'heart', 'home'],
   });
   
    
