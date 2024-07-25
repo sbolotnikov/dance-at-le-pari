@@ -12,7 +12,7 @@ interface Video {
 interface ChooseVideosModalProps {
   videosArray: Video[];
   vis: boolean;
-  onReturn: (videos: string[]) => void;
+  onReturn: (videos: Video[]) => void;
   onClose: () => void;
 }
 
@@ -30,7 +30,7 @@ const ChooseVideosModal: React.FC<ChooseVideosModalProps> = ({ videosArray, vis,
   const handleSubmit = (e: React.FormEvent, action: 'Save' | 'Close') => {
     e.preventDefault();
     if (action === 'Save') {
-      onReturn(displayVideos.map((item)=>JSON.stringify(item)));
+      onReturn(displayVideos);
     } else {
       onReturn([]);
     }

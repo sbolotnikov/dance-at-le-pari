@@ -75,7 +75,7 @@ export const PartyContext = createContext<ReturnPartyContextType >({} as ReturnP
 
 export default function usePartySettings(): ReturnPartyContextType {
 
-  const [compID, setCompID] = useState('GDnQcmDtWquVfojn8ljX');
+  const [compID, setCompID] = useState('A9UgRuKLaxvLPiSOwO1E');
   const [partyArray, setPartyArray] = useState<PartyContextType>({
     image: '',
     name: '', 
@@ -132,8 +132,32 @@ export default function usePartySettings(): ReturnPartyContextType {
         console.log("got object",filteredParty)
       }
     }
+    //      fetch('/api/admin/get_parties').
+    // then((res) => res.json())
+    // .then (async(partyArray)=>{
+    //   console.log(partyArray)
+    
+    //   let vv=await addDoc(collection(db, 'parties'), {
+    //     image:partyArray[0].image,
+    //     name:partyArray[0].name,
+    //     message:partyArray[0].message,
+    //     mode:partyArray[0].mode,
+    //     fontSize:partyArray[0].fontSize,
+    //     displayedPictures:partyArray[0].displayedPictures.map((str1:string)=>JSON.parse(str1)),
+    //     displayedVideos:partyArray[0].displayedVideos.map((str1:string)=>JSON.parse(str1)),
+    //     videoChoice:JSON.parse(partyArray[0].videoChoice),
+    //     compLogo:JSON.parse(partyArray[0].compLogo),
+    //     titleBarHider:partyArray[0].titleBarHider,
+    //     showUrgentMessage:partyArray[0].showUrgentMessage,
+    //     displayedPicturesAuto:partyArray[0].displayedPicturesAuto.map((str1:string)=>JSON.parse(str1)), 
+    //     seconds:partyArray[0]?.seconds,
+    //     manualPicture:JSON.parse(partyArray[0].manualPicture),
+    //     savedMessages:partyArray[0].savedMessages,
+    //     textColor:partyArray[0].textColor
+    //   })}); 
   }, [snapshot, compID]);   
 
+ 
 
  
   return {...partyArray, setCompID};

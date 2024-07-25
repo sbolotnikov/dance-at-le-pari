@@ -13,7 +13,7 @@ type Props = {
   displayPics: Picture[];
   galleryType: 'manual' | 'auto';
   vis: boolean;
-  onReturn: (pictures: string[]  ) => void;
+  onReturn: (pictures: Picture[]  ) => void;
   onClose:()=>void;
 }
 
@@ -35,7 +35,7 @@ const ChoosePicturesModal: React.FC<Props> = ({
 
   const handleSubmit = (submitType: 'Save' | 'Close') => {
     if (submitType === 'Save') {
-      onReturn(displayPictures.map((item)=>JSON.stringify(item)));
+      onReturn(displayPictures);
     } else {
       onReturn([]);
     }

@@ -130,7 +130,7 @@ const page: React.FC<Props> = () => {
     eventName: string
   ) => {
     if (session?.user.role == 'Admin')
-      updateDoc(doc(db, 'parties', 'GDnQcmDtWquVfojn8ljX'), {
+      updateDoc(doc(db, 'parties', 'A9UgRuKLaxvLPiSOwO1E'), {
         [eventName]: text,
       });
   };
