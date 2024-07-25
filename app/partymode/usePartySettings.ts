@@ -54,26 +54,7 @@ interface ReturnPartyContextType {
 export const PartyContext = createContext<ReturnPartyContextType >({} as ReturnPartyContextType );
 
 export default function usePartySettings(): ReturnPartyContextType {
-//   export const PartyContext = createContext<PartyContextType  >({} as PartyContextType );
 
-// export default function usePartySettings(refreshVar:boolean): PartyContextType   {
-   
-  // const [image, setImage] = useState('');  
-  // const [name, setName] = useState('');
-  // const [message, setMessage] = useState('');
-  // const [mode, setMode] = useState('');
-  // const [fontSize, setFontSize] = useState<number>(0);
-  // const [displayedPictures, setDisplayedPictures] = useState<{ link: string; name: string }[]>([]);
-  // const [displayedVideos, setDisplayedVideos] = useState<{ name: string; image: string; link: string;}[]>([]);
-  // const [videoChoice, setVideoChoice] = useState<{ link: string; name: string }>({link: '', name: ''});
-  // const [compLogo, setCompLogo] = useState<{ link: string; name: string }>({link: '', name: ''});
-  // const [titleBarHider, setTitleBarHider] = useState(false);
-  // const [showUrgentMessage, setShowUrgentMessage] = useState(false);
-  // const [displayedPicturesAuto, setDisplayedPicturesAuto] = useState<{ link: string; name: string }[]>([]);
-  // const [seconds, setSeconds] = useState(0);
-  // const [manualPicture, setManualPicture] = useState<{ link: string; name: string }>({link: '', name: ''});
-  // const [savedMessages, setSavedMessages] = useState<string[]>([]);
-  // const [textColor, setTextColor] = useState('');
   const [compID, setCompID] = useState('GDnQcmDtWquVfojn8ljX');
   const [partyArray, setPartyArray] = useState<PartyContextType>({
     image: '',
@@ -124,54 +105,7 @@ export default function usePartySettings(): ReturnPartyContextType {
   }, [snapshot, compID]);   
 
 
-
-  // useEffect(() => {
-      
-     
-  //   fetch('/api/admin/get_parties').
-  //   then((res) => res.json())
-  //   .then (async(partyArray)=>{
-  //     console.log(partyArray)
-  //     setImage(partyArray[0].image)
-  //     setName(partyArray[0].name )
-  //     setMessage(partyArray[0].message)
-  //     setMode(partyArray[0].mode)
-  //     setFontSize(partyArray[0].fontSize)
-  //     setDisplayedPictures(partyArray[0].displayedPictures.map((str1:string)=>JSON.parse(str1)))
-  //     setDisplayedVideos(partyArray[0].displayedVideos.map((str1:string)=>JSON.parse(str1)))
-  //     setVideoChoice(JSON.parse(partyArray[0].videoChoice))
-  //     setCompLogo(JSON.parse(partyArray[0].compLogo))
-  //     setTitleBarHider(partyArray[0].titleBarHider)
-  //     setShowUrgentMessage(partyArray[0].showUrgentMessage)
-  //     setDisplayedPicturesAuto(partyArray[0].displayedPicturesAuto.map((str1:string)=>JSON.parse(str1))) 
-  //     setSeconds(partyArray[0]?.seconds)
-  //     setManualPicture(JSON.parse(partyArray[0].manualPicture))
-  //     setSavedMessages(partyArray[0].savedMessages)
-  //     setTextColor(partyArray[0].textColor) 
-  //     let vv=await addDoc(collection(db, 'parties'), {
-  //       image:partyArray[0].image,
-  //       name:partyArray[0].name,
-  //       message:partyArray[0].message,
-  //       mode:partyArray[0].mode,
-  //       fontSize:partyArray[0].fontSize,
-  //       displayedPictures:partyArray[0].displayedPictures.map((str1:string)=>JSON.parse(str1)),
-  //       displayedVideos:partyArray[0].displayedVideos.map((str1:string)=>JSON.parse(str1)),
-  //       videoChoice:JSON.parse(partyArray[0].videoChoice),
-  //       compLogo:JSON.parse(partyArray[0].compLogo),
-  //       titleBarHider:partyArray[0].titleBarHider,
-  //       showUrgentMessage:partyArray[0].showUrgentMessage,
-  //       displayedPicturesAuto:partyArray[0].displayedPicturesAuto.map((str1:string)=>JSON.parse(str1)), 
-  //       seconds:partyArray[0]?.seconds,
-  //       manualPicture:JSON.parse(partyArray[0].manualPicture),
-  //       savedMessages:partyArray[0].savedMessages,
-  //       textColor:partyArray[0].textColor
-  //     }); 
-       
-  //   })
-    
-  // } ,[refreshVar]);
-  
-  // return { image, name, message, mode, fontSize, displayedPictures, displayedVideos, videoChoice, compLogo, titleBarHider, showUrgentMessage, displayedPicturesAuto, seconds, manualPicture, savedMessages, textColor };
+ 
   return {...partyArray, setCompID};
 }
   

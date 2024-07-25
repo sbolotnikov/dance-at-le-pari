@@ -112,14 +112,7 @@ const ContainerLoaded = () => {
                   } as React.CSSProperties
                 }
               >
-                {/* <div className={`w-full rounded-md overflow-hidden`} style={{height:Math.round(containerSize.height!/4*0.8)+'px'}}>
-                <Image
-                  className={`object-cover `}
-                  fill={true}
-                  src={item.path}
-                  alt={item.name + ' picture'}
-                />
-                </div> */}
+                 
                 <div className="w-full rounded-md  text-xl  text-center   text-shadow  dark:text-shadow-light text-lightMainColor bg-lightMainBG/80  dark:text-darkMainColor dark:bg-darkMainBG/80  dark:shadow-darkMainColor">
                   {item.name}
                 </div>
@@ -145,8 +138,7 @@ export default function Home() {
     } 
     
   }, [windowSize.width]);
- 
-  // {date:"2023-10-19T20:00",eventtype:"Party",id: 43, image:"cln5j37qp0000sl0g8xip7j0p",tag:"East Coast Swing" }
+  
 
   return (
     <PageWrapper className="absolute inset-0 flex flex-col justify-start items-center mt-10 md:mt-20 ">
