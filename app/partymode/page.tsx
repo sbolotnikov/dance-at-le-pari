@@ -77,7 +77,7 @@ const page: React.FC<Props> = () => {
     particleTypes,
     setCompID,
   } = usePartySettings();
-  const typesSet = ["star",'snowflake', 'heart', 'home',];
+  const typesSet = ["star",'snowflake', 'heart', 'home',"maple",'rose','diamond','clover','streamer','lightning','hydrangea'];
   const reverseColor = (str: string) => {
     console.log(str);
     let n = parseInt(str.slice(1), 16);

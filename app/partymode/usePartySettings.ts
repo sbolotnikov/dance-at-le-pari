@@ -103,7 +103,7 @@ export default function usePartySettings(): ReturnPartyContextType {
     rainAngle: 0,
     originX: 0,
     originY: 0,
-    particleTypes:["star",'snowflake', 'heart', 'home'],
+    particleTypes:["star",'snowflake', 'heart', 'home',"maple",'rose','diamond','clover','streamer','lightning','hydrangea'],
   });
   
    
