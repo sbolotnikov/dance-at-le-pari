@@ -587,6 +587,7 @@ const page: React.FC<Props> = () => {
                         <option value={1}>Towards Viewer</option>
                         <option value={2}>Away from Viewer</option>
                         <option value={3}>Rain</option>
+                        <option value={4}>Storm vortex</option>
                       </select>
                     </div> 
                     {animationOption === 3 && (

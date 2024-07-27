@@ -102,6 +102,7 @@ const ShowPlayingModal: React.FC<Props> = ({
       const createParticle = () => {
         const particle = document.createElementNS(svgNS, 'path');
         const animateMotion = document.createElementNS(svgNS, 'animateMotion');
+        const animateOpacity = document.createElementNS(svgNS, "animate");
         const animateTransform = document.createElementNS(
           svgNS,
           'animateTransform'
@@ -189,19 +190,55 @@ const ShowPlayingModal: React.FC<Props> = ({
                 ? [0, Math.random() * windowSize.height!]
                 : [windowSize.width, Math.random() * windowSize.height!];
           }
-        } else {
+        } else if (animationOption === 4) {
+          startX = Math.random() * windowSize.width!;
+          startY = Math.random() * windowSize.height!;
+          endX = Math.random() * windowSize.width!;
+          endY = Math.random() * windowSize.height!;
+    
+          const animationDuration = 10 / animationSpeed;
+          const randomDelay = Math.random() * animationDuration;
+    
+          animateMotion.setAttribute('path', `M${startX},${startY} L${endX},${endY}`);
+          animateMotion.setAttribute('dur', `${animationDuration}s`);
+          animateMotion.setAttribute('begin', `${randomDelay}s`);
+          animateMotion.setAttribute('repeatCount', 'indefinite');
+    
+          animateTransform.setAttribute('attributeName', 'transform');
+          animateTransform.setAttribute('type', 'rotateX');
+          animateTransform.setAttribute('from', '0 50 20');
+          animateTransform.setAttribute('to', '360 270 360');
+          animateTransform.setAttribute('dur', `${animationDuration}s`);
+          animateTransform.setAttribute('begin', `${randomDelay}s`);
+          animateTransform.setAttribute('repeatCount', 'indefinite');
+    
+          animateOpacity.setAttribute('attributeName', 'opacity');
+          animateOpacity.setAttribute('values', '0;1;1;0');
+          animateOpacity.setAttribute('keyTimes', '0;0.1;0.9;1');
+          animateOpacity.setAttribute('dur', `${animationDuration}s`);
+          animateOpacity.setAttribute('begin', `${randomDelay}s`);
+          animateOpacity.setAttribute('repeatCount', 'indefinite');
+    
+          animateColor.setAttribute('attributeName', 'fill');
+          animateColor.setAttribute('dur', '5s');
+          animateColor.setAttribute('begin', `${randomDelay}s`);
+          animateColor.setAttribute('repeatCount', 'indefinite');
+          animateColor.setAttribute('values', 'hsl(0, 100%, 50%); hsl(60, 100%, 50%); hsl(120, 100%, 50%); hsl(180, 100%, 50%); hsl(240, 100%, 50%); hsl(300, 100%, 50%); hsl(360, 100%, 50%)');
+          particle.appendChild(animateOpacity);
+        } else if (animationOption === 3){
           const angle = (rainAngle * Math.PI) / 180;
           startX = Math.random() * windowSize.width!;
           startY = Math.random() * windowSize.height!;
           endX = startX + Math.cos(angle) * windowSize.height!;
           endY = startY + Math.sin(angle) * windowSize.height!;
-        }
+        } 
         const particleSpeed =
           animationSpeed * (1 + (Math.random() - 0.5) * speedVariation);
+        if (animationOption !== 4) {
         animateMotion.setAttribute(
           'path',
           `M${startX},${startY} L${endX},${endY}`
-        );
+        );}
         animateMotion.setAttribute('dur', `${10 / particleSpeed}s`);
         animateMotion.setAttribute('repeatCount', 'indefinite');
 
