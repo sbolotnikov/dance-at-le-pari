@@ -149,8 +149,7 @@ const page: React.FC<Props> = () => {
     if (session?.user.role !== 'Admin') {
       window.location.href = '/competition';
     }
-  }, []);
-
+  }, []); 
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
       <ColorChoiceModal
@@ -179,6 +178,7 @@ const page: React.FC<Props> = () => {
           videoUri={videoChoice}
           manualPicture={manualPicture}
           displayedPicturesAuto={displayedPicturesAuto}
+          displayedPictures={displayedPictures}
           button1="Ok"
           compName={name}
           heatNum={''}
@@ -263,7 +263,7 @@ const page: React.FC<Props> = () => {
                       onChange={(e) => handleChange(e.target.value, 'mode')}
                       className="w-20 h-9 bg-white rounded-lg border border-[#776548] text-[#444] text-left"
                     >
-                      {['Auto', 'Video', 'Manual', 'Default'].map((option) => (
+                      {['Auto','Auto Full', 'Video', 'Manual', 'Default'].map((option) => (
                         <option key={option} value={option}>
                           {option}
                         </option>

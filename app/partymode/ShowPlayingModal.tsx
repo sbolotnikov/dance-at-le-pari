@@ -5,6 +5,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import VideoPlayingComponent from './VideoPlayingComponent';
 import ManualImage from './ManualImage';
 import AutoImages from './AutoImages';
+import FullAutoMode from './FullAutoMode';
 import { SettingsContext } from '@/hooks/useSettings';
 import { ScreenSettingsContextType } from '@/types/screen-settings';
 import { useDimensions } from '@/hooks/useDimensions';
@@ -19,6 +20,7 @@ type Props = {
   seconds: number;
   manualPicture: { link: string; name: string };
   displayedPicturesAuto: { link: string; name: string }[];
+  displayedPictures: {  link: string; name: string, dances:string[] }[];
   vis: boolean;
   compLogo: { link: string; name: string };
   message: string;
@@ -49,6 +51,7 @@ const ShowPlayingModal: React.FC<Props> = ({
   seconds,
   manualPicture,
   displayedPicturesAuto,
+  displayedPictures,
   vis,
   compLogo,
   message,
@@ -71,6 +74,14 @@ const ShowPlayingModal: React.FC<Props> = ({
   const { changeNav } = useContext(
     SettingsContext
   ) as ScreenSettingsContextType;
+
+
+  const [picArrAutoMode, setPicArrAutoMode] = useState<{link:string, dances:string[]}[]>([]);
+
+  // displayedPictures.map((pic) => ({ link: pic.link, dances: pic.dances })).filter((pic)=>pic.dances.indexOf(message)>=0)
+
+
+
   const windowSize = useDimensions();
   const handleSubmit = (e: React.MouseEvent, submitten: string) => {
     e.preventDefault();
@@ -80,6 +91,20 @@ const ShowPlayingModal: React.FC<Props> = ({
   const svgRef = useRef<SVGSVGElement>(null);
   const [timeNow, setTimeNow] = useState('');
   const [refreshVar, setRefreshVar] = useState(false);
+
+ useEffect(() => {
+  if ((mode === 'Auto Full')&&(displayedPictures.length>0)) {
+    let arr=displayedPictures.map((pic) => ({ link: pic.link, dances: pic.dances })).filter((pic)=>pic.dances.indexOf(message)>=0);
+    console.log(message,arr)
+    setPicArrAutoMode(arr);
+  } else {
+    setPicArrAutoMode([]);
+  
+  }
+ }, [message,mode,displayedPictures]);
+
+
+
   useEffect(() => {
     const timerInterval = setInterval(() => {
       const now = new Date();
@@ -314,7 +339,6 @@ const ShowPlayingModal: React.FC<Props> = ({
     rainAngle,
     particleTypes,
   ]);
-
   return (
     <div
       className={`flex justify-center items-center w-[100vw] h-[100vh] absolute top-0 z-[2000] left-0 ${
@@ -338,6 +362,21 @@ const ShowPlayingModal: React.FC<Props> = ({
               seconds={seconds}
               videoBG={videoUri.link}
               text1={manualPicture.name}
+              compLogo={compLogo.link}
+              titleBarHider={titleBarHider}
+              onRenewInterval={() => {
+                setRefreshVar(!refreshVar);
+                onRenewInterval();
+              }}
+            />
+          )}
+          {((mode === 'Auto Full') && (picArrAutoMode.length>0))&&(
+            <FullAutoMode
+              picsArray={picArrAutoMode} 
+              seconds={seconds}
+              videoBG={videoUri.link}
+              text1={manualPicture.name}
+              message={message}
               compLogo={compLogo.link}
               titleBarHider={titleBarHider}
               onRenewInterval={() => {

@@ -10,7 +10,7 @@ interface PartyContextType {
   message: string;
   mode: string;
   fontSize: number;
-  displayedPictures: { link: string; name: string }[];
+  displayedPictures: { link: string; name: string, dances:string[] }[];
   displayedVideos: {
     name: string;
     image: string;
@@ -43,7 +43,7 @@ interface ReturnPartyContextType {
   message: string;
   mode: string;
   fontSize: number;
-  displayedPictures: { link: string; name: string }[];
+  displayedPictures: { link: string; name: string, dances:string[] }[];
   displayedVideos: {
     name: string;
     image: string;
