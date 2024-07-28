@@ -78,10 +78,6 @@ const ShowPlayingModal: React.FC<Props> = ({
 
   const [picArrAutoMode, setPicArrAutoMode] = useState<{link:string, dances:string[]}[]>([]);
 
-  // displayedPictures.map((pic) => ({ link: pic.link, dances: pic.dances })).filter((pic)=>pic.dances.indexOf(message)>=0)
-
-
-
   const windowSize = useDimensions();
   const handleSubmit = (e: React.MouseEvent, submitten: string) => {
     e.preventDefault();
@@ -95,6 +91,13 @@ const ShowPlayingModal: React.FC<Props> = ({
  useEffect(() => {
   if ((mode === 'Auto Full')&&(displayedPictures.length>0)) {
     let arr=displayedPictures.map((pic) => ({ link: pic.link, dances: pic.dances })).filter((pic)=>pic.dances.indexOf(message)>=0);
+
+
+// add 'all' 
+
+
+
+
     console.log(message,arr)
     setPicArrAutoMode(arr);
   } else {

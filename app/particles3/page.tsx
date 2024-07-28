@@ -16,7 +16,7 @@ const ParticleAnimation = () => {
     const svg = svgRef.current;
     const svgNS = "http://www.w3.org/2000/svg";
 
-    const createParticle = (index) => {
+    const createParticle = (index:number) => {
       const particle = document.createElementNS(svgNS, "g");
       const path = document.createElementNS(svgNS, "path");
       const animateMotion = document.createElementNS(svgNS, "animateMotion");
@@ -110,7 +110,7 @@ const ParticleAnimation = () => {
     };
 
     const init = () => {
-      while (svg.firstChild) {
+      while (svg!.firstChild) {
         svg.removeChild(svg.firstChild);
       }
 
@@ -131,6 +131,48 @@ const ParticleAnimation = () => {
       }
     };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        const init = () => {
+          if (svg && svg.current) {
+            while (svg.current.firstChild) {
+              svg.current.removeChild(svg.current.firstChild);
+            }
+
+            const bgRect = document.createElementNS(svgNS, "rect");
+            bgRect.setAttribute('width', '100%');
+            bgRect.setAttribute('height', '100%');
+            svg.current.appendChild(bgRect);
+
+            const animateBgColor = document.createElementNS(svgNS, "animate");
+            animateBgColor.setAttribute('attributeName', 'fill');
+            animateBgColor.setAttribute('dur', '20s');
+            animateBgColor.setAttribute('repeatCount', 'indefinite');
+            animateBgColor.setAttribute('values', backgroundColor.join(';') + ';' + backgroundColor[0]);
+            bgRect.appendChild(animateBgColor);
+
+            for (let i = 0; i < particleCount; i++) {
+              svg.current.appendChild(createParticle(i));
+            }
+          }
+        };
     init();
 
   }, [particleCount, maxSize, animationSpeed, backgroundColor, particleTypes, pattern]);
