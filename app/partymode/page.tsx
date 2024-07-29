@@ -33,6 +33,7 @@ const page: React.FC<Props> = () => {
     {
       link: string;
       name: string;
+      dances: string[] | null;
     }[]
   >([]);
   const [videoSearchText, setVideoSearchText] = useState('');
@@ -77,7 +78,7 @@ const page: React.FC<Props> = () => {
     particleTypes,
     setCompID,
   } = usePartySettings();
-  const typesSet = ["star",'snowflake', 'heart', 'home',"maple",'rose','diamond','clover','streamer','lightning','hydrangea'];
+  const typesSet = ["star","kiss",'snowflake', 'heart', 'tower','LP',"maple",'rose','diamond','clover','streamer','lightning','hydrangea'];
   const reverseColor = (str: string) => {
     console.log(str);
     let n = parseInt(str.slice(1), 16);
@@ -164,6 +165,7 @@ const page: React.FC<Props> = () => {
       <ChooseVideosModal
         videosArray={displayedVideos}
         vis={modal4Visible}
+        savedMessages={savedMessages}
         onClose={() => setModal4Visible(false)}
         onReturn={(ret) => {
           if (ret && ret.length > 0) {
@@ -210,12 +212,11 @@ const page: React.FC<Props> = () => {
         <ChoosePicturesModal
           displayPics={galleryArr}
           galleryType={galleryType}
+          savedMessages={savedMessages}
           vis={modal3Visible}
           onReturn={(ret) => {
-            if (ret && ret.length > 0) {
-              galleryType === 'auto'
-                ? handleChange(ret, 'displayedPicturesAuto')
-                : handleChange(ret, 'displayedPictures');
+            if (ret && ret.length > 0) { 
+             galleryType === 'auto'? handleChange(ret.map(pic => ({ link:pic.link,name:pic.name })), 'displayedPicturesAuto'): handleChange(ret, 'displayedPictures');
             }
             setModal3Visible(false);
           }}
@@ -454,7 +455,7 @@ const page: React.FC<Props> = () => {
                     e.preventDefault();
                     setGalleryType('auto');
                     if (displayedPicturesAuto)
-                      setGalleryArr([...displayedPicturesAuto]);
+                      setGalleryArr(displayedPicturesAuto.map(pic => ({ ...pic, dances: null })));
                     setModal3Visible(true);
                   }}
                 >

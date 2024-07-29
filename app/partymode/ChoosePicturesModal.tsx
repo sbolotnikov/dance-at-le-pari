@@ -1,16 +1,19 @@
 'use client';
 
 import AnimateModalLayout from '@/components/AnimateModalLayout';
+import ShowIcon from '@/components/svg/showIcon';
 import Image from 'next/image';
 import React, { useState, useEffect } from 'react'; 
 
 interface Picture {
     link: string;
     name: string;
+    dances:string[] | null;  
 }
 
 type Props = {
   displayPics: Picture[];
+  savedMessages: string[];
   galleryType: 'manual' | 'auto';
   vis: boolean;
   onReturn: (pictures: Picture[]  ) => void;
@@ -19,6 +22,7 @@ type Props = {
 
 const ChoosePicturesModal: React.FC<Props> = ({
   displayPics,
+  savedMessages,
   galleryType,
   vis,
   onReturn,
@@ -28,9 +32,11 @@ const ChoosePicturesModal: React.FC<Props> = ({
   const [pictureLink, setPictureLink] = useState('');
   const [pictureLinkType, setPictureLinkType] = useState('Regular link');
   const [pictureText, setPictureText] = useState('');
+  const [pictureDances, setPictureDances] = useState<string[] | null>(null);
 
   useEffect(() => {
     setDisplayPictures(displayPics);
+    console.log(displayPics)
   }, [displayPics]);
 
   const handleSubmit = (submitType: 'Save' | 'Close') => {
@@ -42,11 +48,12 @@ const ChoosePicturesModal: React.FC<Props> = ({
   };
 
   const handleAddPicture = () => {
-    const newPicture =   { name: pictureText, link: pictureLink } as Picture;
+    const newPicture =   { name: pictureText, link: pictureLink, dances:pictureDances } as Picture;
     
     setDisplayPictures([...displayPictures, newPicture]);
     setPictureLink('');
     setPictureText('');
+    setPictureDances([]);
   };
 
   const handleDeletePicture = (index: number) => {
@@ -96,9 +103,9 @@ const ChoosePicturesModal: React.FC<Props> = ({
                 />
                 <button 
                   onClick={() => handleDeletePicture(i)}
-                  className="absolute top-0 right-0 text-red-500 hover:text-red-700"
+                  className="absolute top-0 right-0 fill-alertcolor  stroke-alertcolor  rounded-md border-alertcolor  w-8 h-8"
                 >
-                  Del
+                  <ShowIcon icon={'Close'} stroke={'2'} />
                 </button>
                 {galleryType === "manual"  && (
                   <p className="mt-1 text-center max-w-[100px] truncate">{item.name}</p>
@@ -142,6 +149,36 @@ const ChoosePicturesModal: React.FC<Props> = ({
               onChange={(e) => setPictureText(e.target.value)}
               className="w-full p-2 border border-gray-300 rounded mb-2"
             />
+          )}
+          {galleryType === "manual" && (
+                <div>
+                  <div>
+                    {pictureDances?.toString() || 'No dances selected'}
+                  </div>
+                <select
+                className="w-full p-2 border border-gray-300 rounded mb-2"
+                onChange={(e) => {
+                  e.preventDefault();
+                  if (pictureDances?.indexOf(e.target.value)!>-1) {
+                    let dances=pictureDances?.filter((item)=>item!==e.target.value);
+                    setPictureDances(dances!);
+                  } else {
+                    setPictureDances([...(pictureDances || []), e.target.value]);
+                  }              
+                }}
+              >
+                {savedMessages &&
+                  savedMessages.concat('All').sort((a, b) => a.localeCompare(b)).map((item, index) => {
+                     return (
+                      <option key={'opt' + index} value={item}>
+                        {item}
+                      </option>
+                    );
+                  })}
+              </select>
+
+
+              </div>
           )}
 
           <button
