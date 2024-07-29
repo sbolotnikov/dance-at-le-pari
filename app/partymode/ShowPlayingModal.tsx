@@ -9,7 +9,7 @@ import FullAutoMode from './FullAutoMode';
 import { SettingsContext } from '@/hooks/useSettings';
 import { ScreenSettingsContextType } from '@/types/screen-settings';
 import { useDimensions } from '@/hooks/useDimensions';
-import svgPath from './svgpath';
+import svgPath from './svgPath';
 
 type Props = {
   videoUri: { link: string; name: string };
