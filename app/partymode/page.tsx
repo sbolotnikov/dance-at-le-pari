@@ -178,6 +178,7 @@ const page: React.FC<Props> = () => {
           videoUri={videoChoice}
           manualPicture={manualPicture}
           displayedPicturesAuto={displayedPicturesAuto}
+          displayedVideos={displayedVideos}
           displayedPictures={displayedPictures}
           button1="Ok"
           compName={name}

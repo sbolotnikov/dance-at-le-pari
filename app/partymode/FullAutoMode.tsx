@@ -10,11 +10,13 @@ type Props = {
   titleBarHider: boolean;
   message: string;
   picsArray: { link: string; dances: string[] }[];
+  vidsArray: { link: string; dances: string[] }[];
   onRenewInterval: () => void;
 };
 
 const FullAutoMode = ({
   picsArray,
+  vidsArray,
   seconds,
   text1,
   compLogo,
@@ -23,17 +25,24 @@ const FullAutoMode = ({
   onRenewInterval,
 }: Props) => {
   const [activePic, setActivePic] = useState(0);
+  const [activeVideo, setActiveVideo] = useState(0);
   let timerIntervalID: any;
+  let timerIntervalVideoID: any;
   const nextActive = (num: number) => {
     timerIntervalID = window.setTimeout(function () {
       window.clearTimeout(timerIntervalID);
-      console.log('interval cleared in nextActive');
-      let localPic = num;
-      if (localPic < picsArray.length - 1) localPic++;
-      else localPic = 0;
-      setActivePic(localPic);
-      nextActive(localPic);
-    }, seconds * 1000);
+      console.log('interval cleared in nextActive pictures', num);  
+      setActivePic(Math.floor(Math.random() * picsArray.length));
+      nextActive(num);
+    }, num * 1000);
+  };
+  const nextActiveVideo = (num: number) => {
+    timerIntervalVideoID = window.setTimeout(function () {
+      window.clearTimeout(timerIntervalVideoID);
+      console.log('interval cleared in nextActive video ',num);     
+      setActiveVideo(Math.floor(Math.random()*vidsArray.length));
+      nextActiveVideo(num);
+    }, num * 1000);
   };
   useEffect(() => {
     console.log(picsArray);
@@ -41,11 +50,14 @@ const FullAutoMode = ({
     while (id--) {
       window.clearTimeout(id); // will do nothing if no timeout with id is present
     }
-    console.log('interval cleared in useEffect');
+    console.log('interval cleared in useEffect pictures');
+    setActivePic(Math.floor(Math.random() * picsArray.length));
+    nextActive(seconds);
+    console.log(vidsArray);    
+    setActiveVideo(Math.floor(Math.random()*vidsArray.length));
+    nextActiveVideo(seconds*3);
     onRenewInterval();
-    setActivePic(0);
-    nextActive(0);
-  }, [picsArray]);
+  }, [vidsArray, picsArray]);
   return (
     <>
       {picsArray[activePic] !== undefined && (
@@ -54,7 +66,7 @@ const FullAutoMode = ({
           seconds={seconds}
           text1={text1}
           compLogo={compLogo}
-          videoBG={videoBG}
+          videoBG={vidsArray[activeVideo].link}
           titleBarHider={titleBarHider}
         />
       )}

@@ -21,6 +21,7 @@ type Props = {
   manualPicture: { link: string; name: string };
   displayedPicturesAuto: { link: string; name: string }[];
   displayedPictures: {  link: string; name: string, dances:string[] }[];
+  displayedVideos:{  link: string; dances:string[] }[];
   vis: boolean;
   compLogo: { link: string; name: string };
   message: string;
@@ -52,6 +53,7 @@ const ShowPlayingModal: React.FC<Props> = ({
   manualPicture,
   displayedPicturesAuto,
   displayedPictures,
+  displayedVideos,
   vis,
   compLogo,
   message,
@@ -77,7 +79,7 @@ const ShowPlayingModal: React.FC<Props> = ({
 
 
   const [picArrAutoMode, setPicArrAutoMode] = useState<{link:string, dances:string[]}[]>([]);
-
+  const [videoArrAutoMode, setVideoArrAutoMode] = useState<{link:string, dances:string[]}[]>([]);
   const windowSize = useDimensions();
   const handleSubmit = (e: React.MouseEvent, submitten: string) => {
     e.preventDefault();
@@ -90,21 +92,23 @@ const ShowPlayingModal: React.FC<Props> = ({
 
  useEffect(() => {
   if ((mode === 'Auto Full')&&(displayedPictures.length>0)) {
-    let arr=displayedPictures.map((pic) => ({ link: pic.link, dances: pic.dances })).filter((pic)=>pic.dances.indexOf(message)>=0);
-
-
-// add 'all' 
-
-
+    let arr1=displayedPictures.map((pic) => ({ link: pic.link, dances: pic.dances })).filter((pic)=>pic.dances.indexOf(message)>=0);
+    let arr2=displayedPictures.map((pic) => ({ link: pic.link, dances: pic.dances })).filter((pic)=>pic.dances.indexOf("All")>=0);
+    let arr = arr1.concat(arr2);
+    let videoArr1 = displayedVideos.filter((vid)=>vid.dances.indexOf(message)>=0);
+    let videoArr2=displayedVideos.filter((vid)=>vid.dances.indexOf("All")>=0);
+    let videoArr = videoArr1.concat(videoArr2);
 
 
     console.log(message,arr)
     setPicArrAutoMode(arr);
+    setVideoArrAutoMode(videoArr);
   } else {
     setPicArrAutoMode([]);
+    setVideoArrAutoMode([]);
   
   }
- }, [message,mode,displayedPictures]);
+ }, [message,mode,displayedPictures, displayedVideos]);
 
 
 
@@ -373,9 +377,10 @@ const ShowPlayingModal: React.FC<Props> = ({
               }}
             />
           )}
-          {((mode === 'Auto Full') && (picArrAutoMode.length>0))&&(
+          {((mode === 'Auto Full') && (picArrAutoMode.length>0) && (videoArrAutoMode.length>0))&&(
             <FullAutoMode
               picsArray={picArrAutoMode} 
+              vidsArray={videoArrAutoMode} 
               seconds={seconds}
               videoBG={videoUri.link}
               text1={manualPicture.name}
