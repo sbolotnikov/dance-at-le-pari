@@ -10,12 +10,14 @@ import { SettingsContext } from '@/hooks/useSettings';
 import { ScreenSettingsContextType } from '@/types/screen-settings';
 import { useDimensions } from '@/hooks/useDimensions';
 import svgPath from './svgPath';
+import ImgFromDb from '@/components/ImgFromDb';
 
 type Props = {
   videoUri: { link: string; name: string };
   button1: string;
   compName: string;
   heatNum: string;
+  image: string;
   mode: string;
   fontSize: number;
   seconds: number;
@@ -46,7 +48,7 @@ type Props = {
 const ShowPlayingModal: React.FC<Props> = ({
   videoUri,
   button1,
-  compName,
+  image,
   heatNum,
   mode,
   fontSize,
@@ -156,7 +158,7 @@ const ShowPlayingModal: React.FC<Props> = ({
         particle.setAttribute('d', svgPath(shape));
         particle.setAttribute('fill', `hsl(${Math.random() * 360}, 100%, 50%)`);
         particle.setAttribute('fillRule', `evenodd`);
-        particle.setAttribute('clipRule', `evenodd`); 
+        particle.setAttribute('clipRule', `evenodd`);
 
         let startX, startY, endX, endY;
         const particleSpeed =
@@ -252,9 +254,9 @@ const ShowPlayingModal: React.FC<Props> = ({
             'path',
             `M${startX},${startY} L${endX},${endY}`
           );
-        
-        animateMotion.setAttribute('dur', `${10 / particleSpeed}s`);
-        animateMotion.setAttribute('repeatCount', 'indefinite');
+
+          animateMotion.setAttribute('dur', `${10 / particleSpeed}s`);
+          animateMotion.setAttribute('repeatCount', 'indefinite');
         }
         if (animationOption === 1) {
           animateTransform.setAttribute('attributeName', 'transform');
@@ -389,11 +391,13 @@ const ShowPlayingModal: React.FC<Props> = ({
           )}
           {mode === 'Default' && (
             <div className="w-full h-full flex justify-center items-center">
-              <img
-                src={compLogo.link}
-                alt="Company Logo"
-                className="h-[750px] w-[760px]"
-              />
+              <div className="h-[900px] w-[900px] rounded-md flex justify-center items-center">
+                <ImgFromDb
+                  url={image}
+                  stylings="object-cover w-full h-full rounded-md"
+                  alt="Event Picture"
+                />
+              </div>
             </div>
           )}
           {showSVGAnimation && (

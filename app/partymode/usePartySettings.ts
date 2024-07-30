@@ -67,6 +67,7 @@ interface ReturnPartyContextType {
   maxSize: number;
   animationOption:number;
   rainAngle: number;
+  id: string;
   originX: number;
   originY: number;
   particleTypes:string[];
@@ -76,8 +77,7 @@ interface ReturnPartyContextType {
 export const PartyContext = createContext<ReturnPartyContextType >({} as ReturnPartyContextType );
 
 export default function usePartySettings(): ReturnPartyContextType {
-
-  const [compID, setCompID] = useState('A9UgRuKLaxvLPiSOwO1E');
+  const [compID, setCompID] = useState('');
   const [partyArray, setPartyArray] = useState<PartyContextType>({
     image: '',
     name: '', 
