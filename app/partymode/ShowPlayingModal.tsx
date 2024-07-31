@@ -145,10 +145,8 @@ const ShowPlayingModal: React.FC<Props> = ({
         const particle = document.createElementNS(svgNS, 'path');
         const animateMotion = document.createElementNS(svgNS, 'animateMotion');
         const animateOpacity = document.createElementNS(svgNS, 'animate');
-        const animateTransform = document.createElementNS(
-          svgNS,
-          'animateTransform'
-        );
+        const animateTransform = document.createElementNS(svgNS,'animateTransform');
+        const animateTransform2 = document.createElementNS(svgNS,'animateTransform');
         const animateColor = document.createElementNS(svgNS, 'animate');
 
         const shape =
@@ -200,24 +198,28 @@ const ShowPlayingModal: React.FC<Props> = ({
             `M${startX},${startY} L${endX},${endY}`
           );
           animateMotion.setAttribute('dur', `${animationDuration}s`);
-          animateMotion.setAttribute('begin', `${randomDelay}s`);
-          animateMotion.setAttribute('repeatCount', 'indefinite');
+          animateMotion.setAttribute('begin', `${randomDelay}s`); 
 
+          
+          animateTransform2.setAttribute('attributeName', 'transform');
+          animateTransform2.setAttribute('type', 'scale');
+          animateTransform2.setAttribute('from', '0');
+          animateTransform2.setAttribute('to', `${size / 6}`);
+          animateTransform2.setAttribute('dur', `${10 / particleSpeed}s`);
+          animateTransform2.setAttribute('begin', `${randomDelay}s`);
+          animateTransform2.setAttribute('repeatCount', 'indefinite'); 
+          animateTransform2.setAttribute('additive', 'sum'); 
+          // animateTransform2.setAttribute('accumulate', 'sum'); 
+          // additive="sum" accumulate="sum"
           animateTransform.setAttribute('attributeName', 'transform');
-          animateTransform.setAttribute('type', 'scale');
-          animateTransform.setAttribute('value', '0');
-          animateTransform.setAttribute('to', `${size / 6}`);
-          animateTransform.setAttribute('dur', `${animationDuration}s`);
-          animateTransform.setAttribute('begin', `${randomDelay}s`);
-          animateTransform.setAttribute('repeatCount', 'indefinite');
-
-          animateTransform.setAttribute('attributeName', 'transform');
-          animateTransform.setAttribute('type', 'rotateX');
+          animateTransform.setAttribute('type', 'rotate');
           animateTransform.setAttribute('from', '0 50 20');
-          animateTransform.setAttribute('to', '360 270 360');
+          animateTransform.setAttribute('to', '360 270 360');      
           animateTransform.setAttribute('dur', `${animationDuration}s`);
           animateTransform.setAttribute('begin', `${randomDelay}s`);
-          animateTransform.setAttribute('repeatCount', 'indefinite');
+          animateTransform.setAttribute('repeatCount', 'indefinite'); 
+          animateTransform.setAttribute('additive', 'sum'); 
+          // animateTransform.setAttribute('accumulate', 'sum'); 
 
           animateOpacity.setAttribute('attributeName', 'opacity');
           animateOpacity.setAttribute('values', '0;1;1;0');
@@ -232,9 +234,11 @@ const ShowPlayingModal: React.FC<Props> = ({
           animateColor.setAttribute('repeatCount', 'indefinite');
           animateColor.setAttribute(
             'values',
-            'hsl(0, 100%, 50%); hsl(60, 100%, 50%); hsl(120, 100%, 50%); hsl(180, 100%, 50%); hsl(240, 100%, 50%); hsl(300, 100%, 50%); hsl(360, 100%, 50%)'
+            'hsl(0, 100%, 50%); hsl(60, 100%, 50%); hsl(120, 100%, 50%); hsl(180, 100%, 50%); hsl(240, 100%, 50%); hsl(300, 100%, 50%); hsl(24, 80%, 50%)'
           );
-          particle.appendChild(animateOpacity);
+          animateColor.setAttribute('calcMode', 'discrete');
+          particle.appendChild(animateTransform2);
+          particle.appendChild(animateOpacity); 
         } else if (animationOption === 3) {
           const angle = (rainAngle * Math.PI) / 180;
           startX = Math.random() * windowSize.width!;
@@ -255,9 +259,7 @@ const ShowPlayingModal: React.FC<Props> = ({
             `M${startX},${startY} L${endX},${endY}`
           );
 
-          animateMotion.setAttribute('dur', `${10 / particleSpeed}s`);
-          animateMotion.setAttribute('repeatCount', 'indefinite');
-        }
+         }
         if (animationOption === 1) {
           animateTransform.setAttribute('attributeName', 'transform');
           animateTransform.setAttribute('type', 'scale');
@@ -284,6 +286,7 @@ const ShowPlayingModal: React.FC<Props> = ({
 
         particle.appendChild(animateMotion);
         particle.appendChild(animateTransform);
+        
         particle.appendChild(animateColor);
 
         // Calculate individual particle speed
