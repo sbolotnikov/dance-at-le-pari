@@ -18,7 +18,7 @@ const ManualImage: React.FC<Props> = ({
   videoBG,
   titleBarHider,
 }) => {
-  const [actPic, setActPic] = useState('./winterClass.svg');
+  const [actPic, setActPic] = useState('');
   const [actText, setActText] = useState('Fred Astaire presents');
   const [activePic, setActivePic] = useState(0);
   const [size1, setSize1] = useState(0);
