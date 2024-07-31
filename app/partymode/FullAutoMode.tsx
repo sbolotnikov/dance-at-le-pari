@@ -60,7 +60,7 @@ const FullAutoMode = ({
   }, [vidsArray, picsArray]);
   return (
     <>
-      {(picsArray[activePic] !== undefined) && (picsArray[activePic].link !== undefined)&&(
+      {(picsArray[activePic] !== undefined) && (vidsArray[activeVideo] !== undefined)&&(
         <ManualImage
           image1={picsArray[activePic].link}
           seconds={seconds}
