@@ -1,45 +1,63 @@
-
+import { db } from '@/firebase';
 import { prisma } from '@/lib/prisma';
 import { sendAnyEmail } from '@/utils/sendAnyEmail';
+import { collection, addDoc } from 'firebase/firestore';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
   const data = await req.json();
   const { title, message } = data;
   // await new Promise((resolve, reject) => {
-    const contacts = await prisma.contact.findMany({ where: {
-      OR: [{status:'Subscribed'}],
-     },})
-    await prisma.$disconnect()
-    let resArr=[];
-    let name1="" as string | null
-    for (let i=0; i<contacts.length; i++){
-    name1=contacts[i].name!=null?contacts[i].name+" ":""
-    name1+=contacts[i].lastname!=null?contacts[i].lastname:""
-    console.log(name1)
-   const res = await sendAnyEmail({
-    email1:  contacts[i].email,
-    email2: process.env.EMAIL_SERVER_USER ? process.env.EMAIL_SERVER_USER : '',
-    subject: title,
-    text:  message.replace(/<[^>]*>/g, '').replace('&NAME', name1!=null?name1:""),
-    html: message.replace('&amp;NAME', name1!=null?name1:""),
-    attachments: undefined
-  })
-  resArr.push(res) 
-}
- return new NextResponse( JSON.stringify(resArr));
-}
-
-
-// `
-//   <html lang="en" >
+  const contacts = await prisma.contact.findMany({
+    where: {
+      OR: [{ status: 'Subscribed' }],
+    },
+  });
+  await prisma.$disconnect();
+  let name1 = '' as string | null;
+  const emailSession =  await addDoc(collection(db, "emails"), {accepted:[],rejected:[]});
+  let accepted = '';
+  let rejected = '';
+  for (let i = 0; i < contacts.length; i++) {
+    name1 = contacts[i].name != null ? contacts[i].name + ' ' : '';
+    name1 += contacts[i].lastname != null ? contacts[i].lastname : '';
+    console.log(name1);
+    const timerInterval = setInterval(async () => {
+      const res = await sendAnyEmail({
+        email1: contacts[i].email,
+        email2: process.env.EMAIL_SERVER_USER
+          ? process.env.EMAIL_SERVER_USER
+          : '',
+        subject: title,
+        text: message
+          .replace(/<[^>]*>/g, '')
+          .replace('&NAME', name1 != null ? name1 : ''),
+        html: message.replace('&amp;NAME', name1 != null ? name1 : ''),
+        attachments: undefined,
+      });
+      if (
+        res &&
+        typeof res === 'object' &&
+        'accepted' in res &&
+        'rejected' in res
+      ) {
+         
+          accepted= Array.isArray(res.accepted) ? res.accepted[0] : '';
+          rejected= Array.isArray(res.rejected) ? res.rejected[0] : '';
+        };
+        if (accepted!=''){
+          await addDoc(collection(db, "emails/"+emailSession.id+"/accepted"), {email:accepted});
+        }
+        if (rejected!=''){
+          await addDoc(collection(db, "emails/"+emailSession.id+"/rejected"), {email:rejected});
+        }
+      
+    }, 1000);
   
-// <body>
-//   <div style="width:100%;padding:0.25rem;">
-//     <div style="width:100%;height:12rem; color:#110c6e;">
-//       <img src="cid:logo" style="display: block;margin-left: auto;margin-right: auto;" width="100" height="100" alt="Logo" />
+    // Server is ready to take our messages
+    //   0:{accepted: ['serge.bolotnikov@gmail.com']
+    // rejected: []}
 
-//       <h2 style="text-align:center;font-weight:700;font-size:1.25rem;line-height:1.75rem;">
-//         Dance At Le Pari
-//       </h2>
-//     </div>
+    return new NextResponse(JSON.stringify({emailID:emailSession.id}));
+  }
+}

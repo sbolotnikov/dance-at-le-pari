@@ -269,7 +269,7 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
                 </div>
                 <div className="group flex  cursor-pointer  flex-col justify-center items-center relative  mb-3">
                   <div className="  h-10 w-10 md:h-20 md:w-20 relative hover:scale-110 group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor">
-                    <div
+                    {/* <div
                       className="cursor-pointer h-10 w-10 md:h-14 md:w-14 border-2 rounded-full m-auto flex flex-row justify-center items-center"
                       onClick={(e) => {
                         e.preventDefault(); 
@@ -277,6 +277,16 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
                       }}
                     >        
                         <span className="text-5xl md:text-6xl font-semibold text-alertcolor mb-2">&#10540;</span> 
+                    </div> */}
+                    <div
+                      className="cursor-pointer h-10 w-10 md:h-14 md:w-14 border-2 rounded-full m-auto flex justify-center items-center "
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleDelete(0, 'All');
+                      }}
+                    > <div className='h-7 w-7 md:h-10 md:w-10 fill-alertcolor stroke-alertcolor'>
+                      <ShowIcon icon={'Close'} stroke={'0.5'} />
+                      </div>
                     </div>
                   </div>
                   <p className=" tracking-widest transition duration-300 ease-in-out absolute leftt-0 -bottom-2 md:-bottom-1 rounded-md text-center text-lightMainColor dark:text-darkMainColor text-[6px] md:text-base dark:bg-darkMainBG      group-hover:inline-flex  ">
@@ -338,7 +348,9 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
                         </div>
                         {(sortingType==1)? (<span className="text-2xl md:text-4xl font-semibold md:ml-1">&#8679;</span> ):
                         (sortingType==2)? (<span className="text-2xl md:text-4xl font-semibold md:ml-1">&#8681;</span> ):
-                        (sortingType==0)?( <span className="text-2xl md:text-4xl font-semibold md:ml-1 text-alertcolor">&#10540;</span>):null}
+                        (sortingType==0)?( <div className='h-4 w-4 md:h-6 md:w-6 fill-alertcolor stroke-alertcolor'>
+                          <ShowIcon icon={'Close'} stroke={'0.4'} />
+                          </div>):null}
                       </div>
                     </div>
                   </div>
