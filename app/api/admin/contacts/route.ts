@@ -16,7 +16,9 @@ export async function POST(req: Request) {
 export async function DELETE(req: Request) {
     const data = await req.json();
     const { id } = data; 
-      const deleted1 = await prisma.contact.delete({
+    var deleted1 ={};
+        (id == 0)?deleted1 = await prisma.contact.deleteMany({where: {id: {gt: 0}}}):
+        deleted1 = await prisma.contact.delete({
         where: {
          id
         },

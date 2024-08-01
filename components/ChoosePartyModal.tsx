@@ -154,13 +154,13 @@ const ChoosePartyModal = ({ onReturn, onAlert }: Props) => {
       <div className="w-full flex flex-row flex-wrap justify-center items-center">
         <button
           className="btnFancy"
-          onClick={() => document.getElementById('inputField1')!.click()}
+          onClick={() => document.getElementById('inputField2')!.click()}
         >
           Load Party
         </button>
         <input
           type="file"
-          id="inputField1"
+          id="inputField2"
           hidden
           accept="text/*"
           className="w-full mb-2 rounded-md text-gray-700"

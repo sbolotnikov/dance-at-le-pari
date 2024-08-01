@@ -10,10 +10,11 @@ import ContactEditingForm from './ContactEditingForm';
 import AlertMenu from './alertMenu';
 import ShowIcon from './svg/showIcon';
 import sleep, { csvJSON } from '@/utils/functions';
+import * as XLSX from 'xlsx'; 
 
 type Props = {
   visibility: boolean;
-  onReturn: () => void;
+  onReturn: (mode:number) => void;
 };
 
 const EditContactsModal = ({ visibility, onReturn }: Props) => {
@@ -51,7 +52,7 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
     setAlertStyle({
       variantHead: 'danger',
       heading: 'Warning!',
-      text: `Are you sure about deleting record of ${name}?`,
+      text: name=='All'?'Are you sure about deleting ALL records?':`Are you sure about deleting record of ${name}?`,
       color1: 'danger',
       button1: 'Confirm',
       color2: 'secondary',
@@ -126,7 +127,7 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
             return; 
           }
         }
-      
+        onReturn(1)
         fetch('/api/admin/contacts_import', {
           method: 'POST',
           headers: {
@@ -137,6 +138,7 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
           setNewContact(false);
           console.log(data.json());
           setNewUsers([]);
+          onReturn(2)
           setAlertStyle({
             variantHead: 'success',
             heading: `Good job!`,
@@ -150,6 +152,7 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
           sleep(1000).then(()=>setRevealAlert(true))
         }).catch((err) => {
           console.log(err);
+          onReturn(2)
           setAlertStyle({
             variantHead: 'danger',
             heading: `Something went wrong`,
@@ -210,7 +213,7 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
       <AnimateModalLayout
         visibility={visibility}
         onReturn={() => {
-          onReturn();
+          onReturn(0);
         }}
       >
         <div
@@ -265,6 +268,22 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
                   </p>
                 </div>
                 <div className="group flex  cursor-pointer  flex-col justify-center items-center relative  mb-3">
+                  <div className="  h-10 w-10 md:h-20 md:w-20 relative hover:scale-110 group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor">
+                    <div
+                      className="cursor-pointer h-10 w-10 md:h-14 md:w-14 border-2 rounded-full m-auto flex flex-row justify-center items-center"
+                      onClick={(e) => {
+                        e.preventDefault(); 
+                        handleDelete(0, 'All');
+                      }}
+                    >        
+                        <span className="text-5xl md:text-6xl font-semibold text-alertcolor mb-2">&#10540;</span> 
+                    </div>
+                  </div>
+                  <p className=" tracking-widest transition duration-300 ease-in-out absolute leftt-0 -bottom-2 md:-bottom-1 rounded-md text-center text-lightMainColor dark:text-darkMainColor text-[6px] md:text-base dark:bg-darkMainBG      group-hover:inline-flex  ">
+                    Del. All
+                  </p>
+                </div>
+                <div className="group flex  cursor-pointer  flex-col justify-center items-center relative  mb-3">
                   <div className="  h-10 w-10 md:h-20 md:w-20 relative hover:scale-110 group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor"
                   onClick={(e) => {
                     e.preventDefault();
@@ -314,12 +333,12 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
                     >
                       <div className="flex flex-row justify-center items-center">
                         <div className="flex flex-col justify-around  items-center">
-                          <span className="text-lg font-semibold leading-[1]">A</span>
-                          <span className="text-lg font-semibold leading-[1]">Z</span>
+                          <span className="text-base font-semibold leading-[1]">A</span>
+                          <span className="text-base font-semibold leading-[1]">Z</span>
                         </div>
-                        {(sortingType==1)? (<span className="text-4xl font-semibold ml-1">&#8679;</span> ):
-                        (sortingType==2)? (<span className="text-4xl font-semibold ml-1">&#8681;</span> ):
-                        (sortingType==0)?( <span className="text-4xl font-semibold ml-1 text-alertcolor">&#10540;</span>):null}
+                        {(sortingType==1)? (<span className="text-2xl md:text-4xl font-semibold md:ml-1">&#8679;</span> ):
+                        (sortingType==2)? (<span className="text-2xl md:text-4xl font-semibold md:ml-1">&#8681;</span> ):
+                        (sortingType==0)?( <span className="text-2xl md:text-4xl font-semibold md:ml-1 text-alertcolor">&#10540;</span>):null}
                       </div>
                     </div>
                   </div>
@@ -333,7 +352,10 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
                       className="cursor-pointer h-10 w-10 md:h-14 md:w-14 border-2 rounded-full m-auto "
                       onClick={(e) => {
                         e.preventDefault();
-                        setNewContact(true);
+                        let wb = XLSX.utils.book_new();
+                        let ws = XLSX.utils.json_to_sheet(users);
+                        XLSX.utils.book_append_sheet(wb, ws, "Contacts List");
+                        XLSX.writeFile(wb, `Contacts List on ${new Date(Date.now()).toLocaleDateString('en-us', { year: 'numeric', month: 'short', day: 'numeric',})}.xlsx`);
                       }}
                     >
                       <ShowIcon icon={'ExportCSV'} stroke={'0.1'} />
@@ -359,7 +381,7 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
                 }}/> 
                 {/* </div> */}
                   <p className=" tracking-widest mt-2  rounded-md text-center text-lightMainColor dark:text-darkMainColor text-[6px] md:text-base dark:bg-darkMainBG   ">
-                    Search
+                    Search (records: {usersFiltered.length})
                   </p>
                 </div>
               </div>

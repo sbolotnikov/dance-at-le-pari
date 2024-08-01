@@ -16,11 +16,12 @@ const sleep = (n:number)=> {
   };
   export const getDate = (date: string) => {
     if ((date === '')||(date===undefined)||(date===null)) return null
-    let dateArr = date.split(' ');
-    let timeArr = dateArr[1];
-    console.log(date,timeArr);
-    timeArr = timeArr.split('\r')[0];
-    return new Date(dateArr[0]+'T'+timeArr+':00');
+    // let dateArr = date.split('T');
+    // let timeArr = dateArr[1];
+    // console.log(date,timeArr);
+    // timeArr = timeArr.split('\r')[0];
+    // return new Date(dateArr[0]+'T'+timeArr+':00');
+    return new Date(date );
   };
 export const csvJSON = (text: string, quoteChar: string, delimiter: string) => {
   var rows = text.split('\r\n');

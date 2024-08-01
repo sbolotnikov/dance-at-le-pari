@@ -11,6 +11,7 @@ import { PageWrapper } from '@/components/page-wrapper';
 import ShowIcon from '@/components/svg/showIcon';
 import EditContactsModal from '@/components/EditContactsModal';
 import { useDimensions } from '@/hooks/useDimensions';
+import LoadingScreen from '@/components/LoadingScreen';
 interface pageProps {}
 
 const page: FC<pageProps> = ({}) => {
@@ -18,6 +19,7 @@ const page: FC<pageProps> = ({}) => {
   const router = useRouter();
   const [value, setValue] = useState('');
   const [title, setTitle] = useState('');
+  const [loading, setLoading] = useState(false);
   const [vis, setVis] = useState(false);
   const [revealModal, setRevealModal] = useState(false);
   const dimensions = useDimensions();
@@ -122,13 +124,19 @@ const page: FC<pageProps> = ({}) => {
       {revealModal && (
         <EditContactsModal
           visibility={revealModal}
-          onReturn={() => {
+          onReturn={(mode) => {
+            if (mode==0)
             sleep(1200).then(() => {
               setRevealModal(false);
             });
+            if (mode==1){
+              setLoading(true);
+            }
+            if (mode==2) setLoading(false);
           }}
         />
       )}
+       {loading && <LoadingScreen />}
       <div
         className={`blurFilter border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-[1024px]  flex justify-center items-center flex-col  bg-lightMainBG dark:bg-darkMainBG h-[70svh] md:h-[85svh]
         }`}
