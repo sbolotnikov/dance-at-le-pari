@@ -37,7 +37,7 @@ const ContactEditingForm = ({
     if (contact.telephone1 == null) data1.telephone1 = '';
     if (contact.telephone2 == null) data1.telephone2 = '';
     setContactData(data1);
-  }, []);
+  }, [contact]);
   return (
     <div className="w-full relative flex flex-row justify-center items-center flex-wrap mb-10 mx-2">
       {error1.length>0 && <div className="w-full flex flex-row justify-center items-center flex-wrap mb-10 mx-2 text-alertcolor">

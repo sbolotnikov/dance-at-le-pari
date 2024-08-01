@@ -95,7 +95,60 @@ const ShowPlayingModal: React.FC<Props> = ({
   const svgRef = useRef<SVGSVGElement>(null);
   const [timeNow, setTimeNow] = useState('');
   const [refreshVar, setRefreshVar] = useState(false);
+  const [animationSpeed1, setAnimationSpeed] = useState(animationSpeed);
+  const [speedVariation1, setSpeedVariation] = useState(speedVariation);
+  const [particleCount1, setParticleCount] = useState(particleCount);
+  const [maxSize1, setMaxSize] = useState(maxSize);
+  const [animationOption1, setAnimationOption] = useState(animationOption);
+  const [rainAngle1, setRainAngle] = useState(rainAngle);
+  const [originX1, setOriginX] = useState(originX);
+  const [originY1, setOriginY] = useState(originY);
+  const [showSVGAnimation1, setShowSVGAnimation] = useState(showSVGAnimation);
+  const [particleTypes1, setParticleTypes] = useState(particleTypes);
 
+
+  useEffect(()=>{
+    setAnimationSpeed(animationSpeed);
+    setSpeedVariation(speedVariation);
+    setParticleCount(particleCount);
+    setMaxSize(maxSize);
+    setAnimationOption(animationOption);
+    setRainAngle(rainAngle);
+    setOriginX(originX);
+    setOriginY(originY);
+    setShowSVGAnimation(showSVGAnimation);
+    setParticleTypes(particleTypes);
+  },[
+    animationSpeed,
+  speedVariation,
+  particleCount,
+  maxSize,
+  animationOption,
+  rainAngle,
+  originX,
+  originY,
+  showSVGAnimation,
+  particleTypes
+  ])
+  
+useEffect(() => {
+  if (mode === 'Auto Full') {
+    console.log("changing mode")
+    // setAnimationSpeed(animationSpeed);
+    // setSpeedVariation(speedVariation);
+    // setParticleCount(particleCount);
+    // setMaxSize(maxSize);
+    setAnimationOption(Math.floor(Math.random() * 4)+1);
+    setRainAngle(Math.floor(Math.random() * 360));
+    // setOriginX(originX);
+    // setOriginY(originY);
+    // setShowSVGAnimation(!showSVGAnimation1);
+    // setParticleTypes(particleTypes);
+    
+    } 
+},[
+  message,mode
+])
   useEffect(() => {
     if (mode === 'Auto Full' && displayedPictures.length > 0) {
       let arr1 = displayedPictures
@@ -150,8 +203,8 @@ const ShowPlayingModal: React.FC<Props> = ({
         const animateColor = document.createElementNS(svgNS, 'animate');
 
         const shape =
-          particleTypes[Math.floor(Math.random() * particleTypes.length)];
-        const size = animationOption === 2 ? maxSize : Math.random() * maxSize;
+          particleTypes1[Math.floor(Math.random() * particleTypes1.length)];
+        const size = animationOption1 === 2 ? maxSize1 : Math.random() * maxSize1;
 
         particle.setAttribute('d', svgPath(shape));
         particle.setAttribute('fill', `hsl(${Math.random() * 360}, 100%, 50%)`);
@@ -160,11 +213,11 @@ const ShowPlayingModal: React.FC<Props> = ({
 
         let startX, startY, endX, endY;
         const particleSpeed =
-          animationSpeed * (1 + (Math.random() - 0.5) * speedVariation);
-        if (animationOption === 1 || animationOption === 2) {
+          animationSpeed1 * (1 + (Math.random() - 0.5) * speedVariation1);
+        if (animationOption1 === 1 || animationOption1 === 2) {
           const edge = Math.floor(Math.random() * 4);
-          if (animationOption === 1) {
-            [startX, startY] = [originX, originY];
+          if (animationOption1 === 1) {
+            [startX, startY] = [originX1, originY1];
             [endX, endY] =
               edge === 0
                 ? [Math.random() * windowSize.width!, windowSize.height!]
@@ -174,7 +227,7 @@ const ShowPlayingModal: React.FC<Props> = ({
                 ? [0, Math.random() * windowSize.height!]
                 : [windowSize.width!, Math.random() * windowSize.height!];
           } else {
-            [endX, endY] = [originX, originY];
+            [endX, endY] = [originX1, originY1];
             [startX, startY] =
               edge === 0
                 ? [Math.random() * windowSize.width!, windowSize.height!]
@@ -184,13 +237,13 @@ const ShowPlayingModal: React.FC<Props> = ({
                 ? [0, Math.random() * windowSize.height!]
                 : [windowSize.width, Math.random() * windowSize.height!];
           }
-        } else if (animationOption === 4) {
+        } else if (animationOption1 === 4) {
           startX = Math.random() * windowSize.width!;
           startY = Math.random() * windowSize.height!;
           endX = Math.random() * windowSize.width!;
           endY = Math.random() * windowSize.height!;
 
-          const animationDuration = 10 / animationSpeed;
+          const animationDuration = 10 / animationSpeed1;
           const randomDelay = Math.random() * animationDuration;
 
           animateMotion.setAttribute(
@@ -239,8 +292,8 @@ const ShowPlayingModal: React.FC<Props> = ({
           animateColor.setAttribute('calcMode', 'discrete');
           particle.appendChild(animateTransform2);
           particle.appendChild(animateOpacity); 
-        } else if (animationOption === 3) {
-          const angle = (rainAngle * Math.PI) / 180;
+        } else if (animationOption1 === 3) {
+          const angle = (rainAngle1 * Math.PI) / 180;
           startX = Math.random() * windowSize.width!;
           startY = Math.random() * windowSize.height!;
           endX = startX + Math.cos(angle) * windowSize.height!;
@@ -253,21 +306,21 @@ const ShowPlayingModal: React.FC<Props> = ({
           animateTransform.setAttribute('repeatCount', 'indefinite');
         }
 
-        if (animationOption !== 4) {
+        if (animationOption1 !== 4) {
           animateMotion.setAttribute(
             'path',
             `M${startX},${startY} L${endX},${endY}`
           );
 
          }
-        if (animationOption === 1) {
+        if (animationOption1 === 1) {
           animateTransform.setAttribute('attributeName', 'transform');
           animateTransform.setAttribute('type', 'scale');
           animateTransform.setAttribute('from', '0');
           animateTransform.setAttribute('to', `${size / 6}`);
           animateTransform.setAttribute('dur', `${10 / particleSpeed}s`);
           animateTransform.setAttribute('repeatCount', 'indefinite');
-        } else if (animationOption === 2) {
+        } else if (animationOption1 === 2) {
           animateTransform.setAttribute('attributeName', 'transform');
           animateTransform.setAttribute('type', 'scale');
           animateTransform.setAttribute('from', `${size / 6}`);
@@ -302,7 +355,7 @@ const ShowPlayingModal: React.FC<Props> = ({
           svg.removeChild(svg.firstChild);
         }
 
-        for (let i = 0; i < particleCount; i++) {
+        for (let i = 0; i < particleCount1; i++) {
           svg.appendChild(createParticle());
         }
       };
@@ -323,15 +376,15 @@ const ShowPlayingModal: React.FC<Props> = ({
       // bgRect.appendChild(animateBgColor);
     }
   }, [
-    particleCount,
-    maxSize,
-    animationOption,
-    animationSpeed,
-    speedVariation,
-    originX,
-    originY,
-    rainAngle,
-    particleTypes,
+    particleCount1,
+    maxSize1,
+    animationOption1,
+    animationSpeed1,
+    speedVariation1,
+    originX1,
+    originY1,
+    rainAngle1,
+    particleTypes1,
   ]);
   return (
     <div
@@ -403,7 +456,7 @@ const ShowPlayingModal: React.FC<Props> = ({
               </div>
             </div>
           )}
-          {showSVGAnimation && (
+          {showSVGAnimation1 && (
             <div className="absolute inset-0 flex justify-center items-center">
               <svg
                 ref={svgRef}

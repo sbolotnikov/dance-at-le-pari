@@ -20,13 +20,15 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
   const { data: session } = useSession();
   const router = useRouter();
   const [value, setValue] = useState('');
-  const [title, setTitle] = useState('');
+  const [sortingType, setSortingType] = useState(0);
   const [one, setOne] = useState(0);
   const [two, setTwo] =useState(0)
   const [users, setUsers] = useState<ContactType[]>([]);
+  const [usersFiltered, setUsersFiltered] = useState<ContactType[]>([]);
   const [newUsers, setNewUsers] = useState<ContactType[]>([]);
   const dimensions = useDimensions();
   const [revealAlert, setRevealAlert] = useState(false);
+  const [searchPar, setSearchPar] = useState(''); 
   const [newContact, setNewContact] = useState(false);
   const [alertStyle, setAlertStyle] = useState({
     variantHead: '',
@@ -39,7 +41,7 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
     inputField: '',
   });
   const [selectedId, setSelectedId] = useState(0);
-
+  // const symbolArray=[&#8679;,&#8681;,&#10540;]
   if (session?.user.role !== 'Admin') {
     router.push('/');
   }
@@ -58,7 +60,12 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
     });
     setRevealAlert(true);
   };
+ useEffect(() => {
 
+    
+    let searchRes=users.filter(user=>user.name!.toLowerCase().includes(searchPar.toLowerCase())||user.lastname!.toLowerCase().includes(searchPar.toLowerCase())||user.email.toLowerCase().includes(searchPar.toLowerCase())||user.telephone1!.includes(searchPar)||user.telephone2!.includes(searchPar));
+    setUsersFiltered([...searchRes]);
+ },[searchPar]);
   useEffect(() => {
     // GET request
     fetch('/api/admin/contacts', {
@@ -72,15 +79,25 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
     }).then((res) => {
       res.json().then((data) => {
         console.log(data);
-        let dataArray = data.sort((a: ContactType, b: ContactType) =>
-          a.name + ' ' + a.lastname > b.name + ' ' + b.lastname
+        let data1 = data.filter((item: ContactType)=>item.name!=null || item.lastname!=null);
+        let data2 = data.filter((item: ContactType)=>item.name==null && item.lastname==null);
+        let dataArray = data2.sort((a: ContactType, b: ContactType) =>
+          a.email!.toLowerCase()> b.email!.toLowerCase()
             ? 1
-            : b.name + ' ' + b.lastname > a.name + ' ' + a.lastname
+            : b.email!.toLowerCase()> a.email!.toLowerCase()
             ? -1
             : 0
         );
-        setUsers(data);
-        console.log(data);
+       dataArray =[...dataArray,...data1.sort((a: ContactType, b: ContactType) =>
+          a.name!.toLowerCase() + ' ' + a.lastname!.toLowerCase() > b.name!.toLowerCase() + ' ' + b.lastname!.toLowerCase()
+            ? 1
+            : b.name!.toLowerCase() + ' ' + b.lastname!.toLowerCase() > a.name!.toLowerCase() + ' ' + a.lastname!.toLowerCase()
+            ? -1
+            : 0
+        )];
+        setUsers(dataArray);
+        setUsersFiltered(dataArray);
+        console.log(dataArray);
       });
     });
    
@@ -92,8 +109,7 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
         for (let i = 0; i < newUsers.length; i++) {
           if (newUsers.filter(user=>user.email===newUsers[i].email).length>1) {
             secondIndex=newUsers.map(user=>user.email).indexOf(newUsers[i].email,i+1);
-            console.log(newUsers[i],newUsers[secondIndex]);
-            // console.log(newUsers.filter(user=>user.email===newUsers[i].email));
+            console.log(newUsers[i],newUsers[secondIndex]); 
             setOne(i);
             setTwo(secondIndex)
             setAlertStyle({
@@ -215,7 +231,7 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
               >
                 Edit Contacts Modal
               </h2>
-              <div className="flex flex-row w-full justify-center items-center">
+              <div className="flex flex-row w-full justify-center items-center flex-wrap" >
                 <div className="group flex  cursor-pointer  flex-col justify-center items-center relative  mb-3">
                   <div className="  h-10 w-10 md:h-20 md:w-20 relative hover:scale-110 group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor">
                     <div
@@ -249,6 +265,69 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
                   </p>
                 </div>
                 <div className="group flex  cursor-pointer  flex-col justify-center items-center relative  mb-3">
+                  <div className="  h-10 w-10 md:h-20 md:w-20 relative hover:scale-110 group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    let dataArray: ContactType[] = [];
+                   if (sortingType==1)
+                    dataArray = users.sort((a: ContactType, b: ContactType) =>
+                      a.email.toLowerCase()> b.email.toLowerCase()
+                        ? 1
+                        : b.email.toLowerCase()> a.email.toLowerCase()
+                        ? -1
+                        : 0
+                    )
+                     if(sortingType==0) dataArray = users.sort((a: ContactType, b: ContactType) =>
+                      a.email.toLowerCase()< b.email.toLowerCase()
+                        ? 1
+                        : b.email.toLowerCase()< a.email.toLowerCase()
+                        ? -1
+                        : 0
+                    );
+                    if(sortingType==2){
+                      let data1 = users.filter((item: ContactType)=>item.name!=null || item.lastname!=null);
+                      let data2 = users.filter((item: ContactType)=>item.name==null && item.lastname==null);
+                      dataArray = data2.sort((a: ContactType, b: ContactType) =>
+                        a.email!.toLowerCase()> b.email!.toLowerCase()
+                          ? 1
+                          : b.email!.toLowerCase()> a.email!.toLowerCase()
+                          ? -1
+                          : 0
+                      );
+                     dataArray =[...dataArray,...data1.sort((a: ContactType, b: ContactType) =>
+                        a.name!.toLowerCase() + ' ' + a.lastname!.toLowerCase() > b.name!.toLowerCase() + ' ' + b.lastname!.toLowerCase()
+                          ? 1
+                          : b.name!.toLowerCase() + ' ' + b.lastname!.toLowerCase() > a.name!.toLowerCase() + ' ' + a.lastname!.toLowerCase()
+                          ? -1
+                          : 0
+                      )];
+                    }
+                    console.log("sort: ",sortingType)
+                    if (sortingType==2) setSortingType(0)
+                      else setSortingType(sortingType+1);
+                    setUsersFiltered ([...dataArray]);
+                  }}
+                  >
+                    <div
+                      className="cursor-pointer h-10 w-10 md:h-14 md:w-14 border-2 rounded-full m-auto flex justify-center items-center "
+                      
+                    >
+                      <div className="flex flex-row justify-center items-center">
+                        <div className="flex flex-col justify-around  items-center">
+                          <span className="text-lg font-semibold leading-[1]">A</span>
+                          <span className="text-lg font-semibold leading-[1]">Z</span>
+                        </div>
+                        {(sortingType==1)? (<span className="text-4xl font-semibold ml-1">&#8679;</span> ):
+                        (sortingType==2)? (<span className="text-4xl font-semibold ml-1">&#8681;</span> ):
+                        (sortingType==0)?( <span className="text-4xl font-semibold ml-1 text-alertcolor">&#10540;</span>):null}
+                      </div>
+                    </div>
+                  </div>
+                  <p className=" tracking-widest transition duration-300 ease-in-out absolute leftt-0 -bottom-2 md:-bottom-1 rounded-md text-center text-lightMainColor dark:text-darkMainColor text-[6px] md:text-base dark:bg-darkMainBG      group-hover:inline-flex  ">
+                    Sorting
+                  </p>
+                </div>
+                <div className="group flex  cursor-pointer  flex-col justify-center items-center relative  mb-3">
                   <div className="  h-10 w-10 md:h-20 md:w-20 relative hover:scale-110 group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor">
                     <div
                       className="cursor-pointer h-10 w-10 md:h-14 md:w-14 border-2 rounded-full m-auto "
@@ -271,7 +350,18 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
                 accept="*.csv"
                 className="w-full mb-2 rounded-md text-gray-700"
                 onChange={handleChange}
-              />
+                 />
+                 <div className="flex flex-col justify-end items-center h-10 md:h-20 w-1/2 md:w-1/4"> 
+                 {/* <div className=" w-full flex justify-end items-center"> */}
+                <input type="text" id="inputField" className='w-full rounded-md   dark:bg-lightMainColor '  onChange={(e)=>{
+                  e.preventDefault();
+                  setSearchPar(e.target.value); 
+                }}/> 
+                {/* </div> */}
+                  <p className=" tracking-widest mt-2  rounded-md text-center text-lightMainColor dark:text-darkMainColor text-[6px] md:text-base dark:bg-darkMainBG   ">
+                    Search
+                  </p>
+                </div>
               </div>
               {dimensions.height && (
                 <div
@@ -279,9 +369,9 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
                   className="w-[95%] border-2 rounded-md overflow-y-scroll"
                   style={{ height: `${dimensions.height - 200}px` }}
                 >
-                  {users &&
-                    users.map((item, index) => {
-                      return (
+                  {usersFiltered &&
+                    usersFiltered.map((item, index) => {
+                      return ( 
                         <ContactEditingForm
                           key={'userN' + index}
                           editable={selectedId == item.id}
@@ -321,7 +411,7 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
                               setSelectedId(0);
                             });
                           }}
-                        />
+                        /> 
                       );
                     })}
                   {newContact && (
