@@ -105,7 +105,7 @@ export default function usePartySettings(): ReturnPartyContextType {
     rainAngle: 0,
     originX: 0,
     originY: 0,
-    particleTypes:["star","kiss",'snowflake', 'heart', 'tower','LP',"maple",'rose','diamond','clover','streamer','lightning','hydrangea'],
+    particleTypes:["star","kiss",'snowflake', 'heart', 'tower','LP',"maple",'rose','diamond','clover','streamer','lightning','hydrangea','fred'],
   });
   
    

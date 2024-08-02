@@ -22,7 +22,6 @@ export async function POST(req: Request) {
     name1 = contacts[i].name != null ? contacts[i].name + ' ' : '';
     name1 += contacts[i].lastname != null ? contacts[i].lastname : '';
     console.log(name1);
-    const timerInterval = setInterval(async () => {
       const res = await sendAnyEmail({
         email1: contacts[i].email,
         email2: process.env.EMAIL_SERVER_USER
@@ -52,7 +51,7 @@ export async function POST(req: Request) {
           await addDoc(collection(db, "emails/"+emailSession.id+"/rejected"), {email:rejected});
         }
       
-    }, 1000);
+     
   
     // Server is ready to take our messages
     //   0:{accepted: ['serge.bolotnikov@gmail.com']

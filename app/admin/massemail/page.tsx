@@ -12,6 +12,8 @@ import ShowIcon from '@/components/svg/showIcon';
 import EditContactsModal from '@/components/EditContactsModal';
 import { useDimensions } from '@/hooks/useDimensions';
 import LoadingScreen from '@/components/LoadingScreen';
+import { db } from '@/firebase';
+import { collection, getDocs } from 'firebase/firestore';
 interface pageProps {}
 
 const page: FC<pageProps> = ({}) => {
@@ -40,7 +42,7 @@ const page: FC<pageProps> = ({}) => {
     unlayer?.exportHtml((data) => {
       const { html } = data;
       console.log('exportHtml', html);
-
+      setLoading(true);
       fetch('/api/admin/email_mass_send', {
         method: 'POST',
         headers: {
@@ -54,9 +56,16 @@ const page: FC<pageProps> = ({}) => {
         .then(async (res) => {
           const data = await res.json();
           console.log(data);
+          setLoading(false);
+          const q = await getDocs(collection(db, 'emails/' + data.emailID + '/accepted'));
+          let arr1 = q.docs.map((doc) => doc.data());
+         alert('Emails sent: '+arr1.toString());
+          // emailID
+
         })
         .catch(async (err) => {
-          console.log(err);
+          setLoading(false);
+          alert(err);
         });
     });
   };
