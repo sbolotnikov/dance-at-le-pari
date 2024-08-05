@@ -12,8 +12,7 @@ import ShowIcon from '@/components/svg/showIcon';
 import EditContactsModal from '@/components/EditContactsModal';
 import { useDimensions } from '@/hooks/useDimensions';
 import LoadingScreen from '@/components/LoadingScreen';
-import { db } from '@/firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import ShowSendingEmailResultsModal from '@/components/ShowSendingEmailResultsModal';
 interface pageProps {}
 
 const page: FC<pageProps> = ({}) => {
@@ -24,6 +23,8 @@ const page: FC<pageProps> = ({}) => {
   const [loading, setLoading] = useState(false);
   const [vis, setVis] = useState(false);
   const [revealModal, setRevealModal] = useState(false);
+  const [revealModal1, setRevealModal1] = useState(false);
+  const [sendingStatus, setSendingStatus] = useState<string[]>([]);
   const dimensions = useDimensions();
   if (status === 'unauthenticated') {
     router.push('/');
@@ -38,35 +39,51 @@ const page: FC<pageProps> = ({}) => {
 
   const exportHtml = () => {
     const unlayer = emailEditorRef.current?.editor;
-
+    setRevealModal1(true)
     unlayer?.exportHtml((data) => {
       const { html } = data;
-      console.log('exportHtml', html);
-      setLoading(true);
-      fetch('/api/admin/email_mass_send', {
+      console.log('exportHtml', html); 
+      
+      fetch('/api/admin/contacts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          title,
-          message: html,
+          status: 'Subscribed',
         }),
+      }).then((res) => {
+        res.json().then((data) => {
+          let contacts=data;
+          let name1 = '' as string;;
+          for (let i = 0; i < contacts.length; i++) {
+            name1 = contacts[i].name != null ? contacts[i].name + ' ' : '';
+            name1 += contacts[i].lastname != null ? contacts[i].lastname : '';
+            if (name1.length ==0) name1='Sir/Madam';
+            console.log(name1);
+            fetch('/api/admin/email_mass_send', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                title,
+                message: html,
+                email:contacts[i].email,
+                name:name1
+              }),
+            })
+              .then(async (res) => {
+                const data = await res.json();
+                setSendingStatus((prev) => [...prev, data.message]);
+                console.log(data);
+              }).catch(async (err) => { 
+                setSendingStatus((prev) => [...prev, err.message]);
+              });
+          
+        }})
       })
-        .then(async (res) => {
-          const data = await res.json();
-          console.log(data);
-          setLoading(false);
-          const q = await getDocs(collection(db, 'emails/' + data.emailID + '/accepted'));
-          let arr1 = q.docs.map((doc) => doc.data());
-         alert('Emails sent: '+arr1.toString());
-          // emailID
-
-        })
-        .catch(async (err) => {
-          setLoading(false);
-          alert(err);
-        });
+        
     });
   };
   const sendTestEmail = (email:string) => {
@@ -145,6 +162,18 @@ const page: FC<pageProps> = ({}) => {
           }}
         />
       )}
+      {revealModal1 && (
+        <ShowSendingEmailResultsModal
+         visibility={revealModal1}
+         status={sendingStatus}
+         onReturn={() => {
+          sleep(1200).then(() => {
+            setRevealModal1(false);
+          });
+           
+        }}
+        />
+        )}
        {loading && <LoadingScreen />}
       <div
         className={`blurFilter border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-[1024px]  flex justify-center items-center flex-col  bg-lightMainBG dark:bg-darkMainBG h-[70svh] md:h-[85svh]
@@ -205,7 +234,7 @@ const page: FC<pageProps> = ({}) => {
               Transform link for sharing{' '}
               <input
                 type="text"
-                placeholder="Title"
+                placeholder="Enter link here"
                 value={value}
                 className="dark:bg-lightMainBG bg-darkMainBG dark:text-lightMainColor text-darkMainColor w-full p-1 rounded-md"
                 onChange={(e) =>

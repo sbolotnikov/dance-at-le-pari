@@ -73,6 +73,7 @@ const page: React.FC<Props> = () => {
     message,
     mode,
     fontSize,
+    fontSizeTime,
     displayedPictures,
     displayedPicturesAuto,
     seconds,
@@ -82,6 +83,7 @@ const page: React.FC<Props> = () => {
     compLogo,
     titleBarHider,
     showUrgentMessage,
+    showHeatNumber,
     savedMessages,
     textColor,
     animationSpeed,
@@ -95,6 +97,7 @@ const page: React.FC<Props> = () => {
     showSVGAnimation,
     particleTypes,
     id,
+    heat,
     setCompID,
   } = usePartySettings();
   const typesSet = [
@@ -255,14 +258,17 @@ const page: React.FC<Props> = () => {
           vis={modalVisible}
           mode={mode}
           fontSize={fontSize}
+          fontSizeTime={fontSizeTime}
           seconds={seconds}
           message={message}
           compLogo={compLogo}
           titleBarHider={titleBarHider}
-          showUrgentMessage={showUrgentMessage}
+          showUrgentMessage={showUrgentMessage} 
+          showHeatNumber={showHeatNumber}
           textColor={textColor}
           animationSpeed={animationSpeed}
           speedVariation={speedVariation}
+          heat={heat}
           particleCount={particleCount}
           maxSize={maxSize}
           animationOption={animationOption}
@@ -295,7 +301,7 @@ const page: React.FC<Props> = () => {
           onClose={() => setModal3Visible(false)}
         />
       )}
-      <ChooseMessageModal
+      {modal1Visible &&<ChooseMessageModal
         savedMessages={savedMessages}
         message={message}
         onChange={(text) => {
@@ -309,7 +315,7 @@ const page: React.FC<Props> = () => {
         }}
         vis={modal1Visible}
         onClose={() => setModal1Visible(false)}
-      />
+      />}
       {revealCloud && <ChoosePicture onReturn={onReturnPicture} />}
       <div className="blurFilter border-0 rounded-md p-2 shadow-2xl w-[95%] max-w-[650px] max-h-[85%] h-[85%]  md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70">
         <div className="w-full h-full flex flex-col justify-center items-center border rounded-md border-lightMainColor dark:border-darkMainColor relative p-2 overflow-auto">
@@ -342,7 +348,7 @@ const page: React.FC<Props> = () => {
                     className="w-[92%] h-48 m-1"
                     onClick={(e) => setRevealCloud(!revealCloud)}
                   >
-                    {image.length>0 ? (
+                    {image && image.length>0 ? (
                       <div className="h-full w-full rounded-md flex justify-center items-center mt-2">
                         <ImgFromDb
                           url={image}
@@ -511,7 +517,7 @@ const page: React.FC<Props> = () => {
                       </p>
                     </div>
                   )}
-                  {displayedVideos.length > 0 && (
+                  {displayedVideos && displayedVideos.length > 0 && (
                     <div className="w-full flex flex-col justify-center items-center">
                       <select
                         value={videoChoice.name}
@@ -624,6 +630,31 @@ const page: React.FC<Props> = () => {
                         className="self-center"
                       />
                       <p className="ml-2">Show Urgent Message</p>
+                    </div>
+                    <div className="flex flex-row mb-2.5 mt-2.5">
+                      <input
+                        type="checkbox"
+                        checked={showHeatNumber}
+                        onChange={(e) =>
+                          handleChange(e.target.checked, 'showHeatNumber')
+                        }
+                        className="self-center"
+                      />
+                      <p className="ml-2">Show heat number</p>
+                    </div>
+                    <div className="flex flex-col justify-center items-center">
+                      {fontSizeTime && (
+                        <CountBox
+                          startValue={fontSizeTime}
+                          setWidth={10}
+                          name={'fontSizeTime'}
+                          onChange={(num) => {
+                            console.log(num);
+                            handleChange(num, 'fontSizeTime');
+                          }}
+                        />
+                      )}
+                      <p className="text-center w-24">Font size time</p>
                     </div>
                     <div className="flex flex-row mb-2.5 mt-2.5">
                       <input

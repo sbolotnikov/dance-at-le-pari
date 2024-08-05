@@ -20,6 +20,7 @@ type Props = {
   image: string;
   mode: string;
   fontSize: number;
+  fontSizeTime: number;
   seconds: number;
   manualPicture: { link: string; name: string };
   displayedPicturesAuto: { link: string; name: string }[];
@@ -30,6 +31,7 @@ type Props = {
   message: string;
   titleBarHider: boolean;
   showUrgentMessage: boolean;
+  showHeatNumber: boolean;
   textColor: string;
   animationSpeed: number;
   speedVariation: number;
@@ -40,6 +42,7 @@ type Props = {
   originX: number;
   originY: number;
   particleTypes: string[];
+  heat:string;
   showSVGAnimation: boolean;
   onReturn: (submitten: string) => void;
   onRenewInterval: () => void;
@@ -52,6 +55,7 @@ const ShowPlayingModal: React.FC<Props> = ({
   heatNum,
   mode,
   fontSize,
+  fontSizeTime,
   seconds,
   manualPicture,
   displayedPicturesAuto,
@@ -62,6 +66,7 @@ const ShowPlayingModal: React.FC<Props> = ({
   message,
   titleBarHider,
   showUrgentMessage,
+  showHeatNumber,
   textColor,
   animationSpeed,
   speedVariation,
@@ -73,6 +78,7 @@ const ShowPlayingModal: React.FC<Props> = ({
   originY,
   showSVGAnimation,
   particleTypes,
+  heat,
   onReturn,
   onRenewInterval,
 }) => {
@@ -187,8 +193,7 @@ useEffect(() => {
 
   const gradientStyle = {
     background: 'linear-gradient(135deg, white, red, blue, red, white)',
-  };
-
+  }; 
   useEffect(() => {
     const svg = svgRef.current;
     if (svg) {
@@ -494,9 +499,9 @@ useEffect(() => {
           <div
             onClick={(e) => handleSubmit(e, button1)}
             className="absolute top-0 right-1 cursor-pointer"
-            style={{ color: textColor }}
+            style={{ color: textColor, fontSize: `${fontSizeTime}px` }}
           >
-            <p className="font-bold text-3xl m-0">{timeNow}</p>
+            <p className="font-bold m-0">{showHeatNumber?heat+" "+timeNow:timeNow}</p>
           </div>
         </div>
       </div>

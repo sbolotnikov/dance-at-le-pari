@@ -1,8 +1,9 @@
 "use client"
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect, use } from 'react';
 import { addDoc, collection, doc, query, setDoc, updateDoc } from 'firebase/firestore';
 import { db } from '@/firebase';
-import { useCollection } from 'react-firebase-hooks/firestore';
+import { db2 } from '@/firebase';
+import { useDocument } from 'react-firebase-hooks/firestore';
  
 interface PartyContextType {
   image: string;
@@ -10,6 +11,7 @@ interface PartyContextType {
   message: string;
   mode: string;
   fontSize: number;
+  fontSizeTime: number;
   displayedPictures: { link: string; name: string, dances:string[] }[];
   displayedVideos: {
     name: string;
@@ -21,6 +23,7 @@ interface PartyContextType {
   compLogo: { link: string; name: string };
   titleBarHider: boolean;
   showUrgentMessage: boolean;
+  showHeatNumber: boolean;
   showSVGAnimation: boolean;
   displayedPicturesAuto: { link: string; name: string }[];
   seconds: number;
@@ -36,6 +39,7 @@ interface PartyContextType {
     rainAngle: number;
     originX: number;
     originY: number;
+    heat:string;
     particleTypes:string[];
 }
 interface ReturnPartyContextType {
@@ -44,6 +48,7 @@ interface ReturnPartyContextType {
   message: string;
   mode: string;
   fontSize: number;
+  fontSizeTime: number;
   displayedPictures: { link: string; name: string, dances:string[] }[];
   displayedVideos: {
     name: string;
@@ -55,6 +60,7 @@ interface ReturnPartyContextType {
   compLogo: { link: string; name: string };
   titleBarHider: boolean;
   showUrgentMessage: boolean;
+  showHeatNumber: boolean;
   showSVGAnimation: boolean;
   displayedPicturesAuto: { link: string; name: string }[];
   seconds: number;
@@ -70,6 +76,7 @@ interface ReturnPartyContextType {
   id: string;
   originX: number;
   originY: number;
+  heat:string;
   particleTypes:string[];
   setCompID: (id: string) => void;
 
@@ -77,24 +84,26 @@ interface ReturnPartyContextType {
 export const PartyContext = createContext<ReturnPartyContextType >({} as ReturnPartyContextType );
 
 export default function usePartySettings(): ReturnPartyContextType {
-  const [compID, setCompID] = useState('');
+  const [compID, setCompID] = useState('00');
   const [partyArray, setPartyArray] = useState<PartyContextType>({
     image: '',
     name: '', 
     message: '',
     mode: '',
     fontSize:10,
+    fontSizeTime:10,
     displayedPictures:[],
     displayedVideos:[],
     videoChoice:{link:"",name:""}, 
     compLogo:{link:"",name:""},
     titleBarHider:false,
     showUrgentMessage:false,
+    showHeatNumber:false,
     showSVGAnimation:false,
     displayedPicturesAuto:[],  
     seconds:0, 
     manualPicture:{link:"",name:""},
-    savedMessages:[],
+    savedMessages:[""],
     textColor:"",
     id:"",
     animationSpeed: 0,
@@ -105,38 +114,42 @@ export default function usePartySettings(): ReturnPartyContextType {
     rainAngle: 0,
     originX: 0,
     originY: 0,
+    heat:"",
     particleTypes:["star","kiss",'snowflake', 'heart', 'tower','LP',"maple",'rose','diamond','clover','streamer','lightning','hydrangea','fred'],
   });
   
-   
-  const [snapshot, loading, err] = useCollection(
-    query(collection(db, 'parties')),
+    
+ 
+  const [value, loading, error] = useDocument(
+    doc(db, 'parties', compID),
     {
       snapshotListenOptions: { includeMetadataChanges: true },
     }
   );
  
+  const [value2, loading1, err] = useDocument(
+    doc(db2, 'competitions', "T9FLgtEDmxQFYFTnfrvO"),
+    {
+      snapshotListenOptions: { includeMetadataChanges: true },
+    }
+  );
 
   useEffect(() => {
-    if (snapshot) {
-      let arr: PartyContextType[] = [];
-      snapshot.docs.forEach((doc1) => {
-        arr.push({
-          ...(doc1.data() as any),
-          id: doc1.id,
-        });
-      });
-      const filteredParty = arr.find((x) => x.id === compID);
-      if (filteredParty) {
-        let party
-        setPartyArray(filteredParty);
-
-        console.log("got object",filteredParty)
-      }
+    if (value) { 
+      let party = {...value.data(), id:compID} as PartyContextType;
+      setPartyArray(party);
     }
-    
-  }, [snapshot, compID]);   
-
+    if (error) console.log('error', error);
+  }, [value, compID, error]);
+  
+  useEffect(() => {
+    if (value2) { 
+      console.log("got value",value2.data()?.currentHeat    );
+      let party = {...partyArray, heat:value2.data()?.currentHeat} as PartyContextType;
+      setPartyArray(party);
+    }
+    if (err) console.log('error', err);
+  }, [value2, err]);
  
 
  
