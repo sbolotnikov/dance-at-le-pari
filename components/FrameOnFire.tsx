@@ -5,7 +5,7 @@ type Props = {
     height: string; 
 }
 
-const FrameOnFire = ({width, height, children}: Props) => {
+const FrameOnFire = ({width, height}: Props) => {
   return (
     <div>
          <div className={`h-[${height}] w-[${width}] frameAnimate` }>
