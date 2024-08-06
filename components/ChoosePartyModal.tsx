@@ -1,15 +1,10 @@
 import { useEffect, useState } from 'react';
-import {
-  addDoc,
-  collection,
-  getDocs, 
-} from 'firebase/firestore';
-import { db } from '@/firebase';
-import FrameOnFire from './FrameOnFire';
-import { save_Template } from '@/utils/functions'; 
+import { addDoc, collection, getDocs } from 'firebase/firestore';
+import { db } from '@/firebase'; 
+import { save_Template } from '@/utils/functions';
 type Props = {
   onReturn: (str: string) => void;
-  onAlert: (name: string,id:string) => void
+  onAlert: (name: string, id: string) => void;
 };
 type PartyType = {
   image: string;
@@ -50,14 +45,14 @@ const ChoosePartyModal = ({ onReturn, onAlert }: Props) => {
   const [choosenParty, setChoosenParty] = useState<string>('');
   const [visibleInput, setVisibleInput] = useState(false);
   const [partyName, setPartyName] = useState<string>('');
-  
+
   async function getPartyArray() {
     const q = await getDocs(collection(db, 'parties'));
     let arr1 = q.docs.map((doc) => doc.data());
     let arr2 = q.docs.map((doc) => doc.id);
     let arr = arr1.map((x, i) => ({ ...x, id: arr2[i] })) as PartyType[];
     console.log(arr);
-    setChoosenParty(arr2[0])
+    setChoosenParty(arr2[0]);
     setParties(arr);
   }
 
@@ -90,21 +85,20 @@ const ChoosePartyModal = ({ onReturn, onAlert }: Props) => {
     reader.onload = (function (file) {
       return async function () {
         let res = this.result?.toString();
-        let resObj=JSON.parse(res !== undefined ? res : '');
+        let resObj = JSON.parse(res !== undefined ? res : '');
         delete resObj.id;
 
-        const partyRef = collection(db, "parties");
+        const partyRef = collection(db, 'parties');
 
         await addDoc(partyRef, resObj);
-        location.reload() 
+        location.reload();
       };
     })(file1);
     reader.readAsText(file1);
   };
- 
+
   return (
     <div className="w-full flex flex-col justify-center items-center">
-             
       <select
         className="w-1/2 p-2"
         name="parties"
@@ -145,9 +139,15 @@ const ChoosePartyModal = ({ onReturn, onAlert }: Props) => {
             Save
           </button>
 
-          <button className="btnFancy" onClick={() => {
-            onAlert(parties.filter(party=>party.id==choosenParty)[0].name,choosenParty)
-          }}>
+          <button
+            className="btnFancy"
+            onClick={() => {
+              onAlert(
+                parties.filter((party) => party.id == choosenParty)[0].name,
+                choosenParty
+              );
+            }}
+          >
             Delete
           </button>
         </div>
@@ -172,67 +172,95 @@ const ChoosePartyModal = ({ onReturn, onAlert }: Props) => {
           onClick={(e) => {
             e.preventDefault();
             setVisibleInput(!visibleInput);
-            
           }}
         >
           Create Party
         </button>
-        <FrameOnFire width={'400px'} height={'400px'}>  
-          </FrameOnFire>
-         {visibleInput && (
-            <div>
-            <input type="text" value={partyName} className="w-full p-2 border border-gray-300 rounded" onChange={(e)=>{
+        {visibleInput && (
+          <div>
+            <input
+              type="text"
+              value={partyName}
+              className="w-full p-2 border border-gray-300 rounded"
+              onChange={(e) => {
                 e.preventDefault();
-                setPartyName(e.target.value)
-            }} />
-            <button className="btnFancy" onClick={async(e)=>{
+                setPartyName(e.target.value);
+              }}
+            />
+            <button
+              className="btnFancy"
+              onClick={async (e) => {
                 e.preventDefault();
                 setVisibleInput(!visibleInput);
                 console.log('submit');
-                let resObj= {
-                    image: '',
-                    name: partyName, 
-                    message: '',
-                    mode: 'Default',
-                    fontSize:10,
-                    fontSizeTime:10,
-                    displayedPictures:[],
-                    displayedVideos:[],
-                    videoChoice:{link:"",name:""}, 
-                    compLogo:{link:"",name:""},
-                    titleBarHider:false,
-                    showUrgentMessage:false,
-                    showHeatNumber:false,
-                    showSVGAnimation:true,
-                    displayedPicturesAuto:[],  
-                    seconds:5, 
-                    manualPicture:{link:"",name:""},
-                    savedMessages:[" ","Argentine Tango","Bachata","Cha Cha","Foxtrot","Happy Birthday, Paul!","Hustle","Jive","Mambo","Merengue","POLKA","Paso Doble","Quickstep","Rumba","Salsa","Samba","Swing","Tango","Two Step","Viennese Waltz","Waltz","West Coast Swing"],
-                    textColor:"#000000", 
-                    animationSpeed: 3,
-                    speedVariation: 0.4,
-                    particleCount: 100,
-                    maxSize: 20,
-                    animationOption:0,
-                    rainAngle: 0,
-                    originX: 400,
-                    originY: 400,
-                    heat:"",
-                    particleTypes:[]
-                }
-                const partyRef = collection(db, "parties");
-        
-                await addDoc(partyRef, resObj);
-                location.reload() 
-            }}>Submit</button>
-            </div>
-         )}
-                 
+                let resObj = {
+                  image: '',
+                  name: partyName,
+                  message: '',
+                  mode: 'Default',
+                  fontSize: 10,
+                  fontSizeTime: 10,
+                  frameStyle:"No frame",
+                  displayedPictures: [],
+                  displayedVideos: [],
+                  videoChoice: { link: '', name: '' },
+                  compLogo: { link: '', name: '' },
+                  titleBarHider: false,
+                  showUrgentMessage: false,
+                  showHeatNumber: false,
+                  showSVGAnimation: true,
+                  displayedPicturesAuto: [],
+                  seconds: 5,
+                  manualPicture: { link: '', name: '' },
+                  savedMessages: [
+                    ' ',
+                    'Argentine Tango',
+                    'Bachata',
+                    'Cha Cha',
+                    'Foxtrot',
+                    'Happy Birthday, Paul!',
+                    'Hustle',
+                    'Jive',
+                    'Mambo',
+                    'Merengue',
+                    'POLKA',
+                    'Paso Doble',
+                    'Quickstep',
+                    'Rumba',
+                    'Salsa',
+                    'Samba',
+                    'Swing',
+                    'Tango',
+                    'Two Step',
+                    'Viennese Waltz',
+                    'Waltz',
+                    'West Coast Swing',
+                  ],
+                  textColor: '#000000',
+                  animationSpeed: 3,
+                  speedVariation: 0.4,
+                  particleCount: 100,
+                  maxSize: 20,
+                  animationOption: 0,
+                  rainAngle: 0,
+                  originX: 400,
+                  originY: 400,
+                  heat: '',
+                  particleTypes: [],
+                };
+                const partyRef = collection(db, 'parties');
 
+                await addDoc(partyRef, resObj);
+                location.reload();
+              }}
+            >
+              Submit
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
 export default ChoosePartyModal;
- 

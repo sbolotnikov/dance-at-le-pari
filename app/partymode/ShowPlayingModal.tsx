@@ -11,6 +11,8 @@ import { ScreenSettingsContextType } from '@/types/screen-settings';
 import { useDimensions } from '@/hooks/useDimensions';
 import svgPath from './svgPath';
 import ImgFromDb from '@/components/ImgFromDb';
+import FrameOnFire from '@/components/FrameOnFire';
+import FrameRunnerEffect from '@/components/FrameRunnerEffect';
 
 type Props = {
   videoUri: { link: string; name: string };
@@ -21,6 +23,7 @@ type Props = {
   mode: string;
   fontSize: number;
   fontSizeTime: number;
+  frameStyle: string;
   seconds: number;
   manualPicture: { link: string; name: string };
   displayedPicturesAuto: { link: string; name: string }[];
@@ -42,7 +45,7 @@ type Props = {
   originX: number;
   originY: number;
   particleTypes: string[];
-  heat:string;
+  heat: string;
   showSVGAnimation: boolean;
   onReturn: (submitten: string) => void;
   onRenewInterval: () => void;
@@ -56,6 +59,7 @@ const ShowPlayingModal: React.FC<Props> = ({
   mode,
   fontSize,
   fontSizeTime,
+  frameStyle,
   seconds,
   manualPicture,
   displayedPicturesAuto,
@@ -112,8 +116,7 @@ const ShowPlayingModal: React.FC<Props> = ({
   const [showSVGAnimation1, setShowSVGAnimation] = useState(showSVGAnimation);
   const [particleTypes1, setParticleTypes] = useState(particleTypes);
 
-
-  useEffect(()=>{
+  useEffect(() => {
     setAnimationSpeed(animationSpeed);
     setSpeedVariation(speedVariation);
     setParticleCount(particleCount);
@@ -124,37 +127,34 @@ const ShowPlayingModal: React.FC<Props> = ({
     setOriginY(originY);
     setShowSVGAnimation(showSVGAnimation);
     setParticleTypes(particleTypes);
-  },[
+  }, [
     animationSpeed,
-  speedVariation,
-  particleCount,
-  maxSize,
-  animationOption,
-  rainAngle,
-  originX,
-  originY,
-  showSVGAnimation,
-  particleTypes
-  ])
-  
-useEffect(() => {
-  if (mode === 'Auto Full') {
-    console.log("changing mode")
-    // setAnimationSpeed(animationSpeed);
-    // setSpeedVariation(speedVariation);
-    // setParticleCount(particleCount);
-    // setMaxSize(maxSize);
-    setAnimationOption(Math.floor(Math.random() * 4)+1);
-    setRainAngle(Math.floor(Math.random() * 360));
-    // setOriginX(originX);
-    // setOriginY(originY);
-    // setShowSVGAnimation(!showSVGAnimation1);
-    // setParticleTypes(particleTypes);
-    
-    } 
-},[
-  message,mode
-])
+    speedVariation,
+    particleCount,
+    maxSize,
+    animationOption,
+    rainAngle,
+    originX,
+    originY,
+    showSVGAnimation,
+    particleTypes,
+  ]);
+
+  useEffect(() => {
+    if (mode === 'Auto Full') {
+      console.log('changing mode');
+      // setAnimationSpeed(animationSpeed);
+      // setSpeedVariation(speedVariation);
+      // setParticleCount(particleCount);
+      // setMaxSize(maxSize);
+      setAnimationOption(Math.floor(Math.random() * 4) + 1);
+      setRainAngle(Math.floor(Math.random() * 360));
+      // setOriginX(originX);
+      // setOriginY(originY);
+      // setShowSVGAnimation(!showSVGAnimation1);
+      // setParticleTypes(particleTypes);
+    }
+  }, [message, mode]);
   useEffect(() => {
     if (mode === 'Auto Full' && displayedPictures.length > 0) {
       let arr1 = displayedPictures
@@ -193,7 +193,7 @@ useEffect(() => {
 
   const gradientStyle = {
     background: 'linear-gradient(135deg, white, red, blue, red, white)',
-  }; 
+  };
   useEffect(() => {
     const svg = svgRef.current;
     if (svg) {
@@ -203,13 +203,20 @@ useEffect(() => {
         const particle = document.createElementNS(svgNS, 'path');
         const animateMotion = document.createElementNS(svgNS, 'animateMotion');
         const animateOpacity = document.createElementNS(svgNS, 'animate');
-        const animateTransform = document.createElementNS(svgNS,'animateTransform');
-        const animateTransform2 = document.createElementNS(svgNS,'animateTransform');
+        const animateTransform = document.createElementNS(
+          svgNS,
+          'animateTransform'
+        );
+        const animateTransform2 = document.createElementNS(
+          svgNS,
+          'animateTransform'
+        );
         const animateColor = document.createElementNS(svgNS, 'animate');
 
         const shape =
           particleTypes1[Math.floor(Math.random() * particleTypes1.length)];
-        const size = animationOption1 === 2 ? maxSize1 : Math.random() * maxSize1;
+        const size =
+          animationOption1 === 2 ? maxSize1 : Math.random() * maxSize1;
 
         particle.setAttribute('d', svgPath(shape));
         particle.setAttribute('fill', `hsl(${Math.random() * 360}, 100%, 50%)`);
@@ -256,28 +263,27 @@ useEffect(() => {
             `M${startX},${startY} L${endX},${endY}`
           );
           animateMotion.setAttribute('dur', `${animationDuration}s`);
-          animateMotion.setAttribute('begin', `${randomDelay}s`); 
+          animateMotion.setAttribute('begin', `${randomDelay}s`);
 
-          
           animateTransform2.setAttribute('attributeName', 'transform');
           animateTransform2.setAttribute('type', 'scale');
           animateTransform2.setAttribute('from', '0');
           animateTransform2.setAttribute('to', `${size / 6}`);
           animateTransform2.setAttribute('dur', `${10 / particleSpeed}s`);
           animateTransform2.setAttribute('begin', `${randomDelay}s`);
-          animateTransform2.setAttribute('repeatCount', 'indefinite'); 
-          animateTransform2.setAttribute('additive', 'sum'); 
-          // animateTransform2.setAttribute('accumulate', 'sum'); 
+          animateTransform2.setAttribute('repeatCount', 'indefinite');
+          animateTransform2.setAttribute('additive', 'sum');
+          // animateTransform2.setAttribute('accumulate', 'sum');
           // additive="sum" accumulate="sum"
           animateTransform.setAttribute('attributeName', 'transform');
           animateTransform.setAttribute('type', 'rotate');
           animateTransform.setAttribute('from', '0 50 20');
-          animateTransform.setAttribute('to', '360 270 360');      
+          animateTransform.setAttribute('to', '360 270 360');
           animateTransform.setAttribute('dur', `${animationDuration}s`);
           animateTransform.setAttribute('begin', `${randomDelay}s`);
-          animateTransform.setAttribute('repeatCount', 'indefinite'); 
-          animateTransform.setAttribute('additive', 'sum'); 
-          // animateTransform.setAttribute('accumulate', 'sum'); 
+          animateTransform.setAttribute('repeatCount', 'indefinite');
+          animateTransform.setAttribute('additive', 'sum');
+          // animateTransform.setAttribute('accumulate', 'sum');
 
           animateOpacity.setAttribute('attributeName', 'opacity');
           animateOpacity.setAttribute('values', '0;1;1;0');
@@ -296,7 +302,7 @@ useEffect(() => {
           );
           animateColor.setAttribute('calcMode', 'discrete');
           particle.appendChild(animateTransform2);
-          particle.appendChild(animateOpacity); 
+          particle.appendChild(animateOpacity);
         } else if (animationOption1 === 3) {
           const angle = (rainAngle1 * Math.PI) / 180;
           startX = Math.random() * windowSize.width!;
@@ -316,8 +322,7 @@ useEffect(() => {
             'path',
             `M${startX},${startY} L${endX},${endY}`
           );
-
-         }
+        }
         if (animationOption1 === 1) {
           animateTransform.setAttribute('attributeName', 'transform');
           animateTransform.setAttribute('type', 'scale');
@@ -344,7 +349,7 @@ useEffect(() => {
 
         particle.appendChild(animateMotion);
         particle.appendChild(animateTransform);
-        
+
         particle.appendChild(animateColor);
 
         // Calculate individual particle speed
@@ -414,6 +419,7 @@ useEffect(() => {
               seconds={seconds}
               videoBG={videoUri.link}
               text1={manualPicture.name}
+              fontSizeTime={fontSizeTime}
               compLogo={compLogo.link}
               titleBarHider={titleBarHider}
               onRenewInterval={() => {
@@ -431,6 +437,7 @@ useEffect(() => {
                 seconds={seconds}
                 videoBG={videoUri.link}
                 text1={manualPicture.name}
+                fontSizeTime={fontSizeTime}
                 message={message}
                 compLogo={compLogo.link}
                 titleBarHider={titleBarHider}
@@ -448,19 +455,37 @@ useEffect(() => {
               titleBarHider={titleBarHider}
               videoBG={videoUri.link}
               seconds={seconds}
+              fontSizeTime={fontSizeTime}
             />
           )}
           {mode === 'Default' && (
-            <div className="w-full h-full flex justify-center items-center">
-              <div className="h-[900px] w-[900px] rounded-md flex justify-center items-center">
-                <ImgFromDb
-                  url={image}
-                  stylings="object-cover w-full h-full rounded-md"
-                  alt="Event Picture"
-                />
-              </div>
-            </div>
+
+<div
+className={`absolute left-0 right-0 m-auto   transition-opacity `}
+style={{top: `${fontSizeTime*1.8}px`, bottom: `${fontSizeTime*.8}px`}}
+>
+ 
+  <div
+    
+    className="h-full w-auto my-auto z-10 bg-center bg-no-repeat bg-contain"
+    style={{
+      backgroundImage: `url(${image})`,
+      boxShadow: '0 30px 40px rgba(0,0,0,.1)',
+    }}
+  ></div>
+ </div>
+
+            // <div className="w-full h-full flex justify-center items-center">
+            //   <div className="h-[900px] w-[900px] rounded-md flex justify-center items-center">
+            //     <ImgFromDb
+            //       url={image}
+            //       stylings="object-cover w-full h-full rounded-md"
+            //       alt="Event Picture"
+            //     />
+            //   </div>
+            // </div>
           )}
+
           {showSVGAnimation1 && (
             <div className="absolute inset-0 flex justify-center items-center">
               <svg
@@ -496,13 +521,27 @@ useEffect(() => {
               {heatNum}
             </p>
           </div>
+          <div className="absolute inset-0 flex flex-col justify-center items-center m-2">
           <div
             onClick={(e) => handleSubmit(e, button1)}
-            className="absolute top-0 right-1 cursor-pointer"
+            className=" w-full flex justify-end items-center cursor-pointer"
             style={{ color: textColor, fontSize: `${fontSizeTime}px` }}
           >
-            <p className="font-bold m-0">{showHeatNumber?heat+" "+timeNow:timeNow}</p>
+            <span className="font-bold m-0 leading-none">
+              {showHeatNumber ? heat + ' ' + timeNow : timeNow}
+            </span>
           </div>
+          {(frameStyle==='Fire frame') && <FrameOnFire
+              className={'w-full h-full flex justify-center items-center'}
+            />}
+            {(frameStyle==='Running frame') &&<FrameRunnerEffect
+              className={
+                'w-full h-full flex justify-center items-center'
+              }
+            />}
+          </div>
+          
+          
         </div>
       </div>
     </div>

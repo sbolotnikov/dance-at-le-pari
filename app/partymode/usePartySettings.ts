@@ -12,6 +12,7 @@ interface PartyContextType {
   mode: string;
   fontSize: number;
   fontSizeTime: number;
+  frameStyle: string;
   displayedPictures: { link: string; name: string, dances:string[] }[];
   displayedVideos: {
     name: string;
@@ -49,6 +50,7 @@ interface ReturnPartyContextType {
   mode: string;
   fontSize: number;
   fontSizeTime: number;
+  frameStyle: string;
   displayedPictures: { link: string; name: string, dances:string[] }[];
   displayedVideos: {
     name: string;
@@ -85,6 +87,7 @@ export const PartyContext = createContext<ReturnPartyContextType >({} as ReturnP
 
 export default function usePartySettings(): ReturnPartyContextType {
   const [compID, setCompID] = useState('00');
+  const [heatString, setHeatString] = useState('');
   const [partyArray, setPartyArray] = useState<PartyContextType>({
     image: '',
     name: '', 
@@ -92,6 +95,7 @@ export default function usePartySettings(): ReturnPartyContextType {
     mode: '',
     fontSize:10,
     fontSizeTime:10,
+    frameStyle:"No frame",
     displayedPictures:[],
     displayedVideos:[],
     videoChoice:{link:"",name:""}, 
@@ -136,7 +140,7 @@ export default function usePartySettings(): ReturnPartyContextType {
 
   useEffect(() => {
     if (value) { 
-      let party = {...value.data(), id:compID} as PartyContextType;
+      let party = {...value.data(), id:compID, heat:heatString} as PartyContextType;
       setPartyArray(party);
     }
     if (error) console.log('error', error);
@@ -146,6 +150,7 @@ export default function usePartySettings(): ReturnPartyContextType {
     if (value2) { 
       console.log("got value",value2.data()?.currentHeat    );
       let party = {...partyArray, heat:value2.data()?.currentHeat} as PartyContextType;
+      setHeatString(value2.data()?.currentHeat);
       setPartyArray(party);
     }
     if (err) console.log('error', err);

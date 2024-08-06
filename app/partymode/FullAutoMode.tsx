@@ -9,6 +9,7 @@ type Props = {
   videoBG: string;
   titleBarHider: boolean;
   message: string;
+  fontSizeTime: number;
   picsArray: { link: string; dances: string[] }[];
   vidsArray: { link: string; dances: string[] }[];
   onRenewInterval: () => void;
@@ -21,6 +22,7 @@ const FullAutoMode = ({
   text1,
   compLogo,
   videoBG,
+  fontSizeTime,
   titleBarHider,
   onRenewInterval,
 }: Props) => {
@@ -66,6 +68,7 @@ const FullAutoMode = ({
           seconds={seconds}
           text1={text1}
           compLogo={compLogo}
+          fontSizeTime={fontSizeTime}
           videoBG={vidsArray[activeVideo].link}
           titleBarHider={titleBarHider}
         />

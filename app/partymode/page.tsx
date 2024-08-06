@@ -74,6 +74,7 @@ const page: React.FC<Props> = () => {
     mode,
     fontSize,
     fontSizeTime,
+    frameStyle,
     displayedPictures,
     displayedPicturesAuto,
     seconds,
@@ -114,7 +115,7 @@ const page: React.FC<Props> = () => {
     'streamer',
     'lightning',
     'hydrangea',
-    'fred'
+    'fred',
   ];
   const reverseColor = (str: string) => {
     console.log(str);
@@ -259,11 +260,12 @@ const page: React.FC<Props> = () => {
           mode={mode}
           fontSize={fontSize}
           fontSizeTime={fontSizeTime}
+          frameStyle={frameStyle}
           seconds={seconds}
           message={message}
           compLogo={compLogo}
           titleBarHider={titleBarHider}
-          showUrgentMessage={showUrgentMessage} 
+          showUrgentMessage={showUrgentMessage}
           showHeatNumber={showHeatNumber}
           textColor={textColor}
           animationSpeed={animationSpeed}
@@ -301,21 +303,23 @@ const page: React.FC<Props> = () => {
           onClose={() => setModal3Visible(false)}
         />
       )}
-      {modal1Visible &&<ChooseMessageModal
-        savedMessages={savedMessages}
-        message={message}
-        onChange={(text) => {
-          console.log(text);
-          handleChange(text, 'message');
-          setModal1Visible(false);
-        }}
-        onMessageArrayChange={(array) => {
-          console.log(array);
-          handleChange(array, 'savedMessages');
-        }}
-        vis={modal1Visible}
-        onClose={() => setModal1Visible(false)}
-      />}
+      {modal1Visible && (
+        <ChooseMessageModal
+          savedMessages={savedMessages}
+          message={message}
+          onChange={(text) => {
+            console.log(text);
+            handleChange(text, 'message');
+            setModal1Visible(false);
+          }}
+          onMessageArrayChange={(array) => {
+            console.log(array);
+            handleChange(array, 'savedMessages');
+          }}
+          vis={modal1Visible}
+          onClose={() => setModal1Visible(false)}
+        />
+      )}
       {revealCloud && <ChoosePicture onReturn={onReturnPicture} />}
       <div className="blurFilter border-0 rounded-md p-2 shadow-2xl w-[95%] max-w-[650px] max-h-[85%] h-[85%]  md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70">
         <div className="w-full h-full flex flex-col justify-center items-center border rounded-md border-lightMainColor dark:border-darkMainColor relative p-2 overflow-auto">
@@ -348,7 +352,7 @@ const page: React.FC<Props> = () => {
                     className="w-[92%] h-48 m-1"
                     onClick={(e) => setRevealCloud(!revealCloud)}
                   >
-                    {image && image.length>0 ? (
+                    {image && image.length > 0 ? (
                       <div className="h-full w-full rounded-md flex justify-center items-center mt-2">
                         <ImgFromDb
                           url={image}
@@ -642,19 +646,41 @@ const page: React.FC<Props> = () => {
                       />
                       <p className="ml-2">Show heat number</p>
                     </div>
-                    <div className="flex flex-col justify-center items-center">
-                      {fontSizeTime && (
-                        <CountBox
-                          startValue={fontSizeTime}
-                          setWidth={10}
-                          name={'fontSizeTime'}
-                          onChange={(num) => {
-                            console.log(num);
-                            handleChange(num, 'fontSizeTime');
-                          }}
-                        />
-                      )}
-                      <p className="text-center w-24">Font size time</p>
+                    <div className="flex flex-row justify-center items-center">
+                      <div className="flex flex-col justify-center items-center">
+                        {fontSizeTime && (
+                          <CountBox
+                            startValue={fontSizeTime}
+                            setWidth={10}
+                            name={'fontSizeTime'}
+                            onChange={(num) => {
+                              console.log(num);
+                              handleChange(num, 'fontSizeTime');
+                            }}
+                          />
+                        )}
+                        <p className="text-center w-24">Font size time</p>
+                      </div>
+                      <div className="flex flex-col justify-center items-center">
+                        {frameStyle && (
+                          <select
+                            value={frameStyle}
+                            onChange={(e) =>
+                              handleChange(e.target.value, 'frameStyle')
+                            }
+                            className="w-28 h-9 bg-white rounded-lg border border-[#776548] text-[#444] text-left"
+                          >
+                            {['No frame', 'Fire frame', 'Running frame'].map(
+                              (option) => (
+                                <option key={option} value={option}>
+                                  {option}
+                                </option>
+                              )
+                            )}
+                          </select>
+                        )}
+                        <p className="text-center w-20">Choose frame</p>
+                      </div>
                     </div>
                     <div className="flex flex-row mb-2.5 mt-2.5">
                       <input

@@ -7,6 +7,7 @@ type Props = {
   text1: string;
   compLogo: string;
   videoBG: string;
+  fontSizeTime: number;
   titleBarHider: boolean;
 };
 
@@ -14,6 +15,7 @@ const ManualImage: React.FC<Props> = ({
   seconds,
   image1,
   text1,
+  fontSizeTime,
   compLogo,
   videoBG,
   titleBarHider,
@@ -99,7 +101,8 @@ const ManualImage: React.FC<Props> = ({
       ></iframe>
 
       <div
-        className={`absolute inset-0 m-auto w-full h-full transition-opacity `}
+        className={`absolute left-0 right-0 m-auto   transition-opacity `}
+        style={{top: `${fontSizeTime*1.8}px`, bottom: `${fontSizeTime*.8}px`}}
       >
         {image1 && (
           <div
