@@ -5,37 +5,6 @@ import { error } from 'console';
 import { collection, addDoc } from 'firebase/firestore';
 import { NextResponse } from 'next/server';
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 export async function POST(req: Request) {
   const data = await req.json();
   const { title, message, email, name } = data;

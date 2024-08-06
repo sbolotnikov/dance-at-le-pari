@@ -5,6 +5,7 @@ import {
   getDocs, 
 } from 'firebase/firestore';
 import { db } from '@/firebase';
+import FrameOnFire from './FrameOnFire';
 import { save_Template } from '@/utils/functions'; 
 type Props = {
   onReturn: (str: string) => void;
@@ -176,6 +177,8 @@ const ChoosePartyModal = ({ onReturn, onAlert }: Props) => {
         >
           Create Party
         </button>
+        <FrameOnFire width={'400px'} height={'400px'}>  
+          </FrameOnFire>
          {visibleInput && (
             <div>
             <input type="text" value={partyName} className="w-full p-2 border border-gray-300 rounded" onChange={(e)=>{
@@ -192,12 +195,14 @@ const ChoosePartyModal = ({ onReturn, onAlert }: Props) => {
                     message: '',
                     mode: 'Default',
                     fontSize:10,
+                    fontSizeTime:10,
                     displayedPictures:[],
                     displayedVideos:[],
                     videoChoice:{link:"",name:""}, 
                     compLogo:{link:"",name:""},
                     titleBarHider:false,
                     showUrgentMessage:false,
+                    showHeatNumber:false,
                     showSVGAnimation:true,
                     displayedPicturesAuto:[],  
                     seconds:5, 
@@ -212,6 +217,7 @@ const ChoosePartyModal = ({ onReturn, onAlert }: Props) => {
                     rainAngle: 0,
                     originX: 400,
                     originY: 400,
+                    heat:"",
                     particleTypes:[]
                 }
                 const partyRef = collection(db, "parties");
