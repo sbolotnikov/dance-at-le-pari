@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, FC } from 'react';
 import { PageWrapper } from '@/components/page-wrapper';
 import AnimateModalLayout from '@/components/AnimateModalLayout';
 import Slider from '@/components/Slider';
@@ -35,6 +35,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
       audioRef.current.load();
       console.log('rate set:', rateSet);
       setLoaded(true);
+      playAudio();
     }
   }, [music]);
   useEffect(() => {
@@ -48,6 +49,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
     console.log(timeRef.current!.innerText, formatTime(songDuration / 1000));
     if (timeRef.current!.innerText >= formatTime(songDuration / 1000)) {
       stopAudio();
+      onSongEnd();
     }
   }, [value]);
   const playAudio = () => {
@@ -101,7 +103,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
   };
 
   return (
-    <div className="w-full max-w-md mx-auto"> 
+    <div className="w-full max-w-md mx-auto">
       <div>
         <audio
           ref={audioRef}
@@ -110,7 +112,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
           onEnded={handleEnded}
         />
         <div className="flex justify-center space-x-4 mb-4">
-        <PlayerButtons
+          <PlayerButtons
             icon={'Previous'}
             color="#504deb"
             color2="#FFFFFF"
@@ -144,7 +146,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
               else playAudio();
             }}
           />
- 
+
           <PlayerButtons
             icon={'Forward'}
             color="#504deb"
@@ -252,22 +254,120 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   );
 };
 
-type Props = {};
+interface Song {
+  url: string;
+  name: string;
+}
 
-const page = (props: Props) => {
+interface PlaylistManagerProps {
+  playlist: Song[];
+  currentSongIndex: number;
+  isVisible: boolean;
+  onSongChange: (index: number) => void;
+  onAddSong: (song: Song) => void;
+  onRemoveSong: (index: number) => void;
+  onReturn: () => void;
+}
+
+const PlaylistManager: React.FC<PlaylistManagerProps> = ({
+  playlist,
+  currentSongIndex,
+  isVisible,
+  onSongChange,
+  onAddSong,
+  onRemoveSong,
+  onReturn,
+}) => {
+  return (
+    <AnimateModalLayout visibility={isVisible} onReturn={() => onReturn()}>
+      <div className="blurFilter border-0 rounded-md p-2 shadow-2xl w-[90%] max-w-[450px] max-h-[85%] overflow-y-auto md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70">
+        <div className="w-full max-w-md mx-auto mt-4">
+          <h4 className="text-lg font-semibold mb-2">Playlist</h4>
+          <ul className="space-y-2">
+            {playlist.map((song, index) => (
+              <li
+                key={index}
+                className={`flex justify-between items-center p-2 rounded ${
+                  index === currentSongIndex
+                    ? 'bg-blue-100 dark:bg-blue-900'
+                    : ''
+                }`}
+              >
+                <span
+                  className="flex-grow cursor-pointer"
+                  onClick={() => onSongChange(index)}
+                >
+                  {song.name}
+                </span>
+                <PlayerButtons
+                  icon="Remove"
+                  color="#504deb"
+                  color2="#FFFFFF"
+                  size={24}
+                  onButtonPress={() => onRemoveSong(index)}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </AnimateModalLayout>
+  );
+};
+
+// Update the main page component
+// const page: React.FC = () => {
+
+//   const [currentSongIndex, setCurrentSongIndex] = useState(0);
+//   const [songLength, setSongLength] = useState(180000);
+//   const [rate, setRate] = useState(1);
+//   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+//   const [isPlaylistOpen, setIsPlaylistOpen] = useState(false);
+
+interface pageProps {}
+
+const page: FC<pageProps> = ({}) => {
   const [musicFile, setMusicFile] = useState({ url: '', name: '' });
+  const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [songLength, setSongLength] = useState(180000);
+  const [playlist, setPlaylist] = useState<Song[]>([]);
   const [rate, setRate] = useState(1);
   const [songPosition, setSongPosition] = useState(0);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isPlaylistOpen, setIsPlaylistOpen] = useState(false);
 
+  const handleSongChange = (index: number) => {
+    setCurrentSongIndex(index);
+  };
+
+  const handleSongEnd = () => {
+    if (currentSongIndex < playlist.length - 1) {
+      setCurrentSongIndex(currentSongIndex + 1);
+    } else {
+      setCurrentSongIndex(0);
+    }
+  };
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      setMusicFile({
+      const newSong: Song = {
         url: URL.createObjectURL(file),
         name: file.name,
-      });
+      };
+      console.log(newSong);
+      setPlaylist([...playlist, newSong]);
+      if (playlist.length === 0) {
+        setCurrentSongIndex(0);
+      }
+    }
+  };
+  const handleRemoveSong = (index: number) => {
+    const newPlaylist = playlist.filter((_, i) => i !== index);
+    setPlaylist(newPlaylist);
+    if (index === currentSongIndex) {
+      setCurrentSongIndex(0);
+    } else if (index < currentSongIndex) {
+      setCurrentSongIndex(currentSongIndex - 1);
     }
   };
   return (
@@ -285,37 +385,56 @@ const page = (props: Props) => {
           onChangeDuration={(duration) => setSongLength(duration)}
         />
       )}
+      {isPlaylistOpen && (
+        <PlaylistManager
+          playlist={playlist}
+          currentSongIndex={currentSongIndex}
+          isVisible={isPlaylistOpen}
+          onSongChange={handleSongChange}
+          onAddSong={(song) => setPlaylist([...playlist, song])}
+          onRemoveSong={handleRemoveSong}
+          onReturn={() => setIsPlaylistOpen(false)}
+        />
+      )}
       <div className="blurFilter border-0 rounded-md p-2 shadow-2xl w-[90%] max-w-[450px] max-h-[85%] overflow-y-auto md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70">
         <div className="w-full h-full flex flex-col justify-center items-center border rounded-md border-lightMainColor dark:border-darkMainColor relative p-2">
           <div className="container mx-auto p-4">
             <h3 className="w-full uppercase xs:text-md sm:text-xl phone:text-2xl tablet:text-3xl text-center">
-            Music Player
+              Music Player
             </h3>
             <div
-            id="icon"
-            className=" h-20 w-20 md:h-24 md:w-24 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor m-auto"
-          >
-            <ShowIcon icon={'Music'} stroke={'0.1'} />
-          </div>
-            <p className="text-center mb-4">Song Title: {musicFile.name}</p>
-            <MusicPlayer
-              rateSet={rate}
-              songDuration={songLength}
-              startPos={songPosition}
-              music={musicFile.url}
-              onSongEnd={() => console.log('End of song')}
-            />
+              id="icon"
+              className=" h-20 w-20 md:h-24 md:w-24 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor m-auto"
+            >
+              <ShowIcon icon={'Music'} stroke={'0.1'} />
+            </div>
+            {playlist.length > 0 && (
+              <p className="text-center mb-4">
+                Song Title: {playlist[currentSongIndex].name}
+              </p>
+            )}
+            {playlist.length > 0 && (
+              <MusicPlayer
+                rateSet={rate}
+                songDuration={songLength}
+                startPos={songPosition}
+                music={playlist[currentSongIndex].url}
+                onSongEnd={handleSongEnd}
+              />
+            )}
             <div className="mt-4 flex justify-center space-x-4">
-            <div className=" flex flex-col items-center justify-center"> 
-              <PlayerButtons
-            icon={'File'}
-            color="#504deb"
-            color2="#FFFFFF"
-            size={50}
-            onButtonPress={() => document.getElementById('file-input')?.click()}
-          />
-          {'Choose a song'}
-          </div>
+              <div className=" flex flex-col items-center justify-center">
+                <PlayerButtons
+                  icon={'File'}
+                  color="#504deb"
+                  color2="#FFFFFF"
+                  size={50}
+                  onButtonPress={() =>
+                    document.getElementById('file-input')?.click()
+                  }
+                />
+                {'Choose a song'}
+              </div>
               <input
                 id="file-input"
                 type="file"
@@ -323,16 +442,26 @@ const page = (props: Props) => {
                 onChange={handleFileChange}
                 className="hidden"
               />
-             <div className=" flex flex-col items-center justify-center"> 
-              <PlayerButtons
-            icon={'Settings'}
-            color="#504deb"
-            color2="#FFFFFF"
-            size={50}
-            onButtonPress={() => setIsSettingsOpen(true)}
-          />
-          {'Settings'}
-          </div> 
+              <div className=" flex flex-col items-center justify-center">
+                <PlayerButtons
+                  icon={'Settings'}
+                  color="#504deb"
+                  color2="#FFFFFF"
+                  size={50}
+                  onButtonPress={() => setIsSettingsOpen(true)}
+                />
+                {'Settings'}
+              </div>
+              <div className="flex flex-col items-center justify-center">
+                <PlayerButtons
+                  icon={'List'}
+                  color="#504deb"
+                  color2="#FFFFFF"
+                  size={50}
+                  onButtonPress={() => setIsPlaylistOpen(true)}
+                />
+                {'Playlist'}
+              </div>
             </div>
           </div>
         </div>
