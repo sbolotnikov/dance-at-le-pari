@@ -207,7 +207,7 @@ body {
    
   animation: rotation2 5s .5s linear infinite;
 }
-.frameRunner::after {
+/* .frameRunner::after {
   content: '';
   position: absolute;
   inset: .90rem;
@@ -217,7 +217,7 @@ body {
   border-radius: inherit;
    
   animation: rotation2 5s 1s linear infinite;
-}
+} */
 .frameAnimate {
   position: relative;
   filter:url(#wavy) blur(1px);
@@ -227,7 +227,7 @@ body {
   content: '';
   position:absolute;
   inset:25px;
-  border-width: 10px;
+  border-width: 20px;
   border-color: #fff;
   box-shadow: 0 0 5px 25px  #f00, inset 0 0 25px #f00;
   -webkit-box-reflect: below 10px linear-gradient(transparent,transparent, #0002);
@@ -238,7 +238,7 @@ body {
   content: '';
   position:absolute;
   inset:25px;
-  border-width: 10px;
+  border-width: 20px;
   border-color: #fff;
   box-shadow: 0 0 5px 25px #fff, inset 0 0 25px #fff;
   -webkit-box-reflect: below 10px linear-gradient(transparent,transparent, #0002);

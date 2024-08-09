@@ -26,6 +26,7 @@ interface PartyContextType {
   showUrgentMessage: boolean;
   showHeatNumber: boolean;
   showSVGAnimation: boolean;
+  showBackdrop: boolean;
   displayedPicturesAuto: { link: string; name: string }[];
   seconds: number;
   manualPicture: { link: string; name: string };
@@ -63,6 +64,7 @@ interface ReturnPartyContextType {
   titleBarHider: boolean;
   showUrgentMessage: boolean;
   showHeatNumber: boolean;
+  showBackdrop: boolean;
   showSVGAnimation: boolean;
   displayedPicturesAuto: { link: string; name: string }[];
   seconds: number;
@@ -104,6 +106,7 @@ export default function usePartySettings(): ReturnPartyContextType {
     showUrgentMessage:false,
     showHeatNumber:false,
     showSVGAnimation:false,
+    showBackdrop:false,
     displayedPicturesAuto:[],  
     seconds:0, 
     manualPicture:{link:"",name:""},

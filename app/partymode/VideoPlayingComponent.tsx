@@ -5,6 +5,7 @@ interface VideoPlayingComponentProps {
   seconds: number;
   videoUri: string;
   text1?: string;
+  showBackdrop: boolean;
   titleBarHider?: boolean;
 }
 
@@ -12,6 +13,7 @@ const VideoPlayingComponent: React.FC<VideoPlayingComponentProps> = ({
   seconds,
   videoUri,
   text1,
+  showBackdrop,
   titleBarHider,
 }) => {
   const textRef = useRef<HTMLDivElement>(null);
@@ -40,6 +42,7 @@ const VideoPlayingComponent: React.FC<VideoPlayingComponentProps> = ({
         frameBorder="0"
         allowFullScreen
       ></iframe>
+      <div className="absolute inset-0" style={{ backgroundImage:`url(${showBackdrop?`/images/backdrop.png`:""})`, backgroundPosition: 'center', backgroundSize: 'cover'}}></div>
       <div
         ref={overlayRef}
         className="absolute inset-0 w-full h-full flex justify-center items-center"

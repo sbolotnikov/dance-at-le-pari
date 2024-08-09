@@ -46,6 +46,7 @@ type Props = {
   originY: number;
   particleTypes: string[];
   heat: string;
+  showBackdrop: boolean;
   showSVGAnimation: boolean;
   onReturn: (submitten: string) => void;
   onRenewInterval: () => void;
@@ -71,6 +72,7 @@ const ShowPlayingModal: React.FC<Props> = ({
   titleBarHider,
   showUrgentMessage,
   showHeatNumber,
+  showBackdrop,
   textColor,
   animationSpeed,
   speedVariation,
@@ -403,13 +405,14 @@ const ShowPlayingModal: React.FC<Props> = ({
       }`}
       style={gradientStyle}
     >
-      <div className="relative w-full h-full">
+      <div className="relative w-full h-full" style={{ backgroundImage:`url(${showBackdrop?'/images/backdrop.png':""})`, backgroundPosition: 'center', backgroundSize: 'cover'}}>
         <div className="w-full h-full flex justify-start items-center">
           {mode === 'Video' && (
             <VideoPlayingComponent
               videoUri={videoUri.link}
               text1={videoUri.name}
               titleBarHider={titleBarHider}
+              showBackdrop={showBackdrop}
               seconds={seconds}
             />
           )}
@@ -420,6 +423,7 @@ const ShowPlayingModal: React.FC<Props> = ({
               videoBG={videoUri.link}
               text1={manualPicture.name}
               fontSizeTime={fontSizeTime}
+              showBackdrop={showBackdrop}
               compLogo={compLogo.link}
               titleBarHider={titleBarHider}
               onRenewInterval={() => {
@@ -438,6 +442,7 @@ const ShowPlayingModal: React.FC<Props> = ({
                 videoBG={videoUri.link}
                 text1={manualPicture.name}
                 fontSizeTime={fontSizeTime}
+                showBackdrop={showBackdrop}
                 message={message}
                 compLogo={compLogo.link}
                 titleBarHider={titleBarHider}
@@ -452,6 +457,7 @@ const ShowPlayingModal: React.FC<Props> = ({
               image1={manualPicture.link}
               text1={manualPicture.name}
               compLogo={compLogo.link}
+              showBackdrop={showBackdrop}
               titleBarHider={titleBarHider}
               videoBG={videoUri.link}
               seconds={seconds}
@@ -498,7 +504,7 @@ style={{top: `${fontSizeTime*1.8}px`, bottom: `${fontSizeTime*.8}px`}}
           )}
           {showUrgentMessage && (
             <div
-              className="absolute inset-0 flex justify-center items-center cursor-pointer animate-pulse"
+              className="absolute inset-0 flex justify-center items-center cursor-pointer "
               onClick={(e) => handleSubmit(e, button1)}
               style={{
                 color: textColor,
@@ -532,13 +538,18 @@ style={{top: `${fontSizeTime*1.8}px`, bottom: `${fontSizeTime*.8}px`}}
             </span>
           </div>
           {(frameStyle==='Fire frame') && <FrameOnFire
-              className={'w-full h-full flex justify-center items-center'}
+              className={'w-[90%] h-full flex justify-center items-center'}
             />}
             {(frameStyle==='Running frame') &&<FrameRunnerEffect
               className={
-                'w-full h-full flex justify-center items-center'
+                'w-[90%] h-full flex justify-center items-center'
               }
             />}
+            {(frameStyle==='No frame') &&<div
+              className={
+                'w-[90%] h-full flex justify-center items-center'
+              }
+            ></div>}
           </div>
           
           

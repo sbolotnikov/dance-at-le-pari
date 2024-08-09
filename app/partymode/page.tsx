@@ -99,6 +99,7 @@ const page: React.FC<Props> = () => {
     particleTypes,
     id,
     heat,
+    showBackdrop,
     setCompID,
   } = usePartySettings();
   const typesSet = [
@@ -266,6 +267,7 @@ const page: React.FC<Props> = () => {
           compLogo={compLogo}
           titleBarHider={titleBarHider}
           showUrgentMessage={showUrgentMessage}
+          showBackdrop={showBackdrop}
           showHeatNumber={showHeatNumber}
           textColor={textColor}
           animationSpeed={animationSpeed}
@@ -634,6 +636,17 @@ const page: React.FC<Props> = () => {
                         className="self-center"
                       />
                       <p className="ml-2">Show Urgent Message</p>
+                    </div>
+                    <div className="flex flex-row mb-2.5 mt-2.5">
+                      <input
+                        type="checkbox"
+                        checked={showBackdrop}
+                        onChange={(e) =>
+                          handleChange(e.target.checked, 'showBackdrop')
+                        }
+                        className="self-center"
+                      />
+                      <p className="ml-2">Show backdrop</p>
                     </div>
                     <div className="flex flex-row mb-2.5 mt-2.5">
                       <input

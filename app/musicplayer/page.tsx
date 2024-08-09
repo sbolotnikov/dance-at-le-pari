@@ -253,7 +253,66 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     </AnimateModalLayout>
   );
 };
+interface ChooseMusicModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onChoice: (song: Song) => void;
+}
 
+const ChooseMusicModal: React.FC<ChooseMusicModalProps> = ({
+  isOpen,
+  onChoice,
+  onClose,
+}) => {
+  const [songLink, setSongLink] = useState('');
+  const [songTag, setSongTag] = useState('');
+
+  return (
+    <AnimateModalLayout
+      visibility={isOpen}
+      onReturn={() => {
+        onClose();
+      }}
+    >
+      <div className="blurFilter border-0 rounded-md p-2 shadow-2xl w-[90%] max-w-[450px] max-h-[85%] overflow-y-auto md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70">
+        <div className="w-full h-full flex flex-col justify-center items-center border rounded-md border-lightMainColor dark:border-darkMainColor relative p-2">
+          <div className="container mx-auto p-4">
+            <h2 className="text-2xl font-bold">Choose music from link or </h2>
+            <div className="space-y-4">
+              <div>
+                <label className="block mb-2">Link</label>
+                <input
+                  type="text"
+                  value={songLink}
+                  className="w-full p-2 border border-gray-300 rounded"
+                  onChange={(e) => setSongLink(e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="block mb-2">Song name or tag</label>
+                <input
+                  type="text"
+                  value={songTag}
+                  className="w-full p-2 border border-gray-300 rounded"
+                  onChange={(e) => setSongTag(e.target.value)}
+                />
+              </div>
+              <button
+                className="btnFancy"
+                onClick={() => {
+                  onChoice({ url: songLink, name: songTag });
+                  onClose();
+                }}
+              >
+                Choose
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </AnimateModalLayout>
+  );
+};
 interface Song {
   url: string;
   name: string;
@@ -315,15 +374,6 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
   );
 };
 
-// Update the main page component
-// const page: React.FC = () => {
-
-//   const [currentSongIndex, setCurrentSongIndex] = useState(0);
-//   const [songLength, setSongLength] = useState(180000);
-//   const [rate, setRate] = useState(1);
-//   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-//   const [isPlaylistOpen, setIsPlaylistOpen] = useState(false);
-
 interface pageProps {}
 
 const page: FC<pageProps> = ({}) => {
@@ -335,6 +385,7 @@ const page: FC<pageProps> = ({}) => {
   const [songPosition, setSongPosition] = useState(0);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isPlaylistOpen, setIsPlaylistOpen] = useState(false);
+  const [isChooseMusicOpen, setIsChooseMusicOpen] = useState(false);
 
   const handleSongChange = (index: number) => {
     setCurrentSongIndex(index);
@@ -385,6 +436,13 @@ const page: FC<pageProps> = ({}) => {
           onChangeDuration={(duration) => setSongLength(duration)}
         />
       )}
+      {isChooseMusicOpen && (
+        <ChooseMusicModal
+          isOpen={isChooseMusicOpen}
+          onChoice={(song) => setPlaylist([...playlist, song])}
+          onClose={() => setIsChooseMusicOpen(false)}
+        />
+      )}
       {isPlaylistOpen && (
         <PlaylistManager
           playlist={playlist}
@@ -429,9 +487,10 @@ const page: FC<pageProps> = ({}) => {
                   color="#504deb"
                   color2="#FFFFFF"
                   size={50}
-                  onButtonPress={() =>
-                    document.getElementById('file-input')?.click()
-                  }
+                  onButtonPress={() => {
+                    setIsChooseMusicOpen(true);
+                    // document.getElementById('file-input')?.click()
+                  }}
                 />
                 {'Choose a song'}
               </div>

@@ -8,12 +8,13 @@ type Props = {
     compLogo: string;
     videoBG: string;
     titleBarHider: boolean;
+    showBackdrop: boolean;
     picsArray: string[];
     fontSizeTime: number;
     onRenewInterval: ()=>void
 }
  
-    const AutoImages = ({ picsArray, seconds, text1,compLogo,videoBG,fontSizeTime, titleBarHider, onRenewInterval }:Props) => {
+    const AutoImages = ({ picsArray, seconds, text1,compLogo,videoBG,fontSizeTime, showBackdrop, titleBarHider, onRenewInterval }:Props) => {
       const [activePic, setActivePic] = useState(0);
       let timerIntervalID: any;
       const nextActive = (num:number) => {
@@ -40,7 +41,7 @@ type Props = {
         nextActive(0);
       }, []);
       return (
-          <ManualImage image1={picsArray[activePic]} seconds={seconds} fontSizeTime={fontSizeTime} text1={ text1} compLogo={compLogo} videoBG={videoBG} titleBarHider={titleBarHider}/>
+          <ManualImage image1={picsArray[activePic]} seconds={seconds} fontSizeTime={fontSizeTime} showBackdrop={showBackdrop} text1={ text1} compLogo={compLogo} videoBG={videoBG} titleBarHider={titleBarHider}/>
     
       );
     };

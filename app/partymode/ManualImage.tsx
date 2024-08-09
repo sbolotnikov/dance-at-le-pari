@@ -8,6 +8,7 @@ type Props = {
   compLogo: string;
   videoBG: string;
   fontSizeTime: number;
+  showBackdrop: boolean;
   titleBarHider: boolean;
 };
 
@@ -16,6 +17,7 @@ const ManualImage: React.FC<Props> = ({
   image1,
   text1,
   fontSizeTime,
+  showBackdrop,
   compLogo,
   videoBG,
   titleBarHider,
@@ -99,7 +101,7 @@ const ManualImage: React.FC<Props> = ({
         frameBorder="0"
         allowFullScreen
       ></iframe>
-
+      <div className="absolute inset-0" style={{ backgroundImage:`url(${showBackdrop?`/images/backdrop.png`:""})`, backgroundPosition: 'center', backgroundSize: 'cover'}}></div>
       <div
         className={`absolute left-0 right-0 m-auto   transition-opacity `}
         style={{top: `${fontSizeTime*1.8}px`, bottom: `${fontSizeTime*.8}px`}}
