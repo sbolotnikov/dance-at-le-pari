@@ -103,13 +103,13 @@ const ManualImage: React.FC<Props> = ({
       ></iframe>
       <div className="absolute inset-0" style={{ backgroundImage:`url(${showBackdrop?`/images/backdrop.png`:""})`, backgroundPosition: 'center', backgroundSize: 'cover'}}></div>
       <div
-        className={`absolute left-0 right-0 m-auto   transition-opacity `}
-        style={{top: `${fontSizeTime*1.8}px`, bottom: `${fontSizeTime*.8}px`}}
+        className={`absolute left-[5%] right-[5%] transition-opacity `}
+        style={{top: `${fontSizeTime*1.3}px`, bottom: `${fontSizeTime*.3}px`}}
       >
         {image1 && (
           <div
             
-            className="h-full w-auto my-auto z-10 bg-center bg-no-repeat bg-contain"
+            className={`h-full w-auto    z-10 bg-center bg-no-repeat bg-contain`}
             style={{
               backgroundImage: `url(${actPic})`,
               boxShadow: '0 30px 40px rgba(0,0,0,.1)',

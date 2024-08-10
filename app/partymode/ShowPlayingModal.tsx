@@ -187,8 +187,9 @@ const ShowPlayingModal: React.FC<Props> = ({
     const timerInterval = setInterval(() => {
       const now = new Date();
       const currentDateTime = now.toLocaleString();
-      setTimeNow(currentDateTime.split(',')[1]);
-    }, 1000);
+      console.log();
+      setTimeNow(currentDateTime.split(',')[1].split(' ')[1].slice(0,-3)+" "+currentDateTime.split(',')[1].split(' ')[2]);
+    }, 60000);
     !vis ? changeNav(false) : changeNav(true);
     return () => clearInterval(timerInterval);
   }, [vis, refreshVar]);
@@ -475,7 +476,7 @@ style={{top: `${fontSizeTime*1.8}px`, bottom: `${fontSizeTime*.8}px`}}
     
     className="h-full w-auto my-auto z-10 bg-center bg-no-repeat bg-contain"
     style={{
-      backgroundImage: `url(${image})`,
+      backgroundImage: `url(${compLogo.link})`,
       boxShadow: '0 30px 40px rgba(0,0,0,.1)',
     }}
   ></div>
@@ -530,11 +531,14 @@ style={{top: `${fontSizeTime*1.8}px`, bottom: `${fontSizeTime*.8}px`}}
           <div className="absolute inset-0 flex flex-col justify-center items-center m-2">
           <div
             onClick={(e) => handleSubmit(e, button1)}
-            className=" w-full flex justify-end items-center cursor-pointer"
+            className=" w-full flex justify-center items-center cursor-pointer relative"
             style={{ color: textColor, fontSize: `${fontSizeTime}px` }}
           >
             <span className="font-bold m-0 leading-none">
-              {showHeatNumber ? heat + ' ' + timeNow : timeNow}
+              {showHeatNumber ? heat : ""}
+            </span>
+            <span className="font-bold m-0 leading-none absolute right-0 top-0">
+              {timeNow}
             </span>
           </div>
           {(frameStyle==='Fire frame') && <FrameOnFire

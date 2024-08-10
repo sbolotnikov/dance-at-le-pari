@@ -8,14 +8,15 @@ import ColorChoiceModal from './ColorChoiceModal';
 import ChoosePicturesModal from './ChoosePicturesModal';
 import CountBox from './CountBox';
 import usePartySettings from './usePartySettings';
+import useComp from './useComp';
 import ChooseMessageModal from './ChooseMessageModal';
-import { deleteDoc, doc, updateDoc } from 'firebase/firestore';
-import { db } from '@/firebase';
+import { collection, deleteDoc, doc, getDocs, updateDoc } from 'firebase/firestore';
+import { db, db2 } from '@/firebase';
 import { useSession } from 'next-auth/react';
 import ChoosePartyModal from '@/components/ChoosePartyModal';
 import AlertMenu from '@/components/alertMenu';
 import ChoosePicture from '@/components/ChoosePicture';
-import ImgFromDb from '@/components/ImgFromDb';
+import ImgFromDb from '@/components/ImgFromDb'; 
 
 type Props = {
   // Add any props if needed
@@ -55,6 +56,7 @@ const page: React.FC<Props> = () => {
   const [videoSearchText, setVideoSearchText] = useState('');
   const [startPage, setStartPage] = useState(true);
   const [revealCloud, setRevealCloud] = useState(false);
+  const [compsArr, setCompsArr] = useState<{name:string, id:string}[]>([]);
 
   useEffect(() => {
     let timerInterval: any;
@@ -97,11 +99,17 @@ const page: React.FC<Props> = () => {
     originY,
     showSVGAnimation,
     particleTypes,
-    id,
-    heat,
+    id, 
+    compChoice,
     showBackdrop,
     setCompID,
   } = usePartySettings();
+  console.log('compChoice', compChoice);
+  const [competition, setCompetition] = useState('T9FLgtEDmxQFYFTnfrvO'); 
+  const {heat} = useComp(competition);
+  useEffect(() => {
+    if (compChoice) setCompetition(compChoice);
+  }, [compChoice]);
   const typesSet = [
     'star',
     'kiss',
@@ -188,11 +196,12 @@ const page: React.FC<Props> = () => {
       'particleTypes'
     );
   };
-  // useEffect(() => {
-  //   if (session?.user.role !== 'Admin') {
-  //     window.location.href = '/competition';
-  //   }
-  // }, []);
+  useEffect(() => {
+    // if (session?.user.role !== 'Admin') {
+    //   window.location.href = '/competition';
+    // }
+    getCompsArray();
+  }, []);
   const onReturnAlert = async (decision1: string) => {
     setRevealAlert(false);
     if (decision1 == 'Cancel') {
@@ -216,7 +225,13 @@ const page: React.FC<Props> = () => {
       }
     }
   };
-
+  async function getCompsArray() {
+    const q = await getDocs(collection(db2, 'competitions'));
+    let arr1 = q.docs.map((doc) => doc.data());
+    let arr2 = q.docs.map((doc) => doc.id);
+    let arr = arr1.map((x, i) => ({ name:x.name, id: arr2[i] })) as {name:string, id:string}[];
+    setCompsArr(arr);
+  }
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
       <AlertMenu
@@ -400,6 +415,7 @@ const page: React.FC<Props> = () => {
                           name={'fontSize'}
                           onChange={(num) => {
                             console.log(num);
+                            if (num < 1) num = 1;
                             handleChange(num, 'fontSize');
                           }}
                         />
@@ -433,6 +449,7 @@ const page: React.FC<Props> = () => {
                           name={'secondsLength'}
                           onChange={(num) => {
                             console.log(num);
+                            if (num < 1) num = 1;
                             handleChange(num, 'seconds');
                           }}
                         />
@@ -659,7 +676,28 @@ const page: React.FC<Props> = () => {
                       />
                       <p className="ml-2">Show heat number</p>
                     </div>
+
                     <div className="flex flex-row justify-center items-center">
+                    <div className="flex flex-col justify-center items-center">
+                        {compsArr && (
+                          <select
+                            value={compChoice}
+                            onChange={(e) =>
+                              handleChange(e.target.value, 'compChoice')
+                            }
+                            className="w-28 h-9 bg-white rounded-lg border border-[#776548] text-[#444] text-left"
+                          >
+                            {compsArr.map(
+                              (option) => (
+                                <option key={option.id} value={option.id}>
+                                  {option.name}
+                                </option>
+                              )
+                            )}
+                          </select>
+                        )}
+                        <p className="text-center w-20">Choose comp</p>
+                      </div>
                       <div className="flex flex-col justify-center items-center">
                         {fontSizeTime && (
                           <CountBox
@@ -668,6 +706,7 @@ const page: React.FC<Props> = () => {
                             name={'fontSizeTime'}
                             onChange={(num) => {
                               console.log(num);
+                              if (num < 1) num = 1;
                               handleChange(num, 'fontSizeTime');
                             }}
                           />

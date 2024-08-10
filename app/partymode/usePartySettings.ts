@@ -1,8 +1,7 @@
 "use client"
-import { createContext, useState, useEffect, use } from 'react';
-import { addDoc, collection, doc, query, setDoc, updateDoc } from 'firebase/firestore';
-import { db } from '@/firebase';
-import { db2 } from '@/firebase';
+import { createContext, useState, useEffect } from 'react';
+import {   doc,  } from 'firebase/firestore';
+import { db } from '@/firebase'; 
 import { useDocument } from 'react-firebase-hooks/firestore';
  
 interface PartyContextType {
@@ -40,8 +39,8 @@ interface PartyContextType {
     animationOption:number;
     rainAngle: number;
     originX: number;
-    originY: number;
-    heat:string;
+    originY: number; 
+    compChoice:string;
     particleTypes:string[];
 }
 interface ReturnPartyContextType {
@@ -79,8 +78,8 @@ interface ReturnPartyContextType {
   rainAngle: number;
   id: string;
   originX: number;
-  originY: number;
-  heat:string;
+  originY: number; 
+  compChoice:string;
   particleTypes:string[];
   setCompID: (id: string) => void;
 
@@ -88,8 +87,7 @@ interface ReturnPartyContextType {
 export const PartyContext = createContext<ReturnPartyContextType >({} as ReturnPartyContextType );
 
 export default function usePartySettings(): ReturnPartyContextType {
-  const [compID, setCompID] = useState('00');
-  const [heatString, setHeatString] = useState('');
+  const [compID, setCompID] = useState('00'); 
   const [partyArray, setPartyArray] = useState<PartyContextType>({
     image: '',
     name: '', 
@@ -120,8 +118,8 @@ export default function usePartySettings(): ReturnPartyContextType {
     animationOption:0,
     rainAngle: 0,
     originX: 0,
-    originY: 0,
-    heat:"",
+    originY: 0, 
+    compChoice:"112",
     particleTypes:["star","kiss",'snowflake', 'heart', 'tower','LP',"maple",'rose','diamond','clover','streamer','lightning','hydrangea','fred'],
   });
   
@@ -134,30 +132,17 @@ export default function usePartySettings(): ReturnPartyContextType {
     }
   );
  
-  const [value2, loading1, err] = useDocument(
-    doc(db2, 'competitions', "T9FLgtEDmxQFYFTnfrvO"),
-    {
-      snapshotListenOptions: { includeMetadataChanges: true },
-    }
-  );
+   
 
   useEffect(() => {
     if (value) { 
-      let party = {...value.data(), id:compID, heat:heatString} as PartyContextType;
+      let party = {...value.data(), id:compID, } as PartyContextType;
       setPartyArray(party);
     }
     if (error) console.log('error', error);
   }, [value, compID, error]);
   
-  useEffect(() => {
-    if (value2) { 
-      console.log("got value",value2.data()?.currentHeat    );
-      let party = {...partyArray, heat:value2.data()?.currentHeat} as PartyContextType;
-      setHeatString(value2.data()?.currentHeat);
-      setPartyArray(party);
-    }
-    if (err) console.log('error', err);
-  }, [value2, err]);
+  
  
 
  
