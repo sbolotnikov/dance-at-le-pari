@@ -5,6 +5,11 @@ import AnimateModalLayout from '@/components/AnimateModalLayout';
 import Slider from '@/components/Slider';
 import PlayerButtons from './PlayerButtons';
 import ShowIcon from '@/components/svg/showIcon';
+import { fileToBase64 } from '@/utils/picturemanipulation';
+import { save_File } from '@/utils/functions';
+import { v4 as uuidv4 } from 'uuid';
+import { db } from '@/firebase';
+import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
 
 interface MusicPlayerProps {
   rateSet: number;
@@ -13,7 +18,29 @@ interface MusicPlayerProps {
   music: string;
   onSongEnd: () => void;
 }
-
+const dances = [
+  ' ',
+  'Argentine Tango',
+  'Bachata',
+  'Cha Cha',
+  'Foxtrot',
+  'Hustle',
+  'Jive',
+  'Mambo',
+  'Merengue',
+  'POLKA',
+  'Paso Doble',
+  'Quickstep',
+  'Rumba',
+  'Salsa',
+  'Samba',
+  'Swing',
+  'Tango',
+  'Two Step',
+  'Viennese Waltz',
+  'Waltz',
+  'West Coast Swing',
+];
 const MusicPlayer: React.FC<MusicPlayerProps> = ({
   rateSet,
   songDuration,
@@ -33,7 +60,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
       audioRef.current.src = music;
       audioRef.current.playbackRate = rateSet;
       audioRef.current.load();
-      console.log('rate set:', rateSet);
+      // console.log('rate set:', rateSet);
       setLoaded(true);
       playAudio();
     }
@@ -46,7 +73,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
   }, [rateSet]);
 
   useEffect(() => {
-    console.log(timeRef.current!.innerText, formatTime(songDuration / 1000));
+    // console.log(timeRef.current!.innerText, formatTime(songDuration / 1000));
     if (timeRef.current!.innerText >= formatTime(songDuration / 1000)) {
       stopAudio();
       onSongEnd();
@@ -300,7 +327,7 @@ const ChooseMusicModal: React.FC<ChooseMusicModalProps> = ({
               <button
                 className="btnFancy"
                 onClick={() => {
-                  onChoice({ url: songLink, name: songTag });
+                  onChoice({ url: songLink, name: songTag, dance: '', id: '' });
                   onClose();
                 }}
               >
@@ -313,9 +340,187 @@ const ChooseMusicModal: React.FC<ChooseMusicModalProps> = ({
     </AnimateModalLayout>
   );
 };
+interface AddToDbModalProps {
+  isOpen: boolean;
+  song: Song | null;
+  onClose: () => void;
+  onChoice: (songs: Song[]) => void;
+}
+const AddToDbModal: React.FC<AddToDbModalProps> = ({
+  isOpen,
+  song,
+  onChoice,
+  onClose,
+}) => {
+  const [playlistName, setPlaylistName] = useState('musicDB.sdb');
+  const [songDB, setSongDB] = useState<Song[]>([]);
+  const [dance, setDance] = useState('');
+  const handleFileAdd = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    // name: file.name,
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (function (file) {
+        return async function () {
+          let res = this.result?.toString();
+          let resObj = JSON.parse(res !== undefined ? res : '');
+          setPlaylistName(file.name);
+          setSongDB(resObj);
+        };
+      })(file);
+      reader.readAsText(file);
+    }
+  };
+  useEffect(() => {
+    if (songDB.length > 0) {
+    }
+  }, [songDB]);
+
+  const handleSongAdd = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      console.log(await fileToBase64(file));
+      const newSong: Song = {
+        url: await fileToBase64(file),
+        name: file.name,
+        id: uuidv4(),
+        dance: dance,
+      };
+      console.log(newSong);
+      setSongDB([...songDB, newSong]);
+    }
+  };
+
+  return (
+    <AnimateModalLayout
+      visibility={isOpen}
+      onReturn={() => {
+        onClose();
+      }}
+    >
+      <div
+        className={`blurFilter border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-[1170px]  flex justify-center items-center flex-col   md:w-[80svw] bg-lightMainBG dark:bg-darkMainBG h-[70svh] md:h-[85svh]
+        }`}
+      >
+        <div
+          id="wrapperDiv"
+          className="w-full h-full relative  p-1  overflow-y-auto border border-lightMainColor dark:border-darkMainColor rounded-md flex flex-col justify-center items-center"
+        >
+          <div
+            id="containedDiv"
+            className={`absolute top-0 left-0 flex flex-col w-full p-1 justify-center items-center`}
+          >
+            <h2 className="text-xl font-bold mb-4">Songs in Local playlist</h2>
+
+            <div className="w-full h-[350px] border border-black p-1 rounded-md overflow-x-auto mb-4">
+              <div className="flex flex-col flex-wrap items-center justify-start">
+                {songDB.map((item, i) => (
+                  <div key={`song${i}`} className="relative m-1">
+                    <p className=" text-center max-w-[300px]">
+                      <span className=" bg-gray-300 text-sm rounded-sm truncate">
+                        {item.dance}
+                      </span>
+                      {'  '}
+                      {item.name}
+                    </p>
+                    <button
+                      onClick={() => {
+                        let newDB = songDB.filter(
+                          (item2) => item2.id !== item.id
+                        );
+                        setSongDB(newDB);
+                      }}
+                      className="absolute top-0 -right-8 fill-alertcolor  stroke-alertcolor  rounded-md border-alertcolor  w-8 h-8"
+                    >
+                      <ShowIcon icon={'Close'} stroke={'2'} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="space-y-4 flex flex-row flex-wrap justify-center items-center w-full">
+              <div className="flex flex-col justify-center items-center">
+                <label className="block mb-2">What dance is it?</label>
+                <select
+                  value={dance}
+                  onChange={(e) => setDance(e.target.value)}
+                  className="w-20 h-9 bg-white rounded-lg border border-[#776548] text-[#444] text-left"
+                >
+                  {dances.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  id="file-input3"
+                  type="file"
+                  accept="*.mdb"
+                  onChange={handleFileAdd}
+                  className="hidden"
+                />
+                <input
+                  id="file-input2"
+                  type="file"
+                  accept="audio/*"
+                  onChange={handleSongAdd}
+                  className="hidden"
+                />
+              </div>
+
+              <button
+                className="btnFancy"
+                onClick={() => {
+                  document.getElementById('file-input3')?.click();
+                }}
+              >
+                Use Existing Playlist
+              </button>
+              <button
+                className="btnFancy"
+                onClick={() => {
+                  document.getElementById('file-input2')?.click();
+                }}
+              >
+                Add song to Playlist
+              </button>
+              <div className=" flex flex-col items-center justify-center m-1.5">
+                <PlayerButtons
+                  icon={'Save'}
+                  color="#504deb"
+                  color2="#FFFFFF"
+                  size={50}
+                  onButtonPress={() => {
+                    save_File(JSON.stringify([...songDB]), playlistName);
+                  }}
+                />
+                {'Save Playlist'}
+              </div>
+              <div className=" flex flex-col items-center justify-center m-1">
+                <PlayerButtons
+                  icon={'AddPlayList'}
+                  color="#504deb"
+                  color2="#FFFFFF"
+                  size={50}
+                  onButtonPress={() => {
+                    onChoice(songDB);
+                  }}
+                />
+                {'Add to Playlist'}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </AnimateModalLayout>
+  );
+};
+
 interface Song {
   url: string;
   name: string;
+  dance: string | null;
+  id: string | null;
 }
 
 interface PlaylistManagerProps {
@@ -383,14 +588,41 @@ const page: FC<pageProps> = ({}) => {
   const [playlist, setPlaylist] = useState<Song[]>([]);
   const [rate, setRate] = useState(1);
   const [songPosition, setSongPosition] = useState(0);
+  const [addToDBSong, setAddToDBSong] = useState<Song | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isPlaylistOpen, setIsPlaylistOpen] = useState(false);
   const [isChooseMusicOpen, setIsChooseMusicOpen] = useState(false);
+  const [isAddToDBOpen, setIsAddToDBOpen] = useState(false);
+  const [parties, setParties] = useState<{ name: string; id: string }[]>([]);
+  const [choosenParty, setChoosenParty] = useState('');
+
+  async function getPartyArray() {
+    const q = await getDocs(collection(db, 'parties'));
+    let arr1 = q.docs.map((doc) => doc.data());
+    let arr2 = q.docs.map((doc) => doc.id);
+    let arr = arr1.map((x, i) => ({ name: x.name, id: arr2[i] }));
+    console.log(arr);
+    setParties(arr);
+    setChoosenParty(arr[0].id);
+  }
+
+  useEffect(() => {
+    getPartyArray();
+  }, []);
 
   const handleSongChange = (index: number) => {
     setCurrentSongIndex(index);
   };
-
+  useEffect(() => {
+    console.log(currentSongIndex, 'in useeffect');
+    if (currentSongIndex >= 0 && playlist.length > 0) {
+      console.log(playlist[currentSongIndex].dance);
+       
+  updateDoc(doc(db, "parties", choosenParty), {
+    message: playlist[currentSongIndex].dance
+  }).then((res) =>  console.log(res))
+    }
+  }, [currentSongIndex]);
   const handleSongEnd = () => {
     if (currentSongIndex < playlist.length - 1) {
       setCurrentSongIndex(currentSongIndex + 1);
@@ -398,12 +630,18 @@ const page: FC<pageProps> = ({}) => {
       setCurrentSongIndex(0);
     }
   };
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (file) {
+      console.log(await fileToBase64(file));
+
       const newSong: Song = {
-        url: URL.createObjectURL(file),
+        url: await fileToBase64(file),
         name: file.name,
+        id: '',
+        dance: '',
       };
       console.log(newSong);
       setPlaylist([...playlist, newSong]);
@@ -412,6 +650,7 @@ const page: FC<pageProps> = ({}) => {
       }
     }
   };
+
   const handleRemoveSong = (index: number) => {
     const newPlaylist = playlist.filter((_, i) => i !== index);
     setPlaylist(newPlaylist);
@@ -441,6 +680,20 @@ const page: FC<pageProps> = ({}) => {
           isOpen={isChooseMusicOpen}
           onChoice={(song) => setPlaylist([...playlist, song])}
           onClose={() => setIsChooseMusicOpen(false)}
+        />
+      )}
+      {isAddToDBOpen && (
+        <AddToDbModal
+          isOpen={isAddToDBOpen}
+          song={addToDBSong}
+          onChoice={(songs) => {
+            setIsAddToDBOpen(false);
+            setPlaylist([...playlist, ...songs]);
+            if (playlist.length === 0) {
+              setCurrentSongIndex(0);
+            }
+          }}
+          onClose={() => setIsAddToDBOpen(false)}
         />
       )}
       {isPlaylistOpen && (
@@ -480,7 +733,7 @@ const page: FC<pageProps> = ({}) => {
                 onSongEnd={handleSongEnd}
               />
             )}
-            <div className="mt-4 flex justify-center space-x-4">
+            <div className="mt-4 flex justify-start space-x-4">
               <div className=" flex flex-col items-center justify-center">
                 <PlayerButtons
                   icon={'File'}
@@ -488,11 +741,22 @@ const page: FC<pageProps> = ({}) => {
                   color2="#FFFFFF"
                   size={50}
                   onButtonPress={() => {
-                    setIsChooseMusicOpen(true);
-                    // document.getElementById('file-input')?.click()
+                    document.getElementById('file-input')?.click();
                   }}
                 />
                 {'Choose a song'}
+              </div>
+              <div className=" flex flex-col items-center justify-center">
+                <PlayerButtons
+                  icon={'AddToDb'}
+                  color="#504deb"
+                  color2="#FFFFFF"
+                  size={50}
+                  onButtonPress={() => {
+                    setIsAddToDBOpen(true);
+                  }}
+                />
+                {'Edit Playlists'}
               </div>
               <input
                 id="file-input"
@@ -501,6 +765,7 @@ const page: FC<pageProps> = ({}) => {
                 onChange={handleFileChange}
                 className="hidden"
               />
+
               <div className=" flex flex-col items-center justify-center">
                 <PlayerButtons
                   icon={'Settings'}
@@ -521,7 +786,24 @@ const page: FC<pageProps> = ({}) => {
                 />
                 {'Playlist'}
               </div>
+              
             </div>
+            <select
+                className="w-1/2 p-2 m-auto"
+                name="parties"
+                id="parties"
+                onChange={(e) => {
+                  setChoosenParty(e.target.value);
+                }}
+              >
+                {parties.map((party, index) => {
+                  return (
+                    <option key={index} value={party.id}>
+                      {party.name}
+                    </option>
+                  );
+                })}
+              </select>
           </div>
         </div>
       </div>

@@ -38,7 +38,7 @@ import Resizer from 'react-image-file-resizer';
   });
 
   
-  const fileToBase64 = (file: File | Blob): Promise<string> =>
+  export const fileToBase64 = (file: File | Blob): Promise<string> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => {
