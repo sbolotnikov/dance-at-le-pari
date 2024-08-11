@@ -73,6 +73,8 @@ const page: React.FC<Props> = () => {
     image,
     name,
     message,
+    message2,
+    fontSize2,
     mode,
     fontSize,
     fontSizeTime,
@@ -274,6 +276,8 @@ const page: React.FC<Props> = () => {
           heatNum={''}
           vis={modalVisible}
           mode={mode}
+          message2={message2}
+          fontSize2={fontSize2}
           fontSize={fontSize}
           fontSizeTime={fontSizeTime}
           frameStyle={frameStyle}
@@ -641,6 +645,30 @@ const page: React.FC<Props> = () => {
                     >
                       <p className="text-center italic">Choose message</p>
                     </button>
+                    <div className="w-full flex flex-col justify-center items-center">
+                    <input
+                      className="w-60 h-9 bg-white rounded-lg border border-[#776548] text-[#444] text-left"
+                      value={message2}
+                      onChange={(e) =>
+                        handleChange(e.target.value, 'message2')
+                      }/>
+                       <div className="flex flex-col justify-center items-center">
+                        {fontSize2 && (
+                          <CountBox
+                            startValue={fontSize2}
+                            setWidth={10}
+                            name={'fontSize2'}
+                            onChange={(num) => {
+                              console.log(num);
+                              if (num < 1) num = 1;
+                              handleChange(num, 'fontSize2');
+                            }}
+                          />
+                        )}
+                        <p className="text-center w-24">Font size 2</p>
+                      </div>
+
+                   </div>
                   </div>
                   <div className="w-full flex flex-col justify-center items-center">
                     <div className="flex flex-row mb-2.5 mt-2.5">

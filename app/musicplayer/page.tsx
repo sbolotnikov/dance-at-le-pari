@@ -482,7 +482,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
                   document.getElementById('file-input2')?.click();
                 }}
               >
-                Add song to Playlist
+                Add song to Local Playlist
               </button>
               <div className=" flex flex-col items-center justify-center m-1.5">
                 <PlayerButtons
@@ -506,7 +506,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
                     onChoice(songDB);
                   }}
                 />
-                {'Add to Playlist'}
+                {'Add to Current Playlist'}
               </div>
             </div>
           </div>
@@ -619,7 +619,12 @@ const page: FC<pageProps> = ({}) => {
       console.log(playlist[currentSongIndex].dance);
        
   updateDoc(doc(db, "parties", choosenParty), {
-    message: playlist[currentSongIndex].dance
+    message: playlist[currentSongIndex].dance,
+   
+  }).then((res) =>  console.log(res))
+  updateDoc(doc(db, "parties", choosenParty), {
+    message2: "Next Dance: "+playlist[(currentSongIndex<playlist.length-1)?currentSongIndex+1:0].dance
+    
   }).then((res) =>  console.log(res))
     }
   }, [currentSongIndex]);

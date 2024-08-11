@@ -8,6 +8,8 @@ interface PartyContextType {
   image: string;
   name: string;
   message: string;
+  message2: string;
+  fontSize2: number;
   mode: string;
   fontSize: number;
   fontSizeTime: number;
@@ -47,6 +49,8 @@ interface ReturnPartyContextType {
   image: string;
   name: string;
   message: string;
+  message2: string;
+  fontSize2: number;
   mode: string;
   fontSize: number;
   fontSizeTime: number;
@@ -92,6 +96,8 @@ export default function usePartySettings(): ReturnPartyContextType {
     image: '',
     name: '', 
     message: '',
+    message2: '',
+    fontSize2: 5,
     mode: '',
     fontSize:10,
     fontSizeTime:10,

@@ -21,6 +21,8 @@ type Props = {
   heatNum: string;
   image: string;
   mode: string;
+  message2: string;
+  fontSize2: number;
   fontSize: number;
   fontSizeTime: number;
   frameStyle: string;
@@ -60,6 +62,7 @@ const ShowPlayingModal: React.FC<Props> = ({
   mode,
   fontSize,
   fontSizeTime,
+  fontSize2,
   frameStyle,
   seconds,
   manualPicture,
@@ -69,6 +72,7 @@ const ShowPlayingModal: React.FC<Props> = ({
   vis,
   compLogo,
   message,
+  message2,
   titleBarHider,
   showUrgentMessage,
   showHeatNumber,
@@ -505,15 +509,19 @@ style={{top: `${fontSizeTime*1.8}px`, bottom: `${fontSizeTime*.8}px`}}
           )}
           {showUrgentMessage && (
             <div
-              className="absolute inset-0 flex justify-center items-center cursor-pointer "
+              className="absolute inset-0 flex flex-col justify-center items-center cursor-pointer "
               onClick={(e) => handleSubmit(e, button1)}
               style={{
                 color: textColor,
-                fontSize: `${fontSize}px`,
                 textShadow: '5px 5px #C9AB78',
               }}
             >
-              <p className="font-bold m-0">{message}</p>
+              <p className="font-bold m-0"
+              style={{fontSize: `${fontSize}px`}}
+              >{message}</p>
+              <p className="font-bold m-0"
+               style={{fontSize: `${fontSize2}px`}}
+              >{message2}</p>
             </div>
           )}
           <div
