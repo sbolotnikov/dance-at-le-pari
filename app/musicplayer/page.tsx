@@ -19,6 +19,7 @@ interface MusicPlayerProps {
   startPos: number;
   music: string;
   onSongEnd: () => void;
+  onSongPrev:() => void;
 }
 const dances = [
   ' ',
@@ -50,6 +51,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
   startPos,
   music,
   onSongEnd,
+  onSongPrev
 }) => {
   const [loaded, setLoaded] = useState(false);
   const [playing, setPlaying] = useState(false);
@@ -73,11 +75,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
           clearInterval(timerInterval);
           console.log('cleared timer');
         }, delayLength); 
-        
-
-
-
-      
+              
     }
   }, [music]);
   useEffect(() => {
@@ -159,7 +157,10 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
             color="#504deb"
             color2="#FFFFFF"
             size={(windowSize.width!>400)?50:45}
-            onButtonPress={() => {}}
+            onButtonPress={() => {
+              onSongPrev()
+              seekUpdate(0)
+            }}
           />
           <PlayerButtons
             icon={'Backward'}
@@ -201,7 +202,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
             color="#504deb"
             color2="#FFFFFF"
             size={(windowSize.width!>400)?50:45}
-            onButtonPress={() => {}}
+            onButtonPress={() => {seekUpdate(100)}}
           />
         </div>
         <Slider
@@ -209,7 +210,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
           max={100}
           step={1}
           value={value}
-          onChange={setValue}
+          onChange={(val)=>{seekUpdate(val)}}
           thumbColor="#504deb"
         />
 
@@ -769,7 +770,7 @@ const page: FC<pageProps> = ({}) => {
                 Song Title: {playlist[currentSongIndex].name}
               </p>
             )}
-            {playlist.length > 0 && (
+            {playlist.length > 0 &&(currentSongIndex>-1)&& (
               <MusicPlayer
                 rateSet={rate}
                 songDuration={songLength}
@@ -777,6 +778,10 @@ const page: FC<pageProps> = ({}) => {
                 startPos={songPosition}
                 music={playlist[currentSongIndex].url}
                 onSongEnd={handleSongEnd}
+                onSongPrev={()=>{
+                  console.log('prev song', currentSongIndex-1);
+                  (currentSongIndex-1>-1)?setCurrentSongIndex(currentSongIndex-1):0
+                }}
               />
             )}
             <div className="mt-4 flex justify-start space-x-4">
