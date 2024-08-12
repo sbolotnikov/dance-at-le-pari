@@ -9,11 +9,13 @@ import { fileToBase64 } from '@/utils/picturemanipulation';
 import { save_File } from '@/utils/functions';
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '@/firebase';
-import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
+import { collection, doc, getDocs, updateDoc } from 'firebase/firestore'; 
+import { useDimensions } from '@/hooks/useDimensions';
 
 interface MusicPlayerProps {
   rateSet: number;
   songDuration: number;
+  delayLength: number;
   startPos: number;
   music: string;
   onSongEnd: () => void;
@@ -44,6 +46,7 @@ const dances = [
 const MusicPlayer: React.FC<MusicPlayerProps> = ({
   rateSet,
   songDuration,
+  delayLength,
   startPos,
   music,
   onSongEnd,
@@ -53,16 +56,28 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
   const [duration, setDuration] = useState(songDuration);
   const [value, setValue] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
-  const timeRef = useRef<HTMLDivElement>(null);
-
+  const timeRef = useRef<HTMLDivElement>(null); 
+  const windowSize = useDimensions()
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.src = music;
       audioRef.current.playbackRate = rateSet;
       audioRef.current.load();
-      // console.log('rate set:', rateSet);
+      console.log('rate set:', rateSet);
       setLoaded(true);
-      playAudio();
+
+      let timerInterval: any; 
+        timerInterval = setInterval(function () {
+                
+          playAudio();
+          clearInterval(timerInterval);
+          console.log('cleared timer');
+        }, delayLength); 
+        
+
+
+
+      
     }
   }, [music]);
   useEffect(() => {
@@ -143,21 +158,21 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
             icon={'Previous'}
             color="#504deb"
             color2="#FFFFFF"
-            size={50}
+            size={(windowSize.width!>400)?50:45}
             onButtonPress={() => {}}
           />
           <PlayerButtons
             icon={'Backward'}
             color="#504deb"
             color2="#FFFFFF"
-            size={50}
+            size={(windowSize.width!>400)?50:45}
             onButtonPress={() => seekUpdate(Math.max(0, value - 10))}
           />
           <PlayerButtons
             icon={'Stop'}
             color="#504deb"
             color2="#FFFFFF"
-            size={50}
+            size={(windowSize.width!>400)?50:45}
             onButtonPress={() => {
               stopAudio();
             }}
@@ -167,7 +182,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
             icon={playing ? 'Pause' : 'Play'}
             color="#504deb"
             color2="#FFFFFF"
-            size={50}
+            size={(windowSize.width!>400)?50:45}
             onButtonPress={() => {
               if (playing) pauseAudio();
               else playAudio();
@@ -178,14 +193,14 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
             icon={'Forward'}
             color="#504deb"
             color2="#FFFFFF"
-            size={50}
+            size={(windowSize.width!>400)?50:45}
             onButtonPress={() => seekUpdate(Math.min(100, value + 10))}
           />
           <PlayerButtons
             icon={'Skip'}
             color="#504deb"
             color2="#FFFFFF"
-            size={50}
+            size={(windowSize.width!>400)?50:45}
             onButtonPress={() => {}}
           />
         </div>
@@ -211,21 +226,26 @@ interface SettingsModalProps {
   isOpen: boolean;
   duration: number;
   speed: number;
+  delay1: number;
   onClose: () => void;
   onChangeRate: (rate: number) => void;
   onChangeDuration: (duration: number) => void;
+  onChangeDelay: (duration: number) => void;
 }
 
 const SettingsModal: React.FC<SettingsModalProps> = ({
   duration,
   speed,
+  delay1,
   isOpen,
   onClose,
   onChangeRate,
   onChangeDuration,
+  onChangeDelay
 }) => {
   const [songLength, setSongLength] = useState(duration);
   const [rate, setRate] = useState(speed);
+  const [delayLength, setDelayLength] = useState(delay1);
 
   useEffect(() => {
     onChangeRate(rate);
@@ -234,7 +254,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   useEffect(() => {
     onChangeDuration(songLength);
   }, [songLength]);
-
+  useEffect(() => {
+    onChangeDelay(delayLength);
+  }, [delayLength]);
   return (
     <AnimateModalLayout
       visibility={isOpen}
@@ -272,6 +294,20 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                   thumbColor="#4a5568"
                 />
                 <span>{`${(rate * 100).toFixed(0)}%`}</span>
+              </div>
+              <div>
+                <label className="block mb-2">Delay in seconds</label>
+                <Slider
+                  min={1000}
+                  max={60000}
+                  step={1000}
+                  value={delayLength}
+                  onChange={(newValue) => setDelayLength(newValue)}
+                  thumbColor="#4a5568"
+                />
+                <span>{`${Math.floor(delayLength / 60000)}m ${Math.floor(
+                  (delayLength % 60000) / 1000
+                )}s`}</span>
               </div>
             </div>
           </div>
@@ -585,6 +621,7 @@ const page: FC<pageProps> = ({}) => {
   const [musicFile, setMusicFile] = useState({ url: '', name: '' });
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [songLength, setSongLength] = useState(180000);
+  const[ delayLength, setDelayLength] = useState(0);
   const [playlist, setPlaylist] = useState<Song[]>([]);
   const [rate, setRate] = useState(1);
   const [songPosition, setSongPosition] = useState(0);
@@ -671,6 +708,7 @@ const page: FC<pageProps> = ({}) => {
         <SettingsModal
           duration={songLength}
           speed={rate}
+          delay1={delayLength}
           isOpen={isSettingsOpen}
           onClose={() => setIsSettingsOpen(false)}
           onChangeRate={(rate) => {
@@ -678,6 +716,7 @@ const page: FC<pageProps> = ({}) => {
             console.log(`New rate: ${rate}`);
           }}
           onChangeDuration={(duration) => setSongLength(duration)}
+          onChangeDelay={(duration)=>setDelayLength(duration)}
         />
       )}
       {isChooseMusicOpen && (
@@ -712,9 +751,10 @@ const page: FC<pageProps> = ({}) => {
           onReturn={() => setIsPlaylistOpen(false)}
         />
       )}
-      <div className="blurFilter border-0 rounded-md p-2 shadow-2xl w-[90%] max-w-[450px] max-h-[85%] overflow-y-auto md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70">
-        <div className="w-full h-full flex flex-col justify-center items-center border rounded-md border-lightMainColor dark:border-darkMainColor relative p-2">
-          <div className="container mx-auto p-4">
+      <div className="blurFilter border-0 rounded-md p-2 shadow-2xl w-[90%] max-w-[450px] h-[85%] overflow-y-auto md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70">
+        <div className="w-full h-full flex flex-col justify-center items-center border rounded-md border-lightMainColor dark:border-darkMainColor relative p-2 overflow-x-auto">
+          {/* <div className="container mx-auto p-4"> */}
+          <div className="   w-full h-fit p-2 flex flex-col justify-center items-center">
             <h3 className="w-full uppercase xs:text-md sm:text-xl phone:text-2xl tablet:text-3xl text-center">
               Music Player
             </h3>
@@ -733,6 +773,7 @@ const page: FC<pageProps> = ({}) => {
               <MusicPlayer
                 rateSet={rate}
                 songDuration={songLength}
+                delayLength={delayLength}
                 startPos={songPosition}
                 music={playlist[currentSongIndex].url}
                 onSongEnd={handleSongEnd}

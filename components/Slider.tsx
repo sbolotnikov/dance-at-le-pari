@@ -23,10 +23,10 @@ const Slider: React.FC<SliderProps> = ({
   value,
   onChange,
   width = '100%',
-  height = '4px',
+  height = '10px',
   trackColor = '#e0e0e0',
   thumbColor = '#3b82f6',
-  thumbSize = 16,
+  thumbSize =25,
   label
 }) => {
   const [isDragging, setIsDragging] = useState(false);
