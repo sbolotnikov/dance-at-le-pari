@@ -9,7 +9,7 @@ import { fileToBase64 } from '@/utils/picturemanipulation';
 import { save_File } from '@/utils/functions';
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '@/firebase';
-import { collection, doc, getDocs, updateDoc } from 'firebase/firestore'; 
+import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
 import { useDimensions } from '@/hooks/useDimensions';
 
 interface MusicPlayerProps {
@@ -19,7 +19,7 @@ interface MusicPlayerProps {
   startPos: number;
   music: string;
   onSongEnd: () => void;
-  onSongPrev:() => void;
+  onSongPrev: () => void;
 }
 const dances = [
   ' ',
@@ -51,15 +51,15 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
   startPos,
   music,
   onSongEnd,
-  onSongPrev
+  onSongPrev,
 }) => {
   const [loaded, setLoaded] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [duration, setDuration] = useState(songDuration);
   const [value, setValue] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
-  const timeRef = useRef<HTMLDivElement>(null); 
-  const windowSize = useDimensions()
+  const timeRef = useRef<HTMLDivElement>(null);
+  const windowSize = useDimensions();
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.src = music;
@@ -68,14 +68,12 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
       console.log('rate set:', rateSet);
       setLoaded(true);
 
-      let timerInterval: any; 
-        timerInterval = setInterval(function () {
-                
-          playAudio();
-          clearInterval(timerInterval);
-          console.log('cleared timer');
-        }, delayLength); 
-              
+      let timerInterval: any;
+      timerInterval = setInterval(function () {
+        playAudio();
+        clearInterval(timerInterval);
+        console.log('cleared timer');
+      }, delayLength);
     }
   }, [music]);
   useEffect(() => {
@@ -156,24 +154,24 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
             icon={'Previous'}
             color="#504deb"
             color2="#FFFFFF"
-            size={(windowSize.width!>400)?50:45}
+            size={windowSize.width! > 400 ? 50 : 45}
             onButtonPress={() => {
-              onSongPrev()
-              seekUpdate(0)
+              onSongPrev();
+              seekUpdate(0);
             }}
           />
           <PlayerButtons
             icon={'Backward'}
             color="#504deb"
             color2="#FFFFFF"
-            size={(windowSize.width!>400)?50:45}
+            size={windowSize.width! > 400 ? 50 : 45}
             onButtonPress={() => seekUpdate(Math.max(0, value - 10))}
           />
           <PlayerButtons
             icon={'Stop'}
             color="#504deb"
             color2="#FFFFFF"
-            size={(windowSize.width!>400)?50:45}
+            size={windowSize.width! > 400 ? 50 : 45}
             onButtonPress={() => {
               stopAudio();
             }}
@@ -183,7 +181,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
             icon={playing ? 'Pause' : 'Play'}
             color="#504deb"
             color2="#FFFFFF"
-            size={(windowSize.width!>400)?50:45}
+            size={windowSize.width! > 400 ? 50 : 45}
             onButtonPress={() => {
               if (playing) pauseAudio();
               else playAudio();
@@ -194,15 +192,17 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
             icon={'Forward'}
             color="#504deb"
             color2="#FFFFFF"
-            size={(windowSize.width!>400)?50:45}
+            size={windowSize.width! > 400 ? 50 : 45}
             onButtonPress={() => seekUpdate(Math.min(100, value + 10))}
           />
           <PlayerButtons
             icon={'Skip'}
             color="#504deb"
             color2="#FFFFFF"
-            size={(windowSize.width!>400)?50:45}
-            onButtonPress={() => {seekUpdate(100)}}
+            size={windowSize.width! > 400 ? 50 : 45}
+            onButtonPress={() => {
+              seekUpdate(100);
+            }}
           />
         </div>
         <Slider
@@ -210,7 +210,9 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
           max={100}
           step={1}
           value={value}
-          onChange={(val)=>{seekUpdate(val)}}
+          onChange={(val) => {
+            seekUpdate(val);
+          }}
           thumbColor="#504deb"
         />
 
@@ -242,7 +244,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   onClose,
   onChangeRate,
   onChangeDuration,
-  onChangeDelay
+  onChangeDelay,
 }) => {
   const [songLength, setSongLength] = useState(duration);
   const [rate, setRate] = useState(speed);
@@ -392,6 +394,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
   const [playlistName, setPlaylistName] = useState('musicDB.sdb');
   const [songDB, setSongDB] = useState<Song[]>([]);
   const [dance, setDance] = useState('');
+  const [rate, setRate] = useState(1);
   const handleFileAdd = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     // name: file.name,
@@ -489,6 +492,19 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
                     </option>
                   ))}
                 </select>
+
+                <div>
+                  <label className="block mb-2">Playback Speed</label>
+                  <Slider
+                    min={0.5}
+                    max={2}
+                    step={0.01}
+                    value={rate}
+                    onChange={(newValue) => setRate(newValue)}
+                    thumbColor="#4a5568"
+                  />
+                  <span>{`${(rate * 100).toFixed(0)}%`}</span>
+                </div>
                 <input
                   id="file-input3"
                   type="file"
@@ -567,6 +583,7 @@ interface PlaylistManagerProps {
   onSongChange: (index: number) => void;
   onAddSong: (song: Song) => void;
   onRemoveSong: (index: number) => void;
+  onUpdate: (playlist: Song[]) => void
   onReturn: () => void;
 }
 
@@ -576,37 +593,88 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
   isVisible,
   onSongChange,
   onAddSong,
+  onUpdate,
   onRemoveSong,
   onReturn,
 }) => {
+  const [currentDragIndex, setCurrentDragIndex] = useState(-1);
+  const DropPlace: React.FC<{index:number}> = ({index}) => {
+    const [showDrop, setShowDrop] = useState(false);
+    const handleDrop = async (event: React.DragEvent<HTMLDivElement>) => {
+      event.preventDefault();
+      event.stopPropagation();
+      console.log("index start", currentDragIndex,"index dropped", index);
+    };
+    const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+      event.preventDefault();
+      event.stopPropagation();
+    };
+    return (
+      <div
+       
+        // onDragOver={handleDragOver}
+      
+        className={`w-full h-8`}
+      >
+        <p
+         onDragOver={handleDrop}
+         style={{opacity: showDrop ? "1":"0"}}
+         onDragEnter={()=>setShowDrop(true)}
+         onDragLeave={()=>setShowDrop(false)}
+         onDrop={()=>{
+          setShowDrop(false)
+          console.log("index start", currentDragIndex,"index dropped", index);
+          let item1=playlist[currentDragIndex];
+          let newPlaylist=playlist
+          // .splice(currentDragIndex, 1)
+          newPlaylist=newPlaylist.toSpliced(index, 0, item1);  
+          (currentDragIndex<index)?newPlaylist.splice(currentDragIndex, 1):newPlaylist.splice(currentDragIndex+1, 1);
+          onUpdate(newPlaylist);
+        }}
+        className={`w-full h-full flex justify-center items-center border border-dashed border-gray-700 dark:border-gray-300 rounded-md text-gray-700 dark:text-gray-300`}
+        
+        >Drop here</p>
+      </div>
+    );
+  };
   return (
     <AnimateModalLayout visibility={isVisible} onReturn={() => onReturn()}>
       <div className="blurFilter border-0 rounded-md p-2 shadow-2xl w-[90%] max-w-[450px] max-h-[85%] overflow-y-auto md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70">
         <div className="w-full max-w-md mx-auto mt-4">
           <h4 className="text-lg font-semibold mb-2">Playlist</h4>
           <ul className="space-y-2">
+            <li className={`flex justify-between items-center p-2 rounded`}>
+              <DropPlace index={0}/>
+            </li>
             {playlist.map((song, index) => (
               <li
                 key={index}
-                className={`flex justify-between items-center p-2 rounded ${
-                  index === currentSongIndex
-                    ? 'bg-blue-100 dark:bg-blue-900'
-                    : ''
-                }`}
+                
+                className={`flex flex-col justify-between items-center p-2 rounded `}
               >
-                <span
-                  className="flex-grow cursor-pointer"
-                  onClick={() => onSongChange(index)}
-                >
-                  {song.name}
-                </span>
-                <PlayerButtons
-                  icon="Remove"
-                  color="#504deb"
-                  color2="#FFFFFF"
-                  size={24}
-                  onButtonPress={() => onRemoveSong(index)}
-                />
+                <div draggable={true} className={`flex flex-grow justify-between cursor-pointer  w-full  ${
+                      index === currentSongIndex
+                        ? 'bg-blue-100 dark:bg-blue-900'
+                        : ''
+                    }`}
+                    onDrag={()=>{
+                      setCurrentDragIndex(index);
+                    }}
+                    >
+                  <span 
+                    onClick={() => onSongChange(index)}
+                  >
+                    <span className="rounded-md text-white bg-[#504deb] m-1 p-1">{song.dance}</span>{" "+song.name}
+                  </span>
+                  <PlayerButtons
+                    icon="Remove"
+                    color="#504deb"
+                    color2="#FFFFFF"
+                    size={24}
+                    onButtonPress={() => onRemoveSong(index)}
+                  />
+                </div>
+                <DropPlace index={index+1}/>
               </li>
             ))}
           </ul>
@@ -622,7 +690,7 @@ const page: FC<pageProps> = ({}) => {
   const [musicFile, setMusicFile] = useState({ url: '', name: '' });
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [songLength, setSongLength] = useState(180000);
-  const[ delayLength, setDelayLength] = useState(0);
+  const [delayLength, setDelayLength] = useState(0);
   const [playlist, setPlaylist] = useState<Song[]>([]);
   const [rate, setRate] = useState(1);
   const [songPosition, setSongPosition] = useState(0);
@@ -655,15 +723,17 @@ const page: FC<pageProps> = ({}) => {
     console.log(currentSongIndex, 'in useeffect');
     if (currentSongIndex >= 0 && playlist.length > 0) {
       console.log(playlist[currentSongIndex].dance);
-       
-  updateDoc(doc(db, "parties", choosenParty), {
-    message: playlist[currentSongIndex].dance,
-   
-  }).then((res) =>  console.log(res))
-  updateDoc(doc(db, "parties", choosenParty), {
-    message2: "Next Dance: "+playlist[(currentSongIndex<playlist.length-1)?currentSongIndex+1:0].dance
-    
-  }).then((res) =>  console.log(res))
+
+      updateDoc(doc(db, 'parties', choosenParty), {
+        message: playlist[currentSongIndex].dance,
+      }).then((res) => console.log(res));
+      updateDoc(doc(db, 'parties', choosenParty), {
+        message2:
+          'Next Dance: ' +
+          playlist[
+            currentSongIndex < playlist.length - 1 ? currentSongIndex + 1 : 0
+          ].dance,
+      }).then((res) => console.log(res));
     }
   }, [currentSongIndex]);
   const handleSongEnd = () => {
@@ -717,7 +787,7 @@ const page: FC<pageProps> = ({}) => {
             console.log(`New rate: ${rate}`);
           }}
           onChangeDuration={(duration) => setSongLength(duration)}
-          onChangeDelay={(duration)=>setDelayLength(duration)}
+          onChangeDelay={(duration) => setDelayLength(duration)}
         />
       )}
       {isChooseMusicOpen && (
@@ -745,6 +815,7 @@ const page: FC<pageProps> = ({}) => {
         <PlaylistManager
           playlist={playlist}
           currentSongIndex={currentSongIndex}
+          onUpdate={(newPlaylist) => setPlaylist(newPlaylist)}
           isVisible={isPlaylistOpen}
           onSongChange={handleSongChange}
           onAddSong={(song) => setPlaylist([...playlist, song])}
@@ -770,7 +841,7 @@ const page: FC<pageProps> = ({}) => {
                 Song Title: {playlist[currentSongIndex].name}
               </p>
             )}
-            {playlist.length > 0 &&(currentSongIndex>-1)&& (
+            {playlist.length > 0 && currentSongIndex > -1 && (
               <MusicPlayer
                 rateSet={rate}
                 songDuration={songLength}
@@ -778,9 +849,11 @@ const page: FC<pageProps> = ({}) => {
                 startPos={songPosition}
                 music={playlist[currentSongIndex].url}
                 onSongEnd={handleSongEnd}
-                onSongPrev={()=>{
-                  console.log('prev song', currentSongIndex-1);
-                  (currentSongIndex-1>-1)?setCurrentSongIndex(currentSongIndex-1):0
+                onSongPrev={() => {
+                  console.log('prev song', currentSongIndex - 1);
+                  currentSongIndex - 1 > -1
+                    ? setCurrentSongIndex(currentSongIndex - 1)
+                    : 0;
                 }}
               />
             )}
@@ -837,24 +910,23 @@ const page: FC<pageProps> = ({}) => {
                 />
                 {'Playlist'}
               </div>
-              
             </div>
             <select
-                className="w-1/2 p-2 m-auto"
-                name="parties"
-                id="parties"
-                onChange={(e) => {
-                  setChoosenParty(e.target.value);
-                }}
-              >
-                {parties.map((party, index) => {
-                  return (
-                    <option key={index} value={party.id}>
-                      {party.name}
-                    </option>
-                  );
-                })}
-              </select>
+              className="w-1/2 p-2 m-auto"
+              name="parties"
+              id="parties"
+              onChange={(e) => {
+                setChoosenParty(e.target.value);
+              }}
+            >
+              {parties.map((party, index) => {
+                return (
+                  <option key={index} value={party.id}>
+                    {party.name}
+                  </option>
+                );
+              })}
+            </select>
           </div>
         </div>
       </div>
