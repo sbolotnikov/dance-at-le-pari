@@ -81,7 +81,7 @@ const PlayerButtons: React.FC<PlayerButtonsProps> = ({
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       > 
-        <g id="Previous_-_Grey" clip-path="url(#clip0_515_33)">
+        <g id="Previous_-_Grey" clipPath="url(#clip0_515_33)">
           <g id="Group">
             <g id="Group_2">
               <path

@@ -384,7 +384,35 @@ interface AddToDbModalProps {
   song: Song | null;
   onClose: () => void;
   onChoice: (songs: Song[]) => void;
+  
 }
+const DropPlace1: React.FC<{index:number, onStart: (index:number)=> void; onDrop:(index:number)=> void}> = ({index, onStart, onDrop}) => {
+  const [showDrop, setShowDrop] = useState(false);
+  const handleDrop = async (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+  }; 
+  return (
+    <div
+      
+    
+      className={`w-full h-8`}
+    >
+      <p
+       onDragOver={handleDrop}
+       style={{opacity: showDrop ? "1":"0"}}
+       onDragEnter={()=>{setShowDrop(true); onStart(index)}}
+       onDragLeave={()=>setShowDrop(false)}
+       onDrop={()=>{
+        setShowDrop(false)
+        onDrop(index) 
+      }}
+      className={`w-full h-full flex justify-center items-center border border-dashed border-gray-700 dark:border-gray-300 rounded-md text-gray-700 dark:text-gray-300`}
+      
+      >Drop here</p>
+    </div>
+  );
+};
 const AddToDbModal: React.FC<AddToDbModalProps> = ({
   isOpen,
   song,
@@ -395,6 +423,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
   const [songDB, setSongDB] = useState<Song[]>([]);
   const [dance, setDance] = useState('');
   const [rate, setRate] = useState(1);
+  const [currentDragIndex, setCurrentDragIndex] = useState(-1);
   const handleFileAdd = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     // name: file.name,
@@ -454,8 +483,24 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
 
             <div className="w-full h-[350px] border border-black p-1 rounded-md overflow-x-auto mb-4">
               <div className="flex flex-col flex-wrap items-center justify-start">
+                <DropPlace1 index={0} onStart={(n)=>{
+                  console.log(n);
+                  if (currentDragIndex===-1) setCurrentDragIndex(n)
+                }} onDrop={(n)=>{
+                  console.log("here", currentDragIndex, n);
+                  if (currentDragIndex===-1) return;
+                  let item1=(currentDragIndex<n)?songDB[currentDragIndex-1]:songDB[currentDragIndex];
+                  let newPlaylist=songDB
+                  newPlaylist=newPlaylist.toSpliced(n, 0, item1);
+                  let p1=newPlaylist
+                  console.log(p1);
+                  (currentDragIndex<n)?newPlaylist.splice(currentDragIndex-1, 1):newPlaylist.splice(currentDragIndex+1, 1);
+                  setSongDB(newPlaylist);
+                  setCurrentDragIndex(-1); 
+                }}/>
                 {songDB.map((item, i) => (
-                  <div key={`song${i}`} className="relative m-1">
+                  <div key={`song${i}`}>
+                  <div draggable className="relative m-1">
                     <p className=" text-center max-w-[300px]">
                       <span className=" bg-gray-300 text-sm rounded-sm truncate">
                         {item.dance}
@@ -474,6 +519,25 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
                     >
                       <ShowIcon icon={'Close'} stroke={'2'} />
                     </button>
+                  </div>
+                  <DropPlace1 index={i+1} 
+                  onStart={(n)=>{
+                    console.log(n);
+                    if (currentDragIndex===-1) setCurrentDragIndex(n)
+                  }} 
+                  onDrop={(n)=>{
+                  console.log("here", currentDragIndex, n);
+                  if (currentDragIndex===-1) return;
+                  let item1=(currentDragIndex<n)?songDB[currentDragIndex-1]:songDB[currentDragIndex];
+                  let newPlaylist=songDB
+                  newPlaylist=newPlaylist.toSpliced(n, 0, item1);
+                  let p1=newPlaylist
+                  console.log(p1);
+                  (currentDragIndex<n)?newPlaylist.splice(currentDragIndex-1, 1):newPlaylist.splice(currentDragIndex+1, 1);
+                  setSongDB(newPlaylist);
+                  setCurrentDragIndex(-1);
+                }}
+                  />
                   </div>
                 ))}
               </div>
@@ -602,18 +666,10 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
     const [showDrop, setShowDrop] = useState(false);
     const handleDrop = async (event: React.DragEvent<HTMLDivElement>) => {
       event.preventDefault();
-      event.stopPropagation();
-      console.log("index start", currentDragIndex,"index dropped", index);
-    };
-    const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
-      event.preventDefault();
-      event.stopPropagation();
-    };
+      event.stopPropagation(); 
+    }; 
     return (
       <div
-       
-        // onDragOver={handleDragOver}
-      
         className={`w-full h-8`}
       >
         <p
@@ -625,8 +681,7 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
           setShowDrop(false)
           console.log("index start", currentDragIndex,"index dropped", index);
           let item1=playlist[currentDragIndex];
-          let newPlaylist=playlist
-          // .splice(currentDragIndex, 1)
+          let newPlaylist=playlist 
           newPlaylist=newPlaylist.toSpliced(index, 0, item1);  
           (currentDragIndex<index)?newPlaylist.splice(currentDragIndex, 1):newPlaylist.splice(currentDragIndex+1, 1);
           onUpdate(newPlaylist);
