@@ -87,6 +87,26 @@ body {
 .alertColor {
   --accent-color: red;
 }
+.dragging {
+  pointer-events: none;
+  touch-action: none;
+  -ms-touch-action: none;
+  box-shadow: 2px 20px 30px rgba(0, 0, 0, 0.2);
+}
+.draggable-item {
+  pointer-events: none;
+  touch-action: none;
+  -ms-touch-action: none;
+  box-shadow: 2px 20px 30px rgba(0, 0, 0, 0.2);
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
 .btnFancy {
   appearance: none;
   border: none;
