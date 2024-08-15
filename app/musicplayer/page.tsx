@@ -423,7 +423,73 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
   const [songDB, setSongDB] = useState<Song[]>([]);
   const [dance, setDance] = useState('');
   const [rate, setRate] = useState(1);
-  const [currentDragIndex, setCurrentDragIndex] = useState(-1);
+  const [draggingId, setDraggingId] = useState<number | null>(null);
+  const dragItem = useRef<HTMLLIElement | null>(null);
+  const dragOverItem = useRef<HTMLLIElement | null>(null);
+
+   
+  const handlePointerDown = (
+    e: React.PointerEvent<HTMLDivElement>,
+    id: number
+  ) => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return; // Only primary button for mouse
+    setDraggingId(id);
+    dragItem.current = e.currentTarget as unknown as HTMLLIElement;
+    dragItem.current.style.opacity = '0.5';
+    dragItem.current.style.cursor = 'grabbing';
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!draggingId) return;
+    const container = e.currentTarget.parentElement;
+    if (!container) return;
+
+    const items = Array.from(container.children) as HTMLLIElement[];
+    const dragItemRect = dragItem.current!.getBoundingClientRect();
+    const dragItemIndex = items.indexOf(dragItem.current!);
+
+    items.forEach((item, index) => {
+      if (item === dragItem.current) return;
+
+      const rect = item.getBoundingClientRect();
+      const isAfter = index > dragItemIndex;
+
+      if (
+        (isAfter && e.clientY > rect.top) ||
+        (!isAfter && e.clientY < rect.bottom)
+      ) {
+        if (dragOverItem.current !== item) {
+          dragOverItem.current = item;
+          items.forEach((i) => (i.style.transform = ''));
+          const shift = isAfter ? -dragItemRect.height : dragItemRect.height;
+          item.style.transform = `translateY(${shift}px)`;
+        }
+      }
+    });
+  };
+
+  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!draggingId || !dragItem.current || !dragOverItem.current) return;
+
+    const items = Array.from(
+      e.currentTarget.parentElement!.children
+    ) as HTMLLIElement[];
+    const fromIndex = items.indexOf(dragItem.current);
+    const toIndex = items.indexOf(dragOverItem.current);
+
+    const newSongDB = [...songDB];
+    const [movedItem] = newSongDB.splice(fromIndex, 1);
+    newSongDB.splice(toIndex, 0, movedItem);
+
+    setSongDB(newSongDB);
+    setDraggingId(null);
+    dragItem.current.style.opacity = '1';
+    dragItem.current.style.cursor = 'grab';
+    items.forEach((item) => (item.style.transform = ''));
+    dragItem.current = null;
+    dragOverItem.current = null;
+  };
   const handleFileAdd = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     // name: file.name,
@@ -483,24 +549,15 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
 
             <div className="w-full h-[350px] border border-black p-1 rounded-md overflow-x-auto mb-4">
               <div className="flex flex-col flex-wrap items-center justify-start">
-                <DropPlace1 index={0} onStart={(n)=>{
-                  console.log(n);
-                  if (currentDragIndex===-1) setCurrentDragIndex(n)
-                }} onDrop={(n)=>{
-                  console.log("here", currentDragIndex, n);
-                  if (currentDragIndex===-1) return;
-                  let item1=(currentDragIndex<n)?songDB[currentDragIndex-1]:songDB[currentDragIndex];
-                  let newPlaylist=songDB
-                  newPlaylist=newPlaylist.toSpliced(n, 0, item1);
-                  let p1=newPlaylist
-                  console.log(p1);
-                  (currentDragIndex<n)?newPlaylist.splice(currentDragIndex-1, 1):newPlaylist.splice(currentDragIndex+1, 1);
-                  setSongDB(newPlaylist);
-                  setCurrentDragIndex(-1); 
-                }}/>
-                {songDB.map((item, i) => (
-                  <div key={`song${i}`}>
-                  <div draggable className="relative m-1">
+                 
+                {songDB.map((item, i) => ( 
+                  <div key={`song${i}`}
+                  onPointerDown={(e) => handlePointerDown(e, i)}
+                  onPointerMove={handlePointerMove}
+                  onPointerUp={handlePointerUp}
+                  className={`flex items-center justify-between p-2 mb-2 border rounded   cursor-grab animate-fade-in relative`}
+                  style={{ touchAction: 'none' }}
+                   >
                     <p className=" text-center max-w-[300px]">
                       <span className=" bg-gray-300 text-sm rounded-sm truncate">
                         {item.dance}
@@ -520,25 +577,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
                       <ShowIcon icon={'Close'} stroke={'2'} />
                     </button>
                   </div>
-                  <DropPlace1 index={i+1} 
-                  onStart={(n)=>{
-                    console.log(n);
-                    if (currentDragIndex===-1) setCurrentDragIndex(n)
-                  }} 
-                  onDrop={(n)=>{
-                  console.log("here", currentDragIndex, n);
-                  if (currentDragIndex===-1) return;
-                  let item1=(currentDragIndex<n)?songDB[currentDragIndex-1]:songDB[currentDragIndex];
-                  let newPlaylist=songDB
-                  newPlaylist=newPlaylist.toSpliced(n, 0, item1);
-                  let p1=newPlaylist
-                  console.log(p1);
-                  (currentDragIndex<n)?newPlaylist.splice(currentDragIndex-1, 1):newPlaylist.splice(currentDragIndex+1, 1);
-                  setSongDB(newPlaylist);
-                  setCurrentDragIndex(-1);
-                }}
-                  />
-                  </div>
+                   
                 ))}
               </div>
             </div>
