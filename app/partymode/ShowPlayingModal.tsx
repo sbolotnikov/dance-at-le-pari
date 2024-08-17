@@ -524,7 +524,7 @@ style={{top: `${fontSizeTime*1.8}px`, bottom: `${fontSizeTime*.8}px`}}
               >{message2}</p>
             </div>
           )}
-          <div
+          {/* <div
             onClick={(e) => handleSubmit(e, button1)}
             className="absolute top-0 left-1 cursor-pointer"
             style={{ color: textColor }}
@@ -535,12 +535,12 @@ style={{top: `${fontSizeTime*1.8}px`, bottom: `${fontSizeTime*.8}px`}}
             >
               {heatNum}
             </p>
-          </div>
+          </div> */}
           <div className="absolute inset-0 flex flex-col justify-center items-center m-2">
           <div
             onClick={(e) => handleSubmit(e, button1)}
             className=" w-full flex justify-center items-center cursor-pointer relative"
-            style={{ color: textColor, fontSize: `${fontSizeTime}px` }}
+            style={{ color: textColor, fontSize: `${fontSizeTime}px`, height: `${fontSizeTime+2}px` }}
           >
             <span className="font-bold m-0 leading-none">
               {showHeatNumber ? heat : ""}
