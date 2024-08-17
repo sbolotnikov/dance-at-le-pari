@@ -25,6 +25,7 @@ const dances = [
   ' ',
   'Argentine Tango',
   'Bachata',
+  'Bolero',
   'Cha Cha',
   'Foxtrot',
   'Hustle',
