@@ -43,6 +43,7 @@ const ContainerLoaded = () => {
   console.log('containerSize', containerSize.height, containerSize.width);
   return (
     <div  id="containerBig" className=" w-full h-full relative  flex justify-center items-center  overflow-auto">
+
       <div
         id="text"
         className="blurFilter centerOrigin bgGradientSize50 cards__item    text-lightMainColor bg-lightMainBG/60 dark:text-darkMainColor dark:bg-darkMainBG/60  shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2"

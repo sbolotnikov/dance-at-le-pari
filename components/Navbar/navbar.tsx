@@ -13,6 +13,7 @@ import Logo from '../svg/logo';
 import { useDimensions } from '@/hooks/useDimensions';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store/store';
+import EmailSubscribeModal from '../EmailSubscribeModal';
 
 type Props = {
   path: string;
@@ -32,6 +33,7 @@ const Navbar = ({ path, locale, children }: Props) => {
   const [style1, setStyle1] = useState({ display: 'none' });
   const [burgerState, setBurgerState] = useState(false);
   const [cartState, setCartState] = useState(false);
+  const [IsEmailModalOpen, setIsEmailModalOpen] = useState(true);
   const { changeTheme, darkMode, hideNav } = useContext(
     SettingsContext
   ) as ScreenSettingsContextType;
@@ -333,6 +335,13 @@ const Navbar = ({ path, locale, children }: Props) => {
   ];
   return (
     <nav className="navbar w-screen h-[100svh] overflow-hidden">
+                 {IsEmailModalOpen && (
+        <EmailSubscribeModal
+        vis={true}
+        onSelectEmail={(email) => {console.log('email', email)}}
+        onClose={() => {setIsEmailModalOpen(false)}}
+        />
+      )}
       <div className=" absolute  inset-0 flex flex-col items-center justify-end z-[-5] pb-14 md:pb-0">
         <div className="logoTransform w-full h-full flex items-center justify-end">
         <Logo
@@ -345,7 +354,7 @@ const Navbar = ({ path, locale, children }: Props) => {
         </div>
       </div>
       {children}
-
+      
       <div
         className={` w-full flex-row justify-end md:justify-between ${hideNav? 'hidden' : ''} `}
         style={{ height: '100%' }}
