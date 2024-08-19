@@ -39,8 +39,7 @@ const ContainerLoaded = () => {
       height: document.getElementById('containerBig')?.offsetHeight!,
     }); 
 
-  },[windowSize.width])
-  console.log('containerSize', containerSize.height, containerSize.width);
+  },[windowSize.width]) 
   return (
     <div  id="containerBig" className=" w-full h-full relative  flex justify-center items-center  overflow-auto">
 

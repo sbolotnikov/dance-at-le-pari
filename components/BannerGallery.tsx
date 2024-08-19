@@ -23,8 +23,7 @@ const BannerGallery = ({ seconds, events }: Props) => {
       let localPic = num;
       if (localPic < events!.length - 1) localPic++;
       else localPic = 0;
-      setNextActivePic(localPic);
-      console.log("old Next:"+nextActivePic+"new "+localPic)
+      setNextActivePic(localPic); 
       nextActive(localPic);
     }, seconds * 1000);
   };
@@ -34,12 +33,9 @@ const BannerGallery = ({ seconds, events }: Props) => {
     if (events?.length > 0) 
       nextActive(0);
     
-  }, [events]);
-  console.log(events)
+  }, [events]); 
   useEffect(() => {
-    if (events!= null ) {
-    // if (!firstTime) {
-      console.log("nextactivepic in Effect "+nextActivePic)
+    if (events!= null ) { 
       let imgEl = document.getElementById(`image${activePic}`);
       if (imgEl) {
         imgEl.style.opacity = '1';

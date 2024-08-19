@@ -14,6 +14,7 @@ import { useDimensions } from '@/hooks/useDimensions';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store/store';
 import EmailSubscribeModal from '../EmailSubscribeModal';
+import { IsUserSubscribed } from '@/utils/functionsservers';
 
 type Props = {
   path: string;
@@ -33,7 +34,7 @@ const Navbar = ({ path, locale, children }: Props) => {
   const [style1, setStyle1] = useState({ display: 'none' });
   const [burgerState, setBurgerState] = useState(false);
   const [cartState, setCartState] = useState(false);
-  const [IsEmailModalOpen, setIsEmailModalOpen] = useState(true);
+  const [IsEmailModalOpen, setIsEmailModalOpen] = useState(false);
   const { changeTheme, darkMode, hideNav } = useContext(
     SettingsContext
   ) as ScreenSettingsContextType;
@@ -200,6 +201,13 @@ const Navbar = ({ path, locale, children }: Props) => {
       ];
     }
     setNavbarLinks(linksArray);
+    IsUserSubscribed(session?.user?.email!).then((res) => {
+      console.log(res)
+      if (res) {
+        setIsEmailModalOpen(false)
+      }else{
+        setIsEmailModalOpen(true);
+      }})
   }, [session]);
   const changeMenu = (isChangeOrientation: boolean) => {
     let items = document.querySelectorAll('.navbar__item');
@@ -232,15 +240,8 @@ const Navbar = ({ path, locale, children }: Props) => {
         ? document.getElementById('profile-toggle')?.classList.add('hidden')
         : document.getElementById('profile-toggle')?.classList.remove('hidden');
       setBurgerState(!burgerState);
-    }
-    console.log("height: "+windowSize.height)
-    if (windowSize.height! < 760 && !isChangeOrientation) {
-      // document
-      //     .getElementsByClassName('navbar__list')[0]
-      //     .classList.remove('translate-x-80');
-      //   document
-      //     .getElementsByClassName('navbar__list')[0]
-      //     .classList.remove('delay-600');
+    } 
+    if (windowSize.height! < 760 && !isChangeOrientation) { 
       for (let i = 0; i < items.length; i++) {
         if (burgerState) {
           items[i].classList.add('-translate-y-80');
@@ -337,8 +338,8 @@ const Navbar = ({ path, locale, children }: Props) => {
     <nav className="navbar w-screen h-[100svh] overflow-hidden">
                  {IsEmailModalOpen && (
         <EmailSubscribeModal
-        vis={true}
-        onSelectEmail={(email) => {console.log('email', email)}}
+        vis={IsEmailModalOpen}
+        userEmail={session?.user?.email} 
         onClose={() => {setIsEmailModalOpen(false)}}
         />
       )}

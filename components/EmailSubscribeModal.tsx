@@ -1,22 +1,32 @@
 'use client';
 
-import AnimateModalLayout from '@/components/AnimateModalLayout';
-import React, { useState, useEffect } from 'react';
+import AnimateModalLayout from '@/components/AnimateModalLayout'; 
+import React, { useEffect, useState  } from 'react';
 
 type Props = {
   vis: boolean;
-  onSelectEmail: (email: string) => void;
+  userEmail: string | undefined;
   onClose: () => void;
 };
 
-const EmailSubscribeModal = ({ vis, onSelectEmail, onClose }: Props) => {
+const EmailSubscribeModal = ({ vis, userEmail, onClose }: Props) => {
   const [email1, setEmail1] = useState('');
-
-  useEffect(() => {
-    if (vis) {
-      // Reset color when modal opens
+  const [name, setName] = useState('');
+  const [lastname, setLastname] = useState('');
+  const [error1, setError1] = useState(false); 
+  const [message, setMessage] = useState(''); 
+  const isEmailValid = (st: string) => {
+    const emailRegex = new RegExp(
+      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+      'gm'
+    );
+    return emailRegex.test(st);
+  }; 
+   useEffect(() => {
+    if (userEmail) {
+      setEmail1(userEmail);
     }
-  }, [vis]);
+  }, [userEmail]);
   return (
     <AnimateModalLayout
       visibility={vis}
@@ -36,19 +46,60 @@ const EmailSubscribeModal = ({ vis, onSelectEmail, onClose }: Props) => {
             id="containedDiv"
             className={`absolute inset-0 flex flex-col w-full p-1 justify-center items-center`}
           >
-            <h1 className="text-center text-4xl font-black">Please subcribe to our newsletter</h1>
+            <h1 className="text-center font-DancingScript text-franceBlue" style={{ fontSize: `45px`, lineHeight: '0.75' }}>Please subscribe to our newsletter</h1>
+            <p className={`text-center text-lg text-${error1?"alertcolor":"editcolor"}`}>
+              {message}</p> 
+              <label className=" w-full m-2 flex justify-center items-center"> Enter First Name</label>
+              <input
+              type="text"
+              value={name}
+              onChange={(e) =>{setError1(false);  setMessage(''); setName(e.target.value);}}
+              className="w-[90%] "
+            /> 
+            <label className=" w-full m-2 flex justify-center items-center"> Enter Last Name</label>
             <input
-              type="email1"
+              type="text"
+              value={lastname}
+              onChange={(e) =>{setError1(false); setMessage(''); setLastname(e.target.value);}}
+              className="w-[90%]"
+            /> 
+            <label className=" w-full m-2 flex justify-center items-center"> Enter Email</label>
+            <input
+              type="email"
               value={email1}
-              onChange={(e) => setEmail1(e.target.value)}
-              className="w-full h-12 m-4"
+              onChange={(e) =>{setError1(false);  setMessage(''); setEmail1(e.target.value);}}
+              className="w-[90%]"
             />
           
           <div
             className="btnFancy"
-            onClick={() => {
-              onSelectEmail(email1);
-              onClose();
+            onClick={async () => {
+              if (isEmailValid(email1)) {
+                const res = await fetch('/api/subscriber_add', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    email: email1,
+                    name: name,
+                    lastname: lastname,
+                  }),
+                });
+                if (res.status === 200) {
+                  setError1(false);
+                  const data = await res.json();
+                  setMessage(data.message);
+                   
+                } else {
+                  setError1(true);
+                  const data = await res.json();
+                  setMessage(data.message);
+                }
+              } else {
+                setError1(true);
+                setMessage ('Please enter a valid email address')
+              }
             }}
           >
             Subscribe
@@ -56,7 +107,7 @@ const EmailSubscribeModal = ({ vis, onSelectEmail, onClose }: Props) => {
           </div>
         </div>
       </div>
-    </AnimateModalLayout>
+    </AnimateModalLayout> 
   );
 };
 

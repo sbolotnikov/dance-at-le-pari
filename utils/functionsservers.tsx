@@ -1,3 +1,4 @@
+'use server';
 import { prisma } from "@/lib/prisma";
  // get post by SLUG
  export const getPost = async (slug: string) => {
@@ -54,3 +55,21 @@ export const getEvent = async (id: number) => {
         return null
       }
 };
+
+export const IsUserSubscribed = async (email: string ) => {
+ try{
+  const user = await prisma.contact.findUnique({
+    where: { email },
+  });
+  await prisma.$disconnect()
+  if(!user){
+    return false;
+  }
+  if(user?.status === 'Subscribed'){
+    return true;
+  }
+  return false;
+ } catch (err) {
+  console.log(err)
+ }
+}
