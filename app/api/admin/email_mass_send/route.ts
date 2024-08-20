@@ -65,9 +65,9 @@ export async function POST(req: Request) {
         if (contact.lastname) name += contact.lastname;
         // email1: contact.email,
         const res = await sendAnyEmail({
-          email1: 'serge.bolotnikov@gmail.com',
+          email1: 'sbolotnikov@gmail.com',
           email2: process.env.EMAIL_SERVER_USER || '',
-          subject: title,
+          subject: title+' - '+contact.email,
           text: message.replace(/<[^>]*>/g, '').replace('&NAME', name.trim() || ""),
           html: message.replace('&amp;NAME', name.trim() || ""),
           attachments: undefined
