@@ -75,10 +75,12 @@ const page: FC<pageProps> = ({}) => {
             })
               .then(async (res) => {
                 const data = await res.json();
-                setSendingStatus((prev) => [...prev, data.message]);
+                let dataArr=data.map((item:any) => item.accepted[0]) as string[];
+
+                setSendingStatus( [...dataArr]);
                 console.log(data);
               }).catch(async (err) => { 
-                setSendingStatus((prev) => [...prev, err.message]);
+                setSendingStatus((prev) => [... err.message]);
               });
           
         }})

@@ -87,7 +87,7 @@ export async function POST(req: Request) {
     return new NextResponse(JSON.stringify(resArr));
   } catch (error) {
     console.error('Error sending emails:', error);
-    return new NextResponse(JSON.stringify({ error: 'Failed to send emails' }), { status: 500 });
+    return new NextResponse(JSON.stringify({ accepted:['Failed to send emails'] }), { status: 500 });
   } finally {
     await prisma.$disconnect();
   }
