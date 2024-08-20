@@ -41,7 +41,7 @@ import { prisma } from '@/lib/prisma';
 import { sendAnyEmail } from '@/utils/sendAnyEmail';
 import { NextResponse } from 'next/server';
 
-const BATCH_SIZE = 50; // Number of emails to send in each batch
+const BATCH_SIZE = 10; // Number of emails to send in each batch
 const DELAY_BETWEEN_BATCHES = 1000; // Delay in milliseconds between batches
 
 export async function POST(req: Request) {
