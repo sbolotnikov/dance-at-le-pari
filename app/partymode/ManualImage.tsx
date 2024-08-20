@@ -94,13 +94,13 @@ const ManualImage: React.FC<Props> = ({
 
   return (
     <div className="w-full h-full flex justify-start items-center relative">
-      <iframe
+      {videoBG.length>0 &&<iframe
         className="w-full h-full"
         src={videoBGtrans}
         allow="autoplay;fullscreen;"
         frameBorder="0"
         allowFullScreen
-      ></iframe>
+      ></iframe>}
       <div className="absolute inset-0" style={{ backgroundImage:`url(${showBackdrop?`/images/backdrop.png`:""})`, backgroundPosition: 'center', backgroundSize: 'cover'}}></div>
       <div
         className={`absolute left-[5%] right-[5%] transition-opacity `}

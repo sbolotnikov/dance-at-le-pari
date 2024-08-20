@@ -165,16 +165,16 @@ const ShowPlayingModal: React.FC<Props> = ({
     if (mode === 'Auto Full' && displayedPictures.length > 0) {
       let arr1 = displayedPictures
         .map((pic) => ({ link: pic.link, dances: pic.dances }))
-        .filter((pic) => pic.dances.indexOf(message) >= 0);
+        .filter((pic) => pic.dances!==null && pic.dances.indexOf(message) >= 0);
       let arr2 = displayedPictures
         .map((pic) => ({ link: pic.link, dances: pic.dances }))
-        .filter((pic) => pic.dances.indexOf('All') >= 0);
+        .filter((pic) => pic.dances!==null && pic.dances.indexOf('All') >= 0);
       let arr = arr1.concat(arr2);
       let videoArr1 = displayedVideos.filter(
-        (vid) => vid.dances.indexOf(message) >= 0
+        (vid) => vid.dances!==null && vid.dances.indexOf(message) >= 0
       );
       let videoArr2 = displayedVideos.filter(
-        (vid) => vid.dances.indexOf('All') >= 0
+        (vid) => vid.dances!==null && vid.dances.indexOf('All') >= 0
       );
       let videoArr = videoArr1.concat(videoArr2);
 
