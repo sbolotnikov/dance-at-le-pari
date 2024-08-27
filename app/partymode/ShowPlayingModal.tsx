@@ -148,17 +148,9 @@ const ShowPlayingModal: React.FC<Props> = ({
 
   useEffect(() => {
     if (mode === 'Auto Full') {
-      console.log('changing mode');
-      // setAnimationSpeed(animationSpeed);
-      // setSpeedVariation(speedVariation);
-      // setParticleCount(particleCount);
-      // setMaxSize(maxSize);
+      console.log('changing mode'); 
       setAnimationOption(Math.floor(Math.random() * 4) + 1);
-      setRainAngle(Math.floor(Math.random() * 360));
-      // setOriginX(originX);
-      // setOriginY(originY);
-      // setShowSVGAnimation(!showSVGAnimation1);
-      // setParticleTypes(particleTypes);
+      setRainAngle(Math.floor(Math.random() * 360)); 
     }
   }, [message, mode]);
   useEffect(() => {
@@ -485,16 +477,6 @@ style={{top: `${fontSizeTime*1.8}px`, bottom: `${fontSizeTime*.8}px`}}
     }}
   ></div>
  </div>
-
-            // <div className="w-full h-full flex justify-center items-center">
-            //   <div className="h-[900px] w-[900px] rounded-md flex justify-center items-center">
-            //     <ImgFromDb
-            //       url={image}
-            //       stylings="object-cover w-full h-full rounded-md"
-            //       alt="Event Picture"
-            //     />
-            //   </div>
-            // </div>
           )}
 
           {showSVGAnimation1 && (
