@@ -336,13 +336,13 @@ const Navbar = ({ path, locale, children }: Props) => {
   ];
   return (
     <nav className="navbar w-screen h-[100svh] overflow-hidden">
-                 {IsEmailModalOpen && (
+                 {/* {IsEmailModalOpen && (
         <EmailSubscribeModal
         vis={IsEmailModalOpen}
         userEmail={session?.user?.email} 
         onClose={() => {setIsEmailModalOpen(false)}}
         />
-      )}
+      )} */}
       <div className=" absolute  inset-0 flex flex-col items-center justify-end z-[-5] pb-14 md:pb-0">
         <div className="logoTransform w-full h-full flex items-center justify-end">
         <Logo
