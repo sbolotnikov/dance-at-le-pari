@@ -67,6 +67,15 @@ const page: FC<pageProps> = ({}) => {
               emailList.push({ name: name1, email: contacts[i].email });
               emailList.push({ name: name1, email: contacts[i].email });
               emailList.push({ name: name1, email: contacts[i].email });
+              emailList.push({ name: name1, email: contacts[i].email });
+              emailList.push({ name: name1, email: contacts[i].email });
+              emailList.push({ name: name1, email: contacts[i].email });
+              emailList.push({ name: name1, email: contacts[i].email });
+              emailList.push({ name: name1, email: contacts[i].email });
+              emailList.push({ name: name1, email: contacts[i].email });
+              emailList.push({ name: name1, email: contacts[i].email });
+              emailList.push({ name: name1, email: contacts[i].email });
+              emailList.push({ name: name1, email: contacts[i].email });
             }
             sendConsecativeEmails(emailList,html);
         
@@ -102,7 +111,7 @@ const page: FC<pageProps> = ({}) => {
     })
       .then(async (res) => {
         const data = await res.json();
-        setSendingStatus([...sendingStatus, data.accepted.email]);
+        setSendingStatus([...sendingStatus, data.accepted[0]]);
         console.log(data);
         sendConsecativeEmails(emailList,html);
       })
@@ -111,6 +120,7 @@ const page: FC<pageProps> = ({}) => {
           ...sendingStatus,
           'Failed to send email to' + email,
         ]);
+        sendConsecativeEmails(emailList,html);
       });
     }
   }
