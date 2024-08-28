@@ -88,8 +88,20 @@ const page: FC<pageProps> = ({}) => {
               emailList.push({ name: name1, email: 'lepari34@gmail.com' });
               emailList.push({ name: name1, email: 'lepari34@gmail.com' });
               emailList.push({ name: name1, email: 'lepari34@gmail.com' });
+              emailList.push({ name: name1, email: 'serge.bolotnikov@gmail.com' });
+              emailList.push({ name: name1, email: 'serge.bolotnikov@gmail.com' });
+              emailList.push({ name: name1, email: 'serge.bolotnikov@gmail.com' });
+              emailList.push({ name: name1, email: 'serge.bolotnikov@gmail.com'});
+              emailList.push({ name: name1, email: 'serge.bolotnikov@gmail.com' });
+              emailList.push({ name: name1, email: 'serge.bolotnikov@gmail.com' });
+              emailList.push({ name: name1, email: 'serge.bolotnikov@gmail.com'});
+              emailList.push({ name: name1, email: 'serge.bolotnikov@gmail.com' });
+              emailList.push({ name: name1, email: 'serge.bolotnikov@gmail.com' });
+              emailList.push({ name: name1, email: 'serge.bolotnikov@gmail.com' });
+              emailList.push({ name: name1, email: 'serge.bolotnikov@gmail.com' });
+              emailList.push({ name: name1, email: 'serge.bolotnikov@gmail.com' });
             }
-            sendConsecativeEmails(emailList,html);
+            sendConsecativeEmails(emailList,html,[] as string[]);
         
             
           }); 
@@ -99,9 +111,9 @@ const page: FC<pageProps> = ({}) => {
         });
     });
   };
-  const sendConsecativeEmails = (emailList:{ name: string; email: string }[],html:any) => {
+  const sendConsecativeEmails = (emailList:{ name: string; email: string }[],html:any, sentEmails:string[]) => {
     if (emailList.length == 0) {
-      setSendingStatus([...sendingStatus,'All emails sent successfully']);
+      setSendingStatus([...sentEmails,'Finished']);
       // setRevealModal1(false);
     } else {
       
@@ -123,16 +135,16 @@ const page: FC<pageProps> = ({}) => {
     })
       .then(async (res) => {
         const data = await res.json();
-        setSendingStatus([...sendingStatus, data.accepted[0]]);
+        setSendingStatus([...sentEmails, 'Sent successfully '+data.accepted[0]]);
         console.log(data);
-        sendConsecativeEmails(emailList,html);
+        sendConsecativeEmails(emailList,html,[...sentEmails, 'Sent successfully '+data.accepted[0]]);
       })
       .catch(async (err) => {
         setSendingStatus([
-          ...sendingStatus,
-          'Failed to send email to' + email,
+          ...sentEmails,
+          'Failed to send email to ' + email,
         ]);
-        sendConsecativeEmails(emailList,html);
+        sendConsecativeEmails(emailList,html,[...sentEmails, 'Failed to send email to ' + email]);
       });
     }
   }
