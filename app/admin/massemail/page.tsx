@@ -76,6 +76,18 @@ const page: FC<pageProps> = ({}) => {
               emailList.push({ name: name1, email: contacts[i].email });
               emailList.push({ name: name1, email: contacts[i].email });
               emailList.push({ name: name1, email: contacts[i].email });
+              emailList.push({ name: name1, email: 'lepari34@gmail.com' });
+              emailList.push({ name: name1, email: 'lepari34@gmail.com' });
+              emailList.push({ name: name1, email: 'lepari34@gmail.com' });
+              emailList.push({ name: name1, email: 'lepari34@gmail.com'});
+              emailList.push({ name: name1, email: 'lepari34@gmail.com' });
+              emailList.push({ name: name1, email: 'lepari34@gmail.com' });
+              emailList.push({ name: name1, email: 'lepari34@gmail.com'});
+              emailList.push({ name: name1, email: 'lepari34@gmail.com' });
+              emailList.push({ name: name1, email: 'lepari34@gmail.com' });
+              emailList.push({ name: name1, email: 'lepari34@gmail.com' });
+              emailList.push({ name: name1, email: 'lepari34@gmail.com' });
+              emailList.push({ name: name1, email: 'lepari34@gmail.com' });
             }
             sendConsecativeEmails(emailList,html);
         
