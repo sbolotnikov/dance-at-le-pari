@@ -81,7 +81,7 @@ const page: FC<pageProps> = ({}) => {
   const sendConsecativeEmails = (emailList:{ name: string; email: string }[],html:any) => {
     if (emailList.length == 0) {
       setSendingStatus([...sendingStatus,'All emails sent successfully']);
-      setRevealModal1(false);
+      // setRevealModal1(false);
     } else {
       
     
@@ -102,7 +102,7 @@ const page: FC<pageProps> = ({}) => {
     })
       .then(async (res) => {
         const data = await res.json();
-        setSendingStatus([...sendingStatus, data.accepted[0].email]);
+        setSendingStatus([...sendingStatus, data.accepted.email]);
         console.log(data);
         sendConsecativeEmails(emailList,html);
       })
