@@ -13,6 +13,7 @@ import EditContactsModal from '@/components/EditContactsModal';
 import { useDimensions } from '@/hooks/useDimensions';
 import LoadingScreen from '@/components/LoadingScreen';
 import ShowSendingEmailResultsModal from '@/components/ShowSendingEmailResultsModal';
+import { sendAnyEmail } from '@/utils/sendAnyEmail';
 interface pageProps {}
 
 const page: FC<pageProps> = ({}) => {
@@ -38,57 +39,82 @@ const page: FC<pageProps> = ({}) => {
   const emailEditorRef = useRef<EditorRef>(null);
 
   const exportHtml = () => {
-    const unlayer = emailEditorRef.current?.editor;
-    setRevealModal1(true)
-    unlayer?.exportHtml((data) => {
-      const { html } = data;
-      console.log('exportHtml', html); 
-      
-      fetch('/api/admin/contacts', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          status: 'Subscribed',
-        }),
-      }).then((res) => {
-        res.json().then((data) => {
-          let contacts=data;
-          let name1 = '' as string;;
-          for (let i = 0; i < contacts.length; i++) {
-            name1 = contacts[i].name != null ? contacts[i].name + ' ' : '';
-            name1 += contacts[i].lastname != null ? contacts[i].lastname : '';
-            if (name1.length ==0) name1='Sir/Madam';
-            console.log(name1);
-            fetch('/api/admin/email_mass_send', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                title,
-                message: html,
-                email:contacts[i].email,
-                name:name1
-              }),
-            })
-              .then(async (res) => {
-                const data = await res.json();
-                let dataArr=data.map((item:any) => item.accepted[0]) as string[];
+    fetch('/api/admin/contacts', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        status: 'Subscribed',
+      }),
+    }).then((res) => {
+      res
+        .json()
+        .then((data) => {
+          let contacts = data;
+          let name1 = '' as string;
+          let emailList = [] as { name: string; email: string }[];
+          console.log(contacts);
+          const unlayer = emailEditorRef.current?.editor;
+          setRevealModal1(true);
+          unlayer?.exportHtml((data) => {
+            const { html } = data;
 
-                setSendingStatus( [...dataArr]);
-                console.log(data);
-              }).catch(async (err) => { 
-                setSendingStatus((prev) => [... err.message]);
-              });
-          
-        }})
-      })
+            for (let i = 0; i < 1; i++) {
+              name1 = contacts[i].name != null ? contacts[i].name + ' ' : '';
+              name1 += contacts[i].lastname != null ? contacts[i].lastname : '';
+              if (name1.trim().length == 0) name1 = 'Sir/Madam';
+              emailList.push({ name: name1, email: contacts[i].email });
+              emailList.push({ name: name1, email: contacts[i].email });
+              emailList.push({ name: name1, email: contacts[i].email });
+            }
+            sendConsecativeEmails(emailList,html);
         
+            
+          }); 
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     });
   };
-  const sendTestEmail = (email:string) => {
+  const sendConsecativeEmails = (emailList:{ name: string; email: string }[],html:any) => {
+    if (emailList.length == 0) {
+      setSendingStatus([...sendingStatus,'All emails sent successfully']);
+      setRevealModal1(false);
+    } else {
+      
+    
+    const { name, email } = emailList.pop()!;
+    console.log(email, name);
+
+    fetch('/api/admin/email_mass_send', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title,
+        message: html,
+        email: email,
+        name: name,
+      }),
+    })
+      .then(async (res) => {
+        const data = await res.json();
+        setSendingStatus([...sendingStatus, data.accepted[0].email]);
+        console.log(data);
+        sendConsecativeEmails(emailList,html);
+      })
+      .catch(async (err) => {
+        setSendingStatus([
+          ...sendingStatus,
+          'Failed to send email to' + email,
+        ]);
+      });
+    }
+  }
+  const sendTestEmail = (email: string) => {
     const unlayer = emailEditorRef.current?.editor;
 
     unlayer?.exportHtml((data) => {
@@ -103,7 +129,7 @@ const page: FC<pageProps> = ({}) => {
         body: JSON.stringify({
           title,
           message: html,
-          email
+          email,
         }),
       })
         .then(async (res) => {
@@ -153,30 +179,29 @@ const page: FC<pageProps> = ({}) => {
         <EditContactsModal
           visibility={revealModal}
           onReturn={(mode) => {
-            if (mode==0)
-            sleep(1200).then(() => {
-              setRevealModal(false);
-            });
-            if (mode==1){
+            if (mode == 0)
+              sleep(1200).then(() => {
+                setRevealModal(false);
+              });
+            if (mode == 1) {
               setLoading(true);
             }
-            if (mode==2) setLoading(false);
+            if (mode == 2) setLoading(false);
           }}
         />
       )}
       {revealModal1 && (
         <ShowSendingEmailResultsModal
-         visibility={revealModal1}
-         status={sendingStatus}
-         onReturn={() => {
-          sleep(1200).then(() => {
-            setRevealModal1(false);
-          });
-           
-        }}
+          visibility={revealModal1}
+          status={sendingStatus}
+          onReturn={() => {
+            sleep(1200).then(() => {
+              setRevealModal1(false);
+            });
+          }}
         />
-        )}
-       {loading && <LoadingScreen />}
+      )}
+      {loading && <LoadingScreen />}
       <div
         className={`blurFilter border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-[1024px]  flex justify-center items-center flex-col  bg-lightMainBG dark:bg-darkMainBG h-[70svh] md:h-[85svh]
         }`}
@@ -197,21 +222,21 @@ const page: FC<pageProps> = ({}) => {
             </h2>
 
             <div className="group flex  cursor-pointer  flex-col justify-center items-center  absolute right-10 top-1">
-                  <div className="  h-10 w-10 md:h-14 md:w-14 relative hover:scale-110 group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor">
-                    <div
-                      className="cursor-pointer h-10 w-10 md:h-14 md:w-14 border-2 rounded-md m-auto "
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setRevealModal(true);
-                      }}
-                    >
-                      <ShowIcon icon={'MailList'} stroke={'0.1'} />
-                    </div>
-                  </div>
-                  <p className=" tracking-widest transition duration-300 ease-in-out absolute leftt-0 -bottom-2 md:-bottom-4  rounded-md text-center text-lightMainColor dark:text-darkMainColor text-[6px] md:text-base dark:bg-darkMainBG      group-hover:inline-flex  ">
-                    Contacts
-                  </p>
+              <div className="  h-10 w-10 md:h-14 md:w-14 relative hover:scale-110 group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor">
+                <div
+                  className="cursor-pointer h-10 w-10 md:h-14 md:w-14 border-2 rounded-md m-auto "
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setRevealModal(true);
+                  }}
+                >
+                  <ShowIcon icon={'MailList'} stroke={'0.1'} />
                 </div>
+              </div>
+              <p className=" tracking-widest transition duration-300 ease-in-out absolute leftt-0 -bottom-2 md:-bottom-4  rounded-md text-center text-lightMainColor dark:text-darkMainColor text-[6px] md:text-base dark:bg-darkMainBG      group-hover:inline-flex  ">
+                Contacts
+              </p>
+            </div>
             {dimensions.height! > 600 && (
               <div
                 id="icon"
@@ -220,7 +245,11 @@ const page: FC<pageProps> = ({}) => {
                 <ShowIcon icon={'MassEmail'} stroke={'0.1'} />
               </div>
             )}
-            <label className={`flex flex-col items-center w-[95%] ${(dimensions.height! < 600)?'mt-2':''}`}>
+            <label
+              className={`flex flex-col items-center w-[95%] ${
+                dimensions.height! < 600 ? 'mt-2' : ''
+              }`}
+            >
               {' '}
               Email Title{' '}
               <input
@@ -253,7 +282,7 @@ const page: FC<pageProps> = ({}) => {
               <button className="btnFancy" onClick={exportHtml}>
                 Send Emails
               </button>
-              <button className="btnFancy" onClick={()=>setVis(true)}>
+              <button className="btnFancy" onClick={() => setVis(true)}>
                 Send test Email
               </button>
               <button className="btnFancy" onClick={saveDesign}>
@@ -274,24 +303,30 @@ const page: FC<pageProps> = ({}) => {
                 onChange={handleChange}
               />
             </div>
-            {vis &&<label className="flex flex-row items-center">
+            {vis && (
+              <label className="flex flex-row items-center">
                 Email
                 <input
                   className="flex-1 outline-none border-none rounded-md   text-lightMainColor p-0.5 mx-1"
                   id="email"
-                  type="email" 
+                  type="email"
                   required
                 />
-                <button className="btnFancy" onClick={()=>{
-                  setVis(false);
-                  let email=(document.getElementById('email') as HTMLInputElement).value;
-                  if (isEmailValid(email)) sendTestEmail(email)
-                    else alert('Invalid email')
-
-                }}>
-                Send
-              </button>
-              </label>}
+                <button
+                  className="btnFancy"
+                  onClick={() => {
+                    setVis(false);
+                    let email = (
+                      document.getElementById('email') as HTMLInputElement
+                    ).value;
+                    if (isEmailValid(email)) sendTestEmail(email);
+                    else alert('Invalid email');
+                  }}
+                >
+                  Send
+                </button>
+              </label>
+            )}
             <EmailEditor ref={emailEditorRef} onReady={onReady} />
           </div>
         </div>
