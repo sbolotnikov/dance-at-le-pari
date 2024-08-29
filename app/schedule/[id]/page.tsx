@@ -213,7 +213,7 @@ export default function Page({ params }: { params: { id: string } }) {
                     day: 'numeric',
                   }) +
                   'T' +
-                  newDateOBJ.toLocaleString('es-CL').split(' ')[1].slice(0, -3);
+                  newDateOBJ.toLocaleString("en-US", { hour12: false }).split(' ')[1].slice(0, -3);
                 let i = 2;
                 while (d <= n.until!) {
                   dateArr.push(d);
@@ -226,7 +226,7 @@ export default function Page({ params }: { params: { id: string } }) {
                     }) +
                     'T' +
                     newDateOBJ
-                      .toLocaleString('es-CL')
+                      .toLocaleString("en-US", { hour12: false })
                       .split(' ')[1]
                       .slice(0, -3);
                   i++;
