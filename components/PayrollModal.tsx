@@ -433,9 +433,10 @@ const PayrollModal = ({ visibility, role,userID, events, users, onReturn }: Prop
             <div className="w-full flex flex-row justify-between border rounded-t-md border-lightMainColor dark:border-darkMainColor"
                   >
                     <div className="w-1/4 flex justify-center items-center">Date</div>
-                    <div className="w-1/2 flex justify-center items-center">Note</div>
+                    <div className="w-[38%] flex justify-center items-center">Note</div>
                     <div className="w-[12.5%] flex justify-center items-center">Lessons</div>
                     <div className="w-[12.5%] flex justify-center items-center ">Groups</div>
+                    <div className="w-[12.5%] flex justify-center items-center">Confirmed</div>
                   </div>
               {tableData &&
                 teacher &&
@@ -445,9 +446,10 @@ const PayrollModal = ({ visibility, role,userID, events, users, onReturn }: Prop
                     className="flex w-full flex-row"
                   >
                     <div className="w-1/4 flex justify-center items-center flex-wrap">{row.date}</div>
-                    <div className="w-1/2 flex justify-center items-center flex-wrap border-l border-lightMainColor dark:border-darkMainColor">{row.note}</div>
+                    <div className="w-[38%] flex justify-center items-center flex-wrap border-l border-lightMainColor dark:border-darkMainColor">{row.note}</div>
                     <div className="w-[12.5%] flex justify-center items-center flex-wrap border-l text-center border-lightMainColor dark:border-darkMainColor">{row.lessons}</div>
                     <div className="w-[12.5%] flex justify-center items-center flex-wrap border-l text-center border-lightMainColor dark:border-darkMainColor">{row.groups}</div>
+                    <div className="w-[12.5%] flex justify-center items-center flex-wrap border-l text-center border-lightMainColor dark:border-darkMainColor">Confirmed</div>
                   </div>
                 ))}
             </div>

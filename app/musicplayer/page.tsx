@@ -815,7 +815,7 @@ interface pageProps {}
 const page: FC<pageProps> = ({}) => {
   const [musicFile, setMusicFile] = useState({ url: '', name: '' });
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
-  const [songLength, setSongLength] = useState(180000);
+  const [songLength, setSongLength] = useState(150000);
   const [delayLength, setDelayLength] = useState(0);
   const [fadeTime, setFadeTime] = useState(5000);
   const [playlist, setPlaylist] = useState<Song[]>([]);
