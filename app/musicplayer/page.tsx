@@ -15,6 +15,7 @@ import { useDimensions } from '@/hooks/useDimensions';
 interface MusicPlayerProps {
   rateSet: number;
   songDuration: number;
+  fadeTime: number;
   delayLength: number;
   startPos: number;
   music: string;
@@ -48,6 +49,7 @@ const dances = [
 const MusicPlayer: React.FC<MusicPlayerProps> = ({
   rateSet,
   songDuration,
+  fadeTime,
   delayLength,
   startPos,
   music,
@@ -84,14 +86,21 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
     }
   }, [rateSet]);
 
-  useEffect(() => {
-    // console.log(timeRef.current!.innerText, formatTime(songDuration / 1000));
+  useEffect(() => { 
+    if (timeRef.current!.innerText >= formatTime((songDuration-fadeTime) / 1000)){
+      if (audioRef.current && audioRef.current.volume- 1/fadeTime*250 >= 0) {
+        audioRef.current.volume = audioRef.current.volume - 1/fadeTime*250;
+      }
+      // console.log('Fade Time',timeRef.current!.innerText, audioRef.current!.volume- 1/fadeTime*250)
+    }
     if (timeRef.current!.innerText >= formatTime(songDuration / 1000)) {
       stopAudio();
+      if (audioRef.current) {
+        audioRef.current.volume = 1;
+      }
       onSongEnd();
     }
-  }, [value]);
-  const playAudio = () => {
+  }, [value]);  const playAudio = () => {
     if (audioRef.current) {
       audioRef.current.play();
       setPlaying(true);
@@ -229,27 +238,32 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
 interface SettingsModalProps {
   isOpen: boolean;
   duration: number;
+  fadeTime: number;
   speed: number;
   delay1: number;
   onClose: () => void;
   onChangeRate: (rate: number) => void;
   onChangeDuration: (duration: number) => void;
+  onChangeFade:(duration: number) => void;
   onChangeDelay: (duration: number) => void;
 }
 
 const SettingsModal: React.FC<SettingsModalProps> = ({
   duration,
+  fadeTime,
   speed,
   delay1,
   isOpen,
   onClose,
   onChangeRate,
   onChangeDuration,
+  onChangeFade,
   onChangeDelay,
 }) => {
   const [songLength, setSongLength] = useState(duration);
   const [rate, setRate] = useState(speed);
   const [delayLength, setDelayLength] = useState(delay1);
+  const [fadeLength, setFadeLength] = useState(fadeTime);
 
   useEffect(() => {
     onChangeRate(rate);
@@ -261,6 +275,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   useEffect(() => {
     onChangeDelay(delayLength);
   }, [delayLength]);
+  useEffect(() => {
+    onChangeFade(fadeLength);
+  }, [fadeLength]);
   return (
     <AnimateModalLayout
       visibility={isOpen}
@@ -311,6 +328,20 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                 />
                 <span>{`${Math.floor(delayLength / 60000)}m ${Math.floor(
                   (delayLength % 60000) / 1000
+                )}s`}</span>
+              </div>
+              <div>
+                <label className="block mb-2">Fade out in seconds</label>
+                <Slider
+                  min={0}
+                  max={60000}
+                  step={1000}
+                  value={fadeLength}
+                  onChange={(newValue) => setFadeLength(newValue)}
+                  thumbColor="#4a5568"
+                />
+                <span>{`${Math.floor(fadeLength / 60000)}m ${Math.floor(
+                  (fadeLength % 60000) / 1000
                 )}s`}</span>
               </div>
             </div>
@@ -786,6 +817,7 @@ const page: FC<pageProps> = ({}) => {
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [songLength, setSongLength] = useState(180000);
   const [delayLength, setDelayLength] = useState(0);
+  const [fadeTime, setFadeTime] = useState(5000);
   const [playlist, setPlaylist] = useState<Song[]>([]);
   const [rate, setRate] = useState(1);
   const [songPosition, setSongPosition] = useState(0);
@@ -875,6 +907,7 @@ const page: FC<pageProps> = ({}) => {
           duration={songLength}
           speed={rate}
           delay1={delayLength}
+          fadeTime={fadeTime}
           isOpen={isSettingsOpen}
           onClose={() => setIsSettingsOpen(false)}
           onChangeRate={(rate) => {
@@ -883,6 +916,7 @@ const page: FC<pageProps> = ({}) => {
           }}
           onChangeDuration={(duration) => setSongLength(duration)}
           onChangeDelay={(duration) => setDelayLength(duration)}
+          onChangeFade ={(duration) => setFadeTime(duration)}
         />
       )}
       {isChooseMusicOpen && (
@@ -940,6 +974,7 @@ const page: FC<pageProps> = ({}) => {
               <MusicPlayer
                 rateSet={rate}
                 songDuration={songLength}
+                fadeTime={fadeTime}
                 delayLength={delayLength}
                 startPos={songPosition}
                 music={playlist[currentSongIndex].url}

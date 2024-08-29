@@ -60,46 +60,12 @@ const page: FC<pageProps> = ({}) => {
           unlayer?.exportHtml((data) => {
             const { html } = data;
 
-            for (let i = 0; i < 1; i++) {
+            for (let i = 0; i < contacts.length; i++) {
               name1 = contacts[i].name != null ? contacts[i].name + ' ' : '';
               name1 += contacts[i].lastname != null ? contacts[i].lastname : '';
               if (name1.trim().length == 0) name1 = 'Sir/Madam';
               emailList.push({ name: name1, email: contacts[i].email });
-              emailList.push({ name: name1, email: contacts[i].email });
-              emailList.push({ name: name1, email: contacts[i].email });
-              emailList.push({ name: name1, email: contacts[i].email });
-              emailList.push({ name: name1, email: contacts[i].email });
-              emailList.push({ name: name1, email: contacts[i].email });
-              emailList.push({ name: name1, email: contacts[i].email });
-              emailList.push({ name: name1, email: contacts[i].email });
-              emailList.push({ name: name1, email: contacts[i].email });
-              emailList.push({ name: name1, email: contacts[i].email });
-              emailList.push({ name: name1, email: contacts[i].email });
-              emailList.push({ name: name1, email: contacts[i].email });
-              emailList.push({ name: name1, email: 'lepari34@gmail.com' });
-              emailList.push({ name: name1, email: 'lepari34@gmail.com' });
-              emailList.push({ name: name1, email: 'lepari34@gmail.com' });
-              emailList.push({ name: name1, email: 'lepari34@gmail.com'});
-              emailList.push({ name: name1, email: 'lepari34@gmail.com' });
-              emailList.push({ name: name1, email: 'lepari34@gmail.com' });
-              emailList.push({ name: name1, email: 'lepari34@gmail.com'});
-              emailList.push({ name: name1, email: 'lepari34@gmail.com' });
-              emailList.push({ name: name1, email: 'lepari34@gmail.com' });
-              emailList.push({ name: name1, email: 'lepari34@gmail.com' });
-              emailList.push({ name: name1, email: 'lepari34@gmail.com' });
-              emailList.push({ name: name1, email: 'lepari34@gmail.com' });
-              emailList.push({ name: name1, email: 'serge.bolotnikov@gmail.com' });
-              emailList.push({ name: name1, email: 'serge.bolotnikov@gmail.com' });
-              emailList.push({ name: name1, email: 'serge.bolotnikov@gmail.com' });
-              emailList.push({ name: name1, email: 'serge.bolotnikov@gmail.com'});
-              emailList.push({ name: name1, email: 'serge.bolotnikov@gmail.com' });
-              emailList.push({ name: name1, email: 'serge.bolotnikov@gmail.com' });
-              emailList.push({ name: name1, email: 'serge.bolotnikov@gmail.com'});
-              emailList.push({ name: name1, email: 'serge.bolotnikov@gmail.com' });
-              emailList.push({ name: name1, email: 'serge.bolotnikov@gmail.com' });
-              emailList.push({ name: name1, email: 'serge.bolotnikov@gmail.com' });
-              emailList.push({ name: name1, email: 'serge.bolotnikov@gmail.com' });
-              emailList.push({ name: name1, email: 'serge.bolotnikov@gmail.com' });
+             
             }
             sendConsecativeEmails(emailList,html,[] as string[]);
         
