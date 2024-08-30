@@ -34,10 +34,18 @@ export const csvJSON = (text: string, quoteChar: string, delimiter: string) => {
     for (let j = 0; j < headers.length; j++) {
       const key = headers[j];
       const value = lines[i].split(delimiter)[j];
-      objContact = {
-        ...objContact,
-        [key]: value,
-      };
+      if (key=="id") {
+        objContact = {
+         ...objContact,
+          [key]: parseInt(value),
+        };
+      } else {
+        objContact = {
+         ...objContact,
+          [key]: value,
+        };
+      }
+      
     }
     objContact.createdAt = getDate(objContact.createdAt as string);
     objContact.lastcontact = getDate(objContact.lastcontact as string);

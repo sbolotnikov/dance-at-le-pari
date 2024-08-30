@@ -67,7 +67,7 @@ const page: FC<pageProps> = ({}) => {
               emailList.push({ name: name1, email: contacts[i].email });
              
             }
-            sendConsecativeEmails(emailList,html,[] as string[]);
+            sendConsecativeEmails(emailList,html,[] as string[],1);
         
             
           }); 
@@ -77,7 +77,7 @@ const page: FC<pageProps> = ({}) => {
         });
     });
   };
-  const sendConsecativeEmails = (emailList:{ name: string; email: string }[],html:any, sentEmails:string[]) => {
+  const sendConsecativeEmails = (emailList:{ name: string; email: string }[],html:any, sentEmails:string[],counter:number) => {
     if (emailList.length == 0) {
       setSendingStatus([...sentEmails,'Finished']);
       // setRevealModal1(false);
@@ -103,14 +103,24 @@ const page: FC<pageProps> = ({}) => {
         const data = await res.json();
         setSendingStatus([...sentEmails, 'Sent successfully '+data.accepted[0]]);
         console.log(data);
-        sendConsecativeEmails(emailList,html,[...sentEmails, 'Sent successfully '+data.accepted[0]]);
+        if (counter>50) {
+          await sleep(3000);
+          sendConsecativeEmails(emailList,html,[...sentEmails, 'Sent successfully '+data.accepted[0]],1);
+        } else { 
+          sendConsecativeEmails(emailList,html,[...sentEmails, 'Sent successfully '+data.accepted[0]],counter+1);
+        } 
       })
       .catch(async (err) => {
         setSendingStatus([
           ...sentEmails,
           'Failed to send email to ' + email,
         ]);
-        sendConsecativeEmails(emailList,html,[...sentEmails, 'Failed to send email to ' + email]);
+        if (counter>50) {
+          await sleep(3000);
+          sendConsecativeEmails(emailList,html,[...sentEmails, 'Failed to send email to ' + email],1);
+        } else { 
+          sendConsecativeEmails(emailList,html,[...sentEmails, 'Failed to send email to ' + email],counter+1);
+        }  
       });
     }
   }
