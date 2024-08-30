@@ -67,7 +67,7 @@ const page: FC<pageProps> = ({}) => {
               emailList.push({ name: name1, email: contacts[i].email });
              
             }
-            sendConsecativeEmails(emailList,html,[] as string[],1);
+            sendConsecativeEmails(emailList,html,[] as string[],1,1);
         
             
           }); 
@@ -77,7 +77,7 @@ const page: FC<pageProps> = ({}) => {
         });
     });
   };
-  const sendConsecativeEmails = (emailList:{ name: string; email: string }[],html:any, sentEmails:string[],counter:number) => {
+  const sendConsecativeEmails = (emailList:{ name: string; email: string }[],html:any, sentEmails:string[],counter:number,errNumber:number) => {
     if (emailList.length == 0) {
       setSendingStatus([...sentEmails,'Finished']);
       // setRevealModal1(false);
@@ -104,23 +104,24 @@ const page: FC<pageProps> = ({}) => {
         setSendingStatus([...sentEmails, 'Sent successfully '+data.accepted[0]]);
         console.log(data);
         if (counter>50) {
+          console.log('3 seconds wait bulk');
           await sleep(3000);
-          sendConsecativeEmails(emailList,html,[...sentEmails, 'Sent successfully '+data.accepted[0]],1);
+          sendConsecativeEmails(emailList,html,[...sentEmails, 'Sent successfully '+data.accepted[0]],1,1);
         } else { 
-          sendConsecativeEmails(emailList,html,[...sentEmails, 'Sent successfully '+data.accepted[0]],counter+1);
+          sendConsecativeEmails(emailList,html,[...sentEmails, 'Sent successfully '+data.accepted[0]],counter+1,1);
         } 
       })
       .catch(async (err) => {
         setSendingStatus([
           ...sentEmails,
           'Failed to send email to ' + email,
-        ]);
-        if (counter>50) {
-          await sleep(3000);
-          sendConsecativeEmails(emailList,html,[...sentEmails, 'Failed to send email to ' + email],1);
-        } else { 
-          sendConsecativeEmails(emailList,html,[...sentEmails, 'Failed to send email to ' + email],counter+1);
-        }  
+        ]); 
+        console.log(errNumber*3,'seconds wait error, email:', email);
+          await sleep(3000*errNumber);
+          
+          emailList.push({ name, email });
+          sendConsecativeEmails(emailList,html,[...sentEmails, 'Failed to send email to ' + email],1,errNumber+1);
+         
       });
     }
   }
