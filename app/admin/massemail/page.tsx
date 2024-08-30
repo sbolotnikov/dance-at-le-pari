@@ -102,22 +102,16 @@ const page: FC<pageProps> = ({}) => {
       .then(async (res) => {
         const data = await res.json();
         setSendingStatus([...sentEmails, 'Sent successfully '+data.accepted[0]]);
-        console.log(data);
-        if (counter>50) {
-          console.log('3 seconds wait bulk');
-          await sleep(3000);
+        console.log(data);  
           sendConsecativeEmails(emailList,html,[...sentEmails, 'Sent successfully '+data.accepted[0]],1,1);
-        } else { 
-          sendConsecativeEmails(emailList,html,[...sentEmails, 'Sent successfully '+data.accepted[0]],counter+1,1);
-        } 
       })
       .catch(async (err) => {
         setSendingStatus([
           ...sentEmails,
           'Failed to send email to ' + email,
         ]); 
-        console.log(errNumber*3,'seconds wait error, email:', email);
-          await sleep(3000*errNumber);
+        console.log("batch size: ",counter,". ",errNumber*30,'seconds wait error, email:', email);
+          await sleep(30000*errNumber);
           
           emailList.push({ name, email });
           sendConsecativeEmails(emailList,html,[...sentEmails, 'Failed to send email to ' + email],1,errNumber+1);
