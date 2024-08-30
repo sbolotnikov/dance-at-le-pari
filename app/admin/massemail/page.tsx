@@ -110,8 +110,8 @@ const page: FC<pageProps> = ({}) => {
           ...sentEmails,
           'Failed to send email to ' + email,
         ]); 
-        console.log("batch size: ",counter,". ",errNumber*30,'seconds wait error, email:', email);
-          await sleep(30000*errNumber);
+        console.log("batch size: ",counter,". ",errNumber*60,'seconds wait error, email:', email);
+          await sleep(60000*errNumber);
           
           emailList.push({ name, email });
           sendConsecativeEmails(emailList,html,[...sentEmails, 'Failed to send email to ' + email],1,errNumber+1);
