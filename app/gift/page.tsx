@@ -15,6 +15,7 @@ import { useDispatch } from 'react-redux';
 import ChoosePicture from '@/components/ChoosePicture';
 import ImgFromDb from '@/components/ImgFromDb';
 import SharePostModal from '@/components/SharePostModal';
+import AnimatedText from '@/components/AnimateText';
 type Props = {};
 
 const page = (props: Props) => {
@@ -70,9 +71,9 @@ const page = (props: Props) => {
       <div className="blurFilter border-0 rounded-md p-2 shadow-2xl w-[90%] max-w-[850px] h-full max-h-[85%]  md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70">
         <div className="w-full h-full flex flex-col justify-center items-center border rounded-md border-lightMainColor dark:border-darkMainColor relative p-2 overflow-y-auto">
           <div className=" absolute top-0 left-0 w-full h-fit p-2">
-            <h3 className="w-full uppercase font-semibold  xs:text-md sm:text-xl md:text-4xl text-center">
-              Gift Certificates
-            </h3>
+            <div className="w-full uppercase font-semibold  xs:text-md sm:text-xl md:text-4xl text-center">
+              <AnimatedText text={'Gift Certificates'}/>
+            </div>
             <div className=" h-20 w-20 md:h-24 md:w-24 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor m-auto">
               <ShowIcon icon={'Gift'} stroke={'0.1'} />
             </div>
