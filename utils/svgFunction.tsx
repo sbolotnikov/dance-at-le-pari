@@ -20,7 +20,8 @@
 // })}
  
 import { createCanvas, registerFont, loadImage } from 'canvas';
-const opentype = require('opentype.js');
+
+import * as opentype from 'opentype.js';
 
  
 
