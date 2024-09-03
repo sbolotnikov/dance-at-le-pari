@@ -14,8 +14,7 @@ import { addItem } from '@/slices/cartSlice';
 import { useDispatch } from 'react-redux';
 import ChoosePicture from '@/components/ChoosePicture';
 import ImgFromDb from '@/components/ImgFromDb';
-import SharePostModal from '@/components/SharePostModal';
-import AnimatedText from '@/components/AnimatedText';
+import SharePostModal from '@/components/SharePostModal'; 
 type Props = {};
 
 const page = (props: Props) => {
@@ -71,7 +70,7 @@ const page = (props: Props) => {
         <div className="w-full h-full flex flex-col justify-center items-center border rounded-md border-lightMainColor dark:border-darkMainColor relative p-2 overflow-y-auto">
           <div className=" absolute top-0 left-0 w-full h-fit p-2">
             <div className="w-full uppercase font-semibold  xs:text-md sm:text-xl md:text-4xl text-center">
-              <AnimatedText text={'Gift Certificates'}/>
+              Gift Certificates
             </div>
             <div className=" h-20 w-20 md:h-24 md:w-24 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor m-auto">
               <ShowIcon icon={'Gift'} stroke={'0.1'} />
