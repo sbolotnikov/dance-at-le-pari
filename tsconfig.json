@@ -33,6 +33,6 @@
     "components/Schedule.tsx",
     "components/PDF/pdf.tsx",
     "components/SharePostModal.tsx"
-, "app/particles1/page.jsx"  ],
+, "app/particles1/page.jsx", "utils/svgFunction.jsx"  ],
   "exclude": ["node_modules"]
 }

@@ -20,12 +20,11 @@
 // })}
  
 import { createCanvas, registerFont, loadImage } from 'canvas';
-
 import * as opentype from 'opentype.js';
 
  
 
-export default async function TextToSVGLocal(textLine:string, fontPath:string) {
+export default async function TextToSVGLocal(textLine, fontPath) {
   
 
   if ( !textLine) {
@@ -43,7 +42,7 @@ export default async function TextToSVGLocal(textLine:string, fontPath:string) {
 
   // Set the font and draw the text
   context.font = '48px DancingScript';
-  const text = textLine as string;
+  const text = textLine;
   // console.log(Font.getPath(text, 0, 0, 48))
   const paths = [];
 
