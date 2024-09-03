@@ -31,8 +31,7 @@ const page = (props: Props) => {
   const dispatch = useDispatch();
   //   tag: string;
   //   price: number;
-  //   amount: number;
-  console.log(giftCertificates);
+  //   amount: number; 
   useEffect(() => {
     setPriceOptions(giftCertificates);
     setImg(gsImage);

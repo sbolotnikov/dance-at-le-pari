@@ -107,8 +107,10 @@ body {
 @keyframes dash {
   to {
     stroke-dashoffset: 0;
+    fill:#fa0b0b
   }
 }
+ 
 .animate-fade-in {
   animation: fadeIn 0.3s ease-out;
 }

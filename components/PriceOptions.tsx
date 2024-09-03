@@ -15,7 +15,6 @@ export default function PriceOptions({options, onChange }: Props) {
   const [visible, setVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [priceOptions, setPriceOptions] = useState<TPriceOption[] | null>(null);
-  console.log(options, priceOptions)
   const handleSubmit = () => {
     setErrorMessage('');
     document.querySelector('#tag1')!.classList.remove('invalid_input');
