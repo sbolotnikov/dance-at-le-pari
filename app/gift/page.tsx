@@ -15,7 +15,7 @@ import { useDispatch } from 'react-redux';
 import ChoosePicture from '@/components/ChoosePicture';
 import ImgFromDb from '@/components/ImgFromDb';
 import SharePostModal from '@/components/SharePostModal';
-import AnimatedText from '@/components/AnimateText';
+import AnimatedText from '@/components/AnimatedText';
 type Props = {};
 
 const page = (props: Props) => {

@@ -27,6 +27,7 @@ const dancingScript = localFont({
   ],
   variable: '--font-DancingScript',
 });
+
 const latoFont = Lato({
   weight: ['300', '400', '700'],
   style: ['italic', 'normal'],
