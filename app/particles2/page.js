@@ -1,5 +1,5 @@
 'use client';
-// import AnimatedText from '@/components/AnimatedText';
+import AnimatedText from '@/components/AnimatedText';
 import AnimatedTextMessage from '@/components/AnimatedTextMessage';
 import { PageWrapper } from '@/components/page-wrapper';
 import React, { useState, useEffect, useRef } from 'react';
@@ -121,20 +121,20 @@ const ParticleAnimation = () => {
         <div className="w-full h-full flex flex-col justify-center items-center border rounded-md border-lightMainColor dark:border-darkMainColor relative p-2 overflow-x-auto">
         
     <div className="w-full h-fit uppercase font-semibold  xs:text-md sm:text-xl md:text-4xl text-center">
-              {/* <AnimatedText text={'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789!?@ ,.'} /> */}
+              {/* <AnimatedText text={'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789!?@ ,.:'} /> */}
                
               <AnimatedTextMessage  
-              text={'zA01234567890!0?0@0,0.'}
+              text={'Particle Chaos'}
               duration={2}
               delay={0}
               name={'Lato'}
-              height={'3rem'}
+              height={'6rem'}
               width={'100%'}
               color={'red'}
               stroke={1}
               cutdelay={false} /> 
       </div>   
-      <h1 className="w-full h-fit m-3 uppercase font-semibold  xs:text-md sm:text-xl md:text-4xl text-center">Particle Chaos</h1>     
+      {/* <h1 className="w-full h-fit m-3 uppercase font-semibold  xs:text-md sm:text-xl md:text-4xl text-center">Particle Chaos</h1>      */}
      <svg ref={svgRef} width={windowSize.width} height={'60vh'} fill={'tranparent'} />
       
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', maxWidth: '400px' }}>

@@ -511,7 +511,7 @@ style={{top: `${fontSizeTime*1.8}px`, bottom: `${fontSizeTime*.8}px`}}
               <AnimatedTextMessage  
               text={message}
               duration={5}
-              delay={1}
+              delay={0}
               height={fontSize*2+'px'}
               name={fontName}
               width={'90%'}
@@ -519,9 +519,20 @@ style={{top: `${fontSizeTime*1.8}px`, bottom: `${fontSizeTime*.8}px`}}
               color={textColor}
               cutdelay={false} /> 
 
-              <p className="font-bold m-0"
+<AnimatedTextMessage  
+              text={message2}
+              duration={5}
+              delay={3}
+              height={fontSize2*2+'px'}
+              name={'Lato'}
+              width={'90%'}
+              stroke={1}
+              color={textColor}
+              cutdelay={false} /> 
+
+              {/* <p className="font-bold m-0"
                style={{fontSize: `${fontSize2}px`}}
-              >{message2}</p>
+              >{message2}</p> */}
             </div>
           )}
           {/* <div
