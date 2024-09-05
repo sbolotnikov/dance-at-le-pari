@@ -1739,7 +1739,7 @@ export default function AnimatedTextMessage({
     <g transform='translate(10, ${fontModule.filter(item=>item.name===name)[0].shift})' style=" filter:url(#shadow2);" > ${generatedSVG}</g></svg> `;
     console.log(generatedSVG);
     svg!.innerHTML = generatedSVG;
-  }, [text]);
+  }, [text, name]);
   return(
     <div style={{ height: height, width: width, zIndex: 1000 }} className='relative' ref={svgRef} />
   );

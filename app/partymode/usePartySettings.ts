@@ -11,6 +11,7 @@ interface PartyContextType {
   message2: string;
   fontSize2: number;
   mode: string;
+  fontName: string;
   fontSize: number;
   fontSizeTime: number;
   frameStyle: string;
@@ -52,6 +53,7 @@ interface ReturnPartyContextType {
   message2: string;
   fontSize2: number;
   mode: string;
+  fontName:string;
   fontSize: number;
   fontSizeTime: number;
   frameStyle: string;
@@ -99,6 +101,7 @@ export default function usePartySettings(): ReturnPartyContextType {
     message2: '',
     fontSize2: 5,
     mode: '',
+    fontName:'',
     fontSize:10,
     fontSizeTime:10,
     frameStyle:"No frame",

@@ -22,6 +22,7 @@ type Props = {
   heatNum: string;
   image: string;
   mode: string;
+  fontName: string;
   message2: string;
   fontSize2: number;
   fontSize: number;
@@ -61,6 +62,7 @@ const ShowPlayingModal: React.FC<Props> = ({
   image,
   heatNum,
   mode,
+  fontName,
   fontSize,
   fontSizeTime,
   fontSize2,
@@ -511,11 +513,12 @@ style={{top: `${fontSizeTime*1.8}px`, bottom: `${fontSizeTime*.8}px`}}
               duration={4}
               delay={1}
               height={fontSize*2+'px'}
-              name={'DancingScript'}
+              name={fontName}
               width={'90%'}
               stroke={1}
               color={textColor}
               cutdelay={false} /> 
+              
               <p className="font-bold m-0"
                style={{fontSize: `${fontSize2}px`}}
               >{message2}</p>

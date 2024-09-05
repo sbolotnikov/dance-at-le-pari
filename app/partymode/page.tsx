@@ -10,13 +10,19 @@ import CountBox from './CountBox';
 import usePartySettings from './usePartySettings';
 import useComp from './useComp';
 import ChooseMessageModal from './ChooseMessageModal';
-import { collection, deleteDoc, doc, getDocs, updateDoc } from 'firebase/firestore';
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  updateDoc,
+} from 'firebase/firestore';
 import { db, db2 } from '@/firebase';
 import { useSession } from 'next-auth/react';
 import ChoosePartyModal from '@/components/ChoosePartyModal';
 import AlertMenu from '@/components/alertMenu';
 import ChoosePicture from '@/components/ChoosePicture';
-import ImgFromDb from '@/components/ImgFromDb'; 
+import ImgFromDb from '@/components/ImgFromDb';
 
 type Props = {
   // Add any props if needed
@@ -56,7 +62,7 @@ const page: React.FC<Props> = () => {
   const [videoSearchText, setVideoSearchText] = useState('');
   const [startPage, setStartPage] = useState(true);
   const [revealCloud, setRevealCloud] = useState(false);
-  const [compsArr, setCompsArr] = useState<{name:string, id:string}[]>([]);
+  const [compsArr, setCompsArr] = useState<{ name: string; id: string }[]>([]);
 
   useEffect(() => {
     let timerInterval: any;
@@ -76,6 +82,7 @@ const page: React.FC<Props> = () => {
     message2,
     fontSize2,
     mode,
+    fontName,
     fontSize,
     fontSizeTime,
     frameStyle,
@@ -101,14 +108,14 @@ const page: React.FC<Props> = () => {
     originY,
     showSVGAnimation,
     particleTypes,
-    id, 
+    id,
     compChoice,
     showBackdrop,
     setCompID,
   } = usePartySettings();
   console.log('compChoice', compChoice);
-  const [competition, setCompetition] = useState('T9FLgtEDmxQFYFTnfrvO'); 
-  const {heat} = useComp(competition);
+  const [competition, setCompetition] = useState('T9FLgtEDmxQFYFTnfrvO');
+  const { heat } = useComp(competition);
   useEffect(() => {
     if (compChoice) setCompetition(compChoice);
   }, [compChoice]);
@@ -231,7 +238,10 @@ const page: React.FC<Props> = () => {
     const q = await getDocs(collection(db2, 'competitions'));
     let arr1 = q.docs.map((doc) => doc.data());
     let arr2 = q.docs.map((doc) => doc.id);
-    let arr = arr1.map((x, i) => ({ name:x.name, id: arr2[i] })) as {name:string, id:string}[];
+    let arr = arr1.map((x, i) => ({ name: x.name, id: arr2[i] })) as {
+      name: string;
+      id: string;
+    }[];
     setCompsArr(arr);
   }
   return (
@@ -276,6 +286,7 @@ const page: React.FC<Props> = () => {
           heatNum={''}
           vis={modalVisible}
           mode={mode}
+          fontName={fontName}
           message2={message2}
           fontSize2={fontSize2}
           fontSize={fontSize}
@@ -634,7 +645,25 @@ const page: React.FC<Props> = () => {
                       <p className="text-center text-sm italic">Start Show</p>
                     </button>
                   </div>
-                  <div className="w-full flex flex-col justify-center items-center">
+                  <div className="w-full flex flex-col justify-center items-center"> 
+                      <div className="w-full flex flex-col justify-center items-center">
+                        <select
+                          value={fontName}
+                          onChange={(e) => handleChange(e.target.value, 'fontName')}
+                          className="w-60 h-9 mt-2 bg-white rounded-lg border border-[#776548] text-[#444] text-left"
+                        >
+                          {['Lato', 'DancingScript', 'ChopinScript'].map(
+                            (option) => (
+                              <option key={option} value={option}>
+                                {option}
+                              </option>
+                            )
+                          )}
+                        </select>
+
+                        <p className="text-center w-60">Choose message font</p>
+                       
+                    </div>
                     <p className="w-full text-center">{message}</p>
                     <button
                       className="btnFancy cursor-pointer"
@@ -646,13 +675,14 @@ const page: React.FC<Props> = () => {
                       <p className="text-center italic">Choose message</p>
                     </button>
                     <div className="w-full flex flex-col justify-center items-center">
-                    <input
-                      className="w-60 h-9 bg-white rounded-lg border border-[#776548] text-[#444] text-left"
-                      value={message2}
-                      onChange={(e) =>
-                        handleChange(e.target.value, 'message2')
-                      }/>
-                       <div className="flex flex-col justify-center items-center">
+                      <input
+                        className="w-60 h-9 bg-white rounded-lg border border-[#776548] text-[#444] text-left"
+                        value={message2}
+                        onChange={(e) =>
+                          handleChange(e.target.value, 'message2')
+                        }
+                      />
+                      <div className="flex flex-col justify-center items-center">
                         {fontSize2 && (
                           <CountBox
                             startValue={fontSize2}
@@ -667,8 +697,7 @@ const page: React.FC<Props> = () => {
                         )}
                         <p className="text-center w-24">Font size 2</p>
                       </div>
-
-                   </div>
+                    </div>
                   </div>
                   <div className="w-full flex flex-col justify-center items-center">
                     <div className="flex flex-row mb-2.5 mt-2.5">
@@ -706,7 +735,7 @@ const page: React.FC<Props> = () => {
                     </div>
 
                     <div className="flex flex-row justify-center items-center">
-                    <div className="flex flex-col justify-center items-center">
+                      <div className="flex flex-col justify-center items-center">
                         {compsArr && (
                           <select
                             value={compChoice}
@@ -715,13 +744,11 @@ const page: React.FC<Props> = () => {
                             }
                             className="w-28 h-9 bg-white rounded-lg border border-[#776548] text-[#444] text-left"
                           >
-                            {compsArr.map(
-                              (option) => (
-                                <option key={option.id} value={option.id}>
-                                  {option.name}
-                                </option>
-                              )
-                            )}
+                            {compsArr.map((option) => (
+                              <option key={option.id} value={option.id}>
+                                {option.name}
+                              </option>
+                            ))}
                           </select>
                         )}
                         <p className="text-center w-20">Choose comp</p>
