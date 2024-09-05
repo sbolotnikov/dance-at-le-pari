@@ -1,5 +1,5 @@
 'use client';
-import AnimatedText from '@/components/AnimatedText';
+// import AnimatedText from '@/components/AnimatedText';
 import AnimatedTextMessage from '@/components/AnimatedTextMessage';
 import { PageWrapper } from '@/components/page-wrapper';
 import React, { useState, useEffect, useRef } from 'react';
