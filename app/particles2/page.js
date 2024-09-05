@@ -121,7 +121,7 @@ const ParticleAnimation = () => {
         <div className="w-full h-full flex flex-col justify-center items-center border rounded-md border-lightMainColor dark:border-darkMainColor relative p-2 overflow-x-auto">
         
     <div className="w-full h-fit uppercase font-semibold  xs:text-md sm:text-xl md:text-4xl text-center">
-              <AnimatedText text={'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789!?@ ,.'} />
+              {/* <AnimatedText text={'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789!?@ ,.'} /> */}
                
               <AnimatedTextMessage  
               text={'zA01234567890!0?0@0,0.'}

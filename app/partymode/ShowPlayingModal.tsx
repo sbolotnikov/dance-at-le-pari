@@ -510,7 +510,7 @@ style={{top: `${fontSizeTime*1.8}px`, bottom: `${fontSizeTime*.8}px`}}
               >{message}</p> */}
               <AnimatedTextMessage  
               text={message}
-              duration={4}
+              duration={5}
               delay={1}
               height={fontSize*2+'px'}
               name={fontName}
@@ -518,7 +518,7 @@ style={{top: `${fontSizeTime*1.8}px`, bottom: `${fontSizeTime*.8}px`}}
               stroke={1}
               color={textColor}
               cutdelay={false} /> 
-              
+
               <p className="font-bold m-0"
                style={{fontSize: `${fontSize2}px`}}
               >{message2}</p>
