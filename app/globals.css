@@ -107,7 +107,10 @@ body {
 @keyframes dash {
   to {
     stroke-dashoffset: 0;
-    fill:#fa0b0b
+    
+  }
+  100% {
+    fill:#fa0b0b;
   }
 }
  

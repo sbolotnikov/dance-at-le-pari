@@ -34,7 +34,7 @@ function checkCase(character) {
   }
 }
 
-export default async function TextToSVGLocal(textLine, fontPath) {
+export async function TextToSVGLocal(textLine, fontPath) {
   
 
   if ( !textLine) {
@@ -45,16 +45,16 @@ export default async function TextToSVGLocal(textLine, fontPath) {
   // Load the font using opentype.js
   // const font = await opentype.Font.load(fontPath as string);
   // const font = await opentype.load(fontPath as string);
-  const font = await opentype.load('fonts/ChopinScript.ttf');
+  const font = await opentype.load('fonts/DancingScriptVariableFont.ttf');
   // Create a canvas
   const canvas = createCanvas(800, 50);
   const context = canvas.getContext('2d');
 
   // Set the font and draw the text
-  context.font = '48px ChopinScript';
+  context.font = '48px DancingScript';
   const text = textLine;
   // console.log(Font.getPath(text, 0, 0, 48))
-  const paths = [];
+  const paths = []; 
   let offset1=0;
   // Convert each letter to a path
   for (let i = 0; i < text.length; i++) {
@@ -81,4 +81,35 @@ export default async function TextToSVGLocal(textLine, fontPath) {
   `;
   console.log(svg);
   return svg;
+}
+export async function TextToPathArrayLocal(textLine) {
+  
+
+  if ( !textLine) {
+    
+    return;
+  }
+
+  // Load the font using opentype.js
+  // const font = await opentype.Font.load(fontPath as string);
+  // const font = await opentype.load(fontPath as string);
+  const font = await opentype.load('fonts/ChopinScript.ttf');
+  // Create a canvas
+  const canvas = createCanvas(800, 50);
+  const context = canvas.getContext('2d');
+
+  // Set the font and draw the text
+  context.font = '48px ChopinScript';
+  const text = textLine;
+  // console.log(Font.getPath(text, 0, 0, 48))
+  
+  let pathArray=[]; 
+  // Convert each letter to a path
+  for (let i = 0; i < text.length; i++) {
+     
+    const path2 = font.charToGlyph(text[i]).getPath(0, 0, 48).toSVG();
+    pathArray.push(path2); 
+  }
+  
+  return pathArray;
 }

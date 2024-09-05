@@ -13,6 +13,7 @@ import svgPath from './svgPath';
 import ImgFromDb from '@/components/ImgFromDb';
 import FrameOnFire from '@/components/FrameOnFire';
 import FrameRunnerEffect from '@/components/FrameRunnerEffect';
+import AnimatedTextMessage from '@/components/AnimatedTextMessage';
 
 type Props = {
   videoUri: { link: string; name: string };
@@ -501,6 +502,14 @@ style={{top: `${fontSizeTime*1.8}px`, bottom: `${fontSizeTime*.8}px`}}
               <p className="font-bold m-0"
               style={{fontSize: `${fontSize}px`}}
               >{message}</p>
+              {/* <AnimatedTextMessage  
+              text={message}
+              duration={5}
+              delay={1}
+              height={'6rem'}
+              width={'100%'}
+              stroke={1}
+              cutdelay={false} />  */}
               <p className="font-bold m-0"
                style={{fontSize: `${fontSize2}px`}}
               >{message2}</p>
