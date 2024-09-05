@@ -543,8 +543,23 @@ width:33.51
       "bigGap": 22,
       "smallGap": 22,
       "width": 50
-  }
-
+  },
+  {
+    "letter": ",",
+    "path": "d=''",
+    "strokeDasharray": 0,
+    "bigGap": 22,
+    "smallGap": 22,
+    "width": 50
+},
+{
+  "letter": ".",
+  "path": "d=''",
+  "strokeDasharray": 0,
+  "bigGap": 22,
+  "smallGap": 22,
+  "width": 50
+}
   ]
 
     TextToPathArrayLocal(text).then((res:any) => {

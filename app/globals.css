@@ -62,6 +62,7 @@
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
   --accent-color: #504deb;
+  --animation-color: #fa0b0b;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -110,7 +111,7 @@ body {
     
   }
   100% {
-    fill:#fa0b0b;
+    fill: var(--animation-color);
   }
 }
  

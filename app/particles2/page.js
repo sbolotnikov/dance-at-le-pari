@@ -117,18 +117,20 @@ const ParticleAnimation = () => {
   return (
     // <div className='absolute inset-0' style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
-    <div className="blurFilter border-0 rounded-md p-2 shadow-2xl w-[90%] max-w-[650px] h-[85%] overflow-y-auto md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70">
+    <div className="blurFilter border-0 rounded-md p-2 shadow-2xl w-[95%] max-w-[1650px] h-[85%] overflow-y-auto md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70">
         <div className="w-full h-full flex flex-col justify-center items-center border rounded-md border-lightMainColor dark:border-darkMainColor relative p-2 overflow-x-auto">
         
     <div className="w-full h-fit uppercase font-semibold  xs:text-md sm:text-xl md:text-4xl text-center">
-              <AnimatedText text={'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789!?@ '} />
+              <AnimatedText text={'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789!?@ ,.'} />
                
               <AnimatedTextMessage  
-              text={'abcdefghijklmnopqrstuvwxyz'}
-              duration={5}
-              delay={1}
+              text={'zA01234567890!0?0@0,0.'}
+              duration={2}
+              delay={0}
+              name={'Lato'}
               height={'3rem'}
               width={'100%'}
+              color={'red'}
               stroke={1}
               cutdelay={false} /> 
       </div>   

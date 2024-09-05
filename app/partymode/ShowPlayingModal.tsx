@@ -155,6 +155,10 @@ const ShowPlayingModal: React.FC<Props> = ({
     }
   }, [message, mode]);
   useEffect(() => {
+    const r = document.querySelector(':root') as HTMLElement;
+    r.style.setProperty('--animation-color', textColor);
+  }, [textColor]);
+  useEffect(() => {
     if (mode === 'Auto Full' && displayedPictures.length > 0) {
       let arr1 = displayedPictures
         .map((pic) => ({ link: pic.link, dances: pic.dances }))
@@ -499,17 +503,19 @@ style={{top: `${fontSizeTime*1.8}px`, bottom: `${fontSizeTime*.8}px`}}
                 textShadow: '5px 5px #C9AB78',
               }}
             >
-              <p className="font-bold m-0"
+              {/* <p className="font-bold m-0"
               style={{fontSize: `${fontSize}px`}}
-              >{message}</p>
-              {/* <AnimatedTextMessage  
+              >{message}</p> */}
+              <AnimatedTextMessage  
               text={message}
-              duration={5}
+              duration={4}
               delay={1}
-              height={'6rem'}
-              width={'100%'}
+              height={fontSize*2+'px'}
+              name={'DancingScript'}
+              width={'90%'}
               stroke={1}
-              cutdelay={false} />  */}
+              color={textColor}
+              cutdelay={false} /> 
               <p className="font-bold m-0"
                style={{fontSize: `${fontSize2}px`}}
               >{message2}</p>

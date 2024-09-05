@@ -93,13 +93,13 @@ export async function TextToPathArrayLocal(textLine) {
   // Load the font using opentype.js
   // const font = await opentype.Font.load(fontPath as string);
   // const font = await opentype.load(fontPath as string);
-  const font = await opentype.load('fonts/ChopinScript.ttf');
+  const font = await opentype.load('fonts/Lato.ttf');
   // Create a canvas
   const canvas = createCanvas(800, 50);
   const context = canvas.getContext('2d');
 
   // Set the font and draw the text
-  context.font = '48px ChopinScript';
+  context.font = '48px Lato';
   const text = textLine;
   // console.log(Font.getPath(text, 0, 0, 48))
   
