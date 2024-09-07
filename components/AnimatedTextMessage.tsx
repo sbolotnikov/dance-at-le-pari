@@ -1743,7 +1743,7 @@ export default function AnimatedTextMessage({
       (item) => item.letter == text[text.length - 1]
     )[0];
     // stroke="${textColor}" fill="${bgColor}"
-    generatedSVG = `<svg viewBox="0 0 ${
+    generatedSVG = `<svg class='${rotate?"spinText":""}' viewBox="0 0 ${
       offset + letter.width
     } 70" style='position:absolute; top:0; left:0; width:100%; height:100%' stroke-width="${stroke}" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"> 
     <defs>
@@ -1753,21 +1753,14 @@ export default function AnimatedTextMessage({
     <filter id="shadow2">
       <feDropShadow dx="0" dy="0" stdDeviation="2" flood-color="black" />
     </filter>
-    // <filter id="shadow3">
-    //   <feDropShadow
-    //     dx="-0.8"
-    //     dy="-0.8"
-    //     stdDeviation="0"
-    //     flood-color="pink"
-    //     flood-opacity="0.5" />
-    // </filter>
+    
   </defs>
-    <g transform='translate(10, ${fontModule.filter(item=>item.name===name)[0].shift})' style=" filter:url(#shadow2);" > ${generatedSVG}</g></svg> `;
+    <g transform='translate(10, ${fontModule.filter(item=>item.name===name)[0].shift})'  style=" filter:url(#a);" > ${generatedSVG}</g></svg> `;
     console.log(generatedSVG);
     svg!.innerHTML = generatedSVG;
   }, [text, name]);
   return(
-    <div  style={{ height: height, width: width, zIndex: 1000 }} className={`relative ${rotate?"spinLogo":""}`} ref={svgRef} />
+    <div  style={{ height: height, width: width, zIndex: 1000 }} className={`relative `} ref={svgRef} />
   );
 }
 // "translate(10, 35)"

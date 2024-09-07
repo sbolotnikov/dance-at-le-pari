@@ -111,10 +111,33 @@ body {
     fill:'none';
   }
   100% {
+    /* stroke-dashoffset: 0; */
     fill: var(--animation-color);
   }
 }
+@keyframes spinText {
+
+  0%{
+     
+    transform: rotateY(0deg) scale3d(1.1,1.1,1.1);
+  }
+  50%{
+     
+    transform: rotateY(180deg) scale3d(1.5,1.5,1.5);
+  }
+  100%{
+     
+    transform: rotateY(360deg) scale3d(1.1,1.1,1.1);
+  }
+}
  
+.spinText { 
+  
+  animation: spinText 10s 5s linear infinite;
+}
+
+
+
 .animate-fade-in {
   animation: fadeIn 0.3s ease-out;
 }
