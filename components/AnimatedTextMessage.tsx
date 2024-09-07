@@ -10,6 +10,7 @@ type ScriptingType = {
   width: string;
   name:string;
   cutdelay: boolean;
+  rotate:boolean;
 };
 
 export default function AnimatedTextMessage({
@@ -22,6 +23,7 @@ export default function AnimatedTextMessage({
   delay,
   name,
   cutdelay,
+  rotate
 }: ScriptingType) {
   let fontModule =[ 
   
@@ -1745,27 +1747,27 @@ export default function AnimatedTextMessage({
       offset + letter.width
     } 70" style='position:absolute; top:0; left:0; width:100%; height:100%' stroke-width="${stroke}" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"> 
     <defs>
-    <filter id="shadow">
-      <feDropShadow dx="0.2" dy="0.4" stdDeviation="0.2" />
-    </filter>
+    // <filter id="shadow">
+    //   <feDropShadow dx="0.2" dy="0.4" stdDeviation="0.2" />
+    // </filter>
     <filter id="shadow2">
       <feDropShadow dx="0" dy="0" stdDeviation="2" flood-color="black" />
     </filter>
-    <filter id="shadow3">
-      <feDropShadow
-        dx="-0.8"
-        dy="-0.8"
-        stdDeviation="0"
-        flood-color="pink"
-        flood-opacity="0.5" />
-    </filter>
+    // <filter id="shadow3">
+    //   <feDropShadow
+    //     dx="-0.8"
+    //     dy="-0.8"
+    //     stdDeviation="0"
+    //     flood-color="pink"
+    //     flood-opacity="0.5" />
+    // </filter>
   </defs>
     <g transform='translate(10, ${fontModule.filter(item=>item.name===name)[0].shift})' style=" filter:url(#shadow2);" > ${generatedSVG}</g></svg> `;
     console.log(generatedSVG);
     svg!.innerHTML = generatedSVG;
   }, [text, name]);
   return(
-    <div style={{ height: height, width: width, zIndex: 1000 }} className='relative' ref={svgRef} />
+    <div  style={{ height: height, width: width, zIndex: 1000 }} className={`relative ${rotate?"spinLogo":""}`} ref={svgRef} />
   );
 }
 // "translate(10, 35)"

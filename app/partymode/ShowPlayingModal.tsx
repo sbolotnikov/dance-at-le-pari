@@ -517,7 +517,9 @@ style={{top: `${fontSizeTime*1.8}px`, bottom: `${fontSizeTime*.8}px`}}
               width={'90%'}
               stroke={1}
               color={textColor}
-              cutdelay={false} /> 
+              cutdelay={false}
+              rotate={true} 
+              /> 
 
 <AnimatedTextMessage  
               text={message2}
@@ -528,7 +530,9 @@ style={{top: `${fontSizeTime*1.8}px`, bottom: `${fontSizeTime*.8}px`}}
               width={'90%'}
               stroke={1}
               color={textColor}
-              cutdelay={false} /> 
+              cutdelay={false}
+              rotate={false}
+              /> 
 
               {/* <p className="font-bold m-0"
                style={{fontSize: `${fontSize2}px`}}

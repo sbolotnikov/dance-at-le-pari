@@ -106,9 +106,9 @@ body {
 }
 
 @keyframes dash {
-  to {
+  50% {
     stroke-dashoffset: 0;
-    
+    fill:'none';
   }
   100% {
     fill: var(--animation-color);
