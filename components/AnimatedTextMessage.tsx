@@ -1743,7 +1743,7 @@ export default function AnimatedTextMessage({
       (item) => item.letter == text[text.length - 1]
     )[0];
     // stroke="${textColor}" fill="${bgColor}"
-    generatedSVG = `<svg class='${rotate?"spinText":""}' viewBox="0 0 ${
+    generatedSVG = `<div><div><svg  viewBox="0 0 ${
       offset + letter.width
     } 70" style='position:absolute; top:0; left:0; width:100%; height:100%' stroke-width="${stroke}" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"> 
     <defs>
@@ -1755,12 +1755,13 @@ export default function AnimatedTextMessage({
     </filter>
     
   </defs>
-    <g transform='translate(10, ${fontModule.filter(item=>item.name===name)[0].shift})'  style=" filter:url(#a);" > ${generatedSVG}</g></svg> `;
+    <g transform='translate(10, ${fontModule.filter(item=>item.name===name)[0].shift})'  style=" filter:url(#a);" > ${generatedSVG}</g></svg></div></div> `;
     console.log(generatedSVG);
     svg!.innerHTML = generatedSVG;
+     
   }, [text, name]);
   return(
-    <div  style={{ height: height, width: width, zIndex: 1000 }} className={`relative `} ref={svgRef} />
+    <div  style={{ height: height, width: width, zIndex: 1000 }} className={`relative shadow1 ${rotate?"threeD":""}`} ref={svgRef} />
   );
 }
 // "translate(10, 35)"

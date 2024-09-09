@@ -62,7 +62,7 @@
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
   --accent-color: #504deb;
-  --animation-color: #fa0b0b;
+  --animation-color: #fa0b0b; 
 }
 
 @media (prefers-color-scheme: dark) {
@@ -127,10 +127,38 @@ body {
   }
   100%{
      
-    transform: rotateY(360deg) scale3d(1.1,1.1,1.1);
+    transform: rotateY(0deg) scale3d(1.1,1.1,1.1);
   }
 }
+.threeD {
+  animation: rotate 20s 5s linear infinite; 
+  transform-style: preserve-3d;
+  position: relative;
+  perspective: 1500px;
+  filter: drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.3));
+  transform: perspective(1000px) rotateY(0deg);
+}
+.shadow1 {
+  -webkit-filter: drop-shadow( 6px 6px 9px rgba(0, 0, 0, .7));
+  filter: drop-shadow( 6px 6px 9px rgba(0, 0, 0, .7));
+  /* Similar syntax to box-shadow */
+}
+
  
+@keyframes rotate {
+  0% {
+    transform: perspective(1500px) rotateY(0deg);
+  }
+  25% {
+    transform: perspective(1500px) rotateY(-90deg);
+  }
+  75% {
+    transform: perspective(1500px) rotateY(90deg);
+  }
+  100% {
+    transform: perspective(1500px) rotateY(0deg);
+  }
+}
 .spinText { 
   
   animation: spinText 10s 5s linear infinite;
