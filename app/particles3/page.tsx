@@ -1,4 +1,6 @@
 'use client';
+import DraggableList from '@/components/DraggableList';
+import { PageWrapper } from '@/components/page-wrapper';
 import React, { useState, useEffect, useRef } from 'react';
 // import { useDimensions } from '@/hooks/useDimensions';
 
@@ -167,75 +169,15 @@ const ParticleAnimation = () => {
   // };
 
   return (
-    <div className='absolute inset-0' style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-     {/* <svg ref={svgRef} width={windowSize.width} height={windowSize.height} fill={'transparent'} />
-      
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', maxWidth: '400px' }}>
-        <div>
-          <label>Particle Count: {particleCount}</label>
-          <input 
-            type="range" 
-            min="1" 
-            max="1000" 
-            value={particleCount} 
-            onChange={(e) => setParticleCount(Number(e.target.value))} 
-          />
-        </div>
-        <div>
-          <label>Max Size: {maxSize}</label>
-          <input 
-            type="range" 
-            min="1" 
-            max="100" 
-            value={maxSize} 
-            onChange={(e) => setMaxSize(Number(e.target.value))} 
-          />
-        </div>
-        <div>
-          <label>Animation Speed: {animationSpeed}</label>
-          <input 
-            type="range" 
-            min="1" 
-            max="10" 
-            value={animationSpeed} 
-            onChange={(e) => setAnimationSpeed(Number(e.target.value))} 
-          />
-        </div>
-      </div>
-      <div style={{ marginTop: '20px' }}>
-        <label>Particle Types:</label>
-        {['heart', 'leaf', 'star', 'snowflake'].map(type => (
-          <button 
-            key={type} 
-            onClick={() => toggleParticleType(type)}
-            style={{ 
-              margin: '0 5px', 
-              padding: '5px 10px', 
-              backgroundColor: particleTypes.includes(type) ? 'lightblue' : 'white'
-            }}
-          >
-            {type}
-          </button>
-        ))}
-      </div>
-      <div style={{ marginTop: '20px' }}>
-        <label>Pattern:</label>
-        {['random', 'spiral', 'circular', 'wave'].map(p => (
-          <button 
-            key={p} 
-            onClick={() => setPattern(p)}
-            style={{ 
-              margin: '0 5px', 
-              padding: '5px 10px', 
-              backgroundColor: pattern === p ? 'lightgreen' : 'white'
-            }}
-          >
-            {p}
-          </button>
-        ))}
-      </div> */}
-    </div>
-  );
+    <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
+    <div className="blurFilter border-0 rounded-md p-2 shadow-2xl w-[95%] max-w-[1650px] h-[85%] overflow-y-auto md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70">
+        <div className="w-full h-full flex flex-col justify-center items-center border rounded-md border-lightMainColor dark:border-darkMainColor relative p-2 overflow-x-auto">
+<DraggableList initialItems={['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5']} />
+</div>
+</div>
+</PageWrapper>
+     
+     )
 };
 
 export default ParticleAnimation;
