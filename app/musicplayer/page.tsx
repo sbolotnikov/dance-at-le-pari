@@ -581,7 +581,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
       >
         <div
           id="wrapperDiv"
-          className="w-full h-full relative  p-1  overflow-y-auto border border-lightMainColor dark:border-darkMainColor rounded-md flex flex-col justify-center items-center"
+          className={`w-full h-full relative  p-1  ${draggedIndex!== null?'overflow-hidden':"overflow-y-auto"} border border-lightMainColor dark:border-darkMainColor rounded-md flex flex-col justify-center items-center`}
         >
           <div
             id="containedDiv"
@@ -589,11 +589,11 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
           >
             <h2 className="text-xl font-bold mb-4">Songs in Local playlist</h2>
 
-            <div className="w-full h-[350px] border border-black p-1 rounded-md overflow-x-auto mb-4 ">
+            <div className={`w-full h-[350px] border border-black p-1 rounded-md ${draggedIndex!== null?'overflow-hidden':"overflow-x-auto"} mb-4 `}>
               <div className="flex flex-col flex-wrap items-center justify-start">
                 <ul
                   ref={listRef}
-                  className="w-full max-w-md mx-auto mt-8 bg-white rounded-lg shadow-md overflow-hidden relative"
+                  className="w-full max-w-md mx-auto mt-8 bg-white rounded-lg shadow-md  relative"
                 >
                   {songDB.map((item, i) => (
                     <React.Fragment key={item.name}>
@@ -606,10 +606,10 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
                         onMouseDown={(e) => onDragStart(e, i)}
                         onTouchStart={(e) => onDragStart(e, i)}
                         className={`px-4 flex items-center justify-between relative h-fit min-h-[2.5rem] border-b last:border-b-0 cursor-move hover:bg-gray-50 transition-colors duration-150 ease-in-out ${
-                          i === draggedIndex ? 'opacity-50' : ''
+                          i === draggedIndex ? 'hidden' : ''
                         }`}
                       >
-                        <p className=" text-center max-w-[300px]">
+                        <p className=" text-center w-full">
                           <span className=" bg-gray-300 text-sm rounded-sm truncate">
                             {item.dance}
                           </span>
@@ -640,7 +640,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
                     className="fixed px-4 py-2 bg-white shadow-lg rounded opacity-80 pointer-events-none"
                     style={{
                       left: `${ghostPosition.x}px`,
-                      top: `${ghostPosition.y}px`,
+                      top: `${ghostPosition.y-50}px`,
                       width: listRef.current
                         ? `${listRef.current.offsetWidth - 32}px`
                         : 'auto',
