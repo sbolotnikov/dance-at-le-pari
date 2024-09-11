@@ -498,7 +498,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
     const y = clientY - listRect.top;
     const newIndex = Math.max(0, Math.min(Math.floor(y / 48), songDB.length - 1));
 
-    setGhostPosition({ x: listRect.left, y: clientY - 20 });
+    setGhostPosition({ x: 0, y: clientY - 90 });
     setPlaceholderIndex(newIndex);
   };
 
@@ -593,7 +593,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
               <div className="flex flex-col flex-wrap items-center justify-start">
                 <ul
                   ref={listRef}
-                  className="w-full max-w-md mx-auto mt-8 bg-white rounded-lg shadow-md  relative"
+                  className="w-full mx-auto mt-8 bg-white rounded-lg shadow-md  relative"
                 >
                   {songDB.map((item, i) => (
                     <React.Fragment key={item.name}>
@@ -609,7 +609,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
                           i === draggedIndex ? 'hidden' : ''
                         }`}
                       >
-                        <p className=" text-center w-full">
+                        <p className=" text-left w-full">
                           <span className=" bg-gray-300 text-sm rounded-sm truncate">
                             {item.dance}
                           </span>
@@ -640,7 +640,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
                     className="fixed px-4 py-2 bg-white shadow-lg rounded opacity-80 pointer-events-none"
                     style={{
                       left: `${ghostPosition.x}px`,
-                      top: `${ghostPosition.y-50}px`,
+                      top: `${ghostPosition.y}px`,
                       width: listRef.current
                         ? `${listRef.current.offsetWidth - 32}px`
                         : 'auto',
