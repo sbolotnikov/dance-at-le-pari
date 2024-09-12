@@ -623,12 +623,14 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
                           <li className="h-12 bg-blue-100 border-2 border-blue-300 border-dashed"></li>
                         )}
                       <li
-                        onMouseDown={(e) => onDragStart(e, i)}
-                        onTouchStart={(e) => onDragStart(e, i)}
+                        
                         className={`px-4 flex items-center justify-between relative h-fit min-h-[2.5rem] border-b last:border-b-0 cursor-move hover:bg-gray-50 transition-colors duration-150 ease-in-out 
                           ${i === draggedIndex ? 'hidden' : ''}`}
                       >
-                        <p className=" text-left w-full">
+                        <p className=" text-left w-full"
+                        onMouseDown={(e) => onDragStart(e, i)}
+                        onTouchStart={(e) => onDragStart(e, i)}
+                        >
                           <span className=" bg-gray-300 text-sm rounded-sm truncate">
                             {item.dance}
                           </span>
@@ -892,19 +894,18 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
                   )}
                 <li
                   key={index}
-                  className={`flex flex-col justify-between items-center p-2 rounded ${
+                  className={`h-12  flex flex-col justify-between items-center p-1 rounded ${
                     index === draggedIndex ? 'hidden' : ''
                   }`}
                 >
                   <div
-                    className={`flex flex-grow items-center justify-between cursor-pointer  w-full  ${
+                    className={`flex flex-grow items-start justify-between cursor-pointer  w-full  ${
                       index === currentSongIndex
                         ? 'bg-blue-100 dark:bg-blue-900'
                         : ''
                     }`}
                      
-                  >
-                    <span>{index+1}. </span>
+                  > 
                     <PlayerButtons
                       icon="Play"
                       color="#504deb"
@@ -912,15 +913,16 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
                       size={24}
                       onButtonPress={() => onSongChange(index)}
                     />
-                    <span 
-                    // onClick={() => onSongChange(index)}
+                    <span  
+                     className="w-[297px] flex flex-row justify-start items-start h-auto text-sm leading-3"
                     onMouseDown={(e) => onDragStart(e, index)}
                     onTouchStart={(e) => onDragStart(e, index)}
                       >
-                      <span className="rounded-md text-white bg-[#504deb] m-1 p-1">
+                      <span >{index+1}. </span>  
+                      <span className="rounded-md text-white bg-[#504deb] mx-1 mb-1 p-1">
                         {song.dance}
                       </span>
-                      {' ' + song.name}
+                      <span className=' h-auto text-ellipsis overflow-hidden'>{ song.name}</span>
                     </span>
                     
                     <PlayerButtons
