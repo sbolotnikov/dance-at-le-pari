@@ -60,11 +60,11 @@ const PlayerButtons: React.FC<PlayerButtonsProps> = ({
 
   return (
     <button
-      onClick={(e) => {
-        e.preventDefault();
+      onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault(); 
+        
         onButtonPress();
-      }}
-      style={{
+      }}      style={{
         width: size,
         height: size,
         margin: 3,

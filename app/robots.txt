@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+
+# Disallow access to API routes
+Disallow: /api/
+
+# Allow crawling of static assets
+Allow: /_next/static/
+
+# Disallow access to internal NextJS files
+Disallow: /_next/
+
+# Sitemap location (if you have one)
+Sitemap: https://dance-at-le-pari.vercel.app/sitemap.xml
