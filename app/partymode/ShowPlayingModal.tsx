@@ -508,7 +508,7 @@ style={{top: `${fontSizeTime*1.8}px`, bottom: `${fontSizeTime*.8}px`}}
               {/* <p className="font-bold m-0"
               style={{fontSize: `${fontSize}px`}}
               >{message}</p> */}
-              <AnimatedTextMessage  
+              {message>"" &&<AnimatedTextMessage  
               text={message}
               duration={5}
               delay={0}
@@ -519,9 +519,9 @@ style={{top: `${fontSizeTime*1.8}px`, bottom: `${fontSizeTime*.8}px`}}
               color={textColor}
               cutdelay={false}
               rotate={true} 
-              /> 
+              />}
 
-<AnimatedTextMessage  
+{message2>'' &&<AnimatedTextMessage  
               text={message2}
               duration={5}
               delay={3}
@@ -532,7 +532,7 @@ style={{top: `${fontSizeTime*1.8}px`, bottom: `${fontSizeTime*.8}px`}}
               color={textColor}
               cutdelay={false}
               rotate={false}
-              /> 
+              /> }
 
               {/* <p className="font-bold m-0"
                style={{fontSize: `${fontSize2}px`}}

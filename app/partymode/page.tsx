@@ -63,6 +63,7 @@ const page: React.FC<Props> = () => {
   const [startPage, setStartPage] = useState(true);
   const [revealCloud, setRevealCloud] = useState(false);
   const [compsArr, setCompsArr] = useState<{ name: string; id: string }[]>([]);
+  const [editFirstMessage, setEditFirstMessage] = useState(true);
 
   useEffect(() => {
     let timerInterval: any;
@@ -338,10 +339,11 @@ const page: React.FC<Props> = () => {
       {modal1Visible && (
         <ChooseMessageModal
           savedMessages={savedMessages}
-          message={message}
+          message={editFirstMessage?message:message2}
+          addPrefix={!editFirstMessage}
           onChange={(text) => {
             console.log(text);
-            handleChange(text, 'message');
+            handleChange(text, editFirstMessage?'message':'message2');
             setModal1Visible(false);
           }}
           onMessageArrayChange={(array) => {
@@ -663,25 +665,31 @@ const page: React.FC<Props> = () => {
 
                         <p className="text-center w-60">Choose message font</p>
                        
-                    </div>
-                    <p className="w-full text-center">{message}</p>
+                    </div> 
                     <button
                       className="btnFancy cursor-pointer"
                       onClick={(e) => {
                         e.preventDefault();
+                        setEditFirstMessage(true);
                         setModal1Visible(true);
                       }}
                     >
+                      <p className="w-full text-center">{message}</p>
                       <p className="text-center italic">Choose message</p>
                     </button>
+                    <button
+                      className="btnFancy cursor-pointer"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setEditFirstMessage(false);
+                        setModal1Visible(true);
+                      }}
+                    >
+                      <p className="w-full text-center">{message2}</p>
+                      <p className="text-center italic">Choose second message</p>
+                    </button>
                     <div className="w-full flex flex-col justify-center items-center">
-                      <input
-                        className="w-60 h-9 bg-white rounded-lg border border-[#776548] text-[#444] text-left"
-                        value={message2}
-                        onChange={(e) =>
-                          handleChange(e.target.value, 'message2')
-                        }
-                      />
+                      
                       <div className="flex flex-col justify-center items-center">
                         {fontSize2 && (
                           <CountBox

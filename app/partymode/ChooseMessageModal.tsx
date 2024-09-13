@@ -12,6 +12,7 @@ interface Picture {
 
 type Props = {
   vis: boolean;
+  addPrefix:boolean;
   onChange: (message: string) => void;
   onMessageArrayChange: (messages: string[]) => void;
   savedMessages: string[];
@@ -25,11 +26,12 @@ const ChooseMessageModal: React.FC<Props> = ({
   savedMessages,
   message,
   vis,
+  addPrefix,
   onClose,
 }) => {
   const [displayMessages, setDisplayMessages] = useState<string[]>([]);
   const [messageText, setMessageText] = useState(message);
-
+  const [displayDeleteIcons, setDisplayDeleteIcons] = useState<boolean>(false);
   useEffect(() => {
     setDisplayMessages(savedMessages.sort((a: string, b: string) => a>b?1:-1));
   }, [savedMessages]);
@@ -74,7 +76,30 @@ const ChooseMessageModal: React.FC<Props> = ({
           className="w-full h-full   p-1   border border-lightMainColor dark:border-darkMainColor rounded-md flex flex-col justify-center items-center"
         > 
             <h2 className="text-xl font-bold mb-4">Available messages</h2>
-
+            {addPrefix &&<h2 className="text-lg font-semibold mb-1">Prefixes to message</h2>}
+            {addPrefix &&<div className="w-full h-[20%] border border-black p-1 rounded-md overflow-y-auto relative">
+              <div className="absolute top-0 left-0 w-full flex flex-wrap items-center justify-start">
+              {["",'Next Dance: '].map((item, i) => (
+                  <div
+                    key={`messagecasting${i}`}
+                    className="h-fit w-full flex flex-col items-end justify-center"
+                  >
+                     
+                    <button
+                      className=" btnFancy min-h-[3rem] min-w-[3rem] w-[90%] cursor-pointer"
+                      style={{ padding: 0 }}
+                      onClick={()=>{setMessageText(item)}}
+                    >
+                      <p className="mt-1 w-[85%] text-center">{item}</p>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div> } 
+            <label className="mb-2">
+            <input  type='checkbox' checked={displayDeleteIcons} onChange={(e)=>setDisplayDeleteIcons(!displayDeleteIcons)}/>
+            &nbsp; &nbsp; Delete messages
+            </label>
             <div className="w-full h-[66%] border border-black p-1 rounded-md overflow-y-auto relative">
               <div className="absolute top-0 left-0 flex flex-wrap items-center justify-start">
                 {displayMessages.map((item, i) => (
@@ -82,16 +107,17 @@ const ChooseMessageModal: React.FC<Props> = ({
                     key={`messagecasting${i}`}
                     className="h-fit w-fit flex flex-col items-end justify-center"
                   >
+                    {displayDeleteIcons && 
                     <button
                       onClick={() => handleDeleteMessages(i)}
                       className="  w-10 h-10  outline-none border-none fill-alertcolor  stroke-alertcolor  rounded-md border-alertcolor"
                     >
                       <ShowIcon icon={'Close'} stroke={'2'} />
-                    </button>
+                    </button>}
                     <button
                       className=" btnFancy min-h-[3rem] min-w-[3rem] cursor-pointer"
                       style={{ padding: 0 }}
-                      onClick={()=>{onChange(item)}}
+                      onClick={()=>{onChange(addPrefix?messageText+item:item)}}
                     >
                       <p className="mt-1 w-[85%] text-center">{item}</p>
                     </button>
@@ -104,7 +130,7 @@ const ChooseMessageModal: React.FC<Props> = ({
               <input
                 type="text"
                 placeholder="Enter message text" 
-                defaultValue={message}
+                value={messageText}
                 onChange={(e) => setMessageText(e.target.value)}
                 className="w-[80%] p-2 border border-gray-300 rounded dark:bg-lightMainColor"
               />

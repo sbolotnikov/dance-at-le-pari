@@ -10,5 +10,4 @@ Allow: /_next/static/
 # Disallow access to internal NextJS files
 Disallow: /_next/
 
-# Sitemap location (if you have one)
-Sitemap: https://dance-at-le-pari.vercel.app/sitemap.xml
+ 
