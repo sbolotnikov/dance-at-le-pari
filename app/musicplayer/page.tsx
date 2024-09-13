@@ -11,6 +11,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { db } from '@/firebase';
 import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
 import { useDimensions } from '@/hooks/useDimensions';
+import { useSession } from 'next-auth/react';
 
 interface MusicPlayerProps {
   rateSet: number;
@@ -994,6 +995,7 @@ const page: FC<pageProps> = ({}) => {
   const [isAddToDBOpen, setIsAddToDBOpen] = useState(false);
   const [parties, setParties] = useState<{ name: string; id: string }[]>([]);
   const [choosenParty, setChoosenParty] = useState('');
+  const {data:session} = useSession();
 
   async function getPartyArray() {
     const q = await getDocs(collection(db, 'parties'));
@@ -1024,14 +1026,7 @@ const page: FC<pageProps> = ({}) => {
         'Next Dance: ' +
         playlist[
           currentSongIndex < playlist.length - 1 ? currentSongIndex + 1 : 0
-        ].dance,
-      // }).then((res) => console.log(res));
-      // updateDoc(doc(db, 'parties', choosenParty), {
-      //   message2:
-      //     'Next Dance: ' +
-      //     playlist[
-      //       currentSongIndex < playlist.length - 1 ? currentSongIndex + 1 : 0
-      //     ].dance,
+        ].dance
       }).then((res) => console.log(res));
     }
   }, [currentSongIndex]);
@@ -1128,7 +1123,7 @@ const page: FC<pageProps> = ({}) => {
         <div className="w-full h-full flex flex-col justify-center items-center border rounded-md border-lightMainColor dark:border-darkMainColor relative p-2 overflow-x-auto">
           {/* <div className="container mx-auto p-4"> */}
           <div className="   w-full h-fit p-2 flex flex-col justify-center items-center">
-            <h3 className="w-full uppercase xs:text-md sm:text-xl phone:text-2xl tablet:text-3xl text-center">
+            <h3 className="text-center font-semibold md:text-4xl uppercase"style={{ letterSpacing: '1px' }}>
               Music Player
             </h3>
             <div
@@ -1159,7 +1154,7 @@ const page: FC<pageProps> = ({}) => {
                 }}
               />
             )}
-            <div className="mt-4 flex justify-start space-x-4">
+            <div className="mt-4 flex justify-between space-x-4">
               <div className=" flex flex-col items-center justify-center">
                 <PlayerButtons
                   icon={'File'}
@@ -1170,7 +1165,7 @@ const page: FC<pageProps> = ({}) => {
                     document.getElementById('file-input')?.click();
                   }}
                 />
-                {'Choose a song'}
+                <span className="text-center">Choose a song</span>
               </div>
               <div className=" flex flex-col items-center justify-center">
                 <PlayerButtons
@@ -1182,7 +1177,7 @@ const page: FC<pageProps> = ({}) => {
                     setIsAddToDBOpen(true);
                   }}
                 />
-                {'Edit Playlists'}
+                <span className="text-center">Edit Playlists</span>
               </div>
               <input
                 id="file-input"
@@ -1200,7 +1195,7 @@ const page: FC<pageProps> = ({}) => {
                   size={50}
                   onButtonPress={() => setIsSettingsOpen(true)}
                 />
-                {'Settings'}
+                <span className="text-center">Settings Dashboard</span>
               </div>
               <div className="flex flex-col items-center justify-center">
                 <PlayerButtons
@@ -1210,11 +1205,11 @@ const page: FC<pageProps> = ({}) => {
                   size={50}
                   onButtonPress={() => setIsPlaylistOpen(true)}
                 />
-                {'Playlist'}
+                <span className="text-center">Show Playlist</span>
               </div>
             </div>
-            <select
-              className="w-1/2 p-2 m-auto"
+            {session?.user.role=='Admin' &&<select
+              className="w-1/2 p-2 mx-auto mt-2 bg-lightMainBG dark:bg-darkMainBG text-lightMainColor dark:text-darkMainColor border border-lightMainColor dark:border-darkMainColor rounded-md"
               name="parties"
               id="parties"
               onChange={(e) => {
@@ -1228,7 +1223,7 @@ const page: FC<pageProps> = ({}) => {
                   </option>
                 );
               })}
-            </select>
+            </select>}
           </div>
         </div>
       </div>
