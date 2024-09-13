@@ -1000,6 +1000,7 @@ const page: FC<pageProps> = ({}) => {
     let arr1 = q.docs.map((doc) => doc.data());
     let arr2 = q.docs.map((doc) => doc.id);
     let arr = arr1.map((x, i) => ({ name: x.name, id: arr2[i] }));
+    arr = [{name:'None',id:""},...arr]
     console.log(arr);
     setParties(arr);
     setChoosenParty(arr[0].id);
@@ -1013,19 +1014,24 @@ const page: FC<pageProps> = ({}) => {
     setCurrentSongIndex(index);
   };
   useEffect(() => {
-    console.log(currentSongIndex, 'in useeffect');
-    if (currentSongIndex >= 0 && playlist.length > 0) {
+    console.log(currentSongIndex, 'in useeffect',choosenParty);
+    if (currentSongIndex >= 0 && playlist.length > 0 && choosenParty != "") {
       console.log(playlist[currentSongIndex].dance);
 
       updateDoc(doc(db, 'parties', choosenParty), {
         message: playlist[currentSongIndex].dance,
-      }).then((res) => console.log(res));
-      updateDoc(doc(db, 'parties', choosenParty), {
         message2:
-          'Next Dance: ' +
-          playlist[
-            currentSongIndex < playlist.length - 1 ? currentSongIndex + 1 : 0
-          ].dance,
+        'Next Dance: ' +
+        playlist[
+          currentSongIndex < playlist.length - 1 ? currentSongIndex + 1 : 0
+        ].dance,
+      // }).then((res) => console.log(res));
+      // updateDoc(doc(db, 'parties', choosenParty), {
+      //   message2:
+      //     'Next Dance: ' +
+      //     playlist[
+      //       currentSongIndex < playlist.length - 1 ? currentSongIndex + 1 : 0
+      //     ].dance,
       }).then((res) => console.log(res));
     }
   }, [currentSongIndex]);
