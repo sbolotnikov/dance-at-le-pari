@@ -489,7 +489,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
 
     const clientY = getClientY(e);
     const listRect = listRef.current!.getBoundingClientRect();
-    setGhostPosition({ x: listRect.left, y: clientY - 20 });
+    setGhostPosition({ x: listRect.left, y: clientY - 20  });
 
     if (ghostRef.current) {
       ghostRef.current.innerText = songDB[index].name;
@@ -509,7 +509,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
       Math.min(Math.floor(y / 48), songDB.length - 1)
     );
 
-    setGhostPosition({ x: 0, y: clientY - 90 });
+    setGhostPosition({  x: listRect.left, y: clientY - 20  });
     setPlaceholderIndex(newIndex);
   };
 
@@ -628,11 +628,11 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
                         className={`px-4 flex items-center justify-between relative h-fit min-h-[2.5rem] border-b last:border-b-0 cursor-move hover:bg-gray-50 transition-colors duration-150 ease-in-out 
                           ${i === draggedIndex ? 'hidden' : ''}`}
                       >
-                        <p className=" text-left w-full"
+                        <p className=" text-left w-full no-select"
                         onMouseDown={(e) => onDragStart(e, i)}
                         onTouchStart={(e) => onDragStart(e, i)}
                         >
-                          <span className=" bg-gray-300 text-sm rounded-sm truncate">
+                          <span className=" bg-gray-300 text-sm rounded-sm truncate no-select">
                             {item.dance}
                           </span>
                           {'  '}
@@ -958,11 +958,11 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
               }}
             >
               <div
-                className={`flex flex-grow justify-between cursor-pointer  w-full   bg-blue-100 dark:bg-blue-900`}
+                className={`flex flex-grow justify-between cursor-pointer  w-full   bg-blue-100 dark:bg-blue-900 no-select`}
               >
-                <span>{draggedIndex+1}. </span>
-                <span>
-                  <span className="rounded-md text-white bg-[#504deb] m-1 p-1">
+                <span className='no-select'>{draggedIndex+1}. </span>
+                <span className='no-select'>
+                  <span className="rounded-md text-white bg-[#504deb] m-1 p-1 no-select">
                     {playlist[draggedIndex].dance}
                   </span>
                   {' ' + playlist[draggedIndex].name}
