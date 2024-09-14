@@ -13,8 +13,11 @@ const DraggableList: React.FC<DraggableListProps> = ({ initialItems }) => {
   const listRef = useRef<HTMLUListElement>(null);
   const ghostRef = useRef<HTMLDivElement>(null);
 
-  const getClientY = (e: React.TouchEvent | React.MouseEvent | TouchEvent | MouseEvent) => {
-    return 'touches' in e ? e.touches[0].clientY : e.clientY;
+  const getClientPos = (e: React.TouchEvent | React.MouseEvent | TouchEvent | MouseEvent) => {
+    if ('touches' in e) {
+      return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    }
+    return { x: e.clientX, y: e.clientY };
   };
 
   const onDragStart = (e: React.TouchEvent | React.MouseEvent, index: number) => {
@@ -22,9 +25,8 @@ const DraggableList: React.FC<DraggableListProps> = ({ initialItems }) => {
     setDraggedIndex(index);
     setPlaceholderIndex(index);
 
-    const clientY = getClientY(e);
-    const listRect = listRef.current!.getBoundingClientRect();
-    setGhostPosition({ x: listRect.left, y: clientY - 20 });
+    const { x, y } = getClientPos(e);
+    setGhostPosition({ x, y });
 
     if (ghostRef.current) {
       ghostRef.current.innerText = items[index];
@@ -34,12 +36,17 @@ const DraggableList: React.FC<DraggableListProps> = ({ initialItems }) => {
   const onDragMove = (e: React.TouchEvent | React.MouseEvent | TouchEvent | MouseEvent) => {
     if (!dragging || draggedIndex === null || !listRef.current) return;
 
-    const clientY = getClientY(e);
-    const listRect = listRef.current.getBoundingClientRect();
-    const y = clientY - listRect.top;
-    const newIndex = Math.max(0, Math.min(Math.floor(y / 48), items.length - 1));
+    const { x, y } = getClientPos(e);
+    setGhostPosition({ x, y });
 
-    setGhostPosition({ x: listRect.left, y: clientY - 20 });
+    const listRect = listRef.current.getBoundingClientRect();
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const relativeY = y + scrollTop - listRect.top;
+
+    const itemHeight = 48; // Assuming each item is 48px high
+    let newIndex = Math.floor(relativeY / itemHeight);
+    newIndex = Math.max(0, Math.min(newIndex, items.length - 1));
+
     setPlaceholderIndex(newIndex);
   };
 
@@ -62,7 +69,7 @@ const DraggableList: React.FC<DraggableListProps> = ({ initialItems }) => {
     if (dragging) {
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', onDragEnd);
-      document.addEventListener('touchmove', handleTouchMove);
+      document.addEventListener('touchmove', handleTouchMove, { passive: false });
       document.addEventListener('touchend', onDragEnd);
     }
 
@@ -88,7 +95,7 @@ const DraggableList: React.FC<DraggableListProps> = ({ initialItems }) => {
             <li
               onMouseDown={(e) => onDragStart(e, index)}
               onTouchStart={(e) => onDragStart(e, index)}
-              className={`px-4 h-12 flex items-center border-b last:border-b-0 cursor-move hover:bg-gray-50 transition-colors duration-150 ease-in-out ${
+              className={`px-4 h-12 flex items-center border-b last:border-b-0 cursor-move hover:bg-gray-50 transition-colors duration-150 ease-in-out no-select ${
                 index === draggedIndex ? 'opacity-50' : ''
               }`}
             >
@@ -107,6 +114,7 @@ const DraggableList: React.FC<DraggableListProps> = ({ initialItems }) => {
           style={{
             left: `${ghostPosition.x}px`,
             top: `${ghostPosition.y}px`,
+            transform: 'translate(-50%, -50%)',
             width: listRef.current ? `${listRef.current.offsetWidth - 32}px` : 'auto',
           }}
         >

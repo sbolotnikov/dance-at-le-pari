@@ -472,44 +472,43 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
   const [placeholderIndex, setPlaceholderIndex] = useState<number | null>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const ghostRef = useRef<HTMLDivElement>(null);
+  const topMargin =12;
+  const itemHeight = 40;
 
-  const getClientY = (
-    e: React.TouchEvent | React.MouseEvent | TouchEvent | MouseEvent
-  ) => {
-    return 'touches' in e ? e.touches[0].clientY : e.clientY;
+  const getClientPos = (e: React.TouchEvent | React.MouseEvent | TouchEvent | MouseEvent) => {
+    if ('touches' in e) {
+      return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    }
+    return { x: e.clientX, y: e.clientY };
   };
-
-  const onDragStart = (
-    e: React.TouchEvent | React.MouseEvent,
-    index: number
-  ) => {
+  
+  const onDragStart = (e: React.TouchEvent | React.MouseEvent, index: number) => {
     setDragging(true);
     setDraggedIndex(index);
     setPlaceholderIndex(index);
 
-    const clientY = getClientY(e);
-    const listRect = listRef.current!.getBoundingClientRect();
-    setGhostPosition({ x: listRect.left, y: clientY - 20  });
+    const { x, y } = getClientPos(e);
+    setGhostPosition({ x, y });
 
     if (ghostRef.current) {
       ghostRef.current.innerText = songDB[index].name;
     }
   };
 
-  const onDragMove = (
-    e: React.TouchEvent | React.MouseEvent | TouchEvent | MouseEvent
-  ) => {
+   
+  const onDragMove = (e: React.TouchEvent | React.MouseEvent | TouchEvent | MouseEvent) => {
     if (!dragging || draggedIndex === null || !listRef.current) return;
 
-    const clientY = getClientY(e);
-    const listRect = listRef.current.getBoundingClientRect();
-    const y = clientY - listRect.top;
-    const newIndex = Math.max(
-      0,
-      Math.min(Math.floor(y / 48), songDB.length - 1)
-    );
+    const { x, y } = getClientPos(e);
+    setGhostPosition({ x, y });
 
-    setGhostPosition({  x: listRect.left, y: clientY - 20  });
+    const listRect = listRef.current.getBoundingClientRect();
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const relativeY = y + scrollTop - listRect.top;
+    console.log("coordinateY =",relativeY)
+     
+    let newIndex = Math.floor((relativeY-topMargin)/ itemHeight);
+    newIndex = Math.max(0, Math.min(newIndex, songDB.length - 1));
     setPlaceholderIndex(newIndex);
   };
 
@@ -611,7 +610,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
                 draggedIndex !== null ? 'overflow-hidden' : 'overflow-x-auto'
               } mb-4 `}
             >
-              <div className="flex flex-col flex-wrap items-center justify-start">
+              <div className="flex flex-col flex-wrap items-center justify-start relative">
                 <ul
                   ref={listRef}
                   className="w-full mx-auto mt-8 bg-white rounded-lg shadow-md  relative"
@@ -628,11 +627,13 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
                         className={`px-4 flex items-center justify-between relative h-fit min-h-[2.5rem] border-b last:border-b-0 cursor-move hover:bg-gray-50 transition-colors duration-150 ease-in-out 
                           ${i === draggedIndex ? 'hidden' : ''}`}
                       >
-                        <p className=" text-left w-full no-select"
+                        <p className=" text-left w-full "
+                        style={{userSelect: 'none'}}
                         onMouseDown={(e) => onDragStart(e, i)}
                         onTouchStart={(e) => onDragStart(e, i)}
                         >
-                          <span className=" bg-gray-300 text-sm rounded-sm truncate no-select">
+                          <span >{i+1}. </span>
+                          <span className=" bg-gray-300 text-sm rounded-sm truncate">
                             {item.dance}
                           </span>
                           {'  '}
@@ -661,14 +662,15 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
                     ref={ghostRef}
                     className="fixed px-4 py-2 bg-white shadow-lg rounded opacity-80 pointer-events-none"
                     style={{
-                      left: `${ghostPosition.x}px`,
-                      top: `${ghostPosition.y}px`,
+                      left: `${5}px`,
+                      top: `${topMargin+(placeholderIndex!+1)*itemHeight}px`,
                       width: listRef.current
                         ? `${listRef.current.offsetWidth - 32}px`
                         : 'auto',
                     }}
                   >
                     <p className=" text-center max-w-[300px]">
+                    <span >{draggedIndex+1}. </span>
                       <span className=" bg-gray-300 text-sm rounded-sm truncate">
                         {songDB[draggedIndex].dance}
                       </span>
@@ -798,52 +800,54 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
   onRemoveSong,
   onReturn,
 }) => {
+  
   const [dragging, setDragging] = useState(false);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [ghostPosition, setGhostPosition] = useState({ x: 0, y: 0 });
   const [placeholderIndex, setPlaceholderIndex] = useState<number | null>(null);
   const listRef1 = useRef<HTMLUListElement>(null);
   const ghostRef = useRef<HTMLDivElement>(null);
+  const topMargin =20;
+  const itemHeight = 56;
 
-  const getClientY = (
-    e: React.TouchEvent | React.MouseEvent | TouchEvent | MouseEvent
-  ) => {
-    return 'touches' in e ? e.touches[0].clientY : e.clientY;
+  const getClientPos = (e: React.TouchEvent | React.MouseEvent | TouchEvent | MouseEvent) => {
+    if ('touches' in e) {
+      return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    }
+    return { x: e.clientX, y: e.clientY };
   };
 
-  const onDragStart = (
-    e: React.TouchEvent | React.MouseEvent,
-    index: number
-  ) => {
+  const onDragStart = (e: React.TouchEvent | React.MouseEvent, index: number) => {
     setDragging(true);
     setDraggedIndex(index);
     setPlaceholderIndex(index);
 
-    const clientY = getClientY(e);
-    const listRect = listRef1.current!.getBoundingClientRect();
-    setGhostPosition({ x: listRect.left, y: clientY - 20 });
+    const { x, y } = getClientPos(e);
+    setGhostPosition({ x, y });
 
     if (ghostRef.current) {
       ghostRef.current.innerText = playlist[index].name;
     }
   };
 
-  const onDragMove = (
-    e: React.TouchEvent | React.MouseEvent | TouchEvent | MouseEvent
-  ) => {
+  const onDragMove = (e: React.TouchEvent | React.MouseEvent | TouchEvent | MouseEvent) => {
     if (!dragging || draggedIndex === null || !listRef1.current) return;
 
-    const clientY = getClientY(e);
-    const listRect = listRef1.current.getBoundingClientRect();
-    const y = clientY - listRect.top;
-    const newIndex = Math.max(
-      0,
-      Math.min(Math.floor(y / 48), playlist.length - 1)
-    );
+    const { x, y } = getClientPos(e);
+    setGhostPosition({ x, y });
 
-    setGhostPosition({ x: 0, y: clientY - 90 });
+    const listRect = listRef1.current.getBoundingClientRect();
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const relativeY = y + scrollTop - listRect.top;
+    console.log("coordinateY =",relativeY)
+    
+     // Assuming each item is 48px high
+    let newIndex = Math.floor((relativeY-topMargin)/ itemHeight);
+    newIndex = Math.max(0, Math.min(newIndex, playlist.length - 1));
+
     setPlaceholderIndex(newIndex);
   };
+
 
   const onDragEnd = () => {
     if (
@@ -883,7 +887,7 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
   return (
     <AnimateModalLayout visibility={isVisible} onReturn={() => onReturn()}>
       <div className="blurFilter border-0 rounded-md p-2 shadow-2xl w-[90%] max-w-[450px] max-h-[85%] overflow-y-auto md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70">
-        <div className="w-full max-w-md mx-auto mt-4">
+        <div className="w-full max-w-md mx-auto mt-4 relative">
           <h4 className="text-lg font-semibold mb-2">Playlist</h4>
           <ul className="space-y-2" ref={listRef1}>
             {playlist.map((song, index) => (
@@ -945,24 +949,25 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
               <li className="h-12 bg-blue-100 border-2 border-blue-300 border-dashed"></li>
             )}
           </ul>
-          {dragging && draggedIndex !== null && (
+          {dragging && draggedIndex !== null && placeholderIndex !== null && (
             <div
               ref={ghostRef}
               className="fixed px-4 py-2 bg-white shadow-lg rounded opacity-80 pointer-events-none"
               style={{
-                left: `${ghostPosition.x}px`,
-                top: `${ghostPosition.y}px`,
+                left: `${5}px`,
+                top: `${topMargin+(placeholderIndex!+1)*itemHeight}px`,  
                 width: listRef1.current
                   ? `${listRef1.current.offsetWidth - 32}px`
                   : 'auto',
               }}
             >
               <div
-                className={`flex flex-grow justify-between cursor-pointer  w-full   bg-blue-100 dark:bg-blue-900 no-select`}
+                className={`flex flex-grow justify-between cursor-pointer w-full   bg-blue-100 dark:bg-blue-900`}
+                style={{userSelect: 'none'}}
               >
-                <span className='no-select'>{draggedIndex+1}. </span>
-                <span className='no-select'>
-                  <span className="rounded-md text-white bg-[#504deb] m-1 p-1 no-select">
+                <span  style={{userSelect: 'none'}}>{draggedIndex+1}. </span>
+                <span   style={{userSelect: 'none'}}>
+                  <span className="rounded-md text-white bg-[#504deb] m-1 p-1 ">
                     {playlist[draggedIndex].dance}
                   </span>
                   {' ' + playlist[draggedIndex].name}
@@ -970,7 +975,7 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
                  
               </div>
             </div>
-          )}
+           )} 
         </div>
       </div>
     </AnimateModalLayout>
