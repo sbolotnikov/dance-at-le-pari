@@ -456,6 +456,12 @@ const DropPlace1: React.FC<{
     </div>
   );
 };
+
+function handleOnBeforeUnload(event:BeforeUnloadEvent){
+  event.preventDefault();
+  return (event.returnValue ='')
+};
+
 const AddToDbModal: React.FC<AddToDbModalProps> = ({
   isOpen,
   song,
@@ -527,7 +533,13 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
     setDraggedIndex(null);
     setPlaceholderIndex(null);
   };
+  useEffect(()=>{
 
+    window.addEventListener('beforeunload',handleOnBeforeUnload, {capture:true});
+    // return () => {
+    //  
+    // }
+  }, [])
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => onDragMove(e);
     const handleTouchMove = (e: TouchEvent) => onDragMove(e);
@@ -586,6 +598,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
     <AnimateModalLayout
       visibility={isOpen}
       onReturn={() => {
+        window.removeEventListener('beforeunload',handleOnBeforeUnload, {capture:true});
         onClose();
       }}
     >
@@ -829,7 +842,11 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
       ghostRef.current.innerText = playlist[index].name;
     }
   };
+  useEffect(()=>{
 
+    window.addEventListener('beforeunload',handleOnBeforeUnload, {capture:true});
+
+  }, [])
   const onDragMove = (e: React.TouchEvent | React.MouseEvent | TouchEvent | MouseEvent) => {
     if (!dragging || draggedIndex === null || !listRef1.current) return;
 
@@ -885,7 +902,7 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
   }, [dragging, draggedIndex, placeholderIndex, playlist]);
  
   return (
-    <AnimateModalLayout visibility={isVisible} onReturn={() => onReturn()}>
+    <AnimateModalLayout visibility={isVisible} onReturn={() => {window.removeEventListener('beforeunload',handleOnBeforeUnload, {capture:true}); onReturn()}}>
       <div className="blurFilter border-0 rounded-md p-2 shadow-2xl w-[90%] max-w-[450px] max-h-[85%] overflow-y-auto md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70">
         <div className="w-full max-w-md mx-auto mt-4 relative">
           <h4 className="text-lg font-semibold mb-2">Playlist</h4>
