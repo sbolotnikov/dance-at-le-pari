@@ -472,6 +472,20 @@ const page: FC<pageProps> = ({}) => {
                     setRevealAlert(!revealAlert);
                     return;
                   }
+                  if ((eventDateTimeEnd == "")&& repeating) {
+                    setAlertStyle({
+                      variantHead: 'danger',
+                      heading: 'Warning',
+                      text: 'Please choose the End of interval date!',
+                      color1: 'info',
+                      button1: 'Ok',
+                      color2: '',
+                      button2: '',
+                      inputField: '',
+                    });
+                    setRevealAlert(!revealAlert);
+                    return;
+                  }
                   console.log({
                     date: dateTimeRef.current?.value,
                     templateID: template1.id,

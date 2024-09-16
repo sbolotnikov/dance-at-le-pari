@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
 export async function GET() {
+ 
   const event1 = await prisma.event.findMany({
     where: {
       date: {
@@ -9,21 +10,27 @@ export async function GET() {
       },
     },
   });
+
   let teachersIds: number[] = [];
-  let minPriceOptions: number[] =[];
+  let minPriceOptions: number[] = []; 
   for (let i = 0; i < event1.length; i++) {
     const options = await prisma.priceOptions.findMany({where:{ templateID: event1[i].templateID} })
     minPriceOptions.push(Math.min(...options.map((option) => option.price)))
     if (event1[i].teachersid[0] != undefined)
       teachersIds.push(event1[i].teachersid[0]);
-  }
-  const teachers = await prisma.user.findMany({
-    where: {
-      id: { in: teachersIds },
-    },
-    
-  });
-  console.log(teachers);
+  } 
+  let teachers: { id: number; name: string |null}[] = [];
+  if (teachersIds.length !== 0) {
+    teachers = await prisma.user.findMany({
+      where: {
+        id: { in: teachersIds },
+      },
+      select: {
+        id: true,
+        name: true,
+      },
+    });
+  } 
   await prisma.$disconnect();
   if (event1 == null) {
     return new NextResponse(
@@ -42,10 +49,10 @@ export async function GET() {
       minprice:minPriceOptions[index],
       teacher:
         item.teachersid[0] != undefined
-          ? teachers.filter((i) => i.id === item.teachersid[0])[0].name
+          ? teachers.find((i) => i.id === item.teachersid[0])?.name || ''
           : '',
     };
-  });
+  }); 
   return new NextResponse(JSON.stringify({ eventJSON }), {
     status: 201,
   });

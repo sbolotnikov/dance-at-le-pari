@@ -59,6 +59,7 @@ const Schedule = ({ eventsSet, onReturn }: Props) => {
         .then((response) => response.json())
         .then((data) => {
           let arrayAgenda = data.eventJSON;
+          console.log(arrayAgenda);
           arrayAgenda.sort((a: any, b: any) =>
             a.date > b.date ? 1 : b.date > a.date ? -1 : 0
           );
@@ -71,18 +72,21 @@ const Schedule = ({ eventsSet, onReturn }: Props) => {
     }
   }, [agendaView]);
   useEffect(() => {
-    if ((windowSize.width! < 960)&&(!agendaView))   
+    if ((windowSize.width! < 960)&&(!agendaView)) 
      document.getElementById('container1')!.style.minWidth='960px'
     else document.getElementById('container1')!.style.minWidth='0px'
 
-  }, [windowSize.width, agendaView]);
+  }, [windowSize.width, agendaView]); 
+  useEffect(()=>{ 
+    setNav(JSON.parse(localStorage.getItem('CurrentCalendarMonth')!))
+  },[])
   return (
     <div className="w-full h-full  flex flex-col justify-center items-center ">
       <CalendarHeader
         dateDisplay={dateDisplay}
         defaultView={false}
-        onNext={() => setNav(nav + 1)}
-        onBack={() => setNav(nav - 1)}
+        onNext={() => {setNav(nav + 1); localStorage.setItem('CurrentCalendarMonth', JSON.stringify(nav+1));}}
+        onBack={() => {setNav(nav - 1); localStorage.setItem('CurrentCalendarMonth', JSON.stringify(nav-1));}}
         onStyle={(n) => setAgendaView(n)}
       />
       <div className="w-full h-full relative overflow-auto border rounded-md border-lightMainColor dark:border-darkMainColor">

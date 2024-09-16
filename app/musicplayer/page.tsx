@@ -639,6 +639,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
                         
                         className={`px-4 flex items-center justify-between relative h-fit min-h-[2.5rem] border-b last:border-b-0 cursor-move hover:bg-gray-50 transition-colors duration-150 ease-in-out 
                           ${i === draggedIndex ? 'hidden' : ''}`}
+                          style={{userSelect: 'none'}}
                       >
                         <p className=" text-left w-full "
                         style={{userSelect: 'none'}}
@@ -919,6 +920,7 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
                   className={`h-12  flex flex-col justify-between items-center p-1 rounded ${
                     index === draggedIndex ? 'hidden' : ''
                   }`}
+                  style={{userSelect: 'none'}}
                 >
                   <div
                     className={`flex flex-grow items-start justify-between cursor-pointer  w-full  ${
