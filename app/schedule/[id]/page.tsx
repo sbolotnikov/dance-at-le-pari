@@ -133,6 +133,9 @@ export default function Page({ params }: { params: { id: string } }) {
       document.getElementById('container1')!.style.minWidth = '960px';
     else document.getElementById('container1')!.style.width = '100%';
   }, [windowSize.width]);
+  useEffect(()=>{ 
+    setNav(JSON.parse(localStorage.getItem('CurrentScheduleMonth')!))
+  },[])
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center md:items-end justify-center">
       {loading && <LoadingScreen />}
@@ -361,8 +364,8 @@ export default function Page({ params }: { params: { id: string } }) {
             <CalendarHeader
               dateDisplay={dateDisplay}
               defaultView={true}
-              onNext={() => setNav(nav + 1)}
-              onBack={() => setNav(nav - 1)}
+              onNext={() => {setNav(nav + 1); localStorage.setItem('CurrentScheduleMonth', JSON.stringify(nav+1));}}
+              onBack={() => {setNav(nav - 1); localStorage.setItem('CurrentScheduleMonth', JSON.stringify(nav-1));}}
               onStyle={(n) => {}}
             />
             </div>
