@@ -60,6 +60,7 @@ const ContainerLoaded = () => {
           {' '}
           The place that brings People <br /> together through Dancing
         </p>
+        <p className="text-center md:text-xl text-lg">Best viewed in fullscreen mode</p>
       </div>
       {containerSize.width &&
         departmentsArray.map((item, index) => {
@@ -132,7 +133,7 @@ export default function Home() {
   
   useEffect(() => {
     if (windowSize.width !== undefined) {
-      windowSize.width! > 700 && windowSize.height! > 700
+      windowSize.width! > 700 && windowSize.height! > 560
         ? setBigScreen(true)
         : setBigScreen(false);
     } 
@@ -143,9 +144,9 @@ export default function Home() {
   return (
     <PageWrapper className="absolute inset-0 flex flex-col justify-start items-center mt-10 md:mt-20 ">
       <div className="w-full h-1/5 relative overflow-auto   rounded-md">
-        {events != undefined && <BannerGallery events={events} seconds={10} />}
+        {events != undefined && <BannerGallery events={events} seconds={10} />} 
       </div>
-      {!bigScreen && windowSize.height! > 560 && (
+      {!bigScreen  && (
         <div
           id="text"
           className="blurFilter  text-lightMainColor   dark:text-darkMainColor   mt-3 p-3 md:p-4 shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2"
@@ -157,12 +158,13 @@ export default function Home() {
             {' '}
             The place that brings People <br /> together through Dancing
           </p>
+          
         </div>
       )}
 
       <div className="w-full h-full relative  mb-12 md:mb-0 overflow-y-auto  md:overflow-auto ">
         {!bigScreen ? (
-          <div className="absolute top-0 left-0 w-full min-h-full min-w-full  flex flex-col justify-center items-center md:flex-row md:ml-[23rem]">
+          <div className="absolute top-0 left-0 w-full min-h-full min-w-full  flex flex-col justify-center items-center md:flex-row md:ml-12">
             {departmentsArray.map((item, index) => {
               return (
                 <Link key={'Links' + index} href={item.link}>
