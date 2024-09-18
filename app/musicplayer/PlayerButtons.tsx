@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import React from 'react';
 
 type IconType =
@@ -60,6 +61,7 @@ const PlayerButtons: React.FC<PlayerButtonsProps> = ({
 
   return (
     <button
+      className=" hover:scale-110"
       onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault(); 
         
@@ -72,6 +74,7 @@ const PlayerButtons: React.FC<PlayerButtonsProps> = ({
         background: 'none',
         border: 'none',
         cursor: 'pointer',
+        outline: 'none',
       }}
     >
       <svg
