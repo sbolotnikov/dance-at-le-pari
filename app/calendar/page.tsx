@@ -67,7 +67,7 @@ const page: FC<pageProps> = ({}) => {
           }}
         />
       )}
-      <div className="blurFilter border-0 rounded-md p-2 mt-6 shadow-2xl w-[95%] h-[70svh] md:h-[85svh] max-w-5xl md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 md:mb-3">
+      <div className="blurFilter border-0 rounded-md p-2 mt-6 shadow-2xl w-[95%] h-[70svh] md:h-[85svh] max-w-[90rem] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 md:mb-3">
         <div className="border rounded-md border-lightMainColor dark:border-darkMainColor w-full h-full   p-2 flex flex-col relative">
           <h2
             className="text-center font-semibold text-2xl md:text-4xl uppercase"

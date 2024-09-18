@@ -1,10 +1,15 @@
-import { TDay } from '@/types/screen-settings';
+import { SettingsContext } from '@/hooks/useSettings';
+import { ScreenSettingsContextType, TDay } from '@/types/screen-settings';
 import Link from 'next/link';
+import { useContext } from 'react';
 type Props = {
   day: TDay;
   onClick: () => void;
 };
 export const Day = ({ day, onClick }: Props) => {
+  const { darkMode } = useContext(
+    SettingsContext
+  ) as ScreenSettingsContextType;
   const className = `day ${day.value === 'padding' ? 'padding' : ''} ${
     day.isCurrentDay ? ' border-red-800 border-2 rounded-md' : ''
   }`;
@@ -39,9 +44,10 @@ export const Day = ({ day, onClick }: Props) => {
           {day.event != null &&
             day.event.length > 0 &&
             day.event.map((event, index) => (
+              <div key={day.value+'_event_'+index}>
               <Link href={`/events/${event.id}`}>
               <div
-                className={`text-xs cursor-pointer flex flex-row justify-start items-center m-0.5 rounded-md ${ event.eventtype == 'Group' ? 'text-blue-700': 'text-red-500'} `}
+                className={`text-xs cursor-pointer flex flex-row justify-start items-center m-0.5 rounded-md ${ event.eventtype == 'Group' ? darkMode?'text-blue-300':'text-blue-700': 'text-red-500'} `}
                 //  style={{color: day.event[0].color}}
               >
                 <span className={`text-xs mr-1 `}>
@@ -52,6 +58,8 @@ export const Day = ({ day, onClick }: Props) => {
                 {event.tag}
               </div>
             </Link>
+            {index<day.event!.length-1 &&<hr className='border-dotted border-t-1 w-full border-t-lightMainColor dark:border-t-darkMainColor' />}
+            </div>
             ))}
             <span className='h-2 w-2'> </span>
         </div>
