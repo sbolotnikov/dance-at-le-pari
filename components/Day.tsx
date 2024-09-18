@@ -47,7 +47,7 @@ export const Day = ({ day, onClick }: Props) => {
               <div key={day.value+'_event_'+index}>
               <Link href={`/events/${event.id}`}>
               <div
-                className={`text-xs cursor-pointer flex flex-row justify-start items-center m-0.5 rounded-md ${ event.eventtype == 'Group' ? darkMode?'text-blue-300':'text-blue-700': 'text-red-500'} `}
+                className={`text-xs cursor-pointer flex flex-row justify-start items-center m-0.5 rounded-md ${ event.eventtype == 'Group' ? darkMode?'text-blue-300':'text-franceBlue': 'text-red-500'} `}
                 //  style={{color: day.event[0].color}}
               >
                 <span className={`text-xs mr-1 `}>
