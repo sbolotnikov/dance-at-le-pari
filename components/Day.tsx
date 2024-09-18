@@ -11,17 +11,20 @@ export const Day = ({ day, onClick }: Props) => {
   const classNameDay = `cursor-pointer ${
     day.isCurrentDay ? 'text-red-800 font-extrabold' : ''
   }`;
+  console.log(day)
   return (
     <div
       className={className}
       style={{
+        flexDirection: 'column',
         width: '13%',
         height: '100px',
         boxSizing: 'border-box',
         margin: '.6429%',
         boxShadow: '0px 0px 3px #CBD4C2',
         display: 'flex',
-        flexDirection: 'column',
+        flexFlow: 'row',
+        alignItems: 'start',
         flexWrap: 'wrap',
         overflow: 'hidden',
         justifyContent: 'left',
@@ -30,43 +33,30 @@ export const Day = ({ day, onClick }: Props) => {
       <span onClick={onClick} className={classNameDay}>
         {day.value === 'padding' ? '' : day.value}
       </span>
-      {day.event != null && day.event.length > 0 && (
-        <Link href={`/events/${day.event[0].id}`}>
-          <div
-            className={`text-xs cursor-pointer flex flex-row ${ day.event[0].eventtype == 'Group' ? 'text-blue-700': 'text-red-500'} `}
-            //  style={{color: day.event[0].color}}
-          >
-            <span className={`text-xs mr-1 `}>
-              {new Date(day.event[0].date).toLocaleTimeString('en-US', {
-                timeStyle: 'short',
-              })}
-            </span>{' '}
-            {day.event[0].tag}
-          </div>
-        </Link>
-      )}
-      {day.event != null && day.event.length > 1 && (
-        <Link href={`/events/${day.event[1].id}`}>
-          <div
-            className={`text-xs cursor-pointer flex flex-row  ${day.event[1].eventtype == 'Group'? 'text-blue-700': 'text-red-500'}`}
-            //  style={{color: day.event[0].color}}
-          >
-            <span
-              className={`text-xs mr-1 `}
-            >
-              {new Date(day.event[1].date).toLocaleTimeString('en-US', {
-                timeStyle: 'short',
-              })}
-            </span>{' '}
-            {day.event[1].tag}
-          </div>
-        </Link>
-      )}
-      {day.event != null && day.event.length > 2 && (
-        <div className="text-xs cursor-pointer " onClick={onClick}>{`${
-          day.event.length - 2
-        } more event${day.event.length - 2 > 1 ? 's' : ''}`}</div>
-      )}
+
+      <div className="h-[80px] w-full flex flex-col relative overflow-y-auto">
+        <div className=" w-full  flex flex-col absolute top-0 left-0 ">
+          {day.event != null &&
+            day.event.length > 0 &&
+            day.event.map((event, index) => (
+              <Link href={`/events/${event.id}`}>
+              <div
+                className={`text-xs cursor-pointer flex flex-row justify-start items-center m-0.5 rounded-md ${ event.eventtype == 'Group' ? 'text-blue-700': 'text-red-500'} `}
+                //  style={{color: day.event[0].color}}
+              >
+                <span className={`text-xs mr-1 `}>
+                  {new Date(event.date).toLocaleTimeString('en-US', {
+                    timeStyle: 'short',
+                  })}
+                </span>{' '}
+                {event.tag}
+              </div>
+            </Link>
+            ))}
+            <span className='h-2 w-2'> </span>
+        </div>
+      </div>
+
     </div>
   );
 };
