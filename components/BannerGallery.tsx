@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import React, { useEffect, useState } from 'react';
 import ShowIcon from './svg/showIcon';
@@ -6,7 +6,6 @@ import { gsap } from '../utils/gsap';
 import ImgFromDb from './ImgFromDb';
 import { useDimensions } from '@/hooks/useDimensions';
 
- 
 type Props = {
   seconds: number;
   events: {
@@ -15,11 +14,10 @@ type Props = {
     id: number | string;
     image: string;
     eventtype: string;
-  }[]
+  }[];
 };
 
 const BannerGallery = ({ seconds, events }: Props) => {
-
   const [activePic, setActivePic] = useState(0);
   const [nextActivePic, setNextActivePic] = useState(1);
   const windowSize = useDimensions();
@@ -29,19 +27,24 @@ const BannerGallery = ({ seconds, events }: Props) => {
       let localPic = num;
       if (localPic < events!.length - 1) localPic++;
       else localPic = 0;
-      setNextActivePic(localPic); 
+      setNextActivePic(localPic);
       nextActive(localPic);
     }, seconds * 1000);
   };
 
- 
   useEffect(() => {
-    if (events?.length > 0) 
+    if (events?.length > 0) {
+      let id = window.setTimeout(function () {}, 0);
+      while (id--) {
+        window.clearTimeout(id); // will do nothing if no timeout with id is present
+      }
       nextActive(0);
-    console.log(events)
-  }, [events]); 
+    }
+
+    console.log(events);
+  }, [events]);
   useEffect(() => {
-    if (events!= null ) { 
+    if (events != null) {
       let imgEl = document.getElementById(`image${activePic}`);
       if (imgEl) {
         imgEl.style.opacity = '1';
@@ -74,69 +77,76 @@ const BannerGallery = ({ seconds, events }: Props) => {
           if (imgEl) imgEl.style.display = 'block';
           setActivePic(nextActivePic);
         });
-    // } else setFirstTime(false);
-  }
+      // } else setFirstTime(false);
+    }
   }, [nextActivePic]);
   return (
     <div
       id="galleryContainer"
       className=" h-full w-full relative overflow-hidden rounded-md flex flex-col  "
       style={{ zIndex: 99 }}
-    > 
-    
-      { events.map((item, index) => (
+    >
+      {events.map((item, index) => (
         <div
           key={'img' + index}
           id={'image' + index}
           className={`h-full w-screen flex flex-row justify-start items-start absolute top-0 left-0 cursor-pointer `}
           style={{ display: index !== activePic ? 'none' : 'block' }}
           onClick={() => {
-            if (typeof(events![activePic].id)=="number")
-            location.replace('/events/' + events![activePic].id)
-          else 
-          location.replace(events![activePic].id)
+            if (typeof events![activePic].id == 'number')
+              location.replace('/events/' + events![activePic].id);
+            else location.replace(events![activePic].id);
           }}
         >
-          <div className='h-full w-fit m-auto relative'>
-         {typeof(events![activePic].id)=="number" ?<ImgFromDb stylings={"object-contain h-full"} url={item.image} alt={'Event Picture' + index} />  :
-          <img
-             src={ item.image}
-             className="object-contain h-full"
-             alt={'Event Picture' + index}
-           /> 
-           }
-         <button 
-        className=" absolute top-6 -right-16  cursor-pointer  "
-        style={{ transform: 'translate(0%, -50%)' }}
-        onClick={() => {
-          if (typeof(events![activePic].id)=="number")
-            location.replace('/events/' + events![activePic].id)
-          else 
-          location.replace(events![activePic].id)
-        }}
-      >
-         
-      </button>
-      </div>
+          {events![activePic].id!==undefined && <div className="h-full w-fit m-auto relative">
+            {typeof events![activePic].id == 'number' ? (
+              <ImgFromDb
+                stylings={'object-contain h-full'}
+                url={item.image}
+                alt={'Event Picture' + index}
+              />
+            ) : (
+              <img
+                src={item.image}
+                className="object-contain h-full"
+                alt={'Event Picture' + index}
+              />
+            )}
+            <button
+              className=" absolute top-6 -right-16  cursor-pointer  "
+              style={{ transform: 'translate(0%, -50%)' }}
+              onClick={() => {
+                if (typeof events![activePic].id == 'number')
+                  location.replace('/events/' + events![activePic].id);
+                else location.replace(events![activePic].id);
+              }}
+            ></button>
+          </div>}
           <h2
             id={'text_' + index}
             className={`w-full  text-center text-xs md:text-base absolute bottom-0 right-0 z-100 bg-lightMainBG/70 dark:bg-darkMainBG/70`}
             style={{ display: index !== activePic ? 'none' : 'block' }}
           >
-            {(typeof(events![activePic].id)=="number")? item.tag +  `${(windowSize.width!>767)?' Join us on':''} ${(windowSize.width!>767)? new Date(item.date).toLocaleDateString('en-us', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-              }) : new Date(item.date).toLocaleDateString('en-us', {
-                weekday: 'short',
-                year: 'numeric',
-                month: 'numeric',
-                day: 'numeric',
-              })} @ ${new Date(item.date).toLocaleTimeString('en-US', {
-                timeStyle: 'short',
-              })}` :item.tag
-            }
+            {typeof events![activePic].id == 'number'
+              ? item.tag +
+                `${windowSize.width! > 767 ? ' Join us on' : ''} ${
+                  windowSize.width! > 767
+                    ? new Date(item.date).toLocaleDateString('en-us', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      })
+                    : new Date(item.date).toLocaleDateString('en-us', {
+                        weekday: 'short',
+                        year: 'numeric',
+                        month: 'numeric',
+                        day: 'numeric',
+                      })
+                } @ ${new Date(item.date).toLocaleTimeString('en-US', {
+                  timeStyle: 'short',
+                })}`
+              : item.tag}
           </h2>
         </div>
       ))}
@@ -167,9 +177,8 @@ const BannerGallery = ({ seconds, events }: Props) => {
           <ShowIcon icon={'ArrowLeft'} stroke={'.1'} />
         </div>
       </button>
-      
     </div>
   );
 };
 export default BannerGallery;
-export const dynamic = 'force-dynamic'
+export const dynamic = 'force-dynamic';
