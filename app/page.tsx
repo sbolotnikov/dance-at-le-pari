@@ -11,7 +11,11 @@ import { useDimensions } from '@/hooks/useDimensions';
 var departmentsArray = [
   { name: 'Studio', path: '/images/ballroom.jpg', link: '/about_us/welcome' },
   { name: 'Calendar', path: '/images/calendar.jpg', link: '/calendar' },
-  { name: 'Dancing', path: '/images/social.jpg', link: '/dancing/private-lessons' },
+  {
+    name: 'Dancing',
+    path: '/images/social.jpg',
+    link: '/dancing/private-lessons',
+  },
   {
     name: 'Wedding Dance',
     path: '/images/weddingcouple.jpg',
@@ -37,12 +41,13 @@ const ContainerLoaded = () => {
     setContainerSize({
       width: document.getElementById('containerBig')?.offsetWidth!,
       height: document.getElementById('containerBig')?.offsetHeight!,
-    }); 
-
-  },[windowSize.width]) 
+    });
+  }, [windowSize.width]);
   return (
-    <div  id="containerBig" className=" w-full h-full relative  flex justify-center items-center  overflow-auto">
-
+    <div
+      id="containerBig"
+      className=" w-full h-full relative  flex justify-center items-center  overflow-auto"
+    >
       <div
         id="text"
         className="blurFilter centerOrigin bgGradientSize50 cards__item    text-lightMainColor bg-lightMainBG/60 dark:text-darkMainColor dark:bg-darkMainBG/60  shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2"
@@ -60,7 +65,9 @@ const ContainerLoaded = () => {
           {' '}
           The place that brings People <br /> together through Dancing
         </p>
-        <p className="text-center md:text-xl text-lg">Best viewed in fullscreen mode</p>
+        <p className="text-center md:text-xl text-lg">
+          Best viewed in fullscreen mode
+        </p>
       </div>
       {containerSize.width &&
         departmentsArray.map((item, index) => {
@@ -84,14 +91,13 @@ const ContainerLoaded = () => {
                   {
                     width: Math.round(containerSize.width! / 5.5) + 'px',
                     height: Math.round(containerSize.height! / 3) + 'px',
-                    maxHeight:'260px',
+                    maxHeight: '260px',
                     backgroundImage: `url(${item.path})`,
                     backgroundPosition: 'center',
                     backgroundSize: 'cover',
                     '--item-x':
                       Math.round(
-                        (containerSize.width  /
-                          2.4) *
+                        (containerSize.width / 2.4) *
                           Math.cos(
                             degrees_to_radians(
                               (index * 360) / departmentsArray.length - 240
@@ -100,7 +106,7 @@ const ContainerLoaded = () => {
                       ) + 'px',
                     '--item-y':
                       Math.round(
-                        (containerSize.height  /
+                        (containerSize.height /
                           (containerSize.height > containerSize.width
                             ? 2.5
                             : 2.5)) *
@@ -113,7 +119,6 @@ const ContainerLoaded = () => {
                   } as React.CSSProperties
                 }
               >
-                 
                 <div className="w-full rounded-md  text-xl  text-center   text-shadow  dark:text-shadow-light text-lightMainColor bg-lightMainBG/80  dark:text-darkMainColor dark:bg-darkMainBG/80  dark:shadow-darkMainColor">
                   {item.name}
                 </div>
@@ -130,23 +135,35 @@ export default function Home() {
   const { events } = useContext(SettingsContext) as ScreenSettingsContextType;
   const windowSize = useDimensions();
   const [bigScreen, setBigScreen] = useState(false);
-  
+
   useEffect(() => {
     if (windowSize.width !== undefined) {
       windowSize.width! > 700 && windowSize.height! > 560
         ? setBigScreen(true)
         : setBigScreen(false);
-    } 
-    
+    }
   }, [windowSize.width]);
-  
 
   return (
     <PageWrapper className="absolute inset-0 flex flex-col justify-start items-center mt-10 md:mt-20 ">
       <div className="w-full h-1/5 relative overflow-auto   rounded-md">
-        {events != undefined && <BannerGallery events={events} seconds={10} />} 
+        {events != undefined && (
+          <BannerGallery
+            events={[
+              ...events,
+              {
+                date: '',
+                tag: 'Give a Gift of Dance!',
+                id: '/gift',
+                image:'/images/couple.webp',
+                eventtype: '',
+              },
+            ]}
+            seconds={10}
+          />
+        )}
       </div>
-      {!bigScreen  && (
+      {!bigScreen && (
         <div
           id="text"
           className="blurFilter  text-lightMainColor   dark:text-darkMainColor   mt-3 p-3 md:p-4 shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2"
@@ -158,7 +175,6 @@ export default function Home() {
             {' '}
             The place that brings People <br /> together through Dancing
           </p>
-          
         </div>
       )}
 
@@ -186,12 +202,8 @@ export default function Home() {
             })}
           </div>
         ) : (
-          <div
-           
-            className="w-full h-full absolute  top-0 left-0 "
-          >
-            
-              <ContainerLoaded/>
+          <div className="w-full h-full absolute  top-0 left-0 ">
+            <ContainerLoaded />
           </div>
         )}
       </div>
