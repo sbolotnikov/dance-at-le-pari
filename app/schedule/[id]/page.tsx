@@ -275,6 +275,7 @@ export default function Page({ params }: { params: { id: string } }) {
                       teachersid: n.teachersid,
                       studentid: n.studentid,
                       location: n.location,
+                      confirmed: n.confirmed,
                     },
                   }),
                 });
