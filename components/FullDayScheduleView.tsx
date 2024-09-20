@@ -35,6 +35,7 @@ type DisplayEvent = {
   crossed: number;
   x_shift: number;
   date2: string;
+  confirmed: boolean;
 };
 const FullDayScheduleView = ({
   events,

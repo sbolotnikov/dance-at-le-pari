@@ -81,6 +81,7 @@ export type TEventSchedule = {
   studentid: number[];
   teachersid: number[];
   until: string | null;
+  confirmed: boolean;
 };
 type TEventScheduleArray = TEventSchedule[];
 type TDaySchedule = {
@@ -94,6 +95,8 @@ type TTableData ={
    note:string, 
    lessons:number | null, 
    groups:number | null,
+   confirmed: boolean | undefined,
+   id:number | undefined,
 }
 type TFullEvent = {
   eventtype: EventType;

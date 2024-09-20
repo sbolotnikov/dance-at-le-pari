@@ -175,6 +175,7 @@ export default function Page({ params }: { params: { id: string } }) {
               interval: null,
               repeating: false,
               until: null,
+              confirmed: false,
             });
           }}
         />

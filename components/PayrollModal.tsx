@@ -5,7 +5,9 @@ import {
   TTableData,
   TUser,
 } from '@/types/screen-settings';
-import * as XLSX from 'xlsx'; 
+import * as XLSX from 'xlsx';
+import ShowIcon from './svg/showIcon';
+import { prisma } from '@/lib/prisma';
 
 type Props = {
   visibility: boolean;
@@ -17,7 +19,7 @@ type Props = {
 };
 type TExcelJSON = {
   daysSchedule: {
-    events: { tag: string; amount: number }[];
+    events: { tag: string; amount: number; confirmed: boolean; id: number }[];
     dateString: string;
     lessonAmount: number;
     groupsAmount: number;
@@ -26,17 +28,24 @@ type TExcelJSON = {
   totalLessonAmount: number;
   totalGroupsAmount: number;
 };
-const PayrollModal = ({ visibility, role,userID, events, users, onReturn }: Props) => {
+const PayrollModal = ({
+  visibility,
+  role,
+  userID,
+  events,
+  users,
+  onReturn,
+}: Props) => {
   const [isVisible, setIsVisible] = useState(visibility);
   const dateRef1 = useRef<HTMLInputElement>(null);
   const dateRef2 = useRef<HTMLInputElement>(null);
   const [tableData, setTableData] = useState<TTableData[]>([]);
   const [lessonLength, setLessonLength] = useState(45);
-  const [teacher, setTeacher] = useState(role==='Teacher'?userID:-1);
+  const [teacher, setTeacher] = useState(role === 'Teacher' ? userID : -1);
   const [excelJSON, setExcelJSON] = useState<TExcelJSON[]>([]);
+  const [changesMade, setChangesMade] = useState<{id:number, confirmed:boolean}[]>([])
 
   const uniqueValues = (nums: any[]) => Array.from(new Set(nums));
-
 
   const handleOnExport = () => {
     let wb = XLSX.utils.book_new();
@@ -45,32 +54,44 @@ const PayrollModal = ({ visibility, role,userID, events, users, onReturn }: Prop
       lessonAmount: number;
       groupsAmount: number;
     }[] = [];
-    for (let i = 0; i < excelJSON.length; i++){
+    for (let i = 0; i < excelJSON.length; i++) {
       let name = excelJSON[i].name;
       let lessonAmount = excelJSON[i].totalLessonAmount;
-      let groupsAmount = excelJSON[i].totalGroupsAmount; 
+      let groupsAmount = excelJSON[i].totalGroupsAmount;
       let obj = {
         name: name,
         lessonAmount: lessonAmount,
         groupsAmount: groupsAmount,
       };
-      totalsTable.push(obj); 
+      totalsTable.push(obj);
     }
-    totalsTable.push({name: 'Total: ', lessonAmount: totalsTable.map((item) => item.lessonAmount).reduce((a, b) => a + b, 0), groupsAmount: totalsTable.map((item) => item.groupsAmount).reduce((a, b) => a + b, 0) });
+    totalsTable.push({
+      name: 'Total: ',
+      lessonAmount: totalsTable
+        .map((item) => item.lessonAmount)
+        .reduce((a, b) => a + b, 0),
+      groupsAmount: totalsTable
+        .map((item) => item.groupsAmount)
+        .reduce((a, b) => a + b, 0),
+    });
     if (teacher === -1) {
-    let ws = XLSX.utils.json_to_sheet(totalsTable);
-    XLSX.utils.book_append_sheet(wb, ws, 'Totals'); 
-    ws = XLSX.utils.json_to_sheet(tableData);
-      XLSX.utils.book_append_sheet(wb, ws, "Details");
-    XLSX.writeFile(wb, `Time Sheet ${dateRef1.current?.value} to ${dateRef2.current?.value}.xlsx`);
-    }else{
-     let ws = XLSX.utils.json_to_sheet(tableData);
-      XLSX.utils.book_append_sheet(wb, ws, "Details");
-    XLSX.writeFile(wb, `Time Sheet ${totalsTable[0].name} ${dateRef1.current?.value} to ${dateRef2.current?.value}.xlsx`);
+      let ws = XLSX.utils.json_to_sheet(totalsTable);
+      XLSX.utils.book_append_sheet(wb, ws, 'Totals');
+      ws = XLSX.utils.json_to_sheet(tableData);
+      XLSX.utils.book_append_sheet(wb, ws, 'Details');
+      XLSX.writeFile(
+        wb,
+        `Time Sheet ${dateRef1.current?.value} to ${dateRef2.current?.value}.xlsx`
+      );
+    } else {
+      let ws = XLSX.utils.json_to_sheet(tableData);
+      XLSX.utils.book_append_sheet(wb, ws, 'Details');
+      XLSX.writeFile(
+        wb,
+        `Time Sheet ${totalsTable[0].name} ${dateRef1.current?.value} to ${dateRef2.current?.value}.xlsx`
+      );
     }
   };
-
-
 
   const prepareJSON = (
     events: TEventScheduleArray,
@@ -79,7 +100,7 @@ const PayrollModal = ({ visibility, role,userID, events, users, onReturn }: Prop
     let dateArr = events.map((event) => event.date.split('T')[0]);
     dateArr = uniqueValues(dateArr);
     let obj1: {
-      events: { tag: string; amount: number }[];
+      events: { tag: string; amount: number; confirmed: boolean; id: number }[];
       dateString: string;
       lessonAmount: number;
       groupsAmount: number;
@@ -112,6 +133,8 @@ const PayrollModal = ({ visibility, role,userID, events, users, onReturn }: Prop
               ': ' +
               event.tag,
         amount: event.eventtype == 'Group' ? 1 : event.length / lessonLength,
+        confirmed: event.confirmed,
+        id: event.id,
       }));
       obj1.push({
         events: finalEvents,
@@ -129,7 +152,6 @@ const PayrollModal = ({ visibility, role,userID, events, users, onReturn }: Prop
 
     return { name, daysSchedule: obj1, totalLessonAmount, totalGroupsAmount };
   };
-
 
   const prepareAllJSON = () => {
     let teachers = users
@@ -168,8 +190,8 @@ const PayrollModal = ({ visibility, role,userID, events, users, onReturn }: Prop
           teacherDataObj.totalLessonAmount > 0
         ) {
           if (temp1.map((item) => item.name).indexOf(teachers[i].name) === -1) {
-            prepareTableView(teacherDataObj,true);
-             
+            prepareTableView(teacherDataObj, true);
+
             temp1.push(teacherDataObj);
             setExcelJSON([...temp1]);
           }
@@ -177,66 +199,76 @@ const PayrollModal = ({ visibility, role,userID, events, users, onReturn }: Prop
       }
   };
 
-  const prepareTableView = (teacherDataObj:TExcelJSON, multipleUsers:boolean ) =>{
-    let tableDataTemp: TTableData[] 
-    multipleUsers?tableDataTemp= tableData : tableDataTemp = [];
-            tableDataTemp.push({
-              date: '.',
-              note: " ",
-              lessons: null,
-              groups: null,
-            });
-            tableDataTemp.push({
-              date: '.',
-              note: " ",
-              lessons: null,
-              groups: null,
-            });
-            tableDataTemp.push({
-              date: '',
-              note: teacherDataObj.name,
-              lessons: Math.round(teacherDataObj.totalLessonAmount*100)/100,
-              groups: teacherDataObj.totalGroupsAmount,
-            });
-            for (let i = 0; i < teacherDataObj.daysSchedule.length; i++) {
-              tableDataTemp.push({
-                date:  new Date( teacherDataObj.daysSchedule[i].dateString +" 5:00:00.1").toLocaleDateString('en-us', {
-                  weekday: 'short',
-                  year: 'numeric',
-                  month: 'numeric',
-                  day: 'numeric',
-                }) ,
+  const prepareTableView = (
+    teacherDataObj: TExcelJSON,
+    multipleUsers: boolean
+  ) => {
+    let tableDataTemp: TTableData[];
+    multipleUsers ? (tableDataTemp = tableData) : (tableDataTemp = []);
+    tableDataTemp.push({
+      date: '.',
+      note: ' ',
+      lessons: null,
+      groups: null,
+      confirmed: undefined,
+      id: undefined,
+    });
+    tableDataTemp.push({
+      date: '.',
+      note: ' ',
+      lessons: null,
+      groups: null,
+      confirmed: undefined,
+      id: undefined,
+    });
+    tableDataTemp.push({
+      date: '',
+      note: teacherDataObj.name,
+      lessons: Math.round(teacherDataObj.totalLessonAmount * 100) / 100,
+      groups: teacherDataObj.totalGroupsAmount,
+      confirmed: undefined,
+      id: undefined,
+    });
+    for (let i = 0; i < teacherDataObj.daysSchedule.length; i++) {
+      tableDataTemp.push({
+        date: new Date(
+          teacherDataObj.daysSchedule[i].dateString + ' 5:00:00.1'
+        ).toLocaleDateString('en-us', {
+          weekday: 'short',
+          year: 'numeric',
+          month: 'numeric',
+          day: 'numeric',
+        }),
+        note: '',
+        lessons:
+          Math.round(teacherDataObj.daysSchedule[i].lessonAmount * 100) / 100,
+        groups: teacherDataObj.daysSchedule[i].groupsAmount,
+        confirmed: undefined,
+        id: undefined,
+      });
+      for (let j = 0; j < teacherDataObj.daysSchedule[i].events.length; j++) {
+        tableDataTemp.push({
+          date: '',
+          note: teacherDataObj.daysSchedule[i].events[j].tag,
+          lessons: teacherDataObj.daysSchedule[i].events[j].tag.includes(
+            'Private'
+          )
+            ? Math.round(
+                teacherDataObj.daysSchedule[i].events[j].amount * 100
+              ) / 100
+            : 0,
+          groups: teacherDataObj.daysSchedule[i].events[j].tag.includes('Group')
+            ? teacherDataObj.daysSchedule[i].events[j].amount
+            : 0,
+          confirmed: teacherDataObj.daysSchedule[i].events[j].confirmed,
+          id: teacherDataObj.daysSchedule[i].events[j].id,
+        });
+      }
+    }
 
-
-
-                note: '',
-                lessons: Math.round(teacherDataObj.daysSchedule[i].lessonAmount*100)/100,
-                groups: teacherDataObj.daysSchedule[i].groupsAmount,
-              });
-              for (
-                let j = 0;
-                j < teacherDataObj.daysSchedule[i].events.length;
-                j++
-              ) {
-                tableDataTemp.push({
-                  date: '',
-                  note: teacherDataObj.daysSchedule[i].events[j].tag,
-                  lessons: teacherDataObj.daysSchedule[i].events[
-                    j
-                  ].tag.includes('Private')
-                    ? Math.round(teacherDataObj.daysSchedule[i].events[j].amount*100)/100
-                    : 0,
-                  groups: teacherDataObj.daysSchedule[i].events[j].tag.includes(
-                    'Group'
-                  )
-                    ? teacherDataObj.daysSchedule[i].events[j].amount
-                    : 0,
-                });
-              }
-            }
-            tableDataTemp=[ ...tableDataTemp]
-            setTableData([...tableDataTemp]);
-  }
+    setTableData([...tableDataTemp]);
+    console.log(tableDataTemp);
+  };
   console.log(excelJSON);
 
   return (
@@ -293,8 +325,8 @@ const PayrollModal = ({ visibility, role,userID, events, users, onReturn }: Prop
                           users.filter((user) => user.id === teacher)[0].name
                         )
                       );
-                      
-                      prepareTableView(temp1[0],false);
+
+                      prepareTableView(temp1[0], false);
                       setExcelJSON([...temp1]);
                     } else {
                       setExcelJSON([] as TExcelJSON[]);
@@ -333,7 +365,7 @@ const PayrollModal = ({ visibility, role,userID, events, users, onReturn }: Prop
                           users.filter((user) => user.id === teacher)[0].name
                         )
                       );
-                      prepareTableView(temp1[0],false);
+                      prepareTableView(temp1[0], false);
                       setExcelJSON([...temp1]);
                     } else {
                       setExcelJSON([] as TExcelJSON[]);
@@ -382,7 +414,7 @@ const PayrollModal = ({ visibility, role,userID, events, users, onReturn }: Prop
                         )[0].name
                       )
                     );
-                    prepareTableView(temp1[0],false);
+                    prepareTableView(temp1[0], false);
                     setExcelJSON([...temp1]);
                   } else {
                     setExcelJSON([] as TExcelJSON[]);
@@ -390,18 +422,22 @@ const PayrollModal = ({ visibility, role,userID, events, users, onReturn }: Prop
                   }
                 }}
               >
-                {role!=="Teacher" &&<option
-                  key={'all teachers'}
-                  value={-1}
-                  style={{
-                    backgroundColor: 'transparent',
-                  }}
-                >
-                  {'All Instructors'}
-                </option>}
+                {role !== 'Teacher' && (
+                  <option
+                    key={'all teachers'}
+                    value={-1}
+                    style={{
+                      backgroundColor: 'transparent',
+                    }}
+                  >
+                    {'All Instructors'}
+                  </option>
+                )}
                 {users
-                  .filter(
-                    (user) => role!=="Teacher"? user.role === 'Teacher' || user.role === 'Admin': user.id==userID
+                  .filter((user) =>
+                    role !== 'Teacher'
+                      ? user.role === 'Teacher' || user.role === 'Admin'
+                      : user.id == userID
                   )
                   .sort((a: any, b: any) => {
                     if (a.name > b.name) return 1;
@@ -429,27 +465,89 @@ const PayrollModal = ({ visibility, role,userID, events, users, onReturn }: Prop
             >
               Export
             </button>
+            {changesMade.length>0 &&<button
+              className="btnFancy m-2 p-2   bg-darkMainColor text-lightMainBG rounded-md"
+              onClick={async () => {
+                const res = await fetch('/api/schedule_confirm', {
+                  method: 'PUT',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                     changesmade: changesMade,
+                  }),
+                });
+                console.log(res);
+                setChangesMade([]);
+                 
+
+              }}
+            >
+              Save Changes
+            </button>}
             <div className="flex flex-col w-full">
-            <div className="w-full flex flex-row justify-between border rounded-t-md border-lightMainColor dark:border-darkMainColor"
-                  >
-                    <div className="w-1/4 flex justify-center items-center">Date</div>
-                    <div className="w-[38%] flex justify-center items-center">Note</div>
-                    <div className="w-[12.5%] flex justify-center items-center">Lessons</div>
-                    <div className="w-[12.5%] flex justify-center items-center ">Groups</div>
-                    <div className="w-[12.5%] flex justify-center items-center">Confirmed</div>
-                  </div>
+              <div className="w-full flex flex-row justify-between border rounded-t-md border-lightMainColor dark:border-darkMainColor">
+                <div className="w-1/4 flex justify-center items-center">
+                  Date
+                </div>
+                <div className="w-[38%] flex justify-center items-center">
+                  Note
+                </div>
+                <div className="w-[12.5%] flex justify-center items-center">
+                  Lessons
+                </div>
+                <div className="w-[12.5%] flex justify-center items-center ">
+                  Groups
+                </div>
+                <div className="w-[12.5%] flex justify-center items-center">
+                  Confirmed
+                </div>
+              </div>
               {tableData &&
                 teacher &&
                 tableData.map((row, index) => (
-                  <div
-                    key={'row_' + index}
-                    className="flex w-full flex-row"
-                  >
-                    <div className="w-1/4 flex justify-center items-center flex-wrap">{row.date}</div>
-                    <div className="w-[38%] flex justify-center items-center flex-wrap border-l border-lightMainColor dark:border-darkMainColor">{row.note}</div>
-                    <div className="w-[12.5%] flex justify-center items-center flex-wrap border-l text-center border-lightMainColor dark:border-darkMainColor">{row.lessons}</div>
-                    <div className="w-[12.5%] flex justify-center items-center flex-wrap border-l text-center border-lightMainColor dark:border-darkMainColor">{row.groups}</div>
-                    <div className="w-[12.5%] flex justify-center items-center flex-wrap border-l text-center border-lightMainColor dark:border-darkMainColor">Confirmed</div>
+                  <div key={'row_' + index} className="flex w-full flex-row">
+                    <div className="w-1/4 flex justify-center items-center flex-wrap">
+                      {row.date}
+                    </div>
+                    <div className="w-[38%] flex justify-center items-center flex-wrap border-l border-lightMainColor dark:border-darkMainColor">
+                      {row.note}
+                    </div>
+                    <div className="w-[12.5%] flex justify-center items-center flex-wrap border-l text-center border-lightMainColor dark:border-darkMainColor">
+                      {row.lessons}
+                    </div>
+                    <div className="w-[12.5%] flex justify-center items-center flex-wrap border-l text-center border-lightMainColor dark:border-darkMainColor">
+                      {row.groups}
+                    </div>
+                    {row.confirmed !== undefined && (
+                      <div className="w-[12.5%] flex justify-center items-center flex-wrap border-l text-center border-lightMainColor dark:border-darkMainColor">
+                        <div className={` h-8 w-8 md:h-10 md:w-10 fill-${row.confirmed?"editcolor":"alertcolor"}  stroke-${row.confirmed?"editcolor":"alertcolor"}`}
+                           onClick={() =>{ 
+                            let temp = [...tableData];
+                            let newValue = !temp[index].confirmed
+                            temp[index].confirmed =  newValue;
+                            console.log(row.id);
+                            setTableData(temp);
+                            let originalEvent=events.filter((event) => event.id === row.id)[0];
+                            console.log(originalEvent);
+                            let tempChanges=changesMade;
+                            if (tempChanges.filter((event) => event.id === row.id).length===0){
+                               tempChanges.push({id:row.id!,confirmed:newValue});
+                            }else{
+                               tempChanges=tempChanges.filter((event) => {
+                                if (event.id !== row.id) 
+                                return event;
+                              });
+                              setChangesMade(tempChanges);
+                            }
+                              console.log(tempChanges);
+                        
+                           }}
+                        >
+                          <ShowIcon icon={row.confirmed?'Checkmark':"Close"} stroke={'0.5'} />
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ))}
             </div>
