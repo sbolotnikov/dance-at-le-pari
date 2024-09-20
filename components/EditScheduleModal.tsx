@@ -36,6 +36,7 @@ export default function EditScheduleModal({
   const [isVisible, setIsVisible] = useState(visibility);
   const [eventType, setEventType] = useState('Private');
   const [location, setLocation] = useState('Main ballroom');
+  const [confirmed, setConfirmed] = useState(false);
   const [eventDateTime1, setEventDateTime1] = useState('');
   const [eventDateTime2, setEventDateTime2] = useState('');
   const [eventDateTimeEnd, setEventDateTimeEnd] = useState('');
@@ -111,6 +112,7 @@ export default function EditScheduleModal({
       setLocation(event.location!);
       setEventDateTime1(event.date);
       setEventDateTimeEnd(event.date);
+      setConfirmed(event.confirmed);
       setLength(event.length);
       let dateObj = Date.parse(event.date);
       let newDateOBJ = new Date(dateObj + event.length * 60000);
@@ -474,7 +476,21 @@ export default function EditScheduleModal({
             <label className="flex flex-row justify-between items-center m-1 w-full">
               Finish Time <span>{eventDateTime2}</span>
             </label>
-           
+            {role !== 'Student' && (
+              <label className="flex flex-row justify-between items-center mb-1">
+                Confirmed Event
+                <input
+                  className=" outline-none border-none rounded-md  text-lightMainColor p-0.5 mx-1"
+                  id="confirmedEvent"
+                  name="confirmedEvent"
+                  type="checkbox"
+                  checked={confirmed}
+                  onChange={(e) => {
+                    setConfirmed(!confirmed);
+                  }}
+                />
+              </label>
+            )}
             {role !== 'Student' && (
               <label className="flex flex-row justify-between items-center mb-1">
                 Repeating Event
@@ -490,6 +506,7 @@ export default function EditScheduleModal({
                 />
               </label>
             )}
+
             {repeating && (
               <label className="flex flex-row m-auto justify-between items-center">
                 Interval of repeating
@@ -556,6 +573,7 @@ export default function EditScheduleModal({
                       interval: repeatInterval,
                       until: eventDateTimeEnd,
                       id: event.id == undefined ? -1 : event.id,
+                      confirmed: confirmed,
                     },
                     null
                   );
