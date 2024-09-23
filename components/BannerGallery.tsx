@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import ShowIcon from './svg/showIcon';
 import { gsap } from '../utils/gsap';
 import ImgFromDb from './ImgFromDb';
-import { useDimensions } from '@/hooks/useDimensions';
+import { useDimensions } from '@/hooks/useDimensions'; 
 
 type Props = {
   seconds: number;
@@ -41,8 +41,7 @@ const BannerGallery = ({ seconds, events }: Props) => {
       nextActive(0);
     }
 
-    console.log(events);
-  }, [events]);
+   }, [events]);
   useEffect(() => {
     if (events != null) {
       let imgEl = document.getElementById(`image${activePic}`);
@@ -77,8 +76,7 @@ const BannerGallery = ({ seconds, events }: Props) => {
           if (imgEl) imgEl.style.display = 'block';
           setActivePic(nextActivePic);
         });
-      // } else setFirstTime(false);
-    }
+     }
   }, [nextActivePic]);
   return (
     <div
@@ -98,7 +96,7 @@ const BannerGallery = ({ seconds, events }: Props) => {
             else location.replace(events![activePic].id);
           }}
         >
-          {events![activePic].id!==undefined && <div className="h-full w-fit m-auto relative">
+          {events![activePic].id!==undefined && windowSize.width!>0 && <div className="h-full w-fit m-auto relative">
             {typeof events![activePic].id == 'number' ? (
               <ImgFromDb
                 stylings={'object-contain h-full'}
@@ -106,11 +104,14 @@ const BannerGallery = ({ seconds, events }: Props) => {
                 alt={'Event Picture' + index}
               />
             ) : (
-              <img
-                src={item.image}
-                className="object-contain h-full"
-                alt={'Event Picture' + index}
-              />
+              <div
+                className="w-full h-full  bg-center bg-no-repeat bg-contain"
+                // alt={'Event Picture' + index}
+                style={{
+                  backgroundImage: `url(${item.image})`,
+
+                }}
+              ></div>
             )}
             <button
               className=" absolute top-6 -right-16  cursor-pointer  "
@@ -150,7 +151,6 @@ const BannerGallery = ({ seconds, events }: Props) => {
           </h2>
         </div>
       ))}
-
       <button
         id="nextButton"
         className=" absolute top-1/2 right-0 cursor-pointer "
