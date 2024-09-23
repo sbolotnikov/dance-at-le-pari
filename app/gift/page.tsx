@@ -15,11 +15,12 @@ import { useDispatch } from 'react-redux';
 import ChoosePicture from '@/components/ChoosePicture';
 import ImgFromDb from '@/components/ImgFromDb';
 import SharePostModal from '@/components/SharePostModal'; 
+import BannerGallery from '@/components/BannerGallery';
 type Props = {};
 
 const page = (props: Props) => {
   const { data: session } = useSession();
-  const { giftCertificates, gsImage } = useContext(
+  const { giftCertificates, gsImage, events } = useContext(
     SettingsContext
   ) as ScreenSettingsContextType;
   const [img, setImg] = useState<string>('');
@@ -27,10 +28,7 @@ const page = (props: Props) => {
   const [priceOptions, setPriceOptions] = useState<TPriceOption[] | null>(null);
   const [choosenOption, setChoosenOption] = useState<number>(0);
   const [revealSharingModal, setRevealSharingModal] = useState(false);
-  const dispatch = useDispatch();
-  //   tag: string;
-  //   price: number;
-  //   amount: number; 
+  const dispatch = useDispatch(); 
   useEffect(() => {
     setPriceOptions(giftCertificates);
     setImg(gsImage);
@@ -54,7 +52,31 @@ const page = (props: Props) => {
     }
   };
   return (
-    <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
+    <PageWrapper className="absolute top-0 left-0 w-full h-screen flex flex-col items-center  justify-start">
+      <div className="w-full h-1/5 relative overflow-auto mt-1 md:mt-6  rounded-md">
+        {events != undefined && (
+          <BannerGallery
+            events={[
+              ...events,
+              {
+                date: '',
+                tag: 'Give a Gift of Dance!',
+                id: '/gift',
+                image: '/images/couple.webp',
+                eventtype: '',
+              },
+              {
+                date: '',
+                tag: 'Subscribe to our Newsletter!',
+                id: '/subscribeemaillist',
+                image: '/images/gotmail.jpg',
+                eventtype: '',
+              },
+            ]}
+            seconds={10}
+          />
+        )}
+      </div> 
        <SharePostModal
         title={
           'Page: Gift Certificates | Dance at Le Pari Studio'
@@ -66,7 +88,7 @@ const page = (props: Props) => {
         visibility={revealSharingModal}
       />
       {revealCloud && <ChoosePicture onReturn={onReturnPicture} />}
-      <div className="blurFilter border-0 rounded-md p-2 shadow-2xl w-[90%] max-w-[850px] h-full max-h-[85%]  md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70">
+      <div className="blurFilter border-0 rounded-md p-2 shadow-2xl w-[90%] max-w-[850px] h-full max-h-[73%]  md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70">
         <div className="w-full h-full flex flex-col justify-center items-center border rounded-md border-lightMainColor dark:border-darkMainColor relative p-2 overflow-y-auto">
           <div className=" absolute top-0 left-0 w-full h-fit p-2">
             <div className="w-full uppercase font-semibold  xs:text-md sm:text-xl md:text-4xl text-center">

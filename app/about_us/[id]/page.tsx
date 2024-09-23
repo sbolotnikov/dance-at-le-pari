@@ -17,7 +17,8 @@ import { useSession } from 'next-auth/react';
 import { useDimensions } from '@/hooks/useDimensions';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import SharePostModal from '@/components/SharePostModal'; 
+import SharePostModal from '@/components/SharePostModal';
+import BannerGallery from '@/components/BannerGallery';
 
 export default function Page({ params }: { params: { id: string } }) {
   const tabsArray = [
@@ -27,19 +28,40 @@ export default function Page({ params }: { params: { id: string } }) {
     'Location',
     'Hours ',
   ];
-  const imgArray=[
-    'Home',
-    'Users',
-    'Home2',
-    'Location',
-    'ClockBallroom',
-  ];
+  const imgArray = ['Home', 'Users', 'Home2', 'Location', 'ClockBallroom'];
   const slugArray = ['welcome', 'our-team', 'studio-tour', 'location', 'hours'];
-  const pageArray = [{title: "Welcome to Studio", description: "Welcome message to dancers or people who wants to learn how to dance", keywords:"WelcomePage HelloPage WelcomeMessage"},
-    {title: "Our Professional Team", description: "Our world-awarded dance instructors specialize in teaching from beginner to advanced levels, adults and kids on all types of dancing: ballroom, latin, argentine tango, hustle, west coast swing, salsa. etc. Specialist of wedding dance instructions. Biography of ballroom, latin, argentine tango, hustle, west coast swing instructors, teachers, manager and owner of dance studio" ,keywords:"Pro Teachers, Pro Instructor, Pro Ballroom Bio, Teachers"},
-    {title: "Interior/Exterior tour", description: "Dance Studio pictures: Inside or Outside tour. Explore our dance studio via pictures & video! Le Pari Dance Center -the place to visit, the place to dance at, the place to learn!",keywords:"StudioInterior, Tour, Interior, Exterior"},
-    {title: "Our Location", description: "Close to major roads, free parking. Easy to get to: 34 South Avenue, Fanwood, NJ 07023. Location, directions, address, contact information of the Le Pari Dance Fitness Center",keywords:" Location, Address, Contact"},
-    {title: "Hours Of Operation", description: "hours of operation, opening and closing time of the dance center, contact information",keywords:"Hours, Contacts, OpenTime, CloseTime" }];  
+  const pageArray = [
+    {
+      title: 'Welcome to Studio',
+      description:
+        'Welcome message to dancers or people who wants to learn how to dance',
+      keywords: 'WelcomePage HelloPage WelcomeMessage',
+    },
+    {
+      title: 'Our Professional Team',
+      description:
+        'Our world-awarded dance instructors specialize in teaching from beginner to advanced levels, adults and kids on all types of dancing: ballroom, latin, argentine tango, hustle, west coast swing, salsa. etc. Specialist of wedding dance instructions. Biography of ballroom, latin, argentine tango, hustle, west coast swing instructors, teachers, manager and owner of dance studio',
+      keywords: 'Pro Teachers, Pro Instructor, Pro Ballroom Bio, Teachers',
+    },
+    {
+      title: 'Interior/Exterior tour',
+      description:
+        'Dance Studio pictures: Inside or Outside tour. Explore our dance studio via pictures & video! Le Pari Dance Center -the place to visit, the place to dance at, the place to learn!',
+      keywords: 'StudioInterior, Tour, Interior, Exterior',
+    },
+    {
+      title: 'Our Location',
+      description:
+        'Close to major roads, free parking. Easy to get to: 34 South Avenue, Fanwood, NJ 07023. Location, directions, address, contact information of the Le Pari Dance Fitness Center',
+      keywords: ' Location, Address, Contact',
+    },
+    {
+      title: 'Hours Of Operation',
+      description:
+        'hours of operation, opening and closing time of the dance center, contact information',
+      keywords: 'Hours, Contacts, OpenTime, CloseTime',
+    },
+  ];
   const selectedTab = slugArray.indexOf(params.id) || null;
   const tabIndex =
     selectedTab !== null && selectedTab >= 0 && selectedTab < 5
@@ -89,7 +111,9 @@ export default function Page({ params }: { params: { id: string } }) {
   const [revealAlert, setRevealAlert] = useState(false);
 
   const router = useRouter();
-  const { hours } = useContext(SettingsContext) as ScreenSettingsContextType;
+  const { hours, events } = useContext(
+    SettingsContext
+  ) as ScreenSettingsContextType;
   const [hoursOfOperation, setHours] = useState<string[] | null>(null);
   const [revealSharingModal, setRevealSharingModal] = useState(false);
   useEffect(() => {
@@ -135,7 +159,31 @@ export default function Page({ params }: { params: { id: string } }) {
   }, []);
 
   return (
-    <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center md:items-end justify-center">
+    <PageWrapper className="absolute top-0 left-0 w-full h-screen flex flex-col items-center justify-start">
+      <div className="w-full h-1/5 relative overflow-auto mt-1 md:mt-6  rounded-md">
+        {events != undefined && (
+          <BannerGallery
+            events={[
+              ...events,
+              {
+                date: '',
+                tag: 'Give a Gift of Dance!',
+                id: '/gift',
+                image: '/images/couple.webp',
+                eventtype: '',
+              },
+              {
+                date: '',
+                tag: 'Subscribe to our Newsletter!',
+                id: '/subscribeemaillist',
+                image: '/images/gotmail.jpg',
+                eventtype: '',
+              },
+            ]}
+            seconds={10}
+          />
+        )}
+      </div>
       {revealGallery && (
         <FullScreenGalleryView
           pictures={picturesArray}
@@ -146,15 +194,14 @@ export default function Page({ params }: { params: { id: string } }) {
           }}
         />
       )}
-          <SharePostModal
-        title={pageArray[tabIndex].title+" | Dance At Le Pari Studio"}
+      <SharePostModal
+        title={pageArray[tabIndex].title + ' | Dance At Le Pari Studio'}
         url={process.env.NEXT_PUBLIC_URL + '/about_us/' + params.id}
         quote={`Description: ${pageArray[tabIndex].description}  \n Click on the link below. \n`}
-        hashtag={pageArray[tabIndex].keywords }
-          onReturn={() => setRevealSharingModal(false)}
-          visibility={revealSharingModal}
-          
-        />
+        hashtag={pageArray[tabIndex].keywords}
+        onReturn={() => setRevealSharingModal(false)}
+        visibility={revealSharingModal}
+      />
       {revealGallery2 && (
         <FullScreenTeamView
           pictures={team}

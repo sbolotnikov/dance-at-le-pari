@@ -1,10 +1,10 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { PageWrapper } from '@/components/page-wrapper';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { useSession } from 'next-auth/react';
 import PaymentPageForm from '@/components/PaymentPageForm';
-import { TPaymentType } from '@/types/screen-settings';
+import { ScreenSettingsContextType, TPaymentType } from '@/types/screen-settings';
 import EventTemplateEditingForm from '@/components/EventTemplateEditingForm';
 import AlertMenu from '@/components/alertMenu'; 
 import  PDFDisplay  from "@/components/PDFDIsplay" ;
@@ -15,6 +15,8 @@ import sleep from '@/utils/functions';
 import ShowIcon from '@/components/svg/showIcon';
 import { useRouter } from 'next/navigation';
 import SharePostModal from '@/components/SharePostModal';
+import BannerGallery from '@/components/BannerGallery';
+import { SettingsContext } from '@/hooks/useSettings';
 interface pageProps {}
 
 export default function Page({ params }: { params: { id: string } }) {
@@ -24,6 +26,9 @@ export default function Page({ params }: { params: { id: string } }) {
   const [revealSharingModal, setRevealSharingModal] = useState(false);
   const [products, setProducts] = useState<TPaymentType[]>([]);
   const [specialEvents, setSpecialEvents] = useState<TPaymentType[]>([]);
+  const { events } = useContext(
+    SettingsContext
+  ) as ScreenSettingsContextType;
   const [alertStyle, setAlertStyle] = useState({
     variantHead: '',
     heading: '',
@@ -185,7 +190,31 @@ export default function Page({ params }: { params: { id: string } }) {
       });
   }, [session?.user.role!]);
   return (
-    <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center md:items-end justify-center">
+    <PageWrapper className="absolute top-0 left-0 w-full h-screen flex flex-col items-center  justify-start">
+      <div className="w-full h-1/5 relative overflow-auto mt-1 md:mt-6  rounded-md">
+        {events != undefined && (
+          <BannerGallery
+            events={[
+              ...events,
+              {
+                date: '',
+                tag: 'Give a Gift of Dance!',
+                id: '/gift',
+                image: '/images/couple.webp',
+                eventtype: '',
+              },
+              {
+                date: '',
+                tag: 'Subscribe to our Newsletter!',
+                id: '/subscribeemaillist',
+                image: '/images/gotmail.jpg',
+                eventtype: '',
+              },
+            ]}
+            seconds={10}
+          />
+        )}
+      </div>
       <SharePostModal
         title={pageArray[tabIndex].title}
         url={process.env.NEXT_PUBLIC_URL + '/dancing/'+params.id}

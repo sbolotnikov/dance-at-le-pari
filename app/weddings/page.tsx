@@ -1,5 +1,5 @@
 'use client';
-import { FC, useState, useRef, useEffect } from 'react';
+import { FC, useState, useRef, useEffect, useContext } from 'react';
 import { useRouter } from 'next/navigation';
 import { PageWrapper } from '@/components/page-wrapper';
 import BoxClickable from '@/components/BoxClickable';
@@ -11,10 +11,12 @@ import ImgFromDb from '@/components/ImgFromDb';
 import { addItem } from '@/slices/cartSlice';
 import Iframe from 'react-iframe';
 import { useDispatch } from 'react-redux';
-import { TPriceOption, TTemplateNew } from '@/types/screen-settings';
+import { ScreenSettingsContextType, TPriceOption, TTemplateNew } from '@/types/screen-settings';
 import Image from 'next/image';
 import SharePostModal from '@/components/SharePostModal';
 import ShowIcon from '@/components/svg/showIcon';
+import { SettingsContext } from '@/hooks/useSettings';
+import BannerGallery from '@/components/BannerGallery';
 
 interface pageProps {}
 
@@ -24,6 +26,9 @@ const page: FC<pageProps> = ({}) => {
   const emailRef = useRef<HTMLInputElement>(null);
   const [revealAlert, setRevealAlert] = useState(false);
   const [revealSharingModal, setRevealSharingModal] = useState(false);
+  const { events } = useContext(
+    SettingsContext
+  ) as ScreenSettingsContextType;
   const [packages, setPackages] = useState<
     {
       tag: string;
@@ -109,7 +114,31 @@ const page: FC<pageProps> = ({}) => {
       });
   }, []);
   return (
-    <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center md:items-end justify-center">
+    <PageWrapper className="absolute top-0 left-0 w-full h-screen flex flex-col items-center  justify-start">
+      <div className="w-full h-1/5 relative overflow-auto mt-1 md:mt-6  rounded-md">
+        {events != undefined && (
+          <BannerGallery
+            events={[
+              ...events,
+              {
+                date: '',
+                tag: 'Give a Gift of Dance!',
+                id: '/gift',
+                image: '/images/couple.webp',
+                eventtype: '',
+              },
+              {
+                date: '',
+                tag: 'Subscribe to our Newsletter!',
+                id: '/subscribeemaillist',
+                image: '/images/gotmail.jpg',
+                eventtype: '',
+              },
+            ]}
+            seconds={10}
+          />
+        )}
+      </div> 
       <SharePostModal
         title={
           'Page: Wedding Dance Lessons in studio | Dance at Le Pari Studio'
@@ -122,7 +151,7 @@ const page: FC<pageProps> = ({}) => {
       />
       {revealAlert && <InfoPopup onReturn={onReturn} styling={alertStyle} />}
       <div
-        className="blurFilter border-0 rounded-md p-2  shadow-2xl w-[90%] h-[85svh]  max-w-[850px] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70  md:m-3"
+        className="blurFilter border-0 rounded-md p-2  shadow-2xl w-[90%] h-[73svh]  max-w-[850px] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70  md:m-3"
         // style={{ boxShadow: '0 0 150px rgb(113, 113, 109 / 50%),inset 0 0 20px #242422' }}
       >
         <div className="w-full h-full border relative rounded-md border-lightMainColor dark:border-darkMainColor flex flex-col justify-center items-center overflow-y-auto">

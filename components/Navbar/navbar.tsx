@@ -116,6 +116,11 @@ const Navbar = ({ path, locale, children }: Props) => {
           title: 'Gift',
           icon: 'Gift',
         },
+        {
+          url: '/subscribeemaillist',
+          title: 'Subscribe',
+          icon: 'Subscribe',
+        },
       ];
     } else if (session.user.role == 'Admin') {
       linksArray = [
@@ -159,7 +164,11 @@ const Navbar = ({ path, locale, children }: Props) => {
           title: 'Gift',
           icon: 'Gift',
         },
-
+        {
+          url: '/subscribeemaillist',
+          title: 'Subscribe',
+          icon: 'Subscribe',
+        },
       ];
     } else {
       linksArray = [
@@ -197,6 +206,11 @@ const Navbar = ({ path, locale, children }: Props) => {
           url: '/gift',
           title: 'Gift',
           icon: 'Gift',
+        },
+        {
+          url: '/subscribeemaillist',
+          title: 'Subscribe',
+          icon: 'Subscribe',
         },
       ];
     }
