@@ -106,7 +106,7 @@ const ContainerLoaded = () => {
                       ) + 'px',
                     '--item-y':
                       Math.round(
-                        (containerSize.height /
+                        ((containerSize.height-50) /
                           (containerSize.height > containerSize.width
                             ? 2.5
                             : 2.5)) *
@@ -156,6 +156,13 @@ export default function Home() {
                 tag: 'Give a Gift of Dance!',
                 id: '/gift',
                 image:'/images/couple.webp',
+                eventtype: '',
+              },
+              {
+                date: '',
+                tag: 'Subscribe to our Newsletter!',
+                id: '/subscribeemaillist',
+                image:'/images/gotmail.jpg',
                 eventtype: '',
               },
             ]}

@@ -42,6 +42,8 @@ export const metadata: Metadata = {
     default: 'Dance at Le Pari Dance Studio | Fanwood, NJ, USA',
   },
   keywords:"ballroom dance, dance lessons in NJ, argentine tango dance lessons in nj, salsa, group dance classes, rentals, wedding dance lessons",
+  description:
+    'Looking for dance lessons? This is the place! Dance at Le Pari is the best dance studio in Fanwood, New Jersey that provides ballroom &amp; latin group and private dance lessons, wedding dance lessons as well as online dance classes.  Dance lessons near me. Dance Studio near me.',
   openGraph: {
     title: {
       template: '%s',

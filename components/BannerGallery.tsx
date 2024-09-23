@@ -1,184 +1,129 @@
-'use client';
+ 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import ShowIcon from './svg/showIcon';
 import { gsap } from '../utils/gsap';
 import ImgFromDb from './ImgFromDb';
-import { useDimensions } from '@/hooks/useDimensions'; 
+import { useDimensions } from '@/hooks/useDimensions';
+
+type Event = {
+  date: string;
+  tag: string;
+  id: number | string;
+  image: string;
+  eventtype: string;
+};
 
 type Props = {
   seconds: number;
-  events: {
-    date: string;
-    tag: string;
-    id: number | string;
-    image: string;
-    eventtype: string;
-  }[];
+  events: Event[];
 };
 
 const BannerGallery = ({ seconds, events }: Props) => {
-  const [activePic, setActivePic] = useState(0);
-  const [nextActivePic, setNextActivePic] = useState(1);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [nextIndex, setNextIndex] = useState(1);
   const windowSize = useDimensions();
-  const nextActive = (num: number) => {
-    let timerInterval = setInterval(function () {
-      clearInterval(timerInterval);
-      let localPic = num;
-      if (localPic < events!.length - 1) localPic++;
-      else localPic = 0;
-      setNextActivePic(localPic);
-      nextActive(localPic);
-    }, seconds * 1000);
+
+  const transitionToNextImage = useCallback(() => {
+    const next = (currentIndex + 1) % events.length;
+    setNextIndex(next);
+    
+    const currentImg = document.getElementById(`image${currentIndex}`);
+    const nextImg = document.getElementById(`image${next}`);
+
+    if (currentImg && nextImg) {
+      gsap.set(nextImg, { display: 'block', opacity: 0 });
+      gsap.to(currentImg, { opacity: 0, duration: seconds * 0.5 });
+      gsap.to(nextImg, { opacity: 1, duration: seconds * 0.5 });
+
+      setTimeout(() => {
+        gsap.set(currentImg, { display: 'none' });
+        setCurrentIndex(next);
+      }, seconds * 500);
+    }
+  }, [currentIndex, events.length, seconds]);
+
+  useEffect(() => {
+    if (events.length > 0) {
+      const timer = setInterval(transitionToNextImage, seconds * 1000);
+      return () => clearInterval(timer);
+    }
+  }, [events, seconds, transitionToNextImage]);
+
+  const handleImageClick = () => {
+    const eventId = events[currentIndex].id;
+    location.replace(typeof eventId === 'number' ? `/events/${eventId}` : eventId);
   };
 
-  useEffect(() => {
-    if (events?.length > 0) {
-      let id = window.setTimeout(function () {}, 0);
-      while (id--) {
-        window.clearTimeout(id); // will do nothing if no timeout with id is present
-      }
-      nextActive(0);
+  const renderImage = (item: Event) => {
+    if (typeof item.id === 'number') {
+      return <ImgFromDb stylings="object-contain h-full" url={item.image} alt={`Event Picture ${item.id}`} />;
     }
+    return (
+      <img
+        src={item.image} 
+        className="w-auto h-full"
+        // style={{ backgroundImage: `url(${item.image})` }}
+      />
+    );
+  };
 
-   }, [events]);
-  useEffect(() => {
-    if (events != null) {
-      let imgEl = document.getElementById(`image${activePic}`);
-      if (imgEl) {
-        imgEl.style.opacity = '1';
-      }
-      let imgEl1 = document.getElementById(`image${nextActivePic}`);
-      if (imgEl1) {
-        imgEl1.style.opacity = '0';
-        imgEl1.style.display = 'block';
-      }
+  const formatDate = (date: string) => {
+    const options: Intl.DateTimeFormatOptions = windowSize.width! > 767
+      ? { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
+      : { weekday: 'short', year: 'numeric', month: 'numeric', day: 'numeric' };
+    return new Date(date).toLocaleDateString('en-us', options);
+  };
 
-      gsap
-        .timeline()
-        .to(imgEl, {
-          opacity: 0,
-          duration: seconds * 0.3,
-          stagger: seconds * 0.1,
-        })
-        .then(() => {
-          if (imgEl) imgEl.style.display = 'none';
-        });
+  const formatTime = (date: string) => {
+    return new Date(date).toLocaleTimeString('en-US', { timeStyle: 'short' });
+  };
 
-      gsap
-        .timeline()
-        .to(imgEl1, {
-          opacity: 1,
-          duration: seconds * 0.3,
-          stagger: seconds * 0.2,
-        })
-        .then(() => {
-          if (imgEl) imgEl.style.display = 'block';
-          setActivePic(nextActivePic);
-        });
-     }
-  }, [nextActivePic]);
   return (
-    <div
-      id="galleryContainer"
-      className=" h-full w-full relative overflow-hidden rounded-md flex flex-col  "
-      style={{ zIndex: 99 }}
-    >
+    <div id="galleryContainer" className="h-full w-full relative overflow-hidden rounded-md flex flex-col" style={{ zIndex: 99 }}>
       {events.map((item, index) => (
         <div
-          key={'img' + index}
-          id={'image' + index}
-          className={`h-full w-screen flex flex-row justify-start items-start absolute top-0 left-0 cursor-pointer `}
-          style={{ display: index !== activePic ? 'none' : 'block' }}
-          onClick={() => {
-            if (typeof events![activePic].id == 'number')
-              location.replace('/events/' + events![activePic].id);
-            else location.replace(events![activePic].id);
-          }}
+          key={`img${index}`}
+          id={`image${index}`}
+          className="h-full w-screen flex flex-row justify-start items-start absolute top-0 left-0 cursor-pointer"
+          style={{ display: index === currentIndex ? 'block' : 'none', opacity: index === currentIndex ? 1 : 0 }}
+          onClick={handleImageClick}
         >
-          {events![activePic].id!==undefined && windowSize.width!>0 && <div className="h-full w-fit m-auto relative">
-            {typeof events![activePic].id == 'number' ? (
-              <ImgFromDb
-                stylings={'object-contain h-full'}
-                url={item.image}
-                alt={'Event Picture' + index}
-              />
-            ) : (
-              <div
-                className="w-full h-full  bg-center bg-no-repeat bg-contain"
-                // alt={'Event Picture' + index}
-                style={{
-                  backgroundImage: `url(${item.image})`,
-
-                }}
-              ></div>
-            )}
-            <button
-              className=" absolute top-6 -right-16  cursor-pointer  "
-              style={{ transform: 'translate(0%, -50%)' }}
-              onClick={() => {
-                if (typeof events![activePic].id == 'number')
-                  location.replace('/events/' + events![activePic].id);
-                else location.replace(events![activePic].id);
-              }}
-            ></button>
-          </div>}
+          {item.id !== undefined && windowSize.width! > 0 && (
+            <div className="h-full w-fit m-auto relative">
+              {renderImage(item)}
+            </div>
+          )}
           <h2
-            id={'text_' + index}
-            className={`w-full  text-center text-xs md:text-base absolute bottom-0 right-0 z-100 bg-lightMainBG/70 dark:bg-darkMainBG/70`}
-            style={{ display: index !== activePic ? 'none' : 'block' }}
+            className="w-full text-center text-xs md:text-base absolute bottom-0 right-0 z-100 bg-lightMainBG/70 dark:bg-darkMainBG/70"
           >
-            {typeof events![activePic].id == 'number'
-              ? item.tag +
-                `${windowSize.width! > 767 ? ' Join us on' : ''} ${
-                  windowSize.width! > 767
-                    ? new Date(item.date).toLocaleDateString('en-us', {
-                        weekday: 'long',
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                      })
-                    : new Date(item.date).toLocaleDateString('en-us', {
-                        weekday: 'short',
-                        year: 'numeric',
-                        month: 'numeric',
-                        day: 'numeric',
-                      })
-                } @ ${new Date(item.date).toLocaleTimeString('en-US', {
-                  timeStyle: 'short',
-                })}`
+            {typeof item.id === 'number'
+              ? `${item.tag}${windowSize.width! > 767 ? ' Join us on' : ''} ${formatDate(item.date)} @ ${formatTime(item.date)}`
               : item.tag}
           </h2>
         </div>
       ))}
-      <button
-        id="nextButton"
-        className=" absolute top-1/2 right-0 cursor-pointer "
-        style={{ transform: 'translate(0%, -50%)' }}
-        onClick={() => {
-          if (activePic < events!.length - 1) setNextActivePic(activePic + 1);
-          else setNextActivePic(0);
-        }}
-      >
-        <div className="mr-2 h-8 w-8 md:h-16 md:w-16 fill-darkMainColor dark:stroke-darkMainColor dark:fill-lightMainColor stroke-lightMainColor  hover:scale-125">
-          <ShowIcon icon={'ArrowRight'} stroke={'.1'} />
-        </div>
-      </button>
-      <button
-        id="prevButton"
-        className=" absolute top-1/2 left-0 cursor-pointer hover:scale-125 "
-        style={{ transform: 'translate(0%, -50%)' }}
-        onClick={() => {
-          if (activePic > 0) setNextActivePic(activePic - 1);
-          else setNextActivePic(events!.length - 1);
-        }}
-      >
-        <div className="ml-1 h-8 w-8 md:h-16 md:w-16  fill-darkMainColor dark:stroke-darkMainColor dark:fill-lightMainColor stroke-lightMainColor  hover:scale-125">
-          <ShowIcon icon={'ArrowLeft'} stroke={'.1'} />
-        </div>
-      </button>
+      <NavigationButton direction="next" onClick={() => transitionToNextImage()} />
+      <NavigationButton direction="prev" onClick={() => {
+        const prev = (currentIndex - 1 + events.length) % events.length;
+        setNextIndex(prev);
+        transitionToNextImage();
+      }} />
     </div>
   );
 };
+
+const NavigationButton = ({ direction, onClick }: { direction: 'next' | 'prev', onClick: () => void }) => (
+  <button
+    className={`absolute top-1/2 ${direction === 'next' ? 'right-0' : 'left-0'} cursor-pointer hover:scale-125`}
+    style={{ transform: 'translate(0%, -50%)' }}
+    onClick={onClick}
+  >
+    <div className={`${direction === 'next' ? 'mr-2' : 'ml-1'} h-8 w-8 md:h-16 md:w-16 fill-darkMainColor dark:stroke-darkMainColor dark:fill-lightMainColor stroke-lightMainColor`}>
+      <ShowIcon icon={direction === 'next' ? 'ArrowRight' : 'ArrowLeft'} stroke=".1" />
+    </div>
+  </button>
+);
+
 export default BannerGallery;
 export const dynamic = 'force-dynamic';
