@@ -16,7 +16,7 @@ const ListenSaveMp3Modal = ({visibility, audioBlob,fileName, onReturn}: Props) =
           audioRef.current.src = audioBlob;
           audioRef.current.playbackRate = 1;
           audioRef.current.load();
-        //   audioRef.current.play();
+          audioRef.current.play();
         }
       }, [audioBlob]);  
   return (
@@ -48,15 +48,17 @@ const ListenSaveMp3Modal = ({visibility, audioBlob,fileName, onReturn}: Props) =
           >
            <h2> Listen/Download Song</h2>
            <p>Song Name: {fileName}</p>
-           <audio ref={audioRef} controls />
+           <audio ref={audioRef} controls title={fileName}/>
+           <div className='flex justify-center items-center w-full h-16'>
            <button
-                  className="px-1 py-2 border-2 border-solid border-transparent rounded-sm w-full m-1 text-center text-gray-700"
+                  className=" h-10 m-1 text-center text-gray-700 hover:scale-110 transition-all duration-150 ease-in-out"
                   onClick={(e) => {
                     onReturn();
                   }}
                 >
                  Close
                 </button>
+                </div>
           </div>  
         </div>    
       </div>      

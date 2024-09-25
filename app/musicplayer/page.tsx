@@ -673,12 +673,12 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
                           {'  '}
                           {item.name}
                         </p>
-                        <div className="absolute top-0 right-10 h-8 w-8">
+                        <div className="  h-8 w-8 m-1">
                           <PlayerButtons
                             icon="Play"
                             color="#504deb"
                             color2="#FFFFFF"
-                            size={24}
+                            size={32}
                             onButtonPress={() => {
                               setSongToSave(item.url);
                               setSongName(item.name);
@@ -693,7 +693,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
                             );
                             setSongDB(newDB);
                           }}
-                          className="absolute top-0 right-2 fill-alertcolor  stroke-alertcolor  rounded-md border-alertcolor  w-8 h-8"
+                          className="  fill-alertcolor  stroke-alertcolor  rounded-md border-alertcolor  w-8 h-8 mt-2 hover:scale-110 transition-all duration-150 ease-in-out"
                         >
                           <ShowIcon icon={'Close'} stroke={'2'} />
                         </button>
