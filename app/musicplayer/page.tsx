@@ -407,7 +407,7 @@ const ChooseMusicModal: React.FC<ChooseMusicModalProps> = ({
               <button
                 className="btnFancy"
                 onClick={() => {
-                  onChoice({ url: songLink, name: songTag, dance: '', id: '' });
+                  onChoice({ url: songLink, name: songTag, rate:1, dance: '', id: '' });
                   onClose();
                 }}
               >
@@ -479,6 +479,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
   const [songName, setSongName] = useState('');
   const [currentIndex, setCurrentIndex] = useState(-1)
   const [currentDance, setCurrentDance] = useState<string | null>(null);
+  const [currentRate, setCurrentRate] = useState(1);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [ghostPosition, setGhostPosition] = useState({ x: 0, y: 0 });
   const [placeholderIndex, setPlaceholderIndex] = useState<number | null>(null);
@@ -597,6 +598,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
         url: await fileToBase64(file),
         name: file.name,
         id: uuidv4(),
+        rate:1,
         dance: dance,
       };
       console.log(newSong);
@@ -618,7 +620,13 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
         visibility={revealSaveModal}
         audioBlob={songToSave}
         fileName={songName}
+        rateOrigin={currentRate}
         currentDance={currentDance}
+        onRate={(rate)=>{
+          let songArr=songDB;
+          songArr[currentIndex].rate = rate;
+          setSongDB(songArr);
+        }}
         onDance={(dance)=>{
           let songArr=songDB;
           songArr[currentIndex].dance = dance;
@@ -628,6 +636,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
           sleep(1200).then(() => {
             setSongToSave("");
             setCurrentDance("");
+            setCurrentRate(1);
             setRevealSaveModal(false);
           });
         }}
@@ -694,6 +703,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
                               setSongName(item.name);
                               setCurrentIndex(i);
                               setCurrentDance(item.dance)
+                              setCurrentRate(item.rate!==undefined?item.rate:1);
                               setRevealSaveModal(true);
                             }}
                           />
@@ -836,6 +846,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
 interface Song {
   url: string;
   name: string;
+  rate: number | undefined;
   dance: string | null;
   id: string | null;
 }
@@ -1099,10 +1110,10 @@ const page: FC<pageProps> = ({}) => {
     setCurrentSongIndex(index);
   };
   useEffect(() => {
-    console.log(currentSongIndex, 'in useeffect', choosenParty);
+    console.log(currentSongIndex, 'in useeffect', playlist);
     if (currentSongIndex >= 0 && playlist.length > 0 && choosenParty != '') {
       console.log(playlist[currentSongIndex].dance);
-
+      setRate(playlist[currentSongIndex].rate!==undefined?playlist[currentSongIndex].rate:1);
       updateDoc(doc(db, 'parties', choosenParty), {
         message: playlist[currentSongIndex].dance,
         message2:
@@ -1131,6 +1142,7 @@ const page: FC<pageProps> = ({}) => {
         url: await fileToBase64(file),
         name: file.name,
         id: '',
+        rate:1,
         dance: '',
       };
       console.log(newSong);
@@ -1225,12 +1237,12 @@ const page: FC<pageProps> = ({}) => {
             )}
             {playlist.length > 0 && currentSongIndex > -1 && (
               <MusicPlayer
-                rateSet={rate}
+                rateSet={playlist[currentSongIndex].rate!==undefined?playlist[currentSongIndex].rate:1}
                 songDuration={songLength}
                 fadeTime={fadeTime}
                 delayLength={delayLength}
                 startPos={songPosition}
-                music={playlist[currentSongIndex].url}
+                music={playlist[currentSongIndex].url} 
                 onSongEnd={handleSongEnd}
                 onSongPrev={() => {
                   console.log('prev song', currentSongIndex - 1);

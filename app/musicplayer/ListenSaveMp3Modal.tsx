@@ -1,4 +1,5 @@
  
+import Slider from '@/components/Slider';
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { useEffect, useRef, useState } from 'react'
 
@@ -7,11 +8,13 @@ type Props = {
     audioBlob:string,
     fileName:string,
     currentDance: string | null,
+    rateOrigin:number,
     onDance: (dance: string) => void;
+    onRate: (rate: number) => void;
     onReturn: () => void;
 }
 
-const ListenSaveMp3Modal = ({visibility, audioBlob,fileName, currentDance, onDance, onReturn}: Props) => {
+const ListenSaveMp3Modal = ({visibility, audioBlob,fileName, currentDance,rateOrigin, onDance, onRate, onReturn}: Props) => {
     const dances = [
         ' ',
         'Argentine Tango',
@@ -38,6 +41,7 @@ const ListenSaveMp3Modal = ({visibility, audioBlob,fileName, currentDance, onDan
       ];
     const audioRef = useRef<HTMLAudioElement>(null);
     const [dance, setDance] = useState<string | null>(currentDance);
+    const [rate, setRate] = useState(rateOrigin);
     useEffect(() => {
         if (audioRef.current) {
           audioRef.current.src = audioBlob;
@@ -46,9 +50,17 @@ const ListenSaveMp3Modal = ({visibility, audioBlob,fileName, currentDance, onDan
           audioRef.current.play();
         }
       }, [audioBlob]); 
+      useEffect(() => {
+        if (audioRef.current) {
+          audioRef.current.playbackRate = rate;
+        }
+      }, [rate]);
       useEffect (()=>{
         setDance(currentDance)
       },[currentDance]) 
+      useEffect (()=>{
+        setRate(rateOrigin)
+      },[rateOrigin]) 
   return (
     <AnimatePresence>
     {visibility && 
@@ -94,6 +106,18 @@ const ListenSaveMp3Modal = ({visibility, audioBlob,fileName, currentDance, onDan
                 </select>
 
             </div>
+            <div>
+                  <label className="block mb-2">Playback Speed</label>
+                  <Slider
+                    min={0.5}
+                    max={2}
+                    step={0.01}
+                    value={rate}
+                    onChange={(newValue) =>{ setRate(newValue); onRate(newValue)}}
+                    thumbColor="#4a5568"
+                  />
+                  <span>{`${(rate * 100).toFixed(0)}%`}</span>
+                </div>
            <div className='flex justify-center items-center w-full h-16'>
            <button
                   className=" h-10 m-1 text-center text-gray-700 hover:scale-110 transition-all duration-150 ease-in-out"
