@@ -86,7 +86,8 @@ export const save_Template = (text1:string,filename:string) =>{
 var blob = new Blob([text1], {type: "text/plain;charset=utf-8"});
 FileSaver.saveAs(blob, filename+".txt");
 
-}  
+} 
+ 
 export const save_File = (text1:string,filename:string) =>{
   var FileSaver = require('file-saver');
 var blob = new Blob([text1], {type: "text/plain;charset=utf-8"});
