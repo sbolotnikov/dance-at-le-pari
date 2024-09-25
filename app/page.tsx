@@ -149,24 +149,8 @@ export default function Home() {
       <div className="w-full h-1/5 relative overflow-auto   rounded-md">
         {events != undefined && (
           <BannerGallery
-            events={[
-              ...events,
-              {
-                date: '',
-                tag: 'Give a Gift of Dance!',
-                id: '/gift',
-                image:'/images/couple.webp',
-                eventtype: '',
-              },
-              {
-                date: '',
-                tag: 'Subscribe to our Newsletter!',
-                id: '/subscribeemaillist',
-                image:'/images/gotmail.jpg',
-                eventtype: '',
-              },
-            ]}
-            seconds={10}
+            events={[...events]}
+            seconds={7}
           />
         )}
       </div>

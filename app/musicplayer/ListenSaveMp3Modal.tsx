@@ -6,11 +6,38 @@ type Props = {
     visibility: boolean;
     audioBlob:string,
     fileName:string,
+    currentDance: string | null,
+    onDance: (dance: string) => void;
     onReturn: () => void;
 }
 
-const ListenSaveMp3Modal = ({visibility, audioBlob,fileName, onReturn}: Props) => {
-    const audioRef = useRef<HTMLAudioElement>(null);  
+const ListenSaveMp3Modal = ({visibility, audioBlob,fileName, currentDance, onDance, onReturn}: Props) => {
+    const dances = [
+        ' ',
+        'Argentine Tango',
+        'Bachata',
+        'Bolero',
+        'Cha Cha',
+        'Foxtrot',
+        'Hustle',
+        'Jive',
+        'Mambo',
+        'Merengue',
+        'POLKA',
+        'Paso Doble',
+        'Quickstep',
+        'Rumba',
+        'Salsa',
+        'Samba',
+        'Swing',
+        'Tango',
+        'Two Step',
+        'Viennese Waltz',
+        'Waltz',
+        'West Coast Swing',
+      ];
+    const audioRef = useRef<HTMLAudioElement>(null);
+    const [dance, setDance] = useState<string | null>(currentDance);
     useEffect(() => {
         if (audioRef.current) {
           audioRef.current.src = audioBlob;
@@ -18,7 +45,10 @@ const ListenSaveMp3Modal = ({visibility, audioBlob,fileName, onReturn}: Props) =
           audioRef.current.load();
           audioRef.current.play();
         }
-      }, [audioBlob]);  
+      }, [audioBlob]); 
+      useEffect (()=>{
+        setDance(currentDance)
+      },[currentDance]) 
   return (
     <AnimatePresence>
     {visibility && 
@@ -49,6 +79,21 @@ const ListenSaveMp3Modal = ({visibility, audioBlob,fileName, onReturn}: Props) =
            <h2> Listen/Download Song</h2>
            <p>Song Name: {fileName}</p>
            <audio ref={audioRef} controls title={fileName}/>
+           <div className="flex flex-col justify-center items-center">
+                <label className="block mb-2">What dance is it?</label>
+                <select
+                  value={dance!}
+                  onChange={(e) =>{setDance(e.target.value); onDance(e.target.value)}}
+                  className="w-20 h-9 bg-white rounded-lg border border-[#776548] text-[#444] text-left"
+                >
+                  {dances.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+
+            </div>
            <div className='flex justify-center items-center w-full h-16'>
            <button
                   className=" h-10 m-1 text-center text-gray-700 hover:scale-110 transition-all duration-150 ease-in-out"

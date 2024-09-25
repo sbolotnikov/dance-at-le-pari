@@ -477,6 +477,8 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
   const [revealSaveModal, setRevealSaveModal] = useState(false);
   const [songToSave, setSongToSave] = useState('');
   const [songName, setSongName] = useState('');
+  const [currentIndex, setCurrentIndex] = useState(-1)
+  const [currentDance, setCurrentDance] = useState<string | null>(null);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [ghostPosition, setGhostPosition] = useState({ x: 0, y: 0 });
   const [placeholderIndex, setPlaceholderIndex] = useState<number | null>(null);
@@ -616,8 +618,16 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
         visibility={revealSaveModal}
         audioBlob={songToSave}
         fileName={songName}
+        currentDance={currentDance}
+        onDance={(dance)=>{
+          let songArr=songDB;
+          songArr[currentIndex].dance = dance;
+          setSongDB(songArr);
+        }}
         onReturn={() => {
           sleep(1200).then(() => {
+            setSongToSave("");
+            setCurrentDance("");
             setRevealSaveModal(false);
           });
         }}
@@ -682,6 +692,8 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
                             onButtonPress={() => {
                               setSongToSave(item.url);
                               setSongName(item.name);
+                              setCurrentIndex(i);
+                              setCurrentDance(item.dance)
                               setRevealSaveModal(true);
                             }}
                           />

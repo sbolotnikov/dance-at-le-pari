@@ -49,11 +49,7 @@ const DropPlace1: React.FC<{
 };
 const page: React.FC = () => {
   const [playlistName, setPlaylistName] = useState('musicDB.sdb');
-  const [songDB, setSongDB] = useState<Song[]>([
-    { url: '', dance: 'Salsa', id: '00', name: 'Dance 1' },
-    { url: '', dance: 'Waltz', id: '01', name: 'Dance 2' },
-    { url: '', dance: 'Foxtrot', id: '02', name: 'Dance 3' },
-    { url: '', dance: 'Merengue', id: '03', name: 'Dance 4' },
+  const [songDB, setSongDB] = useState<Song[]>([ 
   ]);
   const [dance, setDance] = useState('');
   const [rate, setRate] = useState(1);
@@ -86,7 +82,7 @@ const page: React.FC = () => {
       const newSong: Song = {
         url: await fileToBase64(file),
         name: file.name,
-        id: uuidv4(),
+        id: uuidv4(), 
         dance: dance,
       };
       console.log(newSong);
