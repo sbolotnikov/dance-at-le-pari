@@ -1108,12 +1108,14 @@ const page: FC<pageProps> = ({}) => {
 
   const handleSongChange = (index: number) => {
     setCurrentSongIndex(index);
+    setRate(playlist[index].rate!==undefined?playlist[index].rate:1)
   };
   useEffect(() => {
     console.log(currentSongIndex, 'in useeffect', playlist);
     if (currentSongIndex >= 0 && playlist.length > 0 && choosenParty != '') {
       console.log(playlist[currentSongIndex].dance);
       setRate(playlist[currentSongIndex].rate!==undefined?playlist[currentSongIndex].rate:1);
+      
       updateDoc(doc(db, 'parties', choosenParty), {
         message: playlist[currentSongIndex].dance,
         message2:
