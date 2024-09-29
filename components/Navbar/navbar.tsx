@@ -215,13 +215,13 @@ const Navbar = ({ path, locale, children }: Props) => {
       ];
     }
     setNavbarLinks(linksArray);
-    IsUserSubscribed(session?.user?.email!).then((res) => {
-      console.log(res)
-      if (res) {
-        setIsEmailModalOpen(false)
-      }else{
-        setIsEmailModalOpen(true);
-      }})
+    // IsUserSubscribed(session?.user?.email!).then((res) => {
+    //   console.log(res)
+    //   if (res) {
+    //     setIsEmailModalOpen(false)
+    //   }else{
+    //     setIsEmailModalOpen(true);
+    //   }})
   }, [session]);
   const changeMenu = (isChangeOrientation: boolean) => {
     let items = document.querySelectorAll('.navbar__item');
@@ -352,8 +352,8 @@ const Navbar = ({ path, locale, children }: Props) => {
     <nav className="navbar w-screen h-[100svh] overflow-hidden">
                  
         <ChatbotModal
-        vis={IsChatbotModalOpen} 
-        onClose={() => {setIsChatbotModalOpen(false)}}
+        visibility={IsChatbotModalOpen} 
+        onReturn={() => {setIsChatbotModalOpen(false)}}
         /> 
       <div className=" absolute  inset-0 flex flex-col items-center justify-end z-[-5] pb-14 md:pb-0">
         <div className="logoTransform w-full h-full flex items-center justify-end">
@@ -377,7 +377,7 @@ const Navbar = ({ path, locale, children }: Props) => {
           className='fixed bottom-12 right-1 md:bottom-5 md:right-5 cursor-pointer w-20 h-20 md:h-24 md:w-24 rounded-full border border-lightMainColor dark:border-darkMainColor fill-lightMainColor stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor'
           onClick={()=>{setIsChatbotModalOpen(true); console.log('clicked')}}
           >
-          <ShowIcon icon={'Chatbot'} stroke={0.1}/>
+          <ShowIcon icon={'Chatbot'} stroke={'0.1'}/>
         </div>  
 
         <div className={`fixed bottom-0 right-0 w-screen bg-franceBlue  flex justify-between px-3 items-center md:relative md:flex-1 md:justify-around ${burgerState?"md:h-0 md:-translate-y-8 md:transition  md:duration-1000 md:ease-in-out":"md:h-8"} h-12 z-[99] `
