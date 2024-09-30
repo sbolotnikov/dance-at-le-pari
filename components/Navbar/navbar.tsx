@@ -369,7 +369,7 @@ const Navbar = ({ path, locale, children }: Props) => {
         style={{ height: '100%' }}
       >
         <div
-          className="fixed bottom-12 right-1 md:bottom-5 md:right-5 cursor-pointer w-20 h-20 md:h-24 md:w-24 rounded-full border border-lightMainColor dark:border-darkMainColor fill-lightMainColor stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor"
+          className="fixed bottom-12 right-1 md:bottom-5 md:right-5 cursor-pointer w-20 h-20 md:h-24 md:w-24 rounded-full hover:scale-110 bg-lightMainBG dark:bg-lightMainColor border border-lightMainColor dark:border-darkMainColor fill-lightMainColor stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor"
           onClick={() => {
             setIsChatbotModalOpen(true);
             console.log('clicked');
