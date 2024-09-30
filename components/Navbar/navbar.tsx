@@ -14,7 +14,6 @@ import { useDimensions } from '@/hooks/useDimensions';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store/store';
 import ChatbotModal from '../ChatbotModal';
-import { IsUserSubscribed } from '@/utils/functionsservers';
 
 type Props = {
   path: string;
@@ -34,7 +33,7 @@ const Navbar = ({ path, locale, children }: Props) => {
   const [style1, setStyle1] = useState({ display: 'none' });
   const [burgerState, setBurgerState] = useState(false);
   const [cartState, setCartState] = useState(false);
-  const [IsChatbotModalOpen, setIsChatbotModalOpen] = useState(false);
+  const [isChatbotModalOpen, setIsChatbotModalOpen] = useState(false);
   const { changeTheme, darkMode, hideNav } = useContext(
     SettingsContext
   ) as ScreenSettingsContextType;
@@ -254,8 +253,8 @@ const Navbar = ({ path, locale, children }: Props) => {
         ? document.getElementById('profile-toggle')?.classList.add('hidden')
         : document.getElementById('profile-toggle')?.classList.remove('hidden');
       setBurgerState(!burgerState);
-    } 
-    if (windowSize.height! < 760 && !isChangeOrientation) { 
+    }
+    if (windowSize.height! < 760 && !isChangeOrientation) {
       for (let i = 0; i < items.length; i++) {
         if (burgerState) {
           items[i].classList.add('-translate-y-80');
@@ -269,7 +268,7 @@ const Navbar = ({ path, locale, children }: Props) => {
         : document.getElementById('theme-toggle')?.classList.remove('hidden');
       burgerState
         ? document.getElementById('profile-toggle')?.classList.add('hidden')
-        : document.getElementById('profile-toggle')?.classList.remove('hidden'); 
+        : document.getElementById('profile-toggle')?.classList.remove('hidden');
       setBurgerState(!burgerState);
     }
     if (
@@ -295,7 +294,7 @@ const Navbar = ({ path, locale, children }: Props) => {
     }
   };
   useEffect(() => {
-  (items.length>0)?setCartState(true): setCartState(false)
+    items.length > 0 ? setCartState(true) : setCartState(false);
   }, [items]);
   let barArray = [
     {
@@ -346,43 +345,49 @@ const Navbar = ({ path, locale, children }: Props) => {
       icon: 'Phone',
       stroke: '2',
       text: '(848)244-0512',
-    }
+    },
   ];
   return (
     <nav className="navbar w-screen h-[100svh] overflow-hidden">
-                 
-        <ChatbotModal
-        visibility={IsChatbotModalOpen} 
-        onReturn={() => {setIsChatbotModalOpen(false)}}
-        /> 
       <div className=" absolute  inset-0 flex flex-col items-center justify-end z-[-5] pb-14 md:pb-0">
         <div className="logoTransform w-full h-full flex items-center justify-end">
-        <Logo
-          shadow={
-            darkMode
-              ? '0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'
-              : '0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0'
-          }
-        />
+          <Logo
+            shadow={
+              darkMode
+                ? '0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'
+                : '0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0'
+            }
+          />
         </div>
       </div>
       {children}
-      
-      <div
-        className={` w-full flex-row justify-end md:justify-between ${hideNav? 'hidden' : ''} `}
-        style={{ height: '100%' }}
-        
-      >
-                <div 
-          className='fixed bottom-12 right-1 md:bottom-5 md:right-5 cursor-pointer w-20 h-20 md:h-24 md:w-24 rounded-full border border-lightMainColor dark:border-darkMainColor fill-lightMainColor stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor'
-          onClick={()=>{setIsChatbotModalOpen(true); console.log('clicked')}}
-          >
-          <ShowIcon icon={'Chatbot'} stroke={'0.1'}/>
-        </div>  
 
-        <div className={`fixed bottom-0 right-0 w-screen bg-franceBlue  flex justify-between px-3 items-center md:relative md:flex-1 md:justify-around ${burgerState?"md:h-0 md:-translate-y-8 md:transition  md:duration-1000 md:ease-in-out":"md:h-8"} h-12 z-[99] `
-        // md:-translate-y-8 md:transition  md:duration-1000 md:ease-in-out
-        }>
+      <div
+        className={` w-full flex-row justify-end md:justify-between ${
+          hideNav ? 'hidden' : ''
+        } `}
+        style={{ height: '100%' }}
+      >
+        <div
+          className="fixed bottom-12 right-1 md:bottom-5 md:right-5 cursor-pointer w-20 h-20 md:h-24 md:w-24 rounded-full border border-lightMainColor dark:border-darkMainColor fill-lightMainColor stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor"
+          onClick={() => {
+            setIsChatbotModalOpen(true);
+            console.log('clicked');
+          }}
+        >
+          <ShowIcon icon={'Chatbot'} stroke={'0.1'} />
+        </div>
+
+        <div
+          className={
+            `fixed bottom-0 right-0 w-screen bg-franceBlue  flex justify-between px-3 items-center md:relative md:flex-1 md:justify-around ${
+              burgerState
+                ? 'md:h-0 md:-translate-y-8 md:transition  md:duration-1000 md:ease-in-out'
+                : 'md:h-8'
+            } h-12 z-[99] `
+            // md:-translate-y-8 md:transition  md:duration-1000 md:ease-in-out
+          }
+        >
           {barArray.map((item, index) => {
             return (
               <Link
@@ -421,7 +426,11 @@ const Navbar = ({ path, locale, children }: Props) => {
           })}
         </ul>
 
-        <div className={`navbar__right_span z-[100] ${burgerState?"md:top-0":"md:top-7"}`}>
+        <div
+          className={`navbar__right_span z-[100] ${
+            burgerState ? 'md:top-0' : 'md:top-7'
+          }`}
+        >
           {!session && (
             <button
               type="button"
@@ -481,7 +490,7 @@ const Navbar = ({ path, locale, children }: Props) => {
                 : document
                     .getElementsByTagName('body')[0]
                     .classList.remove('dark');
-                    burgerState ? changeMenu(false) : {};
+              burgerState ? changeMenu(false) : {};
             }}
             className=" h-6 w-6 md:h-8 md:w-8  mr-3 md:mr-6 rounded-sm outline-none"
           >
@@ -500,31 +509,36 @@ const Navbar = ({ path, locale, children }: Props) => {
               </p>
             </div>
           </button>
-          {cartState && <button
-            id="cart-toggle"
-            type="button"
-            onClick={() => {
-              burgerState ? changeMenu(false) : {};
-            }}
-            className=" h-6 w-6 md:h-8 md:w-8  mr-3 md:mr-6 rounded-sm outline-none"
-          >
-            <Link href={'/shopping'}>
-              <div className="group flex  cursor-pointer  hover:scale-110  flex-col items-center ">
-                <div className="  h-6 w-6 md:h-8 md:w-8 relative group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
-                  <div className=" h-6 w-6 md:h-8 md:w-8 mr-2  rounded-full bg-lightMainBG dark:bg-lightMainColor p-1 fill-none  stroke-lightMainColor dark:stroke-darkMainColor ">
-                    <ShowIcon icon={'ShoppingCart'} stroke={'1'} />
+          {cartState && (
+            <button
+              id="cart-toggle"
+              type="button"
+              onClick={() => {
+                burgerState ? changeMenu(false) : {};
+              }}
+              className=" h-6 w-6 md:h-8 md:w-8  mr-3 md:mr-6 rounded-sm outline-none"
+            >
+              <Link href={'/shopping'}>
+                <div className="group flex  cursor-pointer  hover:scale-110  flex-col items-center ">
+                  <div className="  h-6 w-6 md:h-8 md:w-8 relative group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
+                    <div className=" h-6 w-6 md:h-8 md:w-8 mr-2  rounded-full bg-lightMainBG dark:bg-lightMainColor p-1 fill-none  stroke-lightMainColor dark:stroke-darkMainColor ">
+                      <ShowIcon icon={'ShoppingCart'} stroke={'1'} />
+                    </div>
+                    <span className="absolute -top-3 -right-3 h-5 w-5 pt-1 bg-yellow-600 text-center text-xs rounded-full  font-bold">
+                      {items
+                        ? items
+                            .map((item) => item.amount)
+                            .reduce((a, b) => a + b, 0)
+                        : 0}
+                    </span>
                   </div>
-                  <span className="absolute -top-3 -right-3 h-5 w-5 pt-1 bg-yellow-600 text-center text-xs rounded-full  font-bold">
-                      {items ? items.map(item=>item.amount).reduce((a, b) => a + b, 0): 0}
-                  </span>
+                  <p className="hidden tracking-widest mx-3 transition duration-300 ease-in-out opacity-100 rounded-md text-darkMainColor md:bg-lightMainBG md:dark:bg-lightMainColor md:dark:text-darkMainColor md:text-lightMainColor group-hover:inline-flex md:block md:opacity-0 md:group-hover:opacity-100 ">
+                    Cart
+                  </p>
                 </div>
-                <p className="hidden tracking-widest mx-3 transition duration-300 ease-in-out opacity-100 rounded-md text-darkMainColor md:bg-lightMainBG md:dark:bg-lightMainColor md:dark:text-darkMainColor md:text-lightMainColor group-hover:inline-flex md:block md:opacity-0 md:group-hover:opacity-100 ">
-                  Cart
-                </p>
-              </div>
-            </Link>
-          </button>
-          }
+              </Link>
+            </button>
+          )}
           <button
             id="burger-toggle"
             className={`relative m-1 flex cursor-pointer p-1.5  outline-none rounded-md hover:ring-2 bg-lightMainBG dark:bg-lightMainColor  hover:ring-lightAccentColor focus:ring-lightAccentColor dark:hover:ring-darkAccentColor dark:focus:ring-darkAccentColor ${
@@ -537,6 +551,16 @@ const Navbar = ({ path, locale, children }: Props) => {
             <Burger status={burgerState} />
           </button>
         </div>
+        {isChatbotModalOpen && (
+          <div className="fixed inset-0 z-[100]">
+            <ChatbotModal
+              visibility={isChatbotModalOpen}
+              onReturn={() => {
+                setIsChatbotModalOpen(false);
+              }}
+            />
+          </div>
+        )}
       </div>
     </nav>
   );
