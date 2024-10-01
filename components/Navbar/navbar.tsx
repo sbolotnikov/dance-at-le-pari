@@ -369,7 +369,7 @@ const Navbar = ({ path, locale, children }: Props) => {
         style={{ height: '100%' }}
       >
         <div
-          className="fixed bottom-12 right-1 md:bottom-5 md:right-5 cursor-pointer w-20 h-20 md:h-24 md:w-24 rounded-full hover:scale-110 bg-lightMainBG dark:bg-lightMainColor border border-lightMainColor dark:border-darkMainColor fill-lightMainColor stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor"
+          className="fixed bottom-12 right-1 md:bottom-5 md:right-5 cursor-pointer w-20 h-20 md:h-24 md:w-24 rounded-full shadow-2xl hover:scale-110 bg-lightMainBG dark:bg-lightMainColor border border-lightMainColor dark:border-darkMainColor fill-lightMainColor stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor"
           onClick={() => {
             setIsChatbotModalOpen(true);
             console.log('clicked');
@@ -521,7 +521,7 @@ const Navbar = ({ path, locale, children }: Props) => {
               <Link href={'/shopping'}>
                 <div className="group flex  cursor-pointer  hover:scale-110  flex-col items-center ">
                   <div className="  h-6 w-6 md:h-8 md:w-8 relative group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
-                    <div className=" h-6 w-6 md:h-8 md:w-8 mr-2  rounded-full bg-lightMainBG dark:bg-lightMainColor p-1 fill-none  stroke-lightMainColor dark:stroke-darkMainColor ">
+                    <div className=" h-6 w-6 md:h-8 md:w-8 mr-2  rounded-full bg-lightMainBG dark:bg-darkMainBG p-1 fill-none  stroke-lightMainColor dark:stroke-darkMainColor ">
                       <ShowIcon icon={'ShoppingCart'} stroke={'1'} />
                     </div>
                     <span className="absolute -top-3 -right-3 h-5 w-5 pt-1 bg-yellow-600 text-center text-xs rounded-full  font-bold">
