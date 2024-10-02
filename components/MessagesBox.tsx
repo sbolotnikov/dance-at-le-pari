@@ -29,7 +29,7 @@ const MessagesBox = ({messages}: Props) => {
                       session && session!==null && session.user.image ? (
                           <ImgFromDb
                             url={session.user.image ? session.user.image : ''}
-                            stylings="object-fill h-10 w-10 md:h-14 md:w-14"
+                            stylings="object-fill h-14 w-14"
                             alt="profile picture"
                           />
                         ) : (
