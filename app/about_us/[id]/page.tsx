@@ -211,7 +211,7 @@ export default function Page({ params }: { params: { id: string } }) {
           >
             {pageArray[tabIndex].title}
           </h2>
-          <div className=" h-16 w-16 m-auto hidden md:block">
+          <div className=" h-16 w-16 m-auto hidden md:block fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
             <ShowIcon icon={imgArray[tabIndex]} stroke={'0.1'} />
           </div>
           <button

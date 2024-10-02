@@ -44,7 +44,7 @@ const page: FC<pageProps> = ({}) => {
           >
             <div className=" h-full w-full  border border-lightMainColor dark:border-darkMainColor/70 rounded-md">
                
-            <div id="svg1" className=" h-16 w-16 m-auto" >
+            <div id="svg1" className=" h-16 w-16 m-auto fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor " >
               <ShowIcon icon={'ClockLatin'} stroke={'0.1'} />
             </div>
             <p className="text-center">Party Mode</p>
