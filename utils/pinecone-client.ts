@@ -9,8 +9,8 @@ if (!process.env.PINECONE_ENVIRONMENT || !process.env.PINECONE_API_KEY) {
 
 async function initPinecone() {
     try { 
-        const pinecone = new Pinecone({ apiKey: process.env.PINECONE_API_KEY!, environment: process.env.PINECONE_ENVIRONMENT! });
-        return pinecone;
+        // const pinecone = new Pinecone({ apiKey: process.env.PINECONE_API_KEY! });
+        // return pinecone;
     } catch (error) {
         console.log('error', error);
         throw new Error('Failed to initialize Pinecone Client');
