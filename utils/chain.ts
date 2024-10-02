@@ -13,7 +13,7 @@ async function initChain() {
     const model = new ChatOpenAI({});
 
     const pineconeClient = await pinecone;
-    const pineconeIndex = await pineconeClient.Index(process.env.PINECONE_INDEX ?? '');
+    // const pineconeIndex = await pineconeClient.Index(process.env.PINECONE_INDEX ?? '');
 
     /* create vectorstore*/
     // const vectorStore = await PineconeStore.fromExistingIndex(
