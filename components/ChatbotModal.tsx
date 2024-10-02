@@ -5,6 +5,7 @@ import MessagesBox from './MessagesBox';
 import { useDimensions } from '@/hooks/useDimensions';
 import { AnimatePresence, motion } from 'framer-motion';
 import sleep from '@/utils/functions';
+import Fredbot from './svg/Fredbot';
 
 type Props = {
   visibility: boolean;
@@ -59,8 +60,9 @@ const ChatbotModal = ({ visibility, onReturn }: Props) => {
                   Chat with AstaireBot
                 </h2>
                 {windowSize.height && windowSize.height > 650 && (
-                  <div className="h-10 w-10 md:h-16 md:w-16 m-auto  fill-lightMainColor dark:fill-darkMainColor   stroke-lightMainColor dark:stroke-darkMainColor">
-                    <ShowIcon icon={'Chatbot'} stroke={'0.1'} />
+                  <div className=" w-8  md:w-12 m-auto  fill-lightMainColor dark:fill-darkMainColor   stroke-lightMainColor dark:stroke-darkMainColor">
+
+                    <Fredbot/>
                   </div>
                 )}
               </div>

@@ -3,6 +3,7 @@ import React, { useEffect } from 'react'
 import ShowIcon from './svg/showIcon'
 import ImgFromDb from './ImgFromDb'
 import { useSession } from 'next-auth/react'
+import Fredbot from './svg/Fredbot';
 
 type Props = {
     messages: string[]
@@ -20,7 +21,10 @@ const MessagesBox = ({messages}: Props) => {
           <div key={i} className={`w-[70%] py-2 my-2 ${(i % 2==0)?"mr-2 pr-2 text-right self-end":"ml-2 pl-2 text-left self-start"} bg-lightMainBG dark:bg-darkMainBG flex-wrap  rounded-md`}>
               <div className={`${(i % 2==0)?"float-right":"float-left"} m-1 w-14 h-14 rounded-full overflow-hidden relative`}>
                   {(i % 2==0) ? (
-                      <div className="w-36 h-36 absolute top-0 -left-10 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor "><ShowIcon icon={'Chatbot'} stroke={'0.05'} /></div>
+                      <div className="w-40 h-40 absolute top-0 -left-14 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
+                        {/* <ShowIcon icon={'Chatbot'} stroke={'0.05'} /> */}
+                        <Fredbot/>
+                        </div>
                   ) : (
                       session && session!==null && session.user.image ? (
                           <ImgFromDb

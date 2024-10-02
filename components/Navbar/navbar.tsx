@@ -14,6 +14,7 @@ import { useDimensions } from '@/hooks/useDimensions';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store/store';
 import ChatbotModal from '../ChatbotModal';
+import Fredbot from '../svg/Fredbot';
 
 type Props = {
   path: string;
@@ -369,13 +370,13 @@ const Navbar = ({ path, locale, children }: Props) => {
         style={{ height: '100%' }}
       >
         <div
-          className="fixed bottom-12 right-1 md:bottom-5 md:right-5 cursor-pointer w-20 h-20 md:h-24 md:w-24 rounded-full shadow-2xl hover:scale-110 bg-lightMainBG dark:bg-lightMainColor border border-lightMainColor dark:border-darkMainColor fill-lightMainColor stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor"
+          className="fixed bottom-12 right-1 md:bottom-5 md:right-5 cursor-pointer w-10 md:w-14 rounded-full shadow-2xl hover:scale-110 bg-lightMainBG dark:bg-lightMainColor border border-lightMainColor dark:border-darkMainColor fill-lightMainColor stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor"
           onClick={() => {
             setIsChatbotModalOpen(true);
             console.log('clicked');
           }}
-        >
-          <ShowIcon icon={'Chatbot'} stroke={'0.1'} />
+        > 
+          <Fredbot/>
         </div>
 
         <div
