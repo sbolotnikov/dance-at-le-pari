@@ -27,7 +27,7 @@ const page: FC<pageProps> = ({}) => {
           </h2>
           <div className="flex flex-wrap justify-start items-start h-full w-full">
           <button
-            className="flex flex-col justify-center items-center h-28 w-28 p-1 border shadow-2xl rounded-md"
+            className="flex flex-col justify-center items-center h-28 w-28 p-1 m-1 border  shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md"
             onClick={() => router.replace('/musicplayer')}
           >
             <div className=" h-full w-full  border border-lightMainColor dark:border-darkMainColor/70 rounded-md">
@@ -39,10 +39,10 @@ const page: FC<pageProps> = ({}) => {
             </div>
           </button>
           {(session?.user.role == 'Admin')&&<button
-            className="flex flex-col justify-center items-center h-28 w-28 p-1 border shadow-2xl rounded-md"
+            className="flex flex-col justify-center items-center h-28 w-28 p-1 m-1 border  shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md"
             onClick={() => router.replace('/partymode')}
           >
-            <div className=" h-full w-full  border border-lightMainColor dark:border-darkMainColor/70 rounded-md">
+            <div className=" h-full w-full  border border-lightMainColor dark:border-darkMainColor/70 rounded-md ">
                
             <div id="svg1" className=" h-16 w-16 m-auto fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor " >
               <ShowIcon icon={'ClockLatin'} stroke={'0.1'} />

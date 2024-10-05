@@ -86,7 +86,7 @@ const ContainerLoaded = () => {
               }px] flex flex-col justify-between items-center`}
             >
               <div
-                className={`cards__item    p-2 max-w-[260px] flex flex-col justify-start  items-center shadow-2xl shadow-lightMainColor rounded-md border-2`}
+                className={`cards__item    p-2 max-w-[260px] flex flex-col justify-start  items-center  shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2`}
                 style={
                   {
                     width: Math.round(containerSize.width! / 5.5) + 'px',

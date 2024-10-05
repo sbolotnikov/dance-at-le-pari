@@ -371,7 +371,7 @@ const Navbar = ({ path, locale, children }: Props) => {
       >
         <div className="fixed bottom-12 right-1 md:bottom-5 md:right-5 group flex  cursor-pointer  hover:scale-110  flex-col items-center ">
         <div
-          className=" cursor-pointer w-10 md:w-14  rounded-full shadow-2xl group-hover:animate-bounce shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor bg-lightMainBG dark:bg-lightMainColor border border-lightMainColor dark:border-darkMainColor fill-lightMainColor stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor"
+          className=" cursor-pointer w-10 md:w-14  rounded-full group-hover:animate-bounce shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor bg-lightMainBG dark:bg-lightMainColor border border-lightMainColor dark:border-darkMainColor fill-lightMainColor stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor"
           onClick={() => {
             setIsChatbotModalOpen(true);
             console.log('clicked');

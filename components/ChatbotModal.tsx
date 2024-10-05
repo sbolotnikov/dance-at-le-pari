@@ -1,11 +1,16 @@
-'use client';
-import React, { useState } from 'react';
+
+import { useState, useEffect } from 'react';
 import ShowIcon from './svg/showIcon';
 import MessagesBox from './MessagesBox';
 import { useDimensions } from '@/hooks/useDimensions';
 import { AnimatePresence, motion } from 'framer-motion';
 import sleep from '@/utils/functions';
 import Fredbot from './svg/Fredbot';
+import { ChatOpenAI } from "@langchain/openai";
+// import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
+// import { RetrievalQA } from "langchain/chains";
+// import { HNSWLib } from 'langchain/vectorstores/hnswlib';
+import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 
 type Props = {
   visibility: boolean;
@@ -15,6 +20,40 @@ type Props = {
 const ChatbotModal = ({ visibility, onReturn }: Props) => {
   const [isVisible, setIsVisible] = useState(visibility);
   const windowSize = useDimensions();
+
+
+  useEffect(() => {
+    const initializeChain = async () => {
+      // Initialize the language model
+      
+      
+
+      const model = new ChatOpenAI({
+        apiKey: process.env.OPENAI_API_KEY,
+        modelName: "gpt-4-1106-preview",
+      });
+      // Load and process the document
+      const response = await fetch('/sample-knowledge.txt');
+      const text = await response.text();
+
+      const splitter = new RecursiveCharacterTextSplitter({
+        chunkSize: 1000,
+        chunkOverlap: 200,
+      });
+      const docs = await splitter.createDocuments([text]);
+
+      // Create the vector store
+      // const vectorStore = await HNSWLib.fromDocuments(docs, new OpenAIEmbeddings());
+
+      // Create the retrieval chain
+      // const retrievalChain = RetrievalQA.fromLLM(model, vectorStore.asRetriever());
+
+      // setChain(retrievalChain);
+    };
+
+    initializeChain();
+  }, []);
+
   return (
     <AnimatePresence>
       {isVisible && (
