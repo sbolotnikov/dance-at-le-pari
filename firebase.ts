@@ -1,8 +1,11 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 
+   
+
+ 
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_APIKEY,
+  apiKey: process.env.FIREBASE_APIKEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
   storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
@@ -10,9 +13,8 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APPID,
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENTID,
 };
-
 const firebaseConfig2 = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_APIKEY2,
+  apiKey: process.env.FIREBASE_APIKEY2,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN2,
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID2,
   storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET2,
@@ -30,3 +32,5 @@ const app2 = initializeApp(firebaseConfig2, 'secondary');
 const db2 = getFirestore(app2);
 
 export { db, db2 };
+
+ 

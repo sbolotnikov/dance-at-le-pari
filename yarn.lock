@@ -690,6 +690,15 @@
     zod "^3.22.4"
     zod-to-json-schema "^3.22.3"
 
+"@langchain/pinecone@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@langchain/pinecone/-/pinecone-0.1.1.tgz#302130f4f100dcfc5f7084c936313d01f2f739cc"
+  integrity sha512-NxIqag6tp2rFKXjy9DTx+wBERXgDlWLlZ56nyje9G/mEd3TCSs9bZk8Tjx8rkT19BgvdHOSqyMyiTzEz6o5cKw==
+  dependencies:
+    "@pinecone-database/pinecone" "^3.0.0"
+    flat "^5.0.2"
+    uuid "^10.0.0"
+
 "@langchain/textsplitters@>=0.0.0 <0.2.0":
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/@langchain/textsplitters/-/textsplitters-0.1.0.tgz#f37620992192df09ecda3dfbd545b36a6bcbae46"
@@ -800,7 +809,7 @@
   resolved "https://registry.yarnpkg.com/@panva/hkdf/-/hkdf-1.2.1.tgz#cb0d111ef700136f4580349ff0226bf25c853f23"
   integrity sha512-6oclG6Y3PiDFcoyk8srjLfVKyMfVCKJ27JwNPViuXziFpmdz+MZnZN/aKY0JGXgYuO/VghU0jcOAZgWXZ1Dmrw==
 
-"@pinecone-database/pinecone@^3.0.3":
+"@pinecone-database/pinecone@^3.0.0", "@pinecone-database/pinecone@^3.0.3":
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/@pinecone-database/pinecone/-/pinecone-3.0.3.tgz#0f2ede69fe92c24669da6f5469d6f39c33829b42"
   integrity sha512-0cAG0d/6knVZgVyXM1II4qG3dyOepLuAQsCXTOJomdA7iQxf+/Om9mq9Cw4QObr56oZ+lqtptlw5qz0BQaBX2Q==
@@ -2813,6 +2822,11 @@ flat-cache@^3.0.4:
     flatted "^3.2.9"
     keyv "^4.5.3"
     rimraf "^3.0.2"
+
+flat@^5.0.2:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/flat/-/flat-5.0.2.tgz#8ca6fe332069ffa9d324c327198c598259ceb241"
+  integrity sha512-b6suED+5/3rTpUBdG1gupIl8MPFCAMA0QXwmljLhvCUKcUvdE4gWky9zpuGCcXHOsz4J9wPGNWq6OKpmIzz3hQ==
 
 flatted@^3.2.9:
   version "3.3.1"

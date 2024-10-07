@@ -5,6 +5,26 @@ const sleep = (n:number)=> {
     return new Promise((resolve) => setTimeout(resolve, n));
   }
   export default sleep;
+export const getEnvLocal =  async (key: string) => {
+  try {
+  const data = await fetch('/api/admin/get_env', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      id: key,
+    }),
+  }) 
+  const res = await data.json();
+      console.log(res.id)
+      return res.id;
+    } catch (error) {
+      if (error) {
+        return error;
+      }
+  }
+}
 
   export const slugify = (str: string) => {
     return str

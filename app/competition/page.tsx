@@ -1,5 +1,5 @@
 'use client';
-import { FC, use, useEffect } from 'react';
+import { FC} from 'react';
 import { useRouter } from 'next/navigation';
 import { PageWrapper } from '@/components/page-wrapper';
 import ShowIcon from '@/components/svg/showIcon';
@@ -9,9 +9,7 @@ interface pageProps {}
 const page: FC<pageProps> = ({}) => {
   const router = useRouter();
   const { data: session } = useSession();
-  useEffect(() => {
-    console.log(document.getElementById("svg1")?.children[0].children[0].children[0].getAttribute("d"))
-  },[])
+   
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center md:items-end justify-center">
       <div

@@ -7,6 +7,7 @@ import BannerGallery from '@/components/BannerGallery';
 import { ScreenSettingsContextType } from '@/types/screen-settings';
 import { SettingsContext } from '@/hooks/useSettings';
 import { useDimensions } from '@/hooks/useDimensions';
+import { getEnvLocal } from '@/utils/functions';
 
 var departmentsArray = [
   { name: 'Studio', path: '/images/ballroom.jpg', link: '/about_us/welcome' },
@@ -42,6 +43,7 @@ const ContainerLoaded = () => {
       width: document.getElementById('containerBig')?.offsetWidth!,
       height: document.getElementById('containerBig')?.offsetHeight!,
     });
+
   }, [windowSize.width]);
   return (
     <div
@@ -142,8 +144,9 @@ export default function Home() {
         ? setBigScreen(true)
         : setBigScreen(false);
     }
+    
   }, [windowSize.width]);
-
+ 
   return (
     <PageWrapper className="absolute inset-0 flex flex-col justify-start items-center mt-10 md:mt-20 ">
       <div className="w-full h-1/5 relative overflow-auto   rounded-md">

@@ -115,7 +115,7 @@ const ChoosePartyModal = ({ onReturn, onAlert }: Props) => {
           );
         })}
       </select>
-      {choosenParty.length > 0 && (
+      {choosenParty && choosenParty.length > 0 && (
         <div className="w-full flex flex-row flex-wrap justify-center items-center">
           <button
             className="btnFancy"

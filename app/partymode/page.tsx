@@ -235,6 +235,26 @@ const page: React.FC<Props> = () => {
       }
     }
   };
+  const fetchConfig =  () => {
+    fetch('/api/admin/get_env',{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({})
+    }).then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+    });
+    // const { firebaseConfig, firebaseConfig2 } = await res.json();
+
+    // console.log(firebaseConfig, firebaseConfig2);
+  };
+
+  
+
+
+ 
   async function getCompsArray() {
     const q = await getDocs(collection(db2, 'competitions'));
     let arr1 = q.docs.map((doc) => doc.data());
@@ -244,6 +264,7 @@ const page: React.FC<Props> = () => {
       id: string;
     }[];
     setCompsArr(arr);
+    fetchConfig();
   }
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
