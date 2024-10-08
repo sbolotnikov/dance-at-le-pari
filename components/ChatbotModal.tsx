@@ -19,7 +19,7 @@ const ChatbotModal = ({ visibility, onReturn }: Props) => {
     'Hello! I am Le Pari Studio DanceChatBot. How can I help?',
   ])
   const [question, setQuestion] = useState('');
-
+  const [loading, setLoading] = useState(false);
   return (
     <AnimatePresence>
       {visibility && (
@@ -70,6 +70,7 @@ const ChatbotModal = ({ visibility, onReturn }: Props) => {
               <div className="w-full h-[70%] border rounded-md border-lightMainColor dark:border-darkMainColor relative overflow-y-auto dark:bg-lightMainBG bg-darkMainBG">
                 <MessagesBox
                   messages={chatMessages}
+                  loading={loading}
                 />
               </div>
               <div className="w-full h-[15%] flex flex-row justify-center items-center mt-2">
@@ -82,14 +83,16 @@ const ChatbotModal = ({ visibility, onReturn }: Props) => {
                   }}
                   value={question}
                 ></textarea>
-                <button className="m-2 p-2  btnFancySmall rounded-md border-2 border-lightMainColor dark:border-darkMainColor"
+                <button disabled={loading} className={`m-2 p-2  ${(!loading)?'btnFancySmall':''} rounded-md border-2 border-lightMainColor dark:border-darkMainColor`}
                 onClick={async()=>{
-                  if(question.length>0){                            
+                  if(question.length>0){  
+                    setLoading(true);                          
                   const res = await makeChain(
                     [],question
                  );
                  setChatMessages([...chatMessages,question, res])
                  setQuestion('');
+                 setLoading(false);
                   }
                 }}
                 >

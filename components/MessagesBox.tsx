@@ -4,12 +4,14 @@ import ShowIcon from './svg/showIcon'
 import ImgFromDb from './ImgFromDb'
 import { useSession } from 'next-auth/react'
 import Fredbot from './svg/Fredbot';
+import JumpingLetters from './JumpingLetters';
 
 type Props = {
-    messages: string[]
+    messages: string[],
+    loading: boolean
 }
 
-const MessagesBox = ({messages}: Props) => {
+const MessagesBox = ({messages, loading}: Props) => {
     const { data: session } = useSession();
     useEffect(() => {
         let goToTop = document.getElementById("messagesBox");
@@ -42,6 +44,7 @@ const MessagesBox = ({messages}: Props) => {
               {msg}
           </div>
       ))}
+      {loading && <div  className={`w-[75%] md:w-[50%] h-16 py-2 my-2 mr-2 pr-2 text-center text-xl md:text-4xl tracking-[.5em] self-center  text-darkMainColor dark:text-lightMainColor flex-wrap  rounded-md`}><JumpingLetters text={'Loading...'} /></div>}
     </div>
   )
 }
