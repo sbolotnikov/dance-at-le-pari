@@ -16,6 +16,7 @@ import ListenSaveMp3Modal from './ListenSaveMp3Modal';
 
 interface MusicPlayerProps {
   rateSet: number;
+  rate:number;
   songDuration: number;
   fadeTime: number;
   delayLength: number;
@@ -50,6 +51,7 @@ const dances = [
 ];
 const MusicPlayer: React.FC<MusicPlayerProps> = ({
   rateSet,
+  rate,
   songDuration,
   fadeTime,
   delayLength,
@@ -83,10 +85,10 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
   }, [music]);
   useEffect(() => {
     if (audioRef.current) {
-      audioRef.current.playbackRate = rateSet;
-      console.log('rate set:', rateSet);
+      audioRef.current.playbackRate = rate;
+      console.log('rate set:', rate);
     }
-  }, [rateSet]);
+  }, [rate]);
 
   useEffect(() => {
     if (
@@ -275,6 +277,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   const [fadeLength, setFadeLength] = useState(fadeTime);
 
   useEffect(() => {
+    console.log(rate)
     onChangeRate(rate);
   }, [rate]);
 
@@ -1255,6 +1258,7 @@ const page: FC<pageProps> = ({}) => {
             {playlist.length > 0 && currentSongIndex > -1 && (
               <MusicPlayer
                 rateSet={playlist[currentSongIndex].rate!==undefined?playlist[currentSongIndex].rate:1}
+                rate={rate}
                 songDuration={songLength}
                 fadeTime={fadeTime}
                 delayLength={delayLength}
