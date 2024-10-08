@@ -312,6 +312,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                 <span>{`${Math.floor(songLength / 60000)}m ${Math.floor(
                   (songLength % 60000) / 1000
                 )}s`}</span>
+                <input type="number" className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG" min={1} max={600} value={songLength/1000}
+                  onChange={(e) =>{ setSongLength(e.target.valueAsNumber*1000); }}
+                  />
               </div>
               <div>
                 <label className="block mb-2">Playback Speed</label>
@@ -324,6 +327,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                   thumbColor="#4a5568"
                 />
                 <span>{`${(rate * 100).toFixed(0)}%`}</span>
+                <input type="number" className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG" min={0.5} max={2} value={rate}
+                  onChange={(e) =>{ setRate(e.target.valueAsNumber); }}
+                  />
               </div>
               <div>
                 <label className="block mb-2">Delay in seconds</label>
@@ -338,6 +344,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                 <span>{`${Math.floor(delayLength / 60000)}m ${Math.floor(
                   (delayLength % 60000) / 1000
                 )}s`}</span>
+                <input type="number" className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG" min={1} max={60} value={delayLength/1000}
+                  onChange={(e) =>{ setDelayLength(e.target.valueAsNumber*1000); }}
+                  />
               </div>
               <div>
                 <label className="block mb-2">Fade out in seconds</label>
@@ -352,6 +361,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                 <span>{`${Math.floor(fadeLength / 60000)}m ${Math.floor(
                   (fadeLength % 60000) / 1000
                 )}s`}</span>
+                <input type="number" className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG" min={1} max={60} value={fadeLength/1000}
+                  onChange={(e) =>{ setFadeLength(e.target.valueAsNumber*1000); }}
+                  />
               </div>
             </div>
           </div>
@@ -665,7 +677,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
               <div className="flex flex-col flex-wrap items-center justify-start relative">
                 <ul
                   ref={listRef}
-                  className="w-full mx-auto mt-8 bg-white rounded-lg shadow-md  relative"
+                  className="w-full mx-auto mt-8 bg-lightMainBG dark:bg-darkMainBG rounded-lg shadow-md  relative"
                 >
                   {songDB.map((item, i) => (
                     <React.Fragment key={item.name}>
@@ -778,6 +790,9 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
                     thumbColor="#4a5568"
                   />
                   <span>{`${(rate * 100).toFixed(0)}%`}</span>
+                  <input type="number" className="mt-2 text-sm h-8 rounded-md w-14 float-right text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG" min={0.5} max={2} value={rate}
+                  onChange={(e) =>{ setRate(e.target.valueAsNumber); }}
+                  />
                 </div>
                 <input
                   id="file-input3"

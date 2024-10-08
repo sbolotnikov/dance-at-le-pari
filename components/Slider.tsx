@@ -99,7 +99,7 @@ const Slider: React.FC<SliderProps> = ({
           }}
         />
       </div>
-      {/* <div className="mt-2 text-sm">{value}</div> */}
+      
     </div>
   );
 };

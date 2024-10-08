@@ -83,7 +83,7 @@ const ListenSaveMp3Modal = ({visibility, audioBlob,fileName, currentDance,rateOr
         }}
         className="blurFilter animatePageMainDiv w-[100vw] h-[100svh] absolute flex flex-col justify-center items-center bg-slate-500/70 left-0 z-[1001]"
       >
-      <div className="m-auto  max-w-[600px] bg-gray-200 border-2 border-solid border-gray-400 rounded-md w-[97%] p-2 flex flex-col content-evenly">
+      <div className="m-auto  max-w-[600px] bg-lightMainBG dark:bg-darkMainBG border-2 border-solid border-gray-400 rounded-md w-[97%] p-2 flex flex-col content-evenly">
         <div id="wrapperDiv" className="w-full h-full border rounded-md border-lightMainColor dark:border-darkMainColor relative overflow-y-auto flex flex-col justify-center items-center">
           <div id="containedDiv"
             className={` w-full p-1 flex flex-col justify-center items-center`}
@@ -117,10 +117,13 @@ const ListenSaveMp3Modal = ({visibility, audioBlob,fileName, currentDance,rateOr
                     thumbColor="#4a5568"
                   />
                   <span>{`${(rate * 100).toFixed(0)}%`}</span>
+                  <input type="number" className="mt-2 text-sm h-8 float-right rounded-md w-14 text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG" min={0.5} max={2} value={rate}
+                  onChange={(e) =>{ setRate(e.target.valueAsNumber); onRate(e.target.valueAsNumber)}}
+                  />
                 </div>
            <div className='flex justify-center items-center w-full h-16'>
            <button
-                  className=" h-10 m-1 text-center text-gray-700 hover:scale-110 transition-all duration-150 ease-in-out"
+                  className=" h-10 m-1 text-center  hover:scale-110 transition-all duration-150 ease-in-out"
                   onClick={(e) => {
                     onReturn();
                   }}

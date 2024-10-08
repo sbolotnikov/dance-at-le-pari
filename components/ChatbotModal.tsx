@@ -6,6 +6,7 @@ import { useDimensions } from '@/hooks/useDimensions';
 import { AnimatePresence, motion } from 'framer-motion';
 import Fredbot from './svg/Fredbot'; 
 import { makeChain } from '@/utils/makechain';
+import JumpingLetters from './JumpingLetters';
 
 type Props = {
   visibility: boolean;
@@ -67,11 +68,13 @@ const ChatbotModal = ({ visibility, onReturn }: Props) => {
                   </div>
                 )}
               </div>
-              <div className="w-full h-[70%] border rounded-md border-lightMainColor dark:border-darkMainColor relative overflow-y-auto dark:bg-lightMainBG bg-darkMainBG">
+              <div className="w-full h-[70%] border rounded-md border-lightMainColor dark:border-darkMainColor relative overflow-y-auto dark:bg-lightMainBG bg-darkMainBG "
+              style={{overflowAnchor: 'none'}}
+              >
                 <MessagesBox
                   messages={chatMessages}
-                  loading={loading}
                 />
+                 {loading && <div  className={`w-full   h-full blurFilterNavAlways bg-black/20 dark:bg-white/20 text-center text-xl md:text-4xl tracking-[.5em] self-center  text-darkMainColor dark:text-lightMainColor flex-wrap  rounded-md`}><JumpingLetters text={'Loading...'} /></div>}
               </div>
               <div className="w-full h-[15%] flex flex-row justify-center items-center mt-2">
                 <textarea

@@ -55,6 +55,13 @@ padding: 1.5rem;
     height: 1.5rem;
     width: 1.5rem;
   } */
+  .blurFilterNavAlways {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    
+
+  
+  }
   .blurFilterNav {
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter:blur(12px);
