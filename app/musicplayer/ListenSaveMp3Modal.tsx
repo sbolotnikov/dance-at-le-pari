@@ -117,7 +117,7 @@ const ListenSaveMp3Modal = ({visibility, audioBlob,fileName, currentDance,rateOr
                     thumbColor="#4a5568"
                   />
                   <span>{`${(rate * 100).toFixed(0)}%`}</span>
-                  <input type="number" className="mt-2 text-sm h-8 float-right rounded-md w-14 text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG" min={0.5} max={2} value={rate}
+                  <input type="number" className="mt-2 text-sm h-8 float-right rounded-md w-14 text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG border border-lightMainColor dark:border-darkMainColor" min={0.5} max={2} value={rate}
                   onChange={(e) =>{ setRate(e.target.valueAsNumber); onRate(e.target.valueAsNumber)}}
                   />
                 </div>

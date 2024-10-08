@@ -315,7 +315,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                 <span>{`${Math.floor(songLength / 60000)}m ${Math.floor(
                   (songLength % 60000) / 1000
                 )}s`}</span>
-                <input type="number" className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG" min={1} max={600} value={songLength/1000}
+                <input type="number" className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG border border-lightMainColor dark:border-darkMainColor" min={1} max={600} value={songLength/1000}
                   onChange={(e) =>{ setSongLength(e.target.valueAsNumber*1000); }}
                   />
               </div>
@@ -330,7 +330,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                   thumbColor="#4a5568"
                 />
                 <span>{`${(rate * 100).toFixed(0)}%`}</span>
-                <input type="number" className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG" min={0.5} max={2} value={rate}
+                <input type="number" className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG border border-lightMainColor dark:border-darkMainColor" min={0.5} max={2} value={rate}
                   onChange={(e) =>{ setRate(e.target.valueAsNumber); }}
                   />
               </div>
@@ -347,7 +347,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                 <span>{`${Math.floor(delayLength / 60000)}m ${Math.floor(
                   (delayLength % 60000) / 1000
                 )}s`}</span>
-                <input type="number" className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG" min={1} max={60} value={delayLength/1000}
+                <input type="number" className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG border border-lightMainColor dark:border-darkMainColor" min={1} max={60} value={delayLength/1000}
                   onChange={(e) =>{ setDelayLength(e.target.valueAsNumber*1000); }}
                   />
               </div>
@@ -364,7 +364,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                 <span>{`${Math.floor(fadeLength / 60000)}m ${Math.floor(
                   (fadeLength % 60000) / 1000
                 )}s`}</span>
-                <input type="number" className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG" min={1} max={60} value={fadeLength/1000}
+                <input type="number" className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG border border-lightMainColor dark:border-darkMainColor" min={1} max={60} value={fadeLength/1000}
                   onChange={(e) =>{ setFadeLength(e.target.valueAsNumber*1000); }}
                   />
               </div>
@@ -793,7 +793,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
                     thumbColor="#4a5568"
                   />
                   <span>{`${(rate * 100).toFixed(0)}%`}</span>
-                  <input type="number" className="mt-2 text-sm h-8 rounded-md w-14 float-right text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG" min={0.5} max={2} value={rate}
+                  <input type="number" className="mt-2 text-sm h-8 rounded-md w-14 float-right text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG border border-lightMainColor dark:border-darkMainColor" min={0.5} max={2} value={rate}
                   onChange={(e) =>{ setRate(e.target.valueAsNumber); }}
                   />
                 </div>
