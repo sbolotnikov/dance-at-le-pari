@@ -1,16 +1,11 @@
-
+'use client';
 import { useState, useEffect } from 'react';
 import ShowIcon from './svg/showIcon';
 import MessagesBox from './MessagesBox';
 import { useDimensions } from '@/hooks/useDimensions';
 import { AnimatePresence, motion } from 'framer-motion';
-import sleep from '@/utils/functions';
-import Fredbot from './svg/Fredbot';
-import { ChatOpenAI } from "@langchain/openai";
-// import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
-// import { RetrievalQA } from "langchain/chains";
-// import { HNSWLib } from 'langchain/vectorstores/hnswlib';
-import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
+import Fredbot from './svg/Fredbot'; 
+import { makeChain } from '@/utils/makechain';
 
 type Props = {
   visibility: boolean;
@@ -18,45 +13,16 @@ type Props = {
 };
 
 const ChatbotModal = ({ visibility, onReturn }: Props) => {
-  const [isVisible, setIsVisible] = useState(visibility);
+ 
   const windowSize = useDimensions();
-
-
-  useEffect(() => {
-    const initializeChain = async () => {
-      // Initialize the language model
-      
-      
-
-      const model = new ChatOpenAI({
-        apiKey: process.env.OPENAI_API_KEY,
-        modelName: "gpt-4-1106-preview",
-      });
-      // Load and process the document
-      const response = await fetch('/sample-knowledge.txt');
-      const text = await response.text();
-
-      const splitter = new RecursiveCharacterTextSplitter({
-        chunkSize: 1000,
-        chunkOverlap: 200,
-      });
-      const docs = await splitter.createDocuments([text]);
-
-      // Create the vector store
-      // const vectorStore = await HNSWLib.fromDocuments(docs, new OpenAIEmbeddings());
-
-      // Create the retrieval chain
-      // const retrievalChain = RetrievalQA.fromLLM(model, vectorStore.asRetriever());
-
-      // setChain(retrievalChain);
-    };
-
-    initializeChain();
-  }, []);
+  const [chatMessages, setChatMessages] = useState([
+    'Hello! I am Le Pari Studio DanceChatBot. How can I help?',
+  ])
+  const [question, setQuestion] = useState('');
 
   return (
     <AnimatePresence>
-      {isVisible && (
+      {visibility && (
         <motion.div
           initial={{ opacity: 0, x: -600 }}
           transition={{
@@ -79,11 +45,7 @@ const ChatbotModal = ({ visibility, onReturn }: Props) => {
           <div className=" blurFilter border-0 rounded-md p-2 shadow-2xl w-[90%] max-w-[1050px] max-h-[85%] overflow-y-auto  md:w-full  bg-lightMainBG dark:bg-darkMainBG relative">
           <button
                 className={` flex flex-col justify-center items-center origin-center cursor-pointer z-10 hover:scale-125 absolute top-3 right-3`}
-                onClick={() => {
-                  setIsVisible(false);
-                  sleep(1200).then(()=>onReturn())
-                  
-                }}
+                onClick={() => onReturn() }
               >
                 <div className=" h-8 w-8  fill-lightMainColor stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor">
                   <ShowIcon icon={'Close'} stroke={'2'} />
@@ -96,7 +58,7 @@ const ChatbotModal = ({ visibility, onReturn }: Props) => {
                 }%]`}
               >
                 <h2 className="text-lg md:text-2xl font-bold text-center">
-                  Chat with AstaireBot
+                  Chat with DanceChatBot
                 </h2>
                 {windowSize.height && windowSize.height > 650 && (
                   <div className=" w-8  md:w-12 m-auto  fill-lightMainColor dark:fill-darkMainColor   stroke-lightMainColor dark:stroke-darkMainColor">
@@ -107,11 +69,7 @@ const ChatbotModal = ({ visibility, onReturn }: Props) => {
               </div>
               <div className="w-full h-[70%] border rounded-md border-lightMainColor dark:border-darkMainColor relative overflow-y-auto dark:bg-lightMainBG bg-darkMainBG">
                 <MessagesBox
-                  messages={[
-                    'Hello, How can I help?',
-                    'I need a lot of things. I need a lot of things.I need a lot of things.I need a lot of things.I need a lot of things.I need a lot of things. ',
-                    'Ooo, let me think about it.. ',
-                  ]}
+                  messages={chatMessages}
                 />
               </div>
               <div className="w-full h-[15%] flex flex-row justify-center items-center mt-2">
@@ -119,8 +77,22 @@ const ChatbotModal = ({ visibility, onReturn }: Props) => {
                   rows={windowSize.height && windowSize.height > 550 ? 3 : 1}
                   className="w-[80%] rounded-md bg-darkMainBG dark:bg-lightMainBG text-sm text-darkMainColor dark:text-lightMainColor border-lightMainColor dark:border-darkMainColor border-2"
                   placeholder="Type your message here..."
+                  onChange={(e) => {
+                    setQuestion(e.target.value);
+                  }}
+                  value={question}
                 ></textarea>
-                <button className="m-2 p-2  btnFancySmall rounded-md border-2 border-lightMainColor dark:border-darkMainColor">
+                <button className="m-2 p-2  btnFancySmall rounded-md border-2 border-lightMainColor dark:border-darkMainColor"
+                onClick={async()=>{
+                  if(question.length>0){                            
+                  const res = await makeChain(
+                    [],question
+                 );
+                 setChatMessages([...chatMessages,question, res])
+                 setQuestion('');
+                  }
+                }}
+                >
                   Send
                 </button>
               </div>

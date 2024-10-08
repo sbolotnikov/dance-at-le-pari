@@ -15,6 +15,14 @@ import { prisma } from "@/lib/prisma";
         return null
       }
 };
+import fs from 'fs';
+import path from 'path';
+export const getFile = async (id: string) => {
+  const filePath = path.join(process.cwd(), "public",id);
+  return fs.readFileSync(filePath, 'utf8');
+}
+
+
 export const getCategory = async (slug: string) => {
 
 

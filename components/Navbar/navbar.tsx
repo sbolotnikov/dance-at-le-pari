@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store/store';
 import ChatbotModal from '../ChatbotModal';
 import Fredbot from '../svg/Fredbot';
+import { sleep } from 'openai/core';
 
 type Props = {
   path: string;
@@ -35,6 +36,7 @@ const Navbar = ({ path, locale, children }: Props) => {
   const [burgerState, setBurgerState] = useState(false);
   const [cartState, setCartState] = useState(false);
   const [isChatbotModalOpen, setIsChatbotModalOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const { changeTheme, darkMode, hideNav } = useContext(
     SettingsContext
   ) as ScreenSettingsContextType;
@@ -374,6 +376,7 @@ const Navbar = ({ path, locale, children }: Props) => {
           className=" cursor-pointer w-10 md:w-14  rounded-full group-hover:animate-bounce shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor bg-lightMainBG dark:bg-lightMainColor border border-lightMainColor dark:border-darkMainColor fill-lightMainColor stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor"
           onClick={() => {
             setIsChatbotModalOpen(true);
+            setIsVisible(true);
             console.log('clicked');
           }}
         > 
@@ -560,9 +563,11 @@ const Navbar = ({ path, locale, children }: Props) => {
         {isChatbotModalOpen && (
           <div className="fixed inset-0 z-[100]">
             <ChatbotModal
-              visibility={isChatbotModalOpen}
+              visibility={isVisible}
               onReturn={() => {
-                setIsChatbotModalOpen(false);
+                
+                setIsVisible(false);
+                  sleep(1200).then(()=>setIsChatbotModalOpen(false))
               }}
             />
           </div>
