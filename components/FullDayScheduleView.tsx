@@ -99,6 +99,7 @@ const FullDayScheduleView = ({
 
   useEffect(() => {
     setSelectedEvents(events);
+    
   }, [events]);
   const [widthDiv, setWidthDiv] = useState(0);
   const [heightDiv, setHeightDiv] = useState(0);
@@ -202,6 +203,8 @@ const FullDayScheduleView = ({
       }
       setDisplayedEvents(evArrayFinal);
     } else setDisplayedEvents([]);
+    var elem = document.getElementById('displayDiv');
+    elem!.scrollTop = elem!.scrollHeight/2;
   }, [selectedEvents, location, users]);
   let date1 = new Date(day! + ' 07:00:00');
   useEffect(() => {
@@ -508,7 +511,7 @@ const FullDayScheduleView = ({
               id="displayDiv"
               className="w-full h-[50svh] relative  overflow-y-auto border border-lightMainColor dark:border-darkMainColor rounded-md"
             >
-              <div className="absolute top-0 left-0 w-full  flex  overflow-auto">
+              <div  className="absolute top-0 left-0 w-full  flex  overflow-auto">
                 <div
                   id="timeSlots"
                   className={` relative w-full flex flex-col justify-center items-center overflow-auto`}
