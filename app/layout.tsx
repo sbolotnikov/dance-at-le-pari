@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     url: process.env.NEXTAUTH_URL + '',
     type: 'website',
     images: [
-      { url: process.env.NEXTAUTH_URL + '/logo2.jpg', width: 750, height: 750 },
+      { url: process.env.NEXTAUTH_URL + '/logo2.jpg', width: 1200, height: 750 },
     ],
   },
 };
