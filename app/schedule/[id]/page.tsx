@@ -80,7 +80,7 @@ export default function Page({ params }: { params: { id: string } }) {
   };
   useEffect(() => {
     if (session) {
-      setLoading(true);
+      // setLoading(true);
       fetch('/api/schedule', {
         method: 'GET',
         headers: {
@@ -151,6 +151,7 @@ export default function Page({ params }: { params: { id: string } }) {
             (e) => e.date.split('T')[0] === clicked!.split('T')[0]
           )}
           users={users}
+          role={session?.user.role!}
           day={clicked}
           onReturn={() => {
             sleep(1200).then(() => {

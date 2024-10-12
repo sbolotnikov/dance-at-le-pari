@@ -50,17 +50,17 @@ export const DaySchedule = ({ day, users,role, onClick, onEventClick }: Props) =
             day.event.map((event, index) => (
               <div
                 key={day.value + 'day' + index}
-                className="text-xs cursor-pointer flex flex-row justify-start items-center m-0.5 rounded-md truncate"
-                style={{ backgroundColor: getColor(event.teachersid[0]) }}
-                onClick={(e)=>{e.preventDefault(); onEventClick(event.id)}}
+                className={`text-xs ${(role!=='OutTeacher')?'cursor-pointer':''} flex flex-row justify-start items-center m-0.5 rounded-md truncate`}
+                style={{ backgroundColor: (role!=='OutTeacher')?getColor(event.teachersid[0]):'gray' }}
+                onClick={(e)=>{e.preventDefault(); if (role!=='OutTeacher') onEventClick(event.id)}}
               >
                 
                   {new Date(event.date).toLocaleTimeString('en-US', {
                     timeStyle: 'short',
                   })}
                 {event.tag.length > 0
-                  ? ' ' + event.tag
-                  : ' ' + ((role=='Student')? getName(event.teachersid[0]) : (event.studentid.length>0)?getName(event.studentid[0]):"")}
+                  ? ` ${(role=='OutTeacher')?'Busy':event.tag}`
+                  : ' ' + ((role=='OutTeacher')?'Busy':(role=='Student')? getName(event.teachersid[0]) : (event.studentid.length>0)?getName(event.studentid[0]):"")}
               </div>
             ))}
             <span className='h-2 w-2'> </span>

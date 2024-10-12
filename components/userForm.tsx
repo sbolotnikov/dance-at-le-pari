@@ -97,6 +97,7 @@ function UserForm(props: UserType) {
         onChange={changeStatus}
       >
         <option value="Student">Student</option>
+        <option value="OutTeacher">Outside Teacher</option>
         <option value="Teacher">Teacher</option>
         <option value="Admin">Admin</option>
       </select>

@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 
 type Props = {
   events: TEventSchedule[];
+  role: string;
   onReturn: () => void;
   onEventClick: (n: number) => void;
   onNewEventClick: (
@@ -39,6 +40,7 @@ type DisplayEvent = {
 };
 const FullDayScheduleView = ({
   events,
+  role,
   users,
   onReturn,
   day,
@@ -77,6 +79,12 @@ const FullDayScheduleView = ({
   const getColor = (n: number) => {
     let color = users.filter((user) => user.id == n)[0];
     return color?.color ?? '#000';
+  };
+  const getName = (n: number) => {
+    if (users.length == 0) return '';
+    let name = users.filter((user) => user.id == n)[0];
+    
+    return name.name ?? '';
   };
   const onReturnAlert = async (decision1: string) => {
     setRevealAlert(false);
@@ -445,6 +453,7 @@ const FullDayScheduleView = ({
               Instructor
               <select
                 className=" mb-2 rounded-md text-ellipsis  dark:text-darkMainColor text-menuBGColor "
+                disabled={(role === 'Student')||(role === 'OutTeacher')}
                 style={{
                   backgroundColor:
                     teacher == undefined || teacher == null
@@ -524,6 +533,7 @@ const FullDayScheduleView = ({
                         key={`timeslot ${index}`}
                         onClick={(e) => {
                           e.preventDefault();
+                          if ((role=='OutTeacher')||(role=='Student')) return;
                           let time = Math.floor(
                             (index / slots.length) * 24 * 60
                           );
@@ -540,6 +550,7 @@ const FullDayScheduleView = ({
                           );
                         }}
                         onContextMenu={(e) => {
+                          if ((role=='OutTeacher')||(role=='Student')) return;
                           setContextMenuItems([
                             { title: 'Paste', icon: 'Paste' },
                           ]);
@@ -560,9 +571,9 @@ const FullDayScheduleView = ({
                     return (
                       <div
                         key={'day' + index}
-                        className="text-xs cursor-pointer flex flex-row justify-start items-center m-0.5 rounded-md  truncate absolute left-20"
+                        className={`text-xs ${(role!=='OutTeacher')&&(role!=='Student')?'cursor-pointer':''} flex flex-row justify-start items-center m-0.5 rounded-md  truncate absolute left-20`}
                         style={{
-                          backgroundColor: getColor(item.teachersid[0]),
+                          backgroundColor: (role!=='OutTeacher')?getColor(item.teachersid[0]):'gray',
 
                           height: `${(item.length / scale1) * 50}px`,
                           left: `${
@@ -583,9 +594,10 @@ const FullDayScheduleView = ({
                         }}
                         onClick={(e) => {
                           e.preventDefault();
-                          onEventClick(item.id);
+                          if (role!=='OutTeacher') onEventClick(item.id);
                         }}
                         onContextMenu={(e) => {
+                          if ((role=='OutTeacher')||(role=='Student')) return;
                           setContextMenuItems([
                             { title: 'Copy', icon: 'Copy' },
                             { title: 'Move', icon: 'Move' },
@@ -599,13 +611,7 @@ const FullDayScheduleView = ({
                           );
                         }}
                       >
-                        {item.tag +
-                          ' ' +
-                          (item.studentid[0] !== undefined
-                            ? users.filter(
-                                (user) => user.id == item.studentid[0]
-                              )[0].name
-                            : '') +
+                        {`${(role=='OutTeacher')?'Busy':item.tag}  ${(role=='OutTeacher')?'':(item.studentid[0] !== undefined)? (role=='Student')? getName(item.teachersid[0]) : (item.studentid.length>0)?getName(item.studentid[0]): '':''}` +
                           ' ' +
                           item.eventtype}
                       </div>

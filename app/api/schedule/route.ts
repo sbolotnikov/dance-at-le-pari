@@ -14,9 +14,7 @@ export async function GET(request: Request) {
   }
   const schedule = await prisma.scheduleEvent.findMany({});
     await prisma.$disconnect()
-if ((session.user.role=="Admin")||(session.user.role=="Teacher")) {
-    
-
+if ((session.user.role=="Admin")||(session.user.role=="Teacher")||(session.user.role=="OutTeacher")){
     return NextResponse.json( schedule, { status:201})
 }else if (session.user.role=="Student"){
     
