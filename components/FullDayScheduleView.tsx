@@ -1,4 +1,11 @@
-import { MouseEvent, useContext, useEffect, useRef, useState } from 'react';
+import {
+  MouseEvent,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { TEventSchedule, TUser } from '@/types/screen-settings';
 import AlertMenu from './alertMenu';
 import AnimateModalLayout from './AnimateModalLayout';
@@ -68,6 +75,12 @@ const FullDayScheduleView = ({
   const [selectedEvents, setSelectedEvents] = useState<TEventSchedule[]>([]);
   const [displayedEvents, setDisplayedEvents] = useState<DisplayEvent[]>([]);
   const [teacher, setTeacher] = useState(-1);
+
+  const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(
+    null
+  );
+  const [isLongPress, setIsLongPress] = useState(false);
+
   const { isMoving, setIsMoving, item, setItem } = useContext(
     PopupContext
   ) as PopupContextType;
@@ -83,7 +96,7 @@ const FullDayScheduleView = ({
   const getName = (n: number) => {
     if (users.length == 0) return '';
     let name = users.filter((user) => user.id == n)[0];
-    
+
     return name.name ?? '';
   };
   const onReturnAlert = async (decision1: string) => {
@@ -100,14 +113,13 @@ const FullDayScheduleView = ({
           id: selectedEventItem?.id,
         }),
       }).then(() => {
-        router.replace('/schedule/' + day);
+        window.location.reload();
       });
     }
   };
 
   useEffect(() => {
     setSelectedEvents(events);
-    
   }, [events]);
   const [widthDiv, setWidthDiv] = useState(0);
   const [heightDiv, setHeightDiv] = useState(0);
@@ -181,7 +193,7 @@ const FullDayScheduleView = ({
       });
       for (let i = 0; i < evArrayFinal.length; i++) {
         for (let j = i + 1; j < evArrayFinal.length; j++) {
-          if ((evArrayFinal[i].date2 > evArrayFinal[j].date)) {
+          if (evArrayFinal[i].date2 > evArrayFinal[j].date) {
             evArrayFinal[i].crossed++;
             evArrayFinal[j].crossed++;
           }
@@ -189,22 +201,28 @@ const FullDayScheduleView = ({
       }
       for (let i = 0; i < evArrayFinal.length; i++) {
         for (let j = i + 1; j < evArrayFinal.length; j++) {
-          if ((evArrayFinal[i].date2 > evArrayFinal[j].date)&&(evArrayFinal[i].crossed < evArrayFinal[j].crossed)) {
-             evArrayFinal[i].crossed=evArrayFinal[j].crossed;
+          if (
+            evArrayFinal[i].date2 > evArrayFinal[j].date &&
+            evArrayFinal[i].crossed < evArrayFinal[j].crossed
+          ) {
+            evArrayFinal[i].crossed = evArrayFinal[j].crossed;
           }
         }
       }
 
-      for (let i = evArrayFinal.length-1; i >=0 ; i--) {
+      for (let i = evArrayFinal.length - 1; i >= 0; i--) {
         for (let j = i - 1; j >= 0; j--) {
-          if ((evArrayFinal[i].date < evArrayFinal[j].date2)&&(evArrayFinal[i].crossed < evArrayFinal[j].crossed)) {
-             evArrayFinal[i].crossed=evArrayFinal[j].crossed;
+          if (
+            evArrayFinal[i].date < evArrayFinal[j].date2 &&
+            evArrayFinal[i].crossed < evArrayFinal[j].crossed
+          ) {
+            evArrayFinal[i].crossed = evArrayFinal[j].crossed;
           }
         }
       }
       console.log(counter, evArrayFinal);
       for (let i = 0; i < evArrayFinal.length; i++) {
-        evArrayFinal[i].crossed++
+        evArrayFinal[i].crossed++;
         // if (evArrayFinal[i].crossed > counter)
         //   evArrayFinal[i].crossed = counter;
         // if (evArrayFinal[i].crossed == 0) evArrayFinal[i].crossed = 1;
@@ -212,7 +230,7 @@ const FullDayScheduleView = ({
       setDisplayedEvents(evArrayFinal);
     } else setDisplayedEvents([]);
     var elem = document.getElementById('displayDiv');
-    elem!.scrollTop = elem!.scrollHeight/2;
+    elem!.scrollTop = elem!.scrollHeight / 2;
   }, [selectedEvents, location, users]);
   let date1 = new Date(day! + ' 07:00:00');
   useEffect(() => {
@@ -266,12 +284,11 @@ const FullDayScheduleView = ({
 
   // open context menu and setting it up
   const handleContextMenu = (
-    e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
+    clientX: number,
+    clientY: number,
     timeFrame: number | undefined,
     item: TEventSchedule | undefined
   ) => {
-    e.preventDefault();
-    const { clientX, clientY } = e;
     console.log(item, timeFrame);
     let str = '';
     if (timeFrame != undefined) {
@@ -312,7 +329,7 @@ const FullDayScheduleView = ({
                 },
               }),
             });
-            router.replace('/schedule/' + day);
+            window.location.reload();
           }
         } else {
           if (item.id > 0) {
@@ -331,10 +348,9 @@ const FullDayScheduleView = ({
                 date: selectedTime,
               }),
             });
-            router.replace('/schedule/' + day);
+            window.location.reload();
           }
         }
-        
       }
       //paste logic
     } else if (str === 'Move') {
@@ -360,6 +376,138 @@ const FullDayScheduleView = ({
   useOnOutsideClick(contextMenuRef, () => {
     setContextMenu({ x: 0, y: 0, isShown: false });
   });
+
+  const regularClickHandler = (index: number) => {
+    if (role == 'OutTeacher' || role == 'Student') return;
+    let time = Math.floor(index  * 60);
+    let hours = Math.floor(time / 60);
+
+    let minutes = time % 60;
+    console.log(teacher);
+    onNewEventClick(
+      `${day}T${hours < 10 ? '0' : ''}${hours}:${
+        minutes < 10 ? '0' : ''
+      }${minutes}`,
+      teacher !== -1 ? [teacher] : [],
+      location
+    );
+  };
+  const contextMenuClickHandler = (
+    index: number,
+    clientX: number,
+    clientY: number
+  ) => {
+    if (role == 'OutTeacher' || role == 'Student') return;
+    setContextMenuItems([{ title: 'Paste', icon: 'Paste' }]);
+    handleContextMenu(clientX, clientY, index , undefined);
+  };
+
+  const handleMouseDown = useCallback((e: React.MouseEvent, index: number, item1: TEventSchedule | undefined) => {
+    e.preventDefault();
+    const { clientX, clientY } = e;
+    console.log("time",index)
+    if (e.button === 2) {
+      // Right click
+      // showing context menu
+      if (item1==undefined) contextMenuClickHandler(index, clientX, clientY)
+        else  {
+          if (role == 'OutTeacher' || role == 'Student') return;
+          setContextMenuItems([
+            { title: 'Copy', icon: 'Copy' },
+            { title: 'Move', icon: 'Move' },
+            { title: 'Paste', icon: 'Paste' },
+            { title: 'Delete', icon: 'Close' },
+          ]); 
+          handleContextMenu(
+            clientX, clientY,
+            index ,
+            item1
+          );     
+        }
+    } else if (e.button === 0) {
+      // Left click
+      const timer = setTimeout(() => {
+        setIsLongPress(true);
+        // showing context menu
+        if (item1==undefined) contextMenuClickHandler(index, clientX, clientY)
+          else  {
+            if (role == 'OutTeacher' || role == 'Student') return;
+            setContextMenuItems([
+              { title: 'Copy', icon: 'Copy' },
+              { title: 'Move', icon: 'Move' },
+              { title: 'Paste', icon: 'Paste' },
+              { title: 'Delete', icon: 'Close' },
+            ]);
+            handleContextMenu(
+              clientX, clientY,
+              index,
+              item1
+            );     
+          }
+      }, 500);
+      setLongPressTimer(timer);
+    }
+  }, []);
+
+  const handleMouseUp = useCallback(
+    (e: React.MouseEvent, index: number, itemId:number) => {
+      if (longPressTimer) {
+        clearTimeout(longPressTimer);
+        setLongPressTimer(null);
+      }
+      if (!isLongPress && e.button === 0) {
+        if (itemId < 0) regularClickHandler(index)
+          else if (role !== 'OutTeacher') onEventClick(itemId);
+        // Regular click
+      }
+      setIsLongPress(false);
+    },
+    [longPressTimer, isLongPress]
+  );
+
+  const handleTouchStart = useCallback((e: React.TouchEvent, timeIndex: number, item1:TEventSchedule | undefined) => {
+    e.preventDefault();
+    const { clientX, clientY } = e.touches[0];
+    console.log("time",timeIndex)
+    const timer = setTimeout(() => {
+      setIsLongPress(true);
+      // showing context menu
+      
+          
+      if (item1==undefined) contextMenuClickHandler(timeIndex, clientX, clientY)
+        else  {
+          if (role == 'OutTeacher' || role == 'Student') return;
+          setContextMenuItems([
+            { title: 'Copy', icon: 'Copy' },
+            { title: 'Move', icon: 'Move' },
+            { title: 'Paste', icon: 'Paste' },
+            { title: 'Delete', icon: 'Close' },
+          ]);
+          handleContextMenu(
+            clientX, clientY,
+            timeIndex,
+            item1
+          );     
+        }
+    }, 500);
+    setLongPressTimer(timer);
+  }, []);
+
+  const handleTouchEnd = useCallback(
+    (e: React.TouchEvent, index: number, itemId:number) => {
+      if (longPressTimer) {
+        clearTimeout(longPressTimer);
+        setLongPressTimer(null);
+      }
+      if (!isLongPress) {
+        if (itemId < 0) regularClickHandler(index)
+          else if (role !== 'OutTeacher') onEventClick(itemId);
+        // Regular click
+      }
+      setIsLongPress(false);
+    },
+    [longPressTimer, isLongPress]
+  );
 
   return (
     <AnimateModalLayout
@@ -453,7 +601,7 @@ const FullDayScheduleView = ({
               Instructor
               <select
                 className=" mb-2 rounded-md text-ellipsis  dark:text-darkMainColor text-menuBGColor "
-                disabled={(role === 'Student')||(role === 'OutTeacher')}
+                disabled={role === 'Student' || role === 'OutTeacher'}
                 style={{
                   backgroundColor:
                     teacher == undefined || teacher == null
@@ -520,7 +668,7 @@ const FullDayScheduleView = ({
               id="displayDiv"
               className="w-full h-[50svh] relative  overflow-y-auto border border-lightMainColor dark:border-darkMainColor rounded-md"
             >
-              <div  className="absolute top-0 left-0 w-full  flex  overflow-auto">
+              <div className="absolute top-0 left-0 w-full  flex  overflow-auto">
                 <div
                   id="timeSlots"
                   className={` relative w-full flex flex-col justify-center items-center overflow-auto`}
@@ -531,35 +679,11 @@ const FullDayScheduleView = ({
                       <div
                         className={` w-full h-[50px] cursor-pointer border-b border-dashed border-lightMainColor dark:border-darkMainColor  flex flex-col justify-left flex-wrap overflow-hidden`}
                         key={`timeslot ${index}`}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          if ((role=='OutTeacher')||(role=='Student')) return;
-                          let time = Math.floor(
-                            (index / slots.length) * 24 * 60
-                          );
-                          let hours = Math.floor(time / 60);
+                        onMouseDown={(e) => handleMouseDown(e, (index / slots.length) * 24, undefined)}
+                        onMouseUp={(e) => handleMouseUp(e, (index / slots.length) * 24, -1)}
+                        onTouchStart={(e) => handleTouchStart(e,(index / slots.length) * 24, undefined)}
+                        onTouchEnd={(e) => handleTouchEnd(e, (index / slots.length) * 24,-1)}
 
-                          let minutes = time % 60;
-                          console.log(teacher);
-                          onNewEventClick(
-                            `${day}T${hours < 10 ? '0' : ''}${hours}:${
-                              minutes < 10 ? '0' : ''
-                            }${minutes}`,
-                            teacher !== -1 ? [teacher] : [],
-                            location
-                          );
-                        }}
-                        onContextMenu={(e) => {
-                          if ((role=='OutTeacher')||(role=='Student')) return;
-                          setContextMenuItems([
-                            { title: 'Paste', icon: 'Paste' },
-                          ]);
-                          handleContextMenu(
-                            e,
-                            (index / slots.length) * 24,
-                            undefined
-                          );
-                        }}
                       >
                         <span>{`${d}`}</span>
                         {/* {day.event && <div className="text-xs" style={{backgroundColor: day.event.color}}>{day.event.title}</div>} */}
@@ -571,9 +695,16 @@ const FullDayScheduleView = ({
                     return (
                       <div
                         key={'day' + index}
-                        className={`text-xs ${(role!=='OutTeacher')&&(role!=='Student')?'cursor-pointer':''} flex flex-row justify-start items-center m-0.5 rounded-md  truncate absolute left-20`}
+                        className={`text-xs ${
+                          role !== 'OutTeacher' && role !== 'Student'
+                            ? 'cursor-pointer'
+                            : ''
+                        } flex flex-row justify-start items-center m-0.5 rounded-md  truncate absolute left-20`}
                         style={{
-                          backgroundColor: (role!=='OutTeacher')?getColor(item.teachersid[0]):'gray',
+                          backgroundColor:
+                            role !== 'OutTeacher'
+                              ? getColor(item.teachersid[0])
+                              : 'gray',
 
                           height: `${(item.length / scale1) * 50}px`,
                           left: `${
@@ -592,26 +723,42 @@ const FullDayScheduleView = ({
                             scale1
                           }px`,
                         }}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          if (role!=='OutTeacher') onEventClick(item.id);
-                        }}
-                        onContextMenu={(e) => {
-                          if ((role=='OutTeacher')||(role=='Student')) return;
-                          setContextMenuItems([
-                            { title: 'Copy', icon: 'Copy' },
-                            { title: 'Move', icon: 'Move' },
-                            { title: 'Paste', icon: 'Paste' },
-                            { title: 'Delete', icon: 'Close' },
-                          ]);
-                          handleContextMenu(
-                            e,
-                            (index / slots.length) * 24,
-                            item
-                          );
-                        }}
+                        // onClick={(e) => {
+                        //   e.preventDefault();
+                        //   if (role !== 'OutTeacher') onEventClick(item.id);
+                        // }}
+                        // onContextMenu={(e) => {
+                        //   e.preventDefault();
+                        //   const { clientX, clientY } = e;
+                          // if (role == 'OutTeacher' || role == 'Student') return;
+                          // setContextMenuItems([
+                          //   { title: 'Copy', icon: 'Copy' },
+                          //   { title: 'Move', icon: 'Move' },
+                          //   { title: 'Paste', icon: 'Paste' },
+                          //   { title: 'Delete', icon: 'Close' },
+                          // ]);
+                          // handleContextMenu(
+                          //   clientX, clientY,
+                          //   (index / slots.length) * 24,
+                          //   item
+                          // );
+                        // }}
+                        onMouseDown={(e) => handleMouseDown(e, (index / slots.length) * 24, item)}
+                        onMouseUp={(e) => handleMouseUp(e, (index / slots.length) * 24, item.id)}
+                        onTouchStart={(e) => handleTouchStart(e,(index / slots.length) * 24, item)}
+                        onTouchEnd={(e) => handleTouchEnd(e, (index / slots.length) * 24, item.id)}
                       >
-                        {`${(role=='OutTeacher')?'Busy':item.tag}  ${(role=='OutTeacher')?'':(item.studentid[0] !== undefined)? (role=='Student')? getName(item.teachersid[0]) : (item.studentid.length>0)?getName(item.studentid[0]): '':''}` +
+                        {`${role == 'OutTeacher' ? 'Busy' : item.tag}  ${
+                          role == 'OutTeacher'
+                            ? ''
+                            : item.studentid[0] !== undefined
+                            ? role == 'Student'
+                              ? getName(item.teachersid[0])
+                              : item.studentid.length > 0
+                              ? getName(item.studentid[0])
+                              : ''
+                            : ''
+                        }` +
                           ' ' +
                           item.eventtype}
                       </div>
