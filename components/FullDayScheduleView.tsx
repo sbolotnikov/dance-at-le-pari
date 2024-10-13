@@ -679,6 +679,7 @@ const FullDayScheduleView = ({
                       <div
                         className={` w-full h-[50px] cursor-pointer border-b border-dashed border-lightMainColor dark:border-darkMainColor  flex flex-col justify-left flex-wrap overflow-hidden`}
                         key={`timeslot ${index}`}
+                        style={{ userSelect: 'none' }}
                         onMouseDown={(e) => handleMouseDown(e, (index / slots.length) * 24, undefined)}
                         onMouseUp={(e) => handleMouseUp(e, (index / slots.length) * 24, -1)}
                         onTouchStart={(e) => handleTouchStart(e,(index / slots.length) * 24, undefined)}
@@ -701,6 +702,7 @@ const FullDayScheduleView = ({
                             : ''
                         } flex flex-row justify-start items-center m-0.5 rounded-md  truncate absolute left-20`}
                         style={{
+                          userSelect: 'none',
                           backgroundColor:
                             role !== 'OutTeacher'
                               ? getColor(item.teachersid[0])
