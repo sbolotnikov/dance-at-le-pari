@@ -236,7 +236,7 @@ const FullDayScheduleView = ({
     var elem = document.getElementById('displayDiv');
     elem!.scrollTop = elem!.scrollHeight / 2;
   }, [selectedEvents, location, users]);
-  let date1 = new Date(day! + ' 07:00:00');
+  // let date1 = new Date(day! + ' 07:00:00');
   useEffect(() => {
     let slotsArray: string[] = [];
     let minutesInterval = scale1;
@@ -569,8 +569,9 @@ const FullDayScheduleView = ({
             <div className="w-full relative">
               <input
                 type="date"
-                className="w-full mb-2 rounded-md text-center bg-lightMainBG dark:bg-darkMainBG"
-                value={new Date(date1).toLocaleDateString('sv-SE', {
+                id='dateInput1'
+                className="w-full min-w-[95%] mb-2 p-1  outline-none rounded-md text-center bg-lightMainBG dark:bg-darkMainBG"
+                value={new Date(day! + 'T07:00:00').toLocaleDateString('sv-SE', {
                   year: 'numeric',
                   month: 'numeric',
                   day: 'numeric',
@@ -579,8 +580,8 @@ const FullDayScheduleView = ({
                   router.replace('/schedule/' + e.target.value);
                 }}
               />
-              <div className="font-semibold text-md text-center w-[95%] text-lightMainColor outline-none dark:text-darkMainColor bg-lightMainBG dark:bg-darkMainBG absolute top-0 left-0">
-                {new Date(date1).toLocaleDateString('en-us', {
+              <div className="font-semibold text-md text-center w-[85%] text-lightMainColor outline-none dark:text-darkMainColor bg-lightMainBG dark:bg-darkMainBG absolute top-0 left-0">
+                {new Date(day! + 'T07:00:00').toLocaleDateString('en-us', {
                   weekday: 'long',
                   year: 'numeric',
                   month: 'long',
