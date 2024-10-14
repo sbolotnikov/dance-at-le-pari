@@ -193,6 +193,7 @@ export const makeChain = async (chat_history: BaseMessage[], input: string) => {
 
 // for wedding dance, song and other recommendations visit https://leparidancecenter.com/weddings and https://leparidancecenter.com/blog/weddings
 // To subscribe to our newsletter, please visit https://leparidancecenter.com/subscribeemaillist.`;
+
   // const splitter = new RecursiveCharacterTextSplitter({
   //   chunkSize: 1536,
   // });

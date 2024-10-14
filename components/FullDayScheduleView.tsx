@@ -401,6 +401,13 @@ const FullDayScheduleView = ({
     setContextMenuItems([{ title: 'Paste', icon: 'Paste' }]);
     handleContextMenu(clientX, clientY, index , undefined);
   };
+ 
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    if (longPressTimer!==null) {
+       setLongPressTimer(null)
+
+    }
+  }, []);
 
   const handleMouseDown = useCallback((e: React.MouseEvent, index: number, item1: TEventSchedule | undefined) => {
     e.preventDefault();
@@ -684,6 +691,7 @@ const FullDayScheduleView = ({
                         onMouseUp={(e) => handleMouseUp(e, (index / slots.length) * 24, -1)}
                         onTouchStart={(e) => handleTouchStart(e,(index / slots.length) * 24, undefined)}
                         onTouchEnd={(e) => handleTouchEnd(e, (index / slots.length) * 24,-1)}
+                        onTouchMove={handleTouchMove}
 
                       >
                         <span>{`${d}`}</span>
