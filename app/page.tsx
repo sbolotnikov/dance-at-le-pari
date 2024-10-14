@@ -69,7 +69,7 @@ const ContainerLoaded = () => {
         </p>
         <p
           className={`font-semibold   text-franceBlue  text-center font-DancingScript text-shadow  dark:text-shadow-light p-3 `}
-          style={{ fontSize: `45px`, lineHeight: '0.75' }}
+          style={{ fontSize: `35px`, lineHeight: '0.75' }}
         >
           <Link
               href={'/new_students'}
@@ -177,6 +177,14 @@ export default function Home() {
             {' '}
             The place that brings People <br /> together through Dancing
           </p>
+          <p
+          className={`font-semibold   text-franceBlue  text-center font-DancingScript text-shadow  dark:text-shadow-light p-3 `}
+          style={{ fontSize: `30px`, lineHeight: '0.75' }}
+        >
+          <Link
+              href={'/new_students'}
+              className="">For New students Only! </Link>
+        </p>
         </div>
       )}
 
