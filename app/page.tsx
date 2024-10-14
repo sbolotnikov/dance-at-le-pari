@@ -43,48 +43,18 @@ const ContainerLoaded = () => {
       width: document.getElementById('containerBig')?.offsetWidth!,
       height: document.getElementById('containerBig')?.offsetHeight!,
     });
-
   }, [windowSize.width]);
   return (
     <div
       id="containerBig"
       className=" w-full h-full relative  flex justify-center items-center  overflow-auto"
     >
-      <div
-        id="text"
-        className="blurFilter centerOrigin bgGradientSize50 cards__item    text-lightMainColor bg-lightMainBG/60 dark:text-darkMainColor dark:bg-darkMainBG/60  shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2"
-      >
-        <h1
-          className={`font-bold   text-franceBlue  text-center font-DancingScript text-shadow  dark:text-shadow-light p-3 `}
-          style={{ fontSize: `45px`, lineHeight: '0.75' }}
-        >
-          Dance at Le Pari
-        </h1>
-        <p
-          className="text-center  text-shadow  dark:text-shadow-light"
-          style={{ fontSize: `22px` }}
-        >
-          {' '}
-          The place that brings People <br /> together through Dancing
-        </p>
-        <p
-          className={`font-semibold   text-franceBlue  text-center font-DancingScript text-shadow  dark:text-shadow-light p-3 `}
-          style={{ fontSize: `35px`, lineHeight: '0.75' }}
-        >
-          <Link
-              href={'/new_students'}
-              className="">For New students Only! </Link>
-        </p>
-        <p className="text-center md:text-xl text-lg">
-          Best viewed in fullscreen mode
-        </p>
-      </div>
+    
       {containerSize.width &&
         departmentsArray.map((item, index) => {
           return (
-            <Link
+            <div
               key={'Links' + index}
-              href={item.link}
               className={`absolute -top-[${
                 Math.round(containerSize.height! / 6) > 260
                   ? 130
@@ -95,7 +65,8 @@ const ContainerLoaded = () => {
                   : Math.round(containerSize.width! / 11)
               }px] flex flex-col justify-between items-center`}
             >
-              <div
+              <Link
+                href={item.link}
                 className={`cards__item    p-2 max-w-[260px] flex flex-col justify-start  items-center  shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2`}
                 style={
                   {
@@ -116,7 +87,7 @@ const ContainerLoaded = () => {
                       ) + 'px',
                     '--item-y':
                       Math.round(
-                        ((containerSize.height-50) /
+                        ((containerSize.height - 50) /
                           (containerSize.height > containerSize.width
                             ? 2.5
                             : 2.5)) *
@@ -132,10 +103,43 @@ const ContainerLoaded = () => {
                 <div className="w-full rounded-md  text-xl  text-center   text-shadow  dark:text-shadow-light text-lightMainColor bg-lightMainBG/80  dark:text-darkMainColor dark:bg-darkMainBG/80  dark:shadow-darkMainColor">
                   {item.name}
                 </div>
-              </div>
-            </Link>
+              </Link>
+            </div>
           );
         })}
+          <div
+        id="text"
+        className="blurFilter centerOrigin bgGradientSize50 cards__item  flex flex-col justify-center items-center  text-lightMainColor bg-lightMainBG/60 dark:text-darkMainColor dark:bg-darkMainBG/60  shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2"
+      >
+        <h1
+          className={`font-bold   text-franceBlue  text-center font-DancingScript text-shadow  dark:text-shadow-light p-3 `}
+          style={{ fontSize: `45px`, lineHeight: '0.75' }}
+        >
+          Dance at Le Pari
+        </h1>
+        <p
+          className="text-center  text-shadow  dark:text-shadow-light"
+          style={{ fontSize: `22px` }}
+        >
+          {' '}
+          The place that brings People <br /> together through Dancing
+        </p>
+        <Link
+            href={'/new_students'}
+            className="text-2xl text-center   text-shadow  dark:text-shadow-light blurFilter w-[230px]  m-2 relative flex flex-col justify-center items-center text-lightMainColor bg-lightMainBG/75 dark:text-darkMainColor dark:bg-darkMainBG/75    shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2"
+          >
+            <div
+              className={`font-semibold   text-red-600  text-center font-DancingScript text-shadow  dark:text-shadow-light p-3 -rotate-12 animate-pulse absolute -top-7 -right-5`}
+              style={{ fontSize: `30px`, lineHeight: '0.75' }}
+            >
+              Click for
+            </div>
+            <span>New students offer!</span>
+          </Link>
+        <p className="text-center md:text-xl text-lg">
+          Best viewed in fullscreen mode
+        </p>
+      </div>
     </div>
   );
 };
@@ -152,23 +156,19 @@ export default function Home() {
         ? setBigScreen(true)
         : setBigScreen(false);
     }
-    
   }, [windowSize.width]);
- 
+
   return (
     <PageWrapper className="absolute inset-0 flex flex-col justify-start items-center mt-10 md:mt-20 ">
       <div className="w-full h-1/5 relative overflow-auto   rounded-md">
         {events != undefined && (
-          <BannerGallery
-            events={[...events]}
-            seconds={7}
-          />
+          <BannerGallery events={[...events]} seconds={7} />
         )}
       </div>
       {!bigScreen && (
         <div
           id="text"
-          className="blurFilter  text-lightMainColor   dark:text-darkMainColor   mt-3 p-3 md:p-4 shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2"
+          className="blurFilter  text-lightMainColor   dark:text-darkMainColor  flex flex-col justify-center items-center mt-3 p-3 md:p-4 shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2"
         >
           <h1 className="font-bold text-5xl md:text-7xl text-franceBlue  text-center font-DancingScript text-shadow  dark:text-shadow-light ">
             Dance at Le Pari
@@ -177,14 +177,19 @@ export default function Home() {
             {' '}
             The place that brings People <br /> together through Dancing
           </p>
-          <p
-          className={`font-semibold   text-franceBlue  text-center font-DancingScript text-shadow  dark:text-shadow-light p-3 `}
-          style={{ fontSize: `30px`, lineHeight: '0.75' }}
-        >
+
           <Link
-              href={'/new_students'}
-              className="">For New students Only! </Link>
-        </p>
+            href={'/new_students'}
+            className="text-2xl text-center   text-shadow  dark:text-shadow-light blurFilter w-[230px] m-2 relative flex flex-col justify-center items-center text-lightMainColor bg-lightMainBG/75 dark:text-darkMainColor dark:bg-darkMainBG/75    shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2"
+          >
+            <div
+              className={`font-semibold   text-red-600  text-center font-DancingScript text-shadow  dark:text-shadow-light p-3 -rotate-12 animate-pulse absolute -top-7 -right-5`}
+              style={{ fontSize: `30px`, lineHeight: '0.75' }}
+            >
+              Click for
+            </div>
+            New students offer!
+          </Link>
         </div>
       )}
 
