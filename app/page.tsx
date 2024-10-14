@@ -24,9 +24,9 @@ var departmentsArray = [
   },
   { name: 'Dance Blog', path: '/images/style.jpg', link: '/blog/0' },
   {
-    name: 'Competitive Dance',
+    name: 'Extra',
     path: '/images/competitive.jpg',
-    link: '/competition',
+    link: '/extra',
   },
 ];
 const ContainerLoaded = () => {
@@ -66,6 +66,14 @@ const ContainerLoaded = () => {
         >
           {' '}
           The place that brings People <br /> together through Dancing
+        </p>
+        <p
+          className={`font-semibold   text-franceBlue  text-center font-DancingScript text-shadow  dark:text-shadow-light p-3 `}
+          style={{ fontSize: `45px`, lineHeight: '0.75' }}
+        >
+          <Link
+              href={'/new_students'}
+              className="">For New students Only! </Link>
         </p>
         <p className="text-center md:text-xl text-lg">
           Best viewed in fullscreen mode

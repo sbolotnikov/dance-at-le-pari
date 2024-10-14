@@ -21,7 +21,7 @@ const page: FC<pageProps> = ({}) => {
             className="text-center font-semibold md:text-4xl uppercase"
             style={{ letterSpacing: '1px' }}
           >
-            Competitions
+            Extra
           </h2>
           <div className="flex flex-wrap justify-start items-start h-full w-full">
           <button

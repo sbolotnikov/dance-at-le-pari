@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
     {
       userAgent: '*',
       allow: '/',
-      disallow: ['/api/', '/admin/', '/schedule','/musicplayer','/partymode', '/profile', '/particles4'], 
+      disallow: ['/api/', '/admin/', '/schedule','/musicplayer','/partymode', '/profile', '/particles4','/extra'], 
     },
    ],
     sitemap:`${process.env.NEXTAUTH_URL}/sitemap.xml`  

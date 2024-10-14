@@ -34,6 +34,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url:`${process.env.NEXTAUTH_URL}/calendar`,
     },
     {
+      url:`${process.env.NEXTAUTH_URL}/new_students`,
+    },
+    {
       url:`${process.env.NEXTAUTH_URL}/dancing`,
     },
     {

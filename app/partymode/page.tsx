@@ -207,9 +207,7 @@ const page: React.FC<Props> = () => {
     );
   };
   useEffect(() => {
-    // if (session?.user.role !== 'Admin') {
-    //   window.location.href = '/competition';
-    // }
+  
     getCompsArray();
   }, []);
   const onReturnAlert = async (decision1: string) => {
