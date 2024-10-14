@@ -127,7 +127,7 @@ const page: FC<pageProps> = ({}) => {
           'Page: Offer to new Students FAQ | Dance at Le Pari Studio'
         }
         url={process.env.NEXT_PUBLIC_URL + '/new_students'}
-        quote={`Description:  We recognize that it might be confusing to determine how to start Ballroom and Latin dancing and if you like it overall. Our expert instructors will help you!  \n Click on the link below. \n`}
+        quote={`Description:  We recognize that it might be confusing to determine how to start Ballroom and Latin social dancing and if you like it overall. Our expert instructors will help you!  \n Click on the link below. \n`}
         hashtag={' NewstudentsOffer FAQ DanceLePariDanceCenter'}
         onReturn={() => setRevealSharingModal(false)}
         visibility={revealSharingModal}

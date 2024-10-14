@@ -37,7 +37,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url:`${process.env.NEXTAUTH_URL}/new_students`,
     },
     {
+      url:`${process.env.NEXTAUTH_URL}/dance-videos`,
+    },
+    {
       url:`${process.env.NEXTAUTH_URL}/dancing`,
+    },
+    {
+      url:`${process.env.NEXTAUTH_URL}/gallerydancepictures`,
     },
     {
       url:`${process.env.NEXTAUTH_URL}/gift`,
