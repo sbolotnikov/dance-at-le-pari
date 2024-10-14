@@ -44,7 +44,7 @@ export default function Image() {
             fontWeight: 500,
           }}
         >
-          {"Wedding Dance Lessons in studio"}
+          {"New Students Offer. FAQ"}
         </div>
         <div style={{ width: '400px', height: '400px', display: 'flex'}}>
         <ShowIcon icon={'Puzzled'} stroke={'0.05'} widthSvg={400} heightSvg={400} fillSvg='red'/>
