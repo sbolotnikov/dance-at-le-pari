@@ -75,6 +75,10 @@ const FullDayScheduleView = ({
   const [selectedEvents, setSelectedEvents] = useState<TEventSchedule[]>([]);
   const [displayedEvents, setDisplayedEvents] = useState<DisplayEvent[]>([]);
   const [teacher, setTeacher] = useState(-1);
+  const [initialTouch, setInitialTouch] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
 
   const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(
     null
@@ -379,7 +383,7 @@ const FullDayScheduleView = ({
 
   const regularClickHandler = (index: number) => {
     if (role == 'OutTeacher' || role == 'Student') return;
-    let time = Math.floor(index  * 60);
+    let time = Math.floor(index * 60);
     let hours = Math.floor(time / 60);
 
     let minutes = time % 60;
@@ -399,90 +403,26 @@ const FullDayScheduleView = ({
   ) => {
     if (role == 'OutTeacher' || role == 'Student') return;
     setContextMenuItems([{ title: 'Paste', icon: 'Paste' }]);
-    handleContextMenu(clientX, clientY, index , undefined);
+    handleContextMenu(clientX, clientY, index, undefined);
   };
- 
+
   const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    if (longPressTimer!==null) {
-       setLongPressTimer(null)
-
+    if (longPressTimer !== null) {
+      setLongPressTimer(null);
     }
   }, []);
 
-  const handleMouseDown = useCallback((e: React.MouseEvent, index: number, item1: TEventSchedule | undefined) => {
-    e.preventDefault();
-    const { clientX, clientY } = e;
-    console.log("time",index)
-    if (e.button === 2) {
-      // Right click
-      // showing context menu
-      if (item1==undefined) contextMenuClickHandler(index, clientX, clientY)
-        else  {
-          if (role == 'OutTeacher' || role == 'Student') return;
-          setContextMenuItems([
-            { title: 'Copy', icon: 'Copy' },
-            { title: 'Move', icon: 'Move' },
-            { title: 'Paste', icon: 'Paste' },
-            { title: 'Delete', icon: 'Close' },
-          ]); 
-          handleContextMenu(
-            clientX, clientY,
-            index ,
-            item1
-          );     
-        }
-    } else if (e.button === 0) {
-      // Left click
-      const timer = setTimeout(() => {
-        setIsLongPress(true);
+  const handleMouseDown = useCallback(
+    (e: React.MouseEvent, index: number, item1: TEventSchedule | undefined) => {
+      e.preventDefault();
+      const { clientX, clientY } = e;
+      console.log('time', index);
+      if (e.button === 2) {
+        // Right click
         // showing context menu
-        if (item1==undefined) contextMenuClickHandler(index, clientX, clientY)
-          else  {
-            if (role == 'OutTeacher' || role == 'Student') return;
-            setContextMenuItems([
-              { title: 'Copy', icon: 'Copy' },
-              { title: 'Move', icon: 'Move' },
-              { title: 'Paste', icon: 'Paste' },
-              { title: 'Delete', icon: 'Close' },
-            ]);
-            handleContextMenu(
-              clientX, clientY,
-              index,
-              item1
-            );     
-          }
-      }, 500);
-      setLongPressTimer(timer);
-    }
-  }, []);
-
-  const handleMouseUp = useCallback(
-    (e: React.MouseEvent, index: number, itemId:number) => {
-      if (longPressTimer) {
-        clearTimeout(longPressTimer);
-        setLongPressTimer(null);
-      }
-      if (!isLongPress && e.button === 0) {
-        if (itemId < 0) regularClickHandler(index)
-          else if (role !== 'OutTeacher') onEventClick(itemId);
-        // Regular click
-      }
-      setIsLongPress(false);
-    },
-    [longPressTimer, isLongPress]
-  );
-
-  const handleTouchStart = useCallback((e: React.TouchEvent, timeIndex: number, item1:TEventSchedule | undefined) => {
-    e.preventDefault();
-    const { clientX, clientY } = e.touches[0];
-    console.log("time",timeIndex)
-    const timer = setTimeout(() => {
-      setIsLongPress(true);
-      // showing context menu
-      
-          
-      if (item1==undefined) contextMenuClickHandler(timeIndex, clientX, clientY)
-        else  {
+        if (item1 == undefined)
+          contextMenuClickHandler(index, clientX, clientY);
+        else {
           if (role == 'OutTeacher' || role == 'Student') return;
           setContextMenuItems([
             { title: 'Copy', icon: 'Copy' },
@@ -490,28 +430,104 @@ const FullDayScheduleView = ({
             { title: 'Paste', icon: 'Paste' },
             { title: 'Delete', icon: 'Close' },
           ]);
-          handleContextMenu(
-            clientX, clientY,
-            timeIndex,
-            item1
-          );     
+          handleContextMenu(clientX, clientY, index, item1);
         }
-    }, 500);
-    setLongPressTimer(timer);
-  }, []);
+      } else if (e.button === 0) {
+        // Left click
+        const timer = setTimeout(() => {
+          setIsLongPress(true);
+          // showing context menu
+          if (item1 == undefined)
+            contextMenuClickHandler(index, clientX, clientY);
+          else {
+            if (role == 'OutTeacher' || role == 'Student') return;
+            setContextMenuItems([
+              { title: 'Copy', icon: 'Copy' },
+              { title: 'Move', icon: 'Move' },
+              { title: 'Paste', icon: 'Paste' },
+              { title: 'Delete', icon: 'Close' },
+            ]);
+            handleContextMenu(clientX, clientY, index, item1);
+          }
+        }, 500);
+        setLongPressTimer(timer);
+      }
+    },
+    []
+  );
 
-  const handleTouchEnd = useCallback(
-    (e: React.TouchEvent, index: number, itemId:number) => {
+  const handleMouseUp = useCallback(
+    (e: React.MouseEvent, index: number, itemId: number) => {
       if (longPressTimer) {
         clearTimeout(longPressTimer);
         setLongPressTimer(null);
       }
-      if (!isLongPress) {
-        if (itemId < 0) regularClickHandler(index)
-          else if (role !== 'OutTeacher') onEventClick(itemId);
+      if (!isLongPress && e.button === 0) {
+        if (itemId < 0) regularClickHandler(index);
+        else if (role !== 'OutTeacher') onEventClick(itemId);
         // Regular click
       }
       setIsLongPress(false);
+    },
+    [longPressTimer, isLongPress]
+  );
+
+  const handleTouchStart = useCallback(
+    (
+      e: React.TouchEvent,
+      timeIndex: number,
+      item1: TEventSchedule | undefined
+    ) => {
+      e.preventDefault();
+      const { clientX, clientY } = e.touches[0];
+      console.log('time', timeIndex);
+      setInitialTouch({ x: clientX, y: clientY });
+
+      const timer = setTimeout(() => {
+        setIsLongPress(true);
+        // showing context menu
+
+        if (item1 == undefined)
+          contextMenuClickHandler(timeIndex, clientX, clientY);
+        else {
+          if (role == 'OutTeacher' || role == 'Student') return;
+          setContextMenuItems([
+            { title: 'Copy', icon: 'Copy' },
+            { title: 'Move', icon: 'Move' },
+            { title: 'Paste', icon: 'Paste' },
+            { title: 'Delete', icon: 'Close' },
+          ]);
+          handleContextMenu(clientX, clientY, timeIndex, item1);
+        }
+      }, 500);
+      setLongPressTimer(timer);
+    },
+    []
+  );
+
+  const handleTouchEnd = useCallback(
+    (e: React.TouchEvent, index: number, itemId: number) => {
+      if (longPressTimer) {
+        clearTimeout(longPressTimer);
+        setLongPressTimer(null);
+      }
+      const touch = e.changedTouches[0];
+      if (!isLongPress) {
+        if (initialTouch!==null) {
+          const deltaX = Math.abs(touch.clientX - initialTouch.x);
+          const deltaY = Math.abs(touch.clientY - initialTouch.y);
+
+          if (deltaX < 5 && deltaY < 5) {
+            if (itemId < 0) regularClickHandler(index);
+            else if (role !== 'OutTeacher') onEventClick(itemId);
+            // Regular click
+          }
+        }
+        setInitialTouch(null);
+        setIsLongPress(false);
+      }
+
+
     },
     [longPressTimer, isLongPress]
   );
@@ -687,12 +703,27 @@ const FullDayScheduleView = ({
                         className={` w-full h-[50px] cursor-pointer border-b border-dashed border-lightMainColor dark:border-darkMainColor  flex flex-col justify-left flex-wrap overflow-hidden`}
                         key={`timeslot ${index}`}
                         style={{ userSelect: 'none' }}
-                        onMouseDown={(e) => handleMouseDown(e, (index / slots.length) * 24, undefined)}
-                        onMouseUp={(e) => handleMouseUp(e, (index / slots.length) * 24, -1)}
-                        onTouchStart={(e) => handleTouchStart(e,(index / slots.length) * 24, undefined)}
-                        onTouchEnd={(e) => handleTouchEnd(e, (index / slots.length) * 24,-1)}
+                        onMouseDown={(e) =>
+                          handleMouseDown(
+                            e,
+                            (index / slots.length) * 24,
+                            undefined
+                          )
+                        }
+                        onMouseUp={(e) =>
+                          handleMouseUp(e, (index / slots.length) * 24, -1)
+                        }
+                        onTouchStart={(e) =>
+                          handleTouchStart(
+                            e,
+                            (index / slots.length) * 24,
+                            undefined
+                          )
+                        }
+                        onTouchEnd={(e) =>
+                          handleTouchEnd(e, (index / slots.length) * 24, -1)
+                        }
                         onTouchMove={handleTouchMove}
-
                       >
                         <span>{`${d}`}</span>
                         {/* {day.event && <div className="text-xs" style={{backgroundColor: day.event.color}}>{day.event.title}</div>} */}
@@ -740,23 +771,35 @@ const FullDayScheduleView = ({
                         // onContextMenu={(e) => {
                         //   e.preventDefault();
                         //   const { clientX, clientY } = e;
-                          // if (role == 'OutTeacher' || role == 'Student') return;
-                          // setContextMenuItems([
-                          //   { title: 'Copy', icon: 'Copy' },
-                          //   { title: 'Move', icon: 'Move' },
-                          //   { title: 'Paste', icon: 'Paste' },
-                          //   { title: 'Delete', icon: 'Close' },
-                          // ]);
-                          // handleContextMenu(
-                          //   clientX, clientY,
-                          //   (index / slots.length) * 24,
-                          //   item
-                          // );
+                        // if (role == 'OutTeacher' || role == 'Student') return;
+                        // setContextMenuItems([
+                        //   { title: 'Copy', icon: 'Copy' },
+                        //   { title: 'Move', icon: 'Move' },
+                        //   { title: 'Paste', icon: 'Paste' },
+                        //   { title: 'Delete', icon: 'Close' },
+                        // ]);
+                        // handleContextMenu(
+                        //   clientX, clientY,
+                        //   (index / slots.length) * 24,
+                        //   item
+                        // );
                         // }}
-                        onMouseDown={(e) => handleMouseDown(e, (index / slots.length) * 24, item)}
-                        onMouseUp={(e) => handleMouseUp(e, (index / slots.length) * 24, item.id)}
-                        onTouchStart={(e) => handleTouchStart(e,(index / slots.length) * 24, item)}
-                        onTouchEnd={(e) => handleTouchEnd(e, (index / slots.length) * 24, item.id)}
+                        onMouseDown={(e) =>
+                          handleMouseDown(e, (index / slots.length) * 24, item)
+                        }
+                        onMouseUp={(e) =>
+                          handleMouseUp(e, (index / slots.length) * 24, item.id)
+                        }
+                        onTouchStart={(e) =>
+                          handleTouchStart(e, (index / slots.length) * 24, item)
+                        }
+                        onTouchEnd={(e) =>
+                          handleTouchEnd(
+                            e,
+                            (index / slots.length) * 24,
+                            item.id
+                          )
+                        }
                       >
                         {`${role == 'OutTeacher' ? 'Busy' : item.tag}  ${
                           role == 'OutTeacher'
