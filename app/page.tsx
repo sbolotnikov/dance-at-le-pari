@@ -6,8 +6,7 @@ import { useContext, useEffect, useState } from 'react';
 import BannerGallery from '@/components/BannerGallery';
 import { ScreenSettingsContextType } from '@/types/screen-settings';
 import { SettingsContext } from '@/hooks/useSettings';
-import { useDimensions } from '@/hooks/useDimensions';
-import { getEnvLocal } from '@/utils/functions';
+import { useDimensions } from '@/hooks/useDimensions'; 
 
 var departmentsArray = [
   { name: 'Studio', path: '/images/ballroom.jpg', link: '/about_us/welcome' },
@@ -24,7 +23,7 @@ var departmentsArray = [
   },
   { name: 'Dance Blog', path: '/images/style.jpg', link: '/blog/0' },
   {
-    name: 'Extra',
+    name: 'Extras',
     path: '/images/competitive.jpg',
     link: '/extra',
   },
@@ -134,7 +133,7 @@ const ContainerLoaded = () => {
             >
               Click for
             </div>
-            <span>New students offer!</span>
+            <span>New student offer!</span>
           </Link>
         <p className="text-center md:text-xl text-lg">
           Best viewed in fullscreen mode
@@ -188,7 +187,7 @@ export default function Home() {
             >
               Click for
             </div>
-            New students offer!
+            New student offer!
           </Link>
         </div>
       )}

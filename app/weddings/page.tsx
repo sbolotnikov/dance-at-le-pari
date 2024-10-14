@@ -245,9 +245,9 @@ const page: FC<pageProps> = ({}) => {
                 height={150}
                 className="m-auto drop-shadow-xl border-2 outline-lightMainColor dark:outline-darkMainColor rounded-md"
               />
-            </div>
-            <BoxClickable title="What are the special wedding packages?">
+            </div> 
               <div className="w-full h-[600px] relative  mb-12 overflow-y-auto ">
+                <h2 className='w-full text-center'>Special wedding packages:</h2>
                 <div className="absolute top-0 left-0 w-full min-h-full  flex flex-col justify-center items-end md:flex-row ">
                   {packages.length > 0 &&
                     packages.map((item, index) => {
@@ -324,8 +324,7 @@ const page: FC<pageProps> = ({}) => {
                       );
                     })}
                 </div>
-              </div>
-            </BoxClickable>
+              </div> 
             <BoxClickable title="When To Start Taking Wedding Dance Lessons. How Many Lessons I need?">
               <p className="mt-4">
                 When to start taking wedding dance lessons is an important
