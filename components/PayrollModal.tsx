@@ -22,11 +22,13 @@ type TExcelJSON = {
     events: { tag: string; amount: number; confirmed: boolean; id: number }[];
     dateString: string;
     lessonAmount: number;
+    lessonsConfirmed:number;
     groupsAmount: number;
   }[];
   name: string;
   totalLessonAmount: number;
   totalGroupsAmount: number;
+  totalLessonConfirmed:number;
 };
 const PayrollModal = ({
   visibility,
@@ -56,7 +58,7 @@ const PayrollModal = ({
     }[] = [];
     for (let i = 0; i < excelJSON.length; i++) {
       let name = excelJSON[i].name;
-      let lessonAmount = excelJSON[i].totalLessonAmount;
+      let lessonAmount = excelJSON[i].totalLessonConfirmed;
       let groupsAmount = excelJSON[i].totalGroupsAmount;
       let obj = {
         name: name,
@@ -104,6 +106,7 @@ const PayrollModal = ({
       dateString: string;
       lessonAmount: number;
       groupsAmount: number;
+      lessonsConfirmed:number;
     }[] = [];
     for (let i = 0; i < dateArr.length; i++) {
       let date = dateArr[i];
@@ -112,6 +115,10 @@ const PayrollModal = ({
         .filter((event) => event.eventtype == 'Private')
         .map((event) => event.length)
         .reduce((a, b) => a + b, 0);
+      let lessonsConfirmed = events1
+      .filter((event) => ((event.eventtype == 'Private')&&(event.confirmed)))
+      .map((event) => event.length)
+      .reduce((a, b) => a + b, 0); 
       let groupsAmount = events1.filter(
         (event) => event.eventtype == 'Group'
       ).length;
@@ -140,17 +147,21 @@ const PayrollModal = ({
         events: finalEvents,
         dateString: date,
         lessonAmount: lessonsLength / lessonLength,
+        lessonsConfirmed:lessonsConfirmed / lessonLength,
         groupsAmount: groupsAmount,
       });
     }
     let totalLessonAmount = obj1
       .map((item) => item.lessonAmount)
       .reduce((a, b) => a + b, 0);
+      let totalLessonConfirmed = obj1
+      .map((item) => item.lessonsConfirmed)
+      .reduce((a, b) => a + b, 0);
     let totalGroupsAmount = obj1
       .map((item) => item.groupsAmount)
       .reduce((a, b) => a + b, 0);
 
-    return { name, daysSchedule: obj1, totalLessonAmount, totalGroupsAmount };
+    return { name, daysSchedule: obj1, totalLessonAmount, totalGroupsAmount, totalLessonConfirmed };
   };
 
   const prepareAllJSON = () => {
@@ -224,7 +235,7 @@ const PayrollModal = ({
     tableDataTemp.push({
       date: '',
       note: teacherDataObj.name,
-      lessons: Math.round(teacherDataObj.totalLessonAmount * 100) / 100,
+      lessons: Math.round(teacherDataObj.totalLessonConfirmed * 100) / 100,
       groups: teacherDataObj.totalGroupsAmount,
       confirmed: undefined,
       id: undefined,
@@ -241,7 +252,7 @@ const PayrollModal = ({
         }),
         note: '',
         lessons:
-          Math.round(teacherDataObj.daysSchedule[i].lessonAmount * 100) / 100,
+          Math.round(teacherDataObj.daysSchedule[i].lessonsConfirmed * 100) / 100,
         groups: teacherDataObj.daysSchedule[i].groupsAmount,
         confirmed: undefined,
         id: undefined,
@@ -252,7 +263,7 @@ const PayrollModal = ({
           note: teacherDataObj.daysSchedule[i].events[j].tag,
           lessons: teacherDataObj.daysSchedule[i].events[j].tag.includes(
             'Private'
-          )
+          )&& teacherDataObj.daysSchedule[i].events[j].confirmed 
             ? Math.round(
                 teacherDataObj.daysSchedule[i].events[j].amount * 100
               ) / 100

@@ -57,7 +57,7 @@ const BannerGallery = ({ seconds, events }: Props) => {
 
   const renderImage = (item: Event) => {
     if (typeof item.id === 'number') {
-      return <ImgFromDb stylings="object-contain h-full" url={item.image} alt={`Event Picture ${item.id}`} />;
+      return <ImgFromDb stylings="object-contain  h-full" url={item.image} alt={`Event Picture ${item.id}`} />;
     }
     return (
       <img
@@ -126,4 +126,4 @@ const NavigationButton = ({ direction, onClick }: { direction: 'next' | 'prev', 
 );
 
 export default BannerGallery;
-// export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic';

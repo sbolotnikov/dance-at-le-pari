@@ -31,7 +31,7 @@ const ImgFromDb: FC<ImgFromDbProps> = ({url,stylings, alt}) => {
         }
       }, [url]);
 
-return (displayURL!=null)?<img src={displayURL} className={stylings} alt={alt} />:""
+return (displayURL!=null)?<img src={displayURL} className={stylings} loading="lazy" alt={alt} />:""
 
 }
 export default ImgFromDb
