@@ -126,4 +126,4 @@ const NavigationButton = ({ direction, onClick }: { direction: 'next' | 'prev', 
 );
 
 export default BannerGallery;
-export const dynamic = 'force-dynamic';
+// export const dynamic = 'force-dynamic';

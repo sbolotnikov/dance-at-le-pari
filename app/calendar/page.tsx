@@ -21,9 +21,9 @@ const page: FC<pageProps> = ({}) => {
   const { data: session } = useSession();
   const windowSize = useDimensions();
   const router = useRouter();
-  // const { events } = useContext(
-  //   SettingsContext
-  // ) as ScreenSettingsContextType;
+  const { events } = useContext(
+    SettingsContext
+  ) as ScreenSettingsContextType;
   const [eventsSet, setEventsSet] = useState<TEventArray>([]);
   useEffect(() => {
     // GET request
@@ -50,14 +50,14 @@ const page: FC<pageProps> = ({}) => {
   // {color:"#e09c6b",date:'2023-09-09T19:00:00',tag:"Party", id:0},{color:"#612326",date:'2023-09-18T19:00:00',tag:"Group", id:1},{color:"#35da9b",date:'2023-09-18T14:00:00',tag:"early Party", id:2}, {color:"#6123f6",date:'2023-09-18T18:00:00',tag:"Cha-Cha", id:3},{color:"#9c15e4",date:'2023-09-18T15:00:00',tag:"Bachata", id:4}
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex flex-col items-center  justify-start">
-      {/* <div className="w-full h-1/5 relative overflow-auto mt-1 md:mt-6  rounded-md">
+      <div className="w-full h-1/5 relative overflow-auto mt-1 md:mt-6  rounded-md">
         {events != undefined && (
           <BannerGallery
             events={[...events]}
             seconds={7}
           />
         )}
-      </div> */}
+      </div>
       <SharePostModal
         title={'Page: Calendar | Dance at Le Pari Studio'}
         url={process.env.NEXT_PUBLIC_URL + '/calendar'}
