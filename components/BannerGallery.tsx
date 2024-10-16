@@ -1,10 +1,13 @@
- 'use client';
+'use client';
 
 import React, { useEffect, useState, useCallback } from 'react';
 import ShowIcon from './svg/showIcon';
 import { gsap } from '../utils/gsap';
 import ImgFromDb from './ImgFromDb';
 import { useDimensions } from '@/hooks/useDimensions';
+import Image from 'next/image';
+import { sleep } from 'openai/core';
+
 
 type Event = {
   date: string;
@@ -22,12 +25,13 @@ type Props = {
 const BannerGallery = ({ seconds, events }: Props) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [nextIndex, setNextIndex] = useState(1);
+  const [startRolling, setStartRolling] = useState(true)
   const windowSize = useDimensions();
 
   const transitionToNextImage = useCallback(() => {
     const next = (currentIndex + 1) % events.length;
     setNextIndex(next);
-    
+
     const currentImg = document.getElementById(`image${currentIndex}`);
     const nextImg = document.getElementById(`image${next}`);
 
@@ -52,26 +56,23 @@ const BannerGallery = ({ seconds, events }: Props) => {
 
   const handleImageClick = () => {
     const eventId = events[currentIndex].id;
-    location.replace(typeof eventId === 'number' ? `/events/${eventId}` : eventId);
-  };
-
-  const renderImage = (item: Event) => {
-    if (typeof item.id === 'number') {
-      return <ImgFromDb stylings="object-contain  h-full" url={item.image} alt={`Event Picture ${item.id}`} />;
-    }
-    return (
-      <img
-        src={item.image} 
-        className="w-auto h-full"
-        // style={{ backgroundImage: `url(${item.image})` }}
-      />
+    location.replace(
+      typeof eventId === 'number' ? `/events/${eventId}` : eventId
     );
   };
-
+  useEffect (()=>{
+    sleep(seconds*1000).then(()=>{setStartRolling(false); console.log('done')})
+  },[])
   const formatDate = (date: string) => {
-    const options: Intl.DateTimeFormatOptions = windowSize.width! > 767
-      ? { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
-      : { weekday: 'short', year: 'numeric', month: 'numeric', day: 'numeric' };
+    const options: Intl.DateTimeFormatOptions =
+      windowSize.width! > 767
+        ? { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
+        : {
+            weekday: 'short',
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric',
+          };
     return new Date(date).toLocaleDateString('en-us', options);
   };
 
@@ -80,47 +81,126 @@ const BannerGallery = ({ seconds, events }: Props) => {
   };
 
   return (
-    <div id="galleryContainer" className="h-full w-full relative overflow-hidden rounded-md flex flex-col" style={{ zIndex: 99 }}>
-      {events.map((item, index) => (
+    <div
+      id="galleryContainer"
+      className="h-full w-full relative overflow-hidden rounded-md flex flex-col"
+      style={{ zIndex: 99 }}
+    >  
+      startRolling? <div
+          key={`img${0}`}
+          id={`image${0}`}
+          className="h-full w-screen flex flex-row justify-start items-start absolute top-0 left-0 cursor-pointer"
+           
+          onClick={handleImageClick}
+        >
+          {events[0] !== undefined &&
+            windowSize.width! > 0 &&
+            (typeof events[0].id === 'number' ? (
+              <div className="h-full w-fit m-auto relative">
+                <ImgFromDb
+                  stylings="object-contain  h-full"
+                  url={events[0].image}
+                  alt={`Event Picture ${events[0].id}`}
+                />
+              </div>
+            ) : (
+              <div className="h-full w-full m-auto relative">
+                <Image
+                  src={events[0].image}
+                  alt={`Event Picture ${events[0].id}`}
+                  fill
+                  style={{ objectFit: 'contain' }}
+                />
+              </div>
+            ))}
+          {events[0]!== undefined &&<h2 className="w-full text-center text-xs md:text-base absolute bottom-0 right-0 z-100 bg-lightMainBG/70 dark:bg-darkMainBG/70">
+            { typeof events[0].id === 'number'
+              ? `${events[0].tag}${
+                  windowSize.width! > 767 ? ' Join us on' : ''
+                } ${formatDate(events[0].date)} @ ${formatTime(events[0].date)}`
+              : events[0].tag}
+          </h2>}
+        </div>
+        :
+    {events.map((item, index) => (
         <div
           key={`img${index}`}
           id={`image${index}`}
           className="h-full w-screen flex flex-row justify-start items-start absolute top-0 left-0 cursor-pointer"
-          style={{ display: index === currentIndex ? 'block' : 'none', opacity: index === currentIndex ? 1 : 0 }}
+          style={{
+            display: index === currentIndex ? 'block' : 'none',
+            opacity: index === currentIndex ? 1 : 0,
+          }}
           onClick={handleImageClick}
         >
-          {item.id !== undefined && windowSize.width! > 0 && (
-            <div className="h-full w-fit m-auto relative">
-              {renderImage(item)}
-            </div>
-          )}
-          <h2
-            className="w-full text-center text-xs md:text-base absolute bottom-0 right-0 z-100 bg-lightMainBG/70 dark:bg-darkMainBG/70"
-          >
+          {item.id !== undefined &&
+            windowSize.width! > 0 &&
+            (typeof item.id === 'number' ? (
+              <div className="h-full w-fit m-auto relative">
+                <ImgFromDb
+                  stylings="object-contain  h-full"
+                  url={item.image}
+                  alt={`Event Picture ${item.id}`}
+                />
+              </div>
+            ) : (
+              <div className="h-full w-full m-auto relative">
+                <Image
+                  src={item.image}
+                  alt={`Event Picture ${item.id}`}
+                  fill
+                  style={{ objectFit: 'contain' }}
+                />
+              </div>
+            ))}
+          <h2 className="w-full text-center text-xs md:text-base absolute bottom-0 right-0 z-100 bg-lightMainBG/70 dark:bg-darkMainBG/70">
             {typeof item.id === 'number'
-              ? `${item.tag}${windowSize.width! > 767 ? ' Join us on' : ''} ${formatDate(item.date)} @ ${formatTime(item.date)}`
+              ? `${item.tag}${
+                  windowSize.width! > 767 ? ' Join us on' : ''
+                } ${formatDate(item.date)} @ ${formatTime(item.date)}`
               : item.tag}
           </h2>
         </div>
       ))}
-      <NavigationButton direction="next" onClick={() => transitionToNextImage()} />
-      <NavigationButton direction="prev" onClick={() => {
-        const prev = (currentIndex - 1 + events.length) % events.length;
-        setNextIndex(prev);
-        transitionToNextImage();
-      }} />
+      <NavigationButton
+        direction="next"
+        onClick={() => transitionToNextImage()}
+      />
+      <NavigationButton
+        direction="prev"
+        onClick={() => {
+          const prev = (currentIndex - 1 + events.length) % events.length;
+          setNextIndex(prev);
+          transitionToNextImage();
+        }}
+      />
     </div>
   );
 };
 
-const NavigationButton = ({ direction, onClick }: { direction: 'next' | 'prev', onClick: () => void }) => (
+const NavigationButton = ({
+  direction,
+  onClick,
+}: {
+  direction: 'next' | 'prev';
+  onClick: () => void;
+}) => (
   <button
-    className={`absolute top-1/2 ${direction === 'next' ? 'right-0' : 'left-0'} cursor-pointer hover:scale-125`}
+    className={`absolute top-1/2 ${
+      direction === 'next' ? 'right-0' : 'left-0'
+    } cursor-pointer hover:scale-125`}
     style={{ transform: 'translate(0%, -50%)' }}
     onClick={onClick}
   >
-    <div className={`${direction === 'next' ? 'mr-2' : 'ml-1'} h-8 w-8 md:h-16 md:w-16 fill-darkMainColor dark:stroke-darkMainColor dark:fill-lightMainColor stroke-lightMainColor`}>
-      <ShowIcon icon={direction === 'next' ? 'ArrowRight' : 'ArrowLeft'} stroke=".1" />
+    <div
+      className={`${
+        direction === 'next' ? 'mr-2' : 'ml-1'
+      } h-8 w-8 md:h-16 md:w-16 fill-darkMainColor dark:stroke-darkMainColor dark:fill-lightMainColor stroke-lightMainColor`}
+    >
+      <ShowIcon
+        icon={direction === 'next' ? 'ArrowRight' : 'ArrowLeft'}
+        stroke=".1"
+      />
     </div>
   </button>
 );

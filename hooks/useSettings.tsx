@@ -36,7 +36,7 @@ export const SettingsProvider = ({ children }: Props) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        setEvents([...data.events,{
+        setEvents([{
           date: '',
           tag: 'Give a Gift of Dance!',
           id: '/gift',
@@ -49,7 +49,7 @@ export const SettingsProvider = ({ children }: Props) => {
           id: '/subscribeemaillist',
           image:'/images/gotmail.jpg',
           eventtype: '',
-        }]);
+        },...data.events,]);
         setHours(data.hours);
         setGiftCertificates(data.giftCertificates.priceOptions);
         setGSImage(data.giftCertificates.img);
