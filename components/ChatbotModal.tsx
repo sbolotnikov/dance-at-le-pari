@@ -21,6 +21,16 @@ const ChatbotModal = ({ visibility, onReturn }: Props) => {
   ])
   const [question, setQuestion] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+
+  const handleOnFocus = () => {
+    if (windowSize.width! <= 768) {
+      setIsFocused(true);
+      var objDiv = document.getElementById("chatbotContainer");
+      objDiv!.scrollTop = objDiv!.scrollHeight;
+      document.body.classList.add('keyboard');
+    }
+  };
   return (
     <AnimatePresence>
       {visibility && (
@@ -41,9 +51,12 @@ const ChatbotModal = ({ visibility, onReturn }: Props) => {
             rotateX: ['0deg', '0deg', '89deg', '89deg', '90deg'],
             x: ['0vw', '0vw', '0vw', '0vw', '-100vw'],
           }}
+           id='chatbotContainer'
           className="blurFilter animatePageMainDiv w-[100vw] h-[100svh] absolute flex flex-col justify-center items-center bg-slate-500/70 left-0 z-[1001]"
         >
-          <div className=" blurFilter border-0 rounded-md p-2 shadow-2xl w-[90%] max-w-[1050px] max-h-[85%] overflow-y-auto  md:w-full  bg-lightMainBG dark:bg-darkMainBG relative">
+          <div className={`blurFilter border-0 rounded-md p-2 shadow-2xl w-[90%] max-w-[1050px] max-h-[85%] overflow-y-auto  md:w-full  bg-lightMainBG dark:bg-darkMainBG relative
+            ${isFocused ? 'mb-52' : ''}
+            `}>
           <button
                 className={` flex flex-col justify-center items-center origin-center cursor-pointer z-10 hover:scale-125 absolute top-3 right-3`}
                 onClick={() => onReturn() }
@@ -52,7 +65,9 @@ const ChatbotModal = ({ visibility, onReturn }: Props) => {
                   <ShowIcon icon={'Close'} stroke={'2'} />
                 </div>
               </button>
-            <div className="w-full h-[70svh] flex flex-col justify-center items-center border rounded-md border-lightMainColor dark:border-darkMainColor relative p-2">             
+            <div  className={`w-full h-[70svh] flex flex-col justify-center items-center border rounded-md border-lightMainColor dark:border-darkMainColor relative p-2
+              
+              `}>             
               <div
                 className={`container mx-auto h-[${
                   windowSize.height && windowSize.height > 650 ? '15' : '5'
@@ -79,6 +94,11 @@ const ChatbotModal = ({ visibility, onReturn }: Props) => {
               <div className="w-full h-[15%] flex flex-row justify-center items-center mt-2">
                 <textarea
                   rows={windowSize.height && windowSize.height > 550 ? 3 : 1}
+                  onFocus={handleOnFocus}
+                  onBlur={() => {
+                    setIsFocused(false);
+                    document.body.classList.remove('keyboard');
+                  }}
                   className="w-[80%] rounded-md bg-darkMainBG dark:bg-lightMainBG text-sm text-darkMainColor dark:text-lightMainColor border-lightMainColor dark:border-darkMainColor border-2"
                   placeholder="Type your message here..."
                   onChange={(e) => {
