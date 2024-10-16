@@ -60,9 +60,6 @@ const BannerGallery = ({ seconds, events }: Props) => {
       typeof eventId === 'number' ? `/events/${eventId}` : eventId
     );
   };
-  useEffect (()=>{
-    sleep(seconds*1000).then(()=>{setStartRolling(false); console.log('done')})
-  },[])
   const formatDate = (date: string) => {
     const options: Intl.DateTimeFormatOptions =
       windowSize.width! > 767
@@ -86,42 +83,6 @@ const BannerGallery = ({ seconds, events }: Props) => {
       className="h-full w-full relative overflow-hidden rounded-md flex flex-col"
       style={{ zIndex: 99 }}
     >  
-      startRolling? <div
-          key={`img${0}`}
-          id={`image${0}`}
-          className="h-full w-screen flex flex-row justify-start items-start absolute top-0 left-0 cursor-pointer"
-           
-          onClick={handleImageClick}
-        >
-          {events[0] !== undefined &&
-            windowSize.width! > 0 &&
-            (typeof events[0].id === 'number' ? (
-              <div className="h-full w-fit m-auto relative">
-                <ImgFromDb
-                  stylings="object-contain  h-full"
-                  url={events[0].image}
-                  alt={`Event Picture ${events[0].id}`}
-                />
-              </div>
-            ) : (
-              <div className="h-full w-full m-auto relative">
-                <Image
-                  src={events[0].image}
-                  alt={`Event Picture ${events[0].id}`}
-                  fill
-                  style={{ objectFit: 'contain' }}
-                />
-              </div>
-            ))}
-          {events[0]!== undefined &&<h2 className="w-full text-center text-xs md:text-base absolute bottom-0 right-0 z-100 bg-lightMainBG/70 dark:bg-darkMainBG/70">
-            { typeof events[0].id === 'number'
-              ? `${events[0].tag}${
-                  windowSize.width! > 767 ? ' Join us on' : ''
-                } ${formatDate(events[0].date)} @ ${formatTime(events[0].date)}`
-              : events[0].tag}
-          </h2>}
-        </div>
-        :
     {events.map((item, index) => (
         <div
           key={`img${index}`}
@@ -134,7 +95,7 @@ const BannerGallery = ({ seconds, events }: Props) => {
           onClick={handleImageClick}
         >
           {item.id !== undefined &&
-            windowSize.width! > 0 &&
+            windowSize.width! > 767 &&
             (typeof item.id === 'number' ? (
               <div className="h-full w-fit m-auto relative">
                 <ImgFromDb
@@ -153,13 +114,18 @@ const BannerGallery = ({ seconds, events }: Props) => {
                 />
               </div>
             ))}
-          <h2 className="w-full text-center text-xs md:text-base absolute bottom-0 right-0 z-100 bg-lightMainBG/70 dark:bg-darkMainBG/70">
+          <div className={`w-full ${windowSize.width! > 767?'absolute bottom-0 right-0':'h-full flex justify-center items-center'}`}>  
+          
             {typeof item.id === 'number'
-              ? `${item.tag}${
-                  windowSize.width! > 767 ? ' Join us on' : ''
-                } ${formatDate(item.date)} @ ${formatTime(item.date)}`
-              : item.tag}
-          </h2>
+              ? <h2 className={`w-full text-center text-xs md:text-base ${windowSize.width! > 767 ? "":"flex flex-col justify-center items-center"} z-100 bg-lightMainBG/70 dark:bg-darkMainBG/70`}>
+                <span className={`${windowSize.width! > 767 ? "":"font-DancingScript text-2xl text-center max-w-[80%] text-red-600 animate-pulse text-shadow  dark:text-shadow-light"}`}>{item.tag}</span> 
+                <span>{windowSize.width! > 767 ? ' Join us on ' : ''}</span> 
+                <span>{formatDate(item.date)} @ {formatTime(item.date)}</span>
+                </h2>  
+              : <h2 className={`w-full text-center ${windowSize.width! > 767 ? "":"font-DancingScript text-red-600 animate-pulse text-shadow  dark:text-shadow-light"} text-2xl md:text-base  z-100 bg-lightMainBG/70 dark:bg-darkMainBG/70`}>{item.tag}</h2>
+              }
+          
+          </div>
         </div>
       ))}
       <NavigationButton
