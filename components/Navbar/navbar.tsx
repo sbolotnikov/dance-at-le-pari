@@ -315,7 +315,7 @@ const Navbar = ({ path, locale, children }: Props) => {
       text: '',
     },
     {
-      link: 'https://www.instagram.com/lepari34/',
+      link: 'https://www.instagram.com/dancenjlepari/',
       additionalStyle: '',
       icon: 'Instagram',
       stroke: '1.5',
