@@ -78,8 +78,7 @@ const ChatbotModal = ({ visibility, onReturn }: Props) => {
                 </h2>
                 {windowSize.height && windowSize.height > 650 && (
                   <div className=" w-8  md:w-12 m-auto  fill-lightMainColor dark:fill-darkMainColor   stroke-lightMainColor dark:stroke-darkMainColor">
-
-                    <Fredbot/>
+                      <ShowIcon icon={'ChatbotSmall'} stroke={'0.01'} />
                   </div>
                 )}
               </div>

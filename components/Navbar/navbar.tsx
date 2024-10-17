@@ -379,9 +379,8 @@ const Navbar = ({ path, locale, children }: Props) => {
             setIsVisible(true);
             console.log('clicked');
           }}
-        > 
-          <Fredbot/>
-          
+        >  
+            <ShowIcon icon={'ChatbotSmall'} stroke={'0.01'} />       
         </div>
         <p className="hidden tracking-widest mx-3 transition duration-300 ease-in-out opacity-100 rounded-md text-lightMainColor md:bg-lightMainBG md:dark:bg-lightMainColor md:dark:text-darkMainColor md:text-lightMainColor group-hover:inline-flex md:block md:opacity-0 md:group-hover:opacity-100 ">
             Chatbot
@@ -406,6 +405,7 @@ const Navbar = ({ path, locale, children }: Props) => {
               >
                 <button
                   type="button"
+                  name={item.icon}
                   className={`cursor-pointer h-8 w-8 md:h-6 md:w-6 hover:animate-bounce hover:scale-110 stroke-darkMainColor ${item.additionalStyle}`}
                 >
                   <ShowIcon icon={item.icon} stroke={item.stroke} />

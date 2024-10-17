@@ -6,7 +6,6 @@ import { gsap } from '../utils/gsap';
 import ImgFromDb from './ImgFromDb';
 import { useDimensions } from '@/hooks/useDimensions';
 import Image from 'next/image';
-import { sleep } from 'openai/core';
 
 
 type Event = {
@@ -152,6 +151,7 @@ const NavigationButton = ({
   onClick: () => void;
 }) => (
   <button
+    name={direction === 'next' ? 'nextEventButton' : 'prevEventButton'} 
     className={`absolute top-1/2 ${
       direction === 'next' ? 'right-0' : 'left-0'
     } cursor-pointer hover:scale-125`}
