@@ -1,11 +1,20 @@
 'use client';
-import { FC, useState, useContext } from 'react';
+import { FC, useState, useEffect, useContext } from 'react';
 import { PageWrapper } from '@/components/page-wrapper';
 import { ScreenSettingsContextType} from '@/types/screen-settings';
 import SharePostModal from '@/components/SharePostModal';
 import ShowIcon from '@/components/svg/showIcon';
 import { SettingsContext } from '@/hooks/useSettings';
 import BannerGallery from '@/components/BannerGallery';
+import { fetchInstagramPosts } from '@/utils/functions';
+
+
+interface InstagramPost {
+    id: string;
+    media_url: string;
+    permalink: string;
+}
+
 
 interface pageProps {}
 
@@ -14,7 +23,14 @@ const page: FC<pageProps> = ({}) => {
   const [revealSharingModal, setRevealSharingModal] = useState(false);
   const { events } = useContext(SettingsContext) as ScreenSettingsContextType;
   
-   
+  const [posts, setPosts] = useState<InstagramPost[]>([]);
+    const accessToken = 'YOUR_INSTAGRAM_ACCESS_TOKEN';
+  
+    useEffect(() => {
+        fetchInstagramPosts().then((posts:InstagramPost[]) => {
+            setPosts(posts)
+           })
+    }, []); 
   
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex flex-col items-center  justify-start">
@@ -60,8 +76,17 @@ const page: FC<pageProps> = ({}) => {
             >
               <ShowIcon icon={'Share'} stroke={'2'} />
             </button>
-            <div className="w-full  text-center ">
-                Under constraction...
+            <div className="container mx-auto p-4">
+            <h1 className="text-2xl font-bold mb-4">Instagram Gallery</h1>
+                <div className="w-full grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+                {posts.map((post) => (
+                <div key={post.id} className="relative">
+                    <a href={post.permalink} target="_blank" rel="noopener noreferrer">
+                        <img src={post.media_url} alt="Instagram Post" className="w-full h-full object-cover rounded-lg shadow-lg" />
+                    </a>
+                </div>
+                ))}
+                </div>
             </div>
           </div>
         </div>

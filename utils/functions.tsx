@@ -1,4 +1,5 @@
 import { ContactType } from "@/types/screen-settings";
+import axios from 'axios';
 
 
 const sleep = (n:number)=> {
@@ -114,3 +115,15 @@ var blob = new Blob([text1], {type: "text/plain;charset=utf-8"});
 FileSaver.saveAs(blob, filename);
 
 }  
+
+export const fetchInstagramPosts = async () => {
+  try {
+      const response = await axios.get(
+          `https://graph.instagram.com/me/media?fields=id,media_url,permalink&access_token=${process.env.INSTAGRAM_ACCESS_TOKEN}`
+      );
+      return response.data.data
+  } catch (error) {
+      console.error('Error fetching Instagram posts', error);
+      return []
+  }
+};
