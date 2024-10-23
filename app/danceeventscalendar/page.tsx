@@ -11,7 +11,7 @@ const page = (props: Props) => {
       router.push("/calendar");
    }, [])  
   return (
-    <div>page</div>
+    <div></div>
   )
 }
 

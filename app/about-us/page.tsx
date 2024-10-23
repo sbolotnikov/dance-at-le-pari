@@ -11,7 +11,7 @@ const page = (props: Props) => {
       router.push("/about_us/welcome");
    }, [])  
   return (
-    <div>page</div>
+    <div></div>
   )
 }
 
