@@ -70,21 +70,30 @@ interface MailData {
   attachments: { filename: string, path: string, cid: string }[] | undefined
 }
 
-export const sendAnyEmail = async (mailData: MailData) => {
-  const transporter = nodemailer.createTransport({
-    pool: true, // Use pooled connections
-    maxConnections: 5, // Limit the number of simultaneous connections
-    rateDelta: 1000, // Limit to 1 email per second
-    rateLimit: 1,
-    port: 465,
-    host: 'smtp.gmail.com',
-    auth: {
-      user: process.env.EMAIL_SERVER_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-    secure: true,
-  });
-
+// export const sendAnyEmail1 = async (mailData: MailData) => {
+  // const transporter = nodemailer.createTransport({
+  //   pool: true, // Use pooled connections
+  //   maxConnections: 5, // Limit the number of simultaneous connections
+  //   rateDelta: 1000, // Limit to 1 email per second
+  //   rateLimit: 1,
+  //   port: 465,
+  //   host: 'smtp.gmail.com',
+  //   auth: {
+  //     user: process.env.EMAIL_SERVER_USER,
+  //     pass: process.env.EMAIL_PASS,
+  //   },
+  //   secure: true,
+  // });
+  export const sendAnyEmail = async (mailData: MailData) => {
+    const transporter = nodemailer.createTransport({
+      secure:false, 
+      port: 587,
+      host: 'smtp.office365.com',
+      auth: {
+        user: process.env.EMAIL_SERVER_USER1,
+        pass: process.env.EMAIL_PASS1,
+      },
+    });
   const sendMailPromise = promisify(transporter.sendMail).bind(transporter);
 
   try {
