@@ -88,7 +88,8 @@ interface MailData {
     const transporter = nodemailer.createTransport({
       secure:false, 
       port: 587,
-      host: 'smtp.office365.com',
+      encryption: 'STARTTLS',
+      host: 'smtp-mail.outlook.com',
       auth: {
         user: process.env.EMAIL_SERVER_USER1,
         pass: process.env.EMAIL_PASS1,
