@@ -36,15 +36,9 @@ function SharePostModal({
       height: '50px !important',
       width: '50px !important',
     },
-  };
-  // const [isVisible, setIsVisible] = useState(visibility);
+  }; 
   return (
-    //   <AnimateModalLayout
-    //   visibility={isVisible}
-    //   onReturn={() => {
-    //     onReturn();
-    //   }}
-    // >
+   
     <AnimatePresence>
       {visibility && (
         <motion.div
