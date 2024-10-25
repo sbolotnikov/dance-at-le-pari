@@ -8,8 +8,8 @@ export async function POST(req: Request) {
   const { email, name, message } = data;
   // await new Promise((resolve, reject) => {
    const res = await sendAnyEmail({
-    email1: process.env.EMAIL_SERVER_USER ? process.env.EMAIL_SERVER_USER : '',
-    email2: process.env.EMAIL_SERVER_USER ? process.env.EMAIL_SERVER_USER : '',
+    email1: process.env.EMAIL_SERVER_USER1 ? process.env.EMAIL_SERVER_USER1 : '',
+    email2: process.env.EMAIL_SERVER_USER1 ? process.env.EMAIL_SERVER_USER1 : '',
     subject: `Special request from ${name} <${email}>`,
     text: message,
     html: `<b>${message}</b>`,
