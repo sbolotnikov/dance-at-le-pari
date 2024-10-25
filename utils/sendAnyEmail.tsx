@@ -86,21 +86,34 @@ interface MailData {
 //   });
   export const sendAnyEmail = async (mailData: MailData) => {
     const transporter = nodemailer.createTransport({
+      host: "smtp.office365.com",
+      port: 587,
+      secure: false,
+      auth: {
+          user: process.env.EMAIL_SERVER_USER1,
+          pass: process.env.EMAIL_PASS1
+      },
+      tls: {
+          ciphers: 'SSLv3',
+          rejectUnauthorized: false
+      }
+  });
+//     const transporter = nodemailer.createTransport({
 
-      host: "smtpout.secureserver.net",  
-    secure: true,
-    secureConnection: false, // TLS requires secureConnection to be false
-    tls: {
-        ciphers:'SSLv3'
-    },
-    requireTLS:true,
-    port: 465,
-    debug: true,
-    auth: {
-        user: process.env.EMAIL_SERVER_USER1,
-        pass: process.env.EMAIL_PASS1 
-    }
-});
+//       host: "smtpout.secureserver.net",  
+//     secure: true,
+//     secureConnection: false, // TLS requires secureConnection to be false
+//     tls: {
+//         ciphers:'SSLv3'
+//     },
+//     requireTLS:true,
+//     port: 465,
+//     debug: true,
+//     auth: {
+//         user: process.env.EMAIL_SERVER_USER1,
+//         pass: process.env.EMAIL_PASS1 
+//     }
+// });
 
     //   secure:false, 
     //   port: 587,
