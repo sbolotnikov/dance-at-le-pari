@@ -60,6 +60,7 @@ export  async function POST(
       data: {
         email:email,
       password: await bcrypt.hash(password, salt),
+      image:process.env.NEXTAUTH_URL+'/images/defaultuser.png',
       role:'User'
       },
     });
