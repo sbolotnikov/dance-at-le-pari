@@ -86,15 +86,32 @@ interface MailData {
 //   });
   export const sendAnyEmail = async (mailData: MailData) => {
     const transporter = nodemailer.createTransport({
-      secure:false, 
-      port: 587,
-      encryption: 'STARTTLS',
-      host: 'smtp-mail.outlook.com',
-      auth: {
+
+      host: "smtpout.secureserver.net",  
+    secure: true,
+    secureConnection: false, // TLS requires secureConnection to be false
+    tls: {
+        ciphers:'SSLv3'
+    },
+    requireTLS:true,
+    port: 465,
+    debug: true,
+    auth: {
         user: process.env.EMAIL_SERVER_USER1,
-        pass: process.env.EMAIL_PASS1,
-      },
-    });
+        pass: process.env.EMAIL_PASS1 
+    }
+});
+
+    //   secure:false, 
+    //   port: 587,
+    //   encryption: 'STARTTLS',
+    //   host: 'smtp-mail.outlook.com',
+    //   authenticationMethod:"OAuth2/Modern Auth",
+    //   auth: {
+    //     user: process.env.EMAIL_SERVER_USER1,
+    //     pass: process.env.EMAIL_PASS1,
+    //   },
+    // });
   const sendMailPromise = promisify(transporter.sendMail).bind(transporter);
 
   try {
