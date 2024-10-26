@@ -24,10 +24,9 @@ const page: FC<pageProps> = ({}) => {
   const { events } = useContext(SettingsContext) as ScreenSettingsContextType;
   
   const [posts, setPosts] = useState<InstagramPost[]>([]);
-    const accessToken = 'YOUR_INSTAGRAM_ACCESS_TOKEN';
-  
     useEffect(() => {
-        fetchInstagramPosts().then((posts:InstagramPost[]) => {
+        fetchInstagramPosts().then((posts) => {
+          console.log(posts)
             setPosts(posts)
            }).catch((error) => {
              
@@ -80,12 +79,16 @@ const page: FC<pageProps> = ({}) => {
               <ShowIcon icon={'Share'} stroke={'2'} />
             </button>
             <div className="container mx-auto p-4">
-            <h1 className="text-2xl font-bold mb-4">Instagram Gallery</h1>
+            <h1 className="text-2xl text-center font-bold mb-4">Instagram Gallery</h1>
                 <div className="w-full grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
                 {posts.map((post) => (
                 <div key={post.id} className="relative">
-                    <a href={post.permalink} target="_blank" rel="noopener noreferrer">
-                        <img src={post.media_url} alt="Instagram Post" className="w-full h-full object-cover rounded-lg shadow-lg" />
+                    <a href={post.permalink} target="_blank" rel="noopener noreferrer">  
+                    {/* _video_dashinit. */}
+                    {post.media_url.includes('_video_dashinit') ?
+                     <video src={post.media_url} controls className="w-full h-full object-cover rounded-lg shadow-lg" />:
+                     <img src={post.media_url} alt="Instagram Post" className="w-full h-full object-contain rounded-lg shadow-lg" />
+                    }
                     </a>
                 </div>
                 ))}
