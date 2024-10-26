@@ -53,7 +53,7 @@ const page: FC<pageProps> = ({}) => {
       />
        
       <div
-        className="blurFilter border-0 rounded-md p-2  shadow-2xl w-[90%] h-[73svh]  max-w-[850px] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70  md:m-3"
+        className="blurFilter border-0 rounded-md p-2  shadow-2xl w-[90%] h-[73svh]  max-w-[1200px] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70  md:m-3"
         // style={{ boxShadow: '0 0 150px rgb(113, 113, 109 / 50%),inset 0 0 20px #242422' }}
       >
         <div className="w-full h-full border relative rounded-md border-lightMainColor dark:border-darkMainColor flex flex-col justify-center items-center overflow-y-auto">
@@ -80,14 +80,14 @@ const page: FC<pageProps> = ({}) => {
             </button>
             <div className="container mx-auto p-4">
             <h1 className="text-2xl text-center font-bold mb-4">Instagram Gallery</h1>
-                <div className="w-full grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+                <div className="w-full" style={{columns:'200px'}}>
                 {posts.map((post) => (
-                <div key={post.id} className="relative">
+                <div key={post.id} className="relative m-2">
                     <a href={post.permalink} target="_blank" rel="noopener noreferrer">  
                     {/* _video_dashinit. */}
                     {post.media_url.includes('_video_dashinit') ?
-                     <video src={post.media_url} controls className="w-full h-full object-cover rounded-lg shadow-lg" />:
-                     <img src={post.media_url} alt="Instagram Post" className="w-full h-full object-contain rounded-lg shadow-lg" />
+                     <video src={post.media_url} controls className="w-full  object-cover rounded-lg shadow-lg" />:
+                     <img src={post.media_url} alt="Instagram Post" className="w-full object-contain rounded-lg shadow-lg" />
                     }
                     </a>
                 </div>
