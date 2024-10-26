@@ -6,7 +6,7 @@ import { TTeacherInfo } from '@/types/screen-settings';
 
 type TAlertType = {
   onReturn: (val: string, val2: TTeacherInfo | null) => void;
-  group: string;
+  
   title:string;
   selectedUsers:TTeacherInfo[];
 };
@@ -36,16 +36,16 @@ export default function ChooseUsersQuick(props: TAlertType) {
       style={{ top: el!.scrollTop }}
     >
       
-      <div className="m-auto  max-w-[600px] bg-gray-200 border-2 border-solid border-gray-400 rounded-md w-[97%] p-2 flex flex-col content-evenly">
-        <label className="px-1 py-2 border-2 border-solid border-transparent rounded-sm w-full m-1 text-center">
+      <div className="m-auto  max-w-[600px] bg-lightMainBG dark:bg-darkMainBG border-2 border-solid border-gray-400 rounded-md w-[97%] p-2 flex flex-col content-evenly">
+        <label className="px-1 py-2 border-2 border-solid uppercase border-transparent rounded-sm w-full m-1 text-center">
           {"Choose "+props.title}
         </label>
         <h5
           className="px-1 py-2 border-2 border-solid border-transparent text-light rounded-sm w-full m-1 text-center"
           dangerouslySetInnerHTML={{ __html: 'Choose one' }}
         />
-        <div className="w-full h-28 relative   overflow-scroll ">
-          <div className="absolute top-0 left-0  min-w-full   flex flex-wrap items-start justify-start ">
+        <div className="w-full h-28 relative   overflow-y-auto ">
+          <div className="absolute top-0 left-0  min-w-full   flex flex-wrap items-center justify-center ">
             {props.selectedUsers.length > 0 &&
               props.selectedUsers.map((item, index) =>
                 

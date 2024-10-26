@@ -223,10 +223,10 @@ export default function EditScheduleModal({
           {revealCloud1 && (
             <ChooseUsersQuick
               title={'student'}
-              group={JSON.stringify([{ role: 'Student' }])}
+              // group={JSON.stringify([{ role: 'Student' }])}
               onReturn={onReturnStudents}
               selectedUsers={users
-                .filter((user) => user.role === 'Student')
+                .filter((user) => user.role == 'Student')
                 .map((user) => {
                   return {
                     id: user.id,
@@ -239,11 +239,11 @@ export default function EditScheduleModal({
           {revealCloud2 && (
             <ChooseUsersQuick
               title={'teacher'}
-              group={JSON.stringify([{ role: 'Teacher' }, { role: 'Admin' }])}
+              // group={JSON.stringify([{ role: 'Teacher' }, { role: 'Admin' }])}
               onReturn={onReturnTeacher}
               selectedUsers={users
                 .filter(
-                  (user) => user.role === 'Teacher' || user.role === 'Admin'
+                  (user) => user.role == 'Teacher' || user.role == 'Admin'
                 )
                 .map((user) => {
                   return {

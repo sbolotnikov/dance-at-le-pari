@@ -27,7 +27,7 @@ function page() {
   const [usersType, setUsersType] = useState('All');
   const [usersDisplay, setUsersDisplay] = useState<UserType[]>([]);
   const [revealAlert, setRevealAlert] = useState(false);
-
+  const [newName, setNewName] = useState('');
   const [revealAvatarSelect, setRevealAvatarSelect] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserType>({} as UserType);
   const router = useRouter();
@@ -49,6 +49,7 @@ function page() {
   const [style1, setStyle1] = useState({ display: 'none' });
   var filtersArray = [
     ['All', ''],
+    ['Users', 'User'],
     ['Students', 'Student'],
     ['Outside Teacher','OutTeacher'],
     ['Teachers', 'Teacher'],
@@ -102,6 +103,24 @@ function page() {
     setRevealAvatarSelect(true);
     setSelectedUser(users.filter((user) => user.id === id)[0]);
   };
+
+  const handleNameUpdate =(id: number, name: string) => {
+    setSelectedId(id);
+    setNewName(name);
+    setAlertStyle({
+      variantHead: 'danger',
+      heading: 'Warning!',
+      text: `Are you sure about change user's name to ${name}?`,
+      color1: 'danger',
+      button1: 'Update',
+      color2: 'secondary',
+      button2: 'Cancel',
+      inputField: '',
+    });
+    setRevealAlert(true);
+  };
+  
+
   const onReturn = (decision1: string) => {
     setRevealAlert(false);
     if (decision1 == 'Confirm') {
@@ -116,7 +135,20 @@ function page() {
       }).then(() => {
         location.reload();
       });
-    } else setSelectedId(0);
+    }else if (decision1 == 'Update'){
+      fetch('/api/admin/upd_user', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: selectedId,
+          name: newName,
+        }),
+      }).then(() => {
+        location.reload();
+      });
+    }  else setSelectedId(0);
   };
   const onReturnAvatar = (decision1: string, fileLink: string) => {
     setRevealAvatarSelect(false);
@@ -262,6 +294,7 @@ function page() {
                       user={item}
                       delUser={handleDelete}
                       updateImg={handleImgUpdate}
+                      updateName={handleNameUpdate}
                     />
                   );
                 })}
