@@ -29,7 +29,10 @@ const page: FC<pageProps> = ({}) => {
     useEffect(() => {
         fetchInstagramPosts().then((posts:InstagramPost[]) => {
             setPosts(posts)
-           })
+           }).catch((error) => {
+             
+            console.log(error);
+          })
     }, []); 
   
   return (

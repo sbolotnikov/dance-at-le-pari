@@ -119,7 +119,7 @@ FileSaver.saveAs(blob, filename);
 export const fetchInstagramPosts = async () => {
   try {
       const response = await axios.get(
-          `https://graph.instagram.com/me/media?fields=id,media_url,permalink&access_token=${process.env.INSTAGRAM_ACCESS_TOKEN}`
+          `https://graph.instagram.com/me/media?fields=id,media_url,permalink&access_token=${process.env.NEXT_PUBLIC_INSTAGRAM_ACCESS_TOKEN}`
       );
       return response.data.data
   } catch (error) {
