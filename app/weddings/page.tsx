@@ -17,6 +17,7 @@ import SharePostModal from '@/components/SharePostModal';
 import ShowIcon from '@/components/svg/showIcon';
 import { SettingsContext } from '@/hooks/useSettings';
 import BannerGallery from '@/components/BannerGallery';
+import PriceOptionSelect from '@/components/PriceOptionSelect';
 
 interface pageProps {}
 
@@ -67,21 +68,21 @@ const page: FC<pageProps> = ({}) => {
     {
       id: 48,
       name: 'Intro package',
-      tag: '$100',
+      tag: '$110',
       description:
         '<ul><li>Consultation on a dance style to chosen song</li>  <li>Learn the proper basic 2-3 dance steps to your chosen song</li></ul>',
     },
     {
       id: 78,
       name: 'Plus package',
-      tag: '$475',
+      tag: '$525',
       description:
         '<ul><li>Learn the proper 5-7 basic steps to your chosen song</li><li>Our most budget friendly package</li></ul>',
     },
     {
       id: 79,
       name: 'Premium package',
-      tag: '$925',
+      tag: '$1000',
       description:
         '<ul><li>Learn 10-15 basic steps to your chosen song</li><li>Complimentary choreography to your chosen song</li><li>Learn tricks to bring your first dance to an even higher level</li></ul>',
     },
@@ -102,11 +103,11 @@ const page: FC<pageProps> = ({}) => {
           pack1 = packageArray.find((item) => item.id === info.template[i].id);
           array1.push({
             ...info.template[i],
-            name: pack1!.name,
             description2: pack1!.description,
             price1: pack1!.tag,
           });
         }
+        console.log(array1)
         setPackages(array1);
       })
       .catch((err) => {
@@ -245,9 +246,9 @@ const page: FC<pageProps> = ({}) => {
                 height={150}
                 className="m-auto drop-shadow-xl border-2 outline-lightMainColor dark:outline-darkMainColor rounded-md"
               />
-            </div> 
+            </div>
+            <h2 className='w-full text-center'>Special wedding packages:</h2>
               <div className="w-full h-[600px] relative  mb-12 overflow-y-auto ">
-                <h2 className='w-full text-center'>Special wedding packages:</h2>
                 <div className="absolute top-0 left-0 w-full min-h-full  flex flex-col justify-center items-end md:flex-row ">
                   {packages.length > 0 &&
                     packages.map((item, index) => {
@@ -266,7 +267,7 @@ const page: FC<pageProps> = ({}) => {
                           <h1
                             className={`text-2xl  text-center   text-shadow  dark:text-shadow-light`}
                           >
-                            {item.name}
+                            {item.title}
                           </h1>
 
                           <p
