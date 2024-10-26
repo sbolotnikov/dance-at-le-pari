@@ -79,12 +79,11 @@ export default function ChoosePicture(props: TAlertType) {
     //    if (img!=='Error uploading') props.onReturn("Upload",img!);
   };
 
-
   const handlePictureLinkChange = (text: string) => {
     if (pictureLinkType === 'GDrive Link') {
       const id = text.split('/file/d/')[1]?.split('/')[0];
       setPictureLink(`https://drive.google.com/thumbnail?id=${id}&sz=w1000`);
-    } else setPictureLink(text)
+    } else setPictureLink(text);
   };
   const refreshPictures = () => {
     fetch('/api/admin/get_all_saved_pics', {
@@ -108,130 +107,146 @@ export default function ChoosePicture(props: TAlertType) {
       className="blurFilter w-[100svw] h-[100svh] absolute flex justify-center items-center bg-slate-500/70 left-0 z-[1001]"
       style={{ top: el!.scrollTop }}
     >
-        <AlertMenu visibility={revealAlert}  onReturn={onReturnAlert} styling={alertStyle} />
-      <div className="m-auto  max-w-[600px] bg-gray-200 border-2 border-solid border-gray-400 rounded-md w-[97%] p-2 flex flex-col content-evenly">
-        <label className="px-1 py-2 border-2 border-solid border-transparent rounded-sm w-full m-1 text-center">
-          Available images
-        </label>
-        <h5
-          className="px-1 py-2 border-2 border-solid border-transparent text-light rounded-sm w-full m-1 text-center"
-          dangerouslySetInnerHTML={{ __html: 'Choose one' }}
-        />
-        <div className="w-full h-28 relative   overflow-scroll ">
-          <div className="absolute top-0 left-0  min-w-full   flex flex-wrap items-start justify-start ">
-            {displayPics.length > 0 &&
-              displayPics.map((item) =>
-                item.file !== null && item.file !== undefined ? (
-                  <div key={item.id} className="m-1 mr-4 relative">
-                    <Image
-                      src={item.file}
-                      width={100}
-                      height={90}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setAlertStyle({
-                          variantHead: 'info',
-                          heading: 'Warning',
-                          text: 'Would you like to choose this Image?',
-                          color1: 'info',
-                          button1: 'Confirm',
-                          color2: 'secondary',
-                          button2: 'Cancel',
-                          inputField: '',
-                        });
-                        setImageID(item.id);
-                        setRevealAlert(!revealAlert);
-                        return;
-                      }}
-                      alt="User Picture"
-                    />
-                    <button
-                      className=" outline-none border-none fill-alertcolor  stroke-alertcolor  rounded-md border-alertcolor absolute p-1 -top-1 -right-9 w-10 h-10"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setAlertStyle({
-                          variantHead: 'danger',
-                          heading: 'Warning',
-                          text: 'You are about to Delete Image!',
-                          color1: 'danger',
-                          button1: 'Delete',
-                          color2: 'secondary',
-                          button2: 'Cancel',
-                          inputField: '',
-                        });
-                        setImageID(item.id);
-                        setRevealAlert(!revealAlert);
-                        return;
-                      }}
-                    >
-                      <ShowIcon icon={'Close'} stroke={'2'} />
-                    </button>
-                  </div>
-                ) : (
-                  <></>
-                )
-              )}
+      <AlertMenu
+        visibility={revealAlert}
+        onReturn={onReturnAlert}
+        styling={alertStyle}
+      />
+      <div
+        className={`blurFilter border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-[600px]  flex justify-center items-center flex-col bg-lightMainBG dark:bg-darkMainBG h-[70svh]
+      }`}
+      >
+        <div
+          id="wrapperDiv"
+          className="w-full h-full relative  p-1  border border-lightMainColor dark:border-darkMainColor rounded-md flex flex-col justify-center items-center overflow-auto"
+        >
+          <div className="m-auto  max-w-[600px] bg-lightMainBG/70 dark:bg-darkMainBG/70 w-[97%] p-2 flex flex-col content-evenly">
+            <label className="px-1 sm:py-2 border-2 border-solid border-transparent font-semibold text-2xl md:text-4xl uppercase rounded-sm w-full m-1 text-center">
+              Available images
+            </label>
+            <h5
+              className="px-1 sm:py-2 border-2 border-solid border-transparent text-light rounded-sm w-full m-1 text-center"
+              dangerouslySetInnerHTML={{ __html: 'Choose one' }}
+            />
+            <div className="w-full h-20  sm:h-28 relative   overflow-scroll ">
+              <div className="absolute top-0 left-0  min-w-full   flex flex-wrap items-start justify-start ">
+                {displayPics.length > 0 &&
+                  displayPics.map((item) =>
+                    item.file !== null && item.file !== undefined ? (
+                      <div key={item.id} className="my-1 mx-6 relative">
+                        <Image
+                          src={item.file}
+                          width={100}
+                          height={90}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setAlertStyle({
+                              variantHead: 'info',
+                              heading: 'Warning',
+                              text: 'Would you like to choose this Image?',
+                              color1: 'info',
+                              button1: 'Confirm',
+                              color2: 'secondary',
+                              button2: 'Cancel',
+                              inputField: '',
+                            });
+                            setImageID(item.id);
+                            setRevealAlert(!revealAlert);
+                            return;
+                          }}
+                          alt="User Picture"
+                        />
+                        <button
+                          className=" outline-none border-none fill-alertcolor  stroke-alertcolor  rounded-md border-alertcolor absolute p-1 -top-1 -right-9 w-10 h-10"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setAlertStyle({
+                              variantHead: 'danger',
+                              heading: 'Warning',
+                              text: 'You are about to Delete Image!',
+                              color1: 'danger',
+                              button1: 'Delete',
+                              color2: 'secondary',
+                              button2: 'Cancel',
+                              inputField: '',
+                            });
+                            setImageID(item.id);
+                            setRevealAlert(!revealAlert);
+                            return;
+                          }}
+                        >
+                          <ShowIcon icon={'Close'} stroke={'2'} />
+                        </button>
+                      </div>
+                    ) : (
+                      <></>
+                    )
+                  )}
+              </div>
+            </div>
+            <input
+              type="file"
+              hidden
+              id="inputField"
+              accept="image/*"
+              className="w-full mb-2 rounded-md text-gray-700"
+              onChange={handleChange}
+            />
+            <button
+               className={`btnFancy dark:text-[#93c5fd] dark:border-blue-300 dark:hover:text-white`}
+              onClick={() => {
+                AllowScroll();
+                document.getElementById('inputField')!.click();
+              }}
+            >
+              {'Upload'}
+            </button>
+            {pictureLink.length > 0 && (
+              <img
+                src={pictureLink}
+                alt="Preview"
+                width={64}
+                height={64}
+                className=" bg-gray-300 rounded-sm mb-2 m-auto"
+              />
+            )}
+            <select
+              value={pictureLinkType}
+              onChange={(e) => setPictureLinkType(e.target.value)}
+               className="w-[90%] mx-auto my-3 p-2 text-lg dark:bg-lightMainBG bg-darkMainBG dark:text-lightMainColor text-darkMainColor rounded-md outline-none "
+            >
+              <option value="Regular link">Regular link</option>
+              <option value="GDrive Link">GDrive Link</option>
+            </select>
+
+            <input
+              type="text"
+              placeholder="Enter picture link"
+              value={pictureLink}
+              onChange={(e) => handlePictureLinkChange(e.target.value)}
+               className="w-[90%] mx-auto mb-3 p-2 text-lg  dark:bg-lightMainBG bg-darkMainBG dark:text-lightMainColor text-darkMainColor rounded-md outline-none "
+            />
+            <button
+               className={`btnFancy dark:text-[#93c5fd] dark:border-blue-300 dark:hover:text-white`}
+              onClick={(e) => {
+                e.preventDefault();
+                props.onReturn('Upload', pictureLink);
+                return;
+              }}
+            >
+              {'Use this link'}
+            </button>
+            <button
+               className={`btnFancy dark:text-[#93c5fd] dark:border-blue-300 dark:hover:text-white`}
+              onClick={(e) => {
+                AllowScroll();
+                props.onReturn('Close', '');
+              }}
+            >
+              {'Close'}
+            </button>
           </div>
         </div>
-        <input
-          type="file"
-          hidden
-          id="inputField"
-          accept="image/*"
-          className="w-full mb-2 rounded-md text-gray-700"
-          onChange={handleChange}
-        />
-        <button
-          className="btnFancy w-[90%]"
-          onClick={() => {
-            AllowScroll();
-            document.getElementById('inputField')!.click();
-          }}
-        >
-          {'Upload'}
-        </button>
-        {pictureLink.length>0 &&<img 
-            src={pictureLink} 
-            alt="Preview" 
-            width={64}
-            height={64}
-            className=" bg-gray-300 rounded-sm mb-2 m-auto"
-          />}
-        <select
-            value={pictureLinkType}
-            onChange={(e) => setPictureLinkType(e.target.value)}
-            className="mb-2 p-2 border border-gray-300 rounded"
-          >
-            <option value="Regular link">Regular link</option>
-            <option value="GDrive Link">GDrive Link</option>
-          </select>
-         
-           <input
-            type="text"
-            placeholder="Enter picture link"
-            value={pictureLink} 
-            onChange={(e) => handlePictureLinkChange(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded mb-2"
-          /> 
-          <button
-          className="btnFancy w-[90%]"
-          onClick={(e) => {
-            e.preventDefault();
-            props.onReturn('Upload', pictureLink);
-            return;
-          }}
-        >
-          {'Use this link'}
-        </button>
-        <button
-          className="btnFancy w-[90%]"
-          onClick={(e) => {
-            AllowScroll();
-            props.onReturn('Close', '');
-          }}
-        >
-          {'Close'}
-        </button>
       </div>
     </div>
   );
