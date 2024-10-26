@@ -11,15 +11,19 @@ interface UserType {
     image: string;
     color?: string;
     id: number;
+    bio?:string;
   };
   delUser: (id: number, name: string) => void;
   updateImg: (id: number, image: string) => void;
   updateName: (id: number, name: string) => void;
+  updateBio: (id: number, bio: string) => void;
 }
-function UserForm(props: UserType) {
-  console.log(props.user);
+function UserForm(props: UserType) { 
   const [isEditVisible, setIsEditVisible] = useState(false);
+  const [isBioVisible, setIsBioVisible] = useState(false);
+  const [bioLocal, setBioLocal] = useState(props.user.bio);
   const userNameRef = useRef<HTMLInputElement>(null);
+  const userBioRef = useRef<HTMLTextAreaElement>(null);
   const changeStatus = async (e: React.SyntheticEvent<EventTarget>) => {
     e.preventDefault();
     if (!(e.target instanceof HTMLSelectElement)) {
@@ -155,6 +159,35 @@ function UserForm(props: UserType) {
           ref={userNameRef}
         />
       )}
+      {bioLocal ? (!isBioVisible ? (
+        <h3
+          className="mx-1 w-80 h-24 overflow-y-auto  text-center relative"
+          onClick={(e) => {
+            e.preventDefault();
+            setIsBioVisible(true);
+          }}
+        ><div className='w-full absolute top-0 left-0 text-center'>{bioLocal}</div>
+       </h3>):(
+        <textarea
+          name="user_bio"
+          id="user_bio"
+          className="w-80 outline-none bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor border-none rounded-md p-0.5 mx-1 my-1"
+          placeholder="Enter Bio"
+          rows={4}
+          defaultValue={bioLocal}
+          onBlur={(e) => {
+            e.preventDefault();
+            setIsBioVisible(false);
+            if (
+              userBioRef.current!.value !== '' &&
+              userBioRef.current!.value !== bioLocal
+            ) 
+            props.updateBio(props.user.id, userBioRef.current!.value!);
+            setBioLocal(props.user.bio);
+          }}
+          ref={userBioRef}
+        />
+      )):(<button className='btnFancySmall' onClick={(e)=>{e.preventDefault();setBioLocal("Enter New Bio here..."); setIsBioVisible(true);}}> Add Bio</button>)}   
     </div>
   );
 }

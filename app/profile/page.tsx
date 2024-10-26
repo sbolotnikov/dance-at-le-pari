@@ -233,13 +233,13 @@ const page: FC<pageProps> = () => {
             className={`absolute top-0 left-0 flex flex-col w-full p-1 justify-center items-center `}
           >
             <h2
-              className="text-center font-semibold md:text-4xl uppercase relative"
+              className="text-center w-[80%] font-semibold md:text-4xl uppercase relative"
               style={{ letterSpacing: '1px' }}
             >
               Your's {session?.user.role} Profile
               <button
                 type="button"
-                className="absolute top-1 -right-10 md:top-1.5 md:right-3 h-6 w-6   md:h-8 md:w-8 rounded-sm outline-none "
+                className="absolute top-1 -right-5 md:-right-[2.2rem] md:top-1.5  h-6 w-6   md:h-8 md:w-8 rounded-sm outline-none "
                 onClick={() => {
                   signOut();
                 }}
