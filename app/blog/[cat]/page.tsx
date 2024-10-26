@@ -101,8 +101,8 @@ export default function Page(params: {
         body: JSON.stringify({
           id:  selectedId,
         }),
-      }).then((res) => {
-       router.push('/blog/0');
+      }).then((res) => { 
+        window.location.reload();
 
       });
     }
