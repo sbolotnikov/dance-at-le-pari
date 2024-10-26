@@ -37,6 +37,8 @@ export default function ChoosePicture(props: TAlertType) {
   const el = document.querySelector('#mainPage');
   const [displayPics, setDisplayPics] = useState<TImage[]>([]);
   const [imageID, setImageID] = useState('');
+  const [pictureLink, setPictureLink] = useState('');
+  const [pictureLinkType, setPictureLinkType] = useState('Regular link');
 
   function StopScroll() {
     // prevent scrolling
@@ -75,6 +77,14 @@ export default function ChoosePicture(props: TAlertType) {
     refreshPictures();
 
     //    if (img!=='Error uploading') props.onReturn("Upload",img!);
+  };
+
+
+  const handlePictureLinkChange = (text: string) => {
+    if (pictureLinkType === 'GDrive Link') {
+      const id = text.split('/file/d/')[1]?.split('/')[0];
+      setPictureLink(`https://drive.google.com/thumbnail?id=${id}&sz=w1000`);
+    } else setPictureLink(text)
   };
   const refreshPictures = () => {
     fetch('/api/admin/get_all_saved_pics', {
@@ -179,6 +189,39 @@ export default function ChoosePicture(props: TAlertType) {
           }}
         >
           {'Upload'}
+        </button>
+        {pictureLink.length>0 &&<img 
+            src={pictureLink} 
+            alt="Preview" 
+            width={64}
+            height={64}
+            className=" bg-gray-300 rounded-sm mb-2 m-auto"
+          />}
+        <select
+            value={pictureLinkType}
+            onChange={(e) => setPictureLinkType(e.target.value)}
+            className="mb-2 p-2 border border-gray-300 rounded"
+          >
+            <option value="Regular link">Regular link</option>
+            <option value="GDrive Link">GDrive Link</option>
+          </select>
+         
+           <input
+            type="text"
+            placeholder="Enter picture link"
+            value={pictureLink} 
+            onChange={(e) => handlePictureLinkChange(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded mb-2"
+          /> 
+          <button
+          className="btnFancy w-[90%]"
+          onClick={(e) => {
+            e.preventDefault();
+            props.onReturn('Upload', pictureLink);
+            return;
+          }}
+        >
+          {'Use this link'}
         </button>
         <button
           className="btnFancy w-[90%]"
