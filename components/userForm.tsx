@@ -1,7 +1,7 @@
 'use client';
 import ImgFromDb from './ImgFromDb';
 import ShowIcon from './svg/showIcon';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 interface UserType {
   user: {
@@ -24,6 +24,9 @@ function UserForm(props: UserType) {
   const [bioLocal, setBioLocal] = useState(props.user.bio);
   const userNameRef = useRef<HTMLInputElement>(null);
   const userBioRef = useRef<HTMLTextAreaElement>(null);
+  useEffect(() => {
+    setBioLocal(props.user.bio);
+  }, [props.user.bio]);
   const changeStatus = async (e: React.SyntheticEvent<EventTarget>) => {
     e.preventDefault();
     if (!(e.target instanceof HTMLSelectElement)) {
