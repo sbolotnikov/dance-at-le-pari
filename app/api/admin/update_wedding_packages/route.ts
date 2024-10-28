@@ -9,13 +9,13 @@ export  async function PUT(
   try {
 
     const data = await req.json();
-    const {hours} = data;
+    const {specialPackage, weddingPackages} = data;
 
     const updateSettings = await prisma.settingVar.update({
         where: {
           id:0
         },
-        data:{hours}
+        data:{specialPackage, weddingPackages}
       })
     console.log(updateSettings)
     await prisma.$disconnect()

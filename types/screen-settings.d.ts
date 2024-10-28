@@ -8,6 +8,8 @@ export type ScreenSettingsContextType = {
   changeNav: (a: boolean) => void;
   events: TEventArray;
   hours: string[];
+  selectedWeddingPackages: number[];
+  specialWeddingPackage: number;
   dances: TDance[];
   giftCertificates:TPriceOption[]
   gsImage: string;

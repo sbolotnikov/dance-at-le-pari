@@ -18,6 +18,9 @@ import ShowIcon from '@/components/svg/showIcon';
 import { SettingsContext } from '@/hooks/useSettings';
 import BannerGallery from '@/components/BannerGallery';
 import PriceOptionSelect from '@/components/PriceOptionSelect';
+import { useSession } from 'next-auth/react';
+import ChooseWeddingPackagesPanel from '@/components/ChooseWeddingPackagesPanel';
+import LoadingScreen from '@/components/LoadingScreen';
 
 interface pageProps {}
 
@@ -25,11 +28,11 @@ const page: FC<pageProps> = ({}) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const emailRef = useRef<HTMLInputElement>(null);
+  const { data: session } = useSession();
+  const [loading, setLoading] = useState(false);
   const [revealAlert, setRevealAlert] = useState(false);
   const [revealSharingModal, setRevealSharingModal] = useState(false);
-  const { events } = useContext(
-    SettingsContext
-  ) as ScreenSettingsContextType;
+  const { events, selectedWeddingPackages, specialWeddingPackage } = useContext(SettingsContext) as ScreenSettingsContextType;
   const [packages, setPackages] = useState<
     {
       tag: string;
@@ -43,9 +46,7 @@ const page: FC<pageProps> = ({}) => {
       location: string | null;
       description: string | null;
       visible: boolean;
-      name: string;
-      description2: string;
-      price1: string;
+      name: string; 
     }[]
   >([]);
   const [alertStyle, setAlertStyle] = useState({
@@ -64,58 +65,21 @@ const page: FC<pageProps> = ({}) => {
       setRevealAlert(false);
     });
   };
-  const packageArray = [
-    {
-      id: 48,
-      name: 'Intro package',
-      tag: '$110',
-      description:
-        '<ul><li>Consultation on a dance style to chosen song</li>  <li>Learn the proper basic 2-3 dance steps to your chosen song</li></ul>',
-    },
-    {
-      id: 78,
-      name: 'Plus package',
-      tag: '$525',
-      description:
-        '<ul><li>Learn the proper 5-7 basic steps to your chosen song</li><li>Our most budget friendly package</li></ul>',
-    },
-    {
-      id: 79,
-      name: 'Premium package',
-      tag: '$1000',
-      description:
-        '<ul><li>Learn 10-15 basic steps to your chosen song</li><li>Complimentary choreography to your chosen song</li><li>Learn tricks to bring your first dance to an even higher level</li></ul>',
-    },
-  ] as {
-    id: number;
-    name: string;
-    tag: string;
-    description: string;
-  }[];
-  const bestPackage = 78;
+   
   useEffect(() => {
-    console.log(packageArray.map((item) => item.id));
-    get_package(packageArray.map((item) => item.id))
+    console.log(selectedWeddingPackages);
+    get_package(selectedWeddingPackages)
       .then((info) => {
-        let array1 = [];
-        let pack1;
-        for (let i = 0; i < info.template.length; i++) {
-          pack1 = packageArray.find((item) => item.id === info.template[i].id);
-          array1.push({
-            ...info.template[i],
-            description2: pack1!.description,
-            price1: pack1!.tag,
-          });
-        }
-        console.log(array1)
-        setPackages(array1);
+        console.log(info)
+        setPackages([...info.template]);
       })
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [selectedWeddingPackages]);
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex flex-col items-center  justify-start">
+      {loading && <LoadingScreen />}
       <div className="w-full h-1/5 relative overflow-auto mt-1 md:mt-6  rounded-md">
         {events != undefined && (
           <BannerGallery
@@ -249,15 +213,17 @@ const page: FC<pageProps> = ({}) => {
             </div>
             <h2 className='w-full text-center'>Special wedding packages:</h2>
               <div className="w-full h-[600px] relative  mb-12 overflow-y-auto ">
+    {session?.user.role==='Admin' ?<ChooseWeddingPackagesPanel specialPackage={specialWeddingPackage} selectedWeddingPackages={selectedWeddingPackages} loadingState={(st)=>setLoading(st)}/>:
                 <div className="absolute top-0 left-0 w-full min-h-full  flex flex-col justify-center items-end md:flex-row ">
+                  
                   {packages.length > 0 &&
                     packages.map((item, index) => {
                       return (
                         <div
                           key={'package' + index}
-                          className={`m-3 p-2  flex flex-col justify-center items-center text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md  border-2`}
+                          className={`m-3 p-2   w-[19rem] flex flex-col justify-center items-center text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md  border-2`}
                         >
-                          {item.id == bestPackage && (
+                          {item.id == specialWeddingPackage && (
                             <p
                               className={`text-red-600  font-DancingScript text-2xl rotate-12 animate-pulse`}
                             >
@@ -269,17 +235,11 @@ const page: FC<pageProps> = ({}) => {
                           >
                             {item.title}
                           </h1>
-
-                          <p
-                            className="  text-center"
-                            dangerouslySetInnerHTML={{
-                              __html: `${item.price1} ($${item.options[0].price} credit card) includes: <br/> ${item.options[0].amount} (45 minute) private lessons for the bride & groom`,
-                            }}
-                          />
+ 
                           <div
                             className="list-disc"
                             dangerouslySetInnerHTML={{
-                              __html: item.description2,
+                              __html: item.description!,
                             }}
                           ></div>
                           <ImgFromDb
@@ -324,7 +284,7 @@ const page: FC<pageProps> = ({}) => {
                         </div>
                       );
                     })}
-                </div>
+                </div>}
               </div> 
             <BoxClickable title="When To Start Taking Wedding Dance Lessons. How Many Lessons I need?">
               <p className="mt-4">

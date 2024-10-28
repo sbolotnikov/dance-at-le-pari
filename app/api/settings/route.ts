@@ -40,7 +40,7 @@ export async function GET() {
         JSON.stringify({ message: 'No such template exist',status: 422}),
       );
     }
-  return new NextResponse(JSON.stringify({events, hours, giftCertificates} ), {
+  return new NextResponse(JSON.stringify({events, hours, giftCertificates,wedding:{packages:settings?.weddingPackages, special:settings?.specialPackage}} ), {
     status: 201,
   });
 }

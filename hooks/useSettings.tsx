@@ -18,6 +18,8 @@ export const SettingsProvider = ({ children }: Props) => {
   const [hideNav, setHideNav] = useState(false);
   const [events, setEvents] = useState<TEventArray>([]);
   const [hours, setHours] = useState<string[]>([]);
+  const [selectedWeddingPackages, setSelectedWeddingPackages] = useState<number[]>([]);
+  const [specialWeddingPackage, setSpecialWeddingPackage] = useState<number>(-1);
   const [dances, setDances] = useState<TDance[]>(dataObject.dances);
   const [giftCertificates, setGiftCertificates] = useState<TPriceOption[]>([]);
   const [gsImage, setGSImage] = useState<string>('');
@@ -53,6 +55,9 @@ export const SettingsProvider = ({ children }: Props) => {
         setHours(data.hours);
         setGiftCertificates(data.giftCertificates.priceOptions);
         setGSImage(data.giftCertificates.img);
+        console.log(data);
+        setSelectedWeddingPackages([...data.wedding.packages]); 
+        setSpecialWeddingPackage(data.wedding.special)
       })
       .catch((error) => {
         console.log(error);
@@ -67,6 +72,8 @@ export const SettingsProvider = ({ children }: Props) => {
         changeNav,
         events,
         hours,
+        selectedWeddingPackages,
+        specialWeddingPackage,
         dances,
         giftCertificates,
         gsImage,
