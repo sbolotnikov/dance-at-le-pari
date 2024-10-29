@@ -208,9 +208,12 @@ export default function Page({ params }: { params: { id: string } }) {
             if (n !== null) {
               setLoading(true);
               let newScheduleArr = [];
+              let timeOriginal='';
               if (n.repeating == true && n.interval! > 0) {
                 let dateObj = Date.parse(n.date);
                 let newDateOBJ = new Date(dateObj + n.interval!);
+                timeOriginal = newDateOBJ.toLocaleString("en-US", { hour12: false }).split(' ')[1].slice(0, -3);
+
                 let d =
                   newDateOBJ.toLocaleDateString('sv-SE', {
                     year: 'numeric',
@@ -218,7 +221,7 @@ export default function Page({ params }: { params: { id: string } }) {
                     day: 'numeric',
                   }) +
                   'T' +
-                  newDateOBJ.toLocaleString("en-US", { hour12: false }).split(' ')[1].slice(0, -3);
+                  timeOriginal;
                 let i = 2;
                 while (d <= n.until!) {
                   dateArr.push(d);
@@ -230,10 +233,7 @@ export default function Page({ params }: { params: { id: string } }) {
                       day: 'numeric',
                     }) +
                     'T' +
-                    newDateOBJ
-                      .toLocaleString("en-US", { hour12: false })
-                      .split(' ')[1]
-                      .slice(0, -3);
+                    timeOriginal;
                   i++;
                 }
                 console.log(dateArr);
@@ -282,6 +282,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 });
                 console.log(res);
               }
+              console.log(newScheduleArr)
               if (newScheduleArr.length > 0) {
                 const res1 = await fetch('/api/teacher/schedule_event/create', {
                   method: 'POST',
