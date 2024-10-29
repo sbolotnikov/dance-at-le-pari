@@ -30,6 +30,7 @@ const page: FC<pageProps> = ({}) => {
   const emailRef = useRef<HTMLInputElement>(null);
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
+  const [packageView, setPackageView] = useState(true)
   const [revealAlert, setRevealAlert] = useState(false);
   const [revealSharingModal, setRevealSharingModal] = useState(false);
   const { events, selectedWeddingPackages, specialWeddingPackage } = useContext(SettingsContext) as ScreenSettingsContextType;
@@ -212,8 +213,8 @@ const page: FC<pageProps> = ({}) => {
               />
             </div>
             <h2 className='w-full text-center'>Special wedding packages:</h2>
-              <div className="w-full h-[600px] relative  mb-12 overflow-y-auto ">
-    {session?.user.role==='Admin' ?<ChooseWeddingPackagesPanel specialPackage={specialWeddingPackage} selectedWeddingPackages={selectedWeddingPackages} loadingState={(st)=>setLoading(st)}/>:
+              <div className="w-full h-[600px] relative overflow-y-auto">
+               {(session?.user.role==='Admin' && packageView) ?<ChooseWeddingPackagesPanel specialPackage={specialWeddingPackage} selectedWeddingPackages={selectedWeddingPackages} loadingState={(st)=>setLoading(st)}/>:
                 <div className="absolute top-0 left-0 w-full min-h-full  flex flex-col justify-center items-end md:flex-row ">
                   
                   {packages.length > 0 &&
@@ -286,6 +287,14 @@ const page: FC<pageProps> = ({}) => {
                     })}
                 </div>}
               </div> 
+              {session?.user.role==='Admin' &&
+                <div className='w-full flex justify-center items-center'>
+                 <button
+                   className="btnFancy dark:text-[#93c5fd] dark:border-blue-300 dark:hover:text-white"
+                   onClick={() => setPackageView(!packageView)}>
+                    Switch View
+                 </button>
+                </div>}
             <BoxClickable title="When To Start Taking Wedding Dance Lessons. How Many Lessons I need?">
               <p className="mt-4">
                 When to start taking wedding dance lessons is an important
