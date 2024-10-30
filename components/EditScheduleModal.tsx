@@ -233,7 +233,7 @@ export default function EditScheduleModal({
                     name: user.name,
                     image: user.image !== null ? user.image : '',
                   };
-                })}
+                }).sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))}
             />
           )}
           {revealCloud2 && (
@@ -251,7 +251,7 @@ export default function EditScheduleModal({
                     name: user.name,
                     image: user.image !== null ? user.image : '',
                   };
-                })}
+                }).sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))}
             />
           )}
           <div

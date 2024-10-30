@@ -59,7 +59,7 @@ export default function ChooseTeacher(props: TAlertType) {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        setDisplayTeachers(data);
+        setDisplayTeachers(data.sort((a:TTeacherInfo,b:TTeacherInfo) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0)));
       });
   };
   useEffect(() => {

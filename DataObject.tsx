@@ -29,7 +29,7 @@ let dataObject = {
         {
           name: `Cha Cha Cha` ,
           img:'/icons/rabbit_hat.svg',
-          videoLink:'https://youtube.com',
+          videoLink:'QWdbANbPaw4',
           short:"A fun, exciting, sassy dance that can be danced to both traditional Latin and new popular club music. As you cha cha across the dance floor, you'll feel the music pulse through your veins and bring a sense of joy and freedom to your body. The cha cha is all about having fun and expressing yourself through movement, and it's a great way to let go of any stress or inhibitions. Whether you're dancing solo or with a partner, the cha cha is a dance that allows you to connect with the music and let your inner dancer shine. So if you're ready to get your cha cha on, grab a partner and hit the dance floor! You won't be able to resist the allure of this exciting and infectious dance.",
           poem:"The Cha-Cha-Cha will add some fun to life,<br>Its music is catchy so you won't feel strife,<br>The rhythm is contagious and the moves pretty neat,<br>It'll make your heart beat at an upbeat!<br><br>The Cha-Cha-Cha is great for two to dance,<br>A way to get close and forget those glance,<br>The energy and spirit it brings is divine,<br>And the experience is worth a lifetime.<br><br>So come on, put on your dancing shoes,<br>And put on a show that no one can refuse,<br>Let the Cha-Cha-Cha enthuse you today,<br>And make you dance away in a joyous array!",
           songs:[{ title:'"Havana" by Camila Cabello',
@@ -57,7 +57,7 @@ let dataObject = {
         {
           name: `Foxtrot` ,
           img:'/icons/rabbit_hat.svg',
-          videoLink:'https://youtube.com',
+          videoLink:'tAZ-38F-G74',
           short:'The social foxtrot is a dance that exudes elegance and grace. As you glide across the dance floor, the smooth, flowing movements of the foxtrot will transport you to a world of sophisticated glamour. Whether you are a seasoned dancer or a beginner looking to learn something new, the foxtrot is a fantastic choice. With its mix of quick and slow steps, the foxtrot is both challenging and rewarding to dance. So put on your dancing shoes and let the social foxtrot sweep you off your feet!',
           poem:"Let's step out and have a ball,<br>Do the foxtrot, one and all,<br>Move your feet so fast and light,<br>To the music, take flight.<br><br>Do a rhythm all your own,<br>Gracefully you'll be shown,<br>Glide along to the beat,<br>A happy, joyous feat.<br><br>Slide to the left, slide to the right,<br>Smiling faces beaming bright,<br>Create a new and exciting show,<br>Foxtrot is the dance you should know.",
           songs:[{ title:'“Thinking Out Loud” by Ed Sheeran',
@@ -85,7 +85,7 @@ let dataObject = {
         {
           name: `Rumba` ,
           img:'/icons/rabbit_hat.svg',
-          videoLink:'https://youtube.com',
+          videoLink:'ZCaLLyjZgX4',
           short:'Short text4.',
           poem:"Under a moonlit sky, passion ignites,<br>Two souls entwined in warm Rumba nights.<br>Steps with rhythm, hearts in tune,<br>A dance of love, beneath the moon.<br><br>Sensual sways and fiery moves,<br>Every step, our love approves.<br>Hand in hand, cheek to cheek,<br>In Rumba's heat, emotions peak.<br><br>Whispers of love in every glide,<br>As we dance, side by side.<br>With every turn, our bond grows stronger,<br>In this dance, love will linger longer.<br><br>Rumba’s fire, burning bright,<br>A dance of passion, pure delight.<br>In each movement, our love blooms,<br>As we Rumba, through life's rooms.",
           songs:[{ title:'“Love on the Brain” by Rihanna',
@@ -114,7 +114,7 @@ let dataObject = {
         {
           name: `Slow Waltz` ,
           img:'/icons/rabbit_hat.svg',
-          videoLink:'https://youtube.com',
+          videoLink:'6flHn0wCR64',
           short:'The wedding waltz is a dance of intimate connection and fluid elegance, where the couple’s love takes center stage in a series of sweeping, graceful movements, creating a timeless moment on their special day. ',
           poem:"On a day when love's light shimmers bright,<br>Two hearts entwined in gentle flight.<br>Slow Waltz, the dance of timeless grace,<br>Where each step paints love's embrace.<br><br>In your arms, we glide so near,<br> Every moment crystal clear.<br>Rhythms whisper, soft and low,<br>In elegant steps, our love will grow.<br><br>Swaying slowly, heart to heart,<br>From this dance, we'll never part.<br>As we waltz through life anew,<br>Let this be our vow, our view.<br><br>In the dance of love, we find,<br>A memory, forever kind.<br>Slow Waltz, our romantic art,<br>Echoes of our unified heart.",
           songs:[{ title:'"Moon River" by Andy Williams (Featured in Breakfast at Tiffany’s)',
@@ -142,7 +142,7 @@ let dataObject = {
         {
           name: `Swing` ,
           img:'/icons/rabbit_hat.svg',
-          videoLink:'https://youtube.com',
+          videoLink:'OJ5SGojIHbs',
           short:'Short text4.',
           poem:"In a world of rhythm, fast and bright,<br>Two hearts leap in swing's delight.<br>Bouncing steps and laughter clear,<br>In swing's embrace, love draws near.<br><br>Jumps and turns with joyful flair,<br>Hand in hand, we pair the air.<br>In each move, our spirits lift,<br>Swing's the dance that gives love a gift.<br><br>Happy feet in sync, we glide,<br>With every beat, love amplified.<br>In this dance, our joy explodes,<br>Swing's the rhythm where love unfolds.<br><br>Together, we create a scene,<br>With swing's energy, our love is seen.<br>In every twirl, our hearts sing,<br>As we dance through life, in joyous swing.",
           songs:[{ title:'“Feel So Close” by Calvin Harris',
@@ -170,7 +170,7 @@ let dataObject = {
         {
           name: `Tango` ,
           img:'/icons/rabbit_hat.svg',
-          videoLink:'https://youtube.com',
+          videoLink:'G3h2pxNLQ-Q',
           short:'The Tango, a passionate and dramatic dance, is an expression of deep connection and fiery love, making it a captivating choice for a wedding dance that leaves a lasting impression of the couple’s intense bond.',
           poem:"In a world where passion ignites the flame,<br>Two lovers dance, in tango’s name.<br>With every step, intensity grows,<br>In each other's arms, the dance flows.<br><br>Sharp and smooth, a blend so fine,<br>Entwined in rhythm, hearts align.<br>Eyes that lock, movements bold,<br>In tango's embrace, stories are told.<br><br>With a flick and a twirl, love's allure,<br>A timeless dance, emotions pure.<br>With every turn, the connection deep,<br>In tango's grasp, our hearts leap.<br><br>In this dance of passion and fire,<br>We find our love, our true desire.<br>Tango’s steps, a love song played,<br>As we dance, our vows conveyed.",
           songs:[{ title:'"Querer" by Francesca Gagnon',
@@ -198,7 +198,7 @@ let dataObject = {
         {
           name: `Viennese Waltz` ,
           img:'/icons/rabbit_hat.svg',
-          videoLink:'https://youtube.com',
+          videoLink:'-LLzvce0joI',
           short:'Short text4.',
           poem:"In a swirl of elegance, where dreams alight,<br>Two hearts dance, in Viennese Waltz's light.<br>Graceful spins, a seamless flow,<br>In perfect harmony, love’s glow.<br><br>Swiftly moving, hand in hand,<br>Through the ballroom, we grandly stand.<br>Every turn, our love conveyed,<br>In Viennese Waltz, memories made.<br><br>With each twirl, we feel the breeze,<br>A dance of ease, our hearts appease.<br>In every step, a silent vow,<br>In this waltz, love we avow.<br><br>As we glide through life's grand hall,<br>The Viennese Waltz, we recall.<br>In this dance, our love’s romance,<br>A timeless, elegant wedding dance.",
           songs:[{ title:'“A Thousand Years” by Christina Perri',
