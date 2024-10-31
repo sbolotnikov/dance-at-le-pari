@@ -75,8 +75,8 @@ export  async function POST(
                 });
               //Send email notification
               const res1 = await sendAnyEmail({
-                email2: process.env.EMAIL_SERVER_USER ? process.env.EMAIL_SERVER_USER : '',
-                email1: process.env.EMAIL_SERVER_USER ? process.env.EMAIL_SERVER_USER : '',
+                email2: process.env.EMAIL_SERVER_USER1 ? process.env.EMAIL_SERVER_USER1 : '',
+                email1: process.env.EMAIL_SERVER_USER1 ? process.env.EMAIL_SERVER_USER1 : '',
                 subject: `New Purchase from ${user?.name} email ${user?.email} invoice# ${result.payment?.id}`,
                 text: text_receipt(items, result.payment?.id, amount),
                 html: html_receipt(items,result.payment?.id, amount),
@@ -88,8 +88,8 @@ export  async function POST(
               }) 
             } else{
               const res1 = await sendAnyEmail({
-                email2: process.env.EMAIL_SERVER_USER ? process.env.EMAIL_SERVER_USER : '',
-                email1: process.env.EMAIL_SERVER_USER ? process.env.EMAIL_SERVER_USER : '',
+                email2: process.env.EMAIL_SERVER_USER1 ? process.env.EMAIL_SERVER_USER1 : '',
+                email1: process.env.EMAIL_SERVER_USER1 ? process.env.EMAIL_SERVER_USER1 : '',
                 subject: `New Purchase from unknown user invoice# ${result.payment?.id}`,
                 text: text_receipt(items, result.payment?.id, amount),
                 html: html_receipt(items,result.payment?.id, amount),
