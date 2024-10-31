@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     attachments.push({"filename": "qr_code"+(i+1)+".jpg", "path": qrCodes[i], "cid": "qrImage"+i})
    }
    const res = await sendAnyEmail({
-    email2: process.env.EMAIL_SERVER_USER ? process.env.EMAIL_SERVER_USER : '',
+    email2: process.env.EMAIL_SERVER_USER1 ? process.env.EMAIL_SERVER_USER1 : '',
     email1: email,
     subject: `Purchase receipt for ${invoice}`,
     text: text_receipt(items, invoice, total),
