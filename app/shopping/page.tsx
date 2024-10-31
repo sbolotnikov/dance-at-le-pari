@@ -277,7 +277,7 @@ const page: FC<pageProps> = ({}) => {
               <h2>To make purchases please {!session?<span><Link href='/signin' className="font-semibold text-franceBlue hover:uppercase">register</Link> or <Link href='/login' className="font-semibold text-franceBlue hover:uppercase">login</Link> and  provide a phone number so we can contact you</span>:session.user.telephone!>""?"":<span> update your phone number in <Link href='/profile' className="font-semibold text-franceBlue hover:uppercase">Profile</Link> so we can contact you</span>}!</h2>
               
             </div>}
-             {session!.user.role=='Admin'&&<button className="bg-franceBlue hover:bg-franceBlueHover text-white font-bold py-2 px-4 rounded-full" onClick={() =>{ setVisibleModal(true); setTransactionID('ciedodx1')}}>try</button>}
+             {session?.user.role=='Admin'&&<button className="bg-franceBlue hover:bg-franceBlueHover text-white font-bold py-2 px-4 rounded-full" onClick={() =>{ setVisibleModal(true); setTransactionID('ciedodx1')}}>try</button>}
             <div className="m-2">{'  '}</div>
           </div>
         </div>
