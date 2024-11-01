@@ -157,7 +157,7 @@ const Navbar = ({ path, locale, children }: Props) => {
           icon: 'Blog',
         },
         {
-          url: '/admin/usersscreen',
+          url: '/admin/dashboard',
           title: 'Dashboard',
           icon: 'Dashboard',
         },

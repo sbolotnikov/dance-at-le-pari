@@ -241,27 +241,12 @@ function page() {
             className="text-center font-semibold text-2xl md:text-4xl uppercase"
             style={{ letterSpacing: '1px' }}
           >
-            Admin Dashboard
+            User's List
           </h2>
           <div className=" h-16 w-16 m-auto hidden md:block">
-            <ShowIcon icon={'Dashboard'} stroke={'0.1'} />
+            <ShowIcon icon={'Users'} stroke={'0.1'} />
           </div>
-          <div className="group flex  cursor-pointer  flex-col justify-center items-center absolute right-1 top-1">
-            <div className="  h-10 w-10 md:h-14 md:w-14 relative hover:scale-110 group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
-              <div
-                className="cursor-pointer h-10 w-10 md:h-14 md:w-14 border-2 rounded-md  m-auto "
-                onClick={(e) => {
-                  e.preventDefault();
-                  router.push('/admin/massemail');
-                }}
-              >
-                <ShowIcon icon={'MassEmail'} stroke={'0.15'} />
-              </div>
-            </div>
-            <p className="hidden tracking-widest mx-3 transition duration-300 ease-in-out absolute -right-4 -bottom-1.5 md:-bottom-4 rounded-md text-center text-lightMainColor dark:text-darkMainColor text-[6px] md:text-base      opacity-100 group-hover:inline-flex md:block md:opacity-0 md:group-hover:opacity-100 ">
-              Emailing
-            </p>
-          </div>
+           
           <h5 className="w-full xs:text-md sm:text-lg phone:text-xl tablet:text-2xl text-center">
             {' '}
             Table of project Users's Roles

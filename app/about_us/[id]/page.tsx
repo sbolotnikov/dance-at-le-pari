@@ -375,7 +375,7 @@ export default function Page({ params }: { params: { id: string } }) {
                       user.image !== '' &&
                       user.image !== undefined ? (
                         <ImgFromDb
-                          url={user.image}
+                         url={user.image}
                           stylings="w-full h-full object-cover rounded-md"
                           alt="Event Picture"
                         />
@@ -383,7 +383,7 @@ export default function Page({ params }: { params: { id: string } }) {
                         <div className=" h-8 w-8 md:h-10 md:w-10 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
                           <ShowIcon icon={'Image'} stroke={'2'} />
                         </div>
-                      )}
+                      )} 
                     </div>
                     <div
                       className="teamMemberBio flex justify-center items-center flex-col outline outline-2 rounded-md border-blue-500 outline-offset-2 bg-[#f1f2f9] color-[#1e1f25]"

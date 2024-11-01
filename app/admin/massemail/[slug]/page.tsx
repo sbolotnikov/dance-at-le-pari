@@ -13,10 +13,12 @@ import EditContactsModal from '@/components/EditContactsModal';
 import { useDimensions } from '@/hooks/useDimensions';
 import LoadingScreen from '@/components/LoadingScreen';
 import ShowSendingEmailResultsModal from '@/components/ShowSendingEmailResultsModal';
-import { sendAnyEmail } from '@/utils/sendAnyEmail';
-interface pageProps {}
+type Props = {
+  params: { slug: string };
+};
 
-const page: FC<pageProps> = ({}) => {
+export default function Page(params: { params: { slug: string } }) {
+  const slug = params.params.slug;
   const { data: session, status } = useSession();
   const router = useRouter();
   const [value, setValue] = useState('');
@@ -27,6 +29,9 @@ const page: FC<pageProps> = ({}) => {
   const [revealModal1, setRevealModal1] = useState(false);
   const [sendingStatus, setSendingStatus] = useState<string[]>([]);
   const dimensions = useDimensions();
+  useEffect(()=>{
+    if (slug=='1') setRevealModal(true);
+  },[slug])
   if (status === 'unauthenticated') {
     router.push('/');
   }
@@ -82,8 +87,6 @@ const page: FC<pageProps> = ({}) => {
       setSendingStatus([...sentEmails,'Finished']);
       // setRevealModal1(false);
     } else {
-      
-    
     const { name, email } = emailList.pop()!;
     console.log(email, name);
 
@@ -208,7 +211,7 @@ const page: FC<pageProps> = ({}) => {
       )}
       {loading && <LoadingScreen />}
       <div
-        className={`blurFilter border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-[1024px]  flex justify-center items-center flex-col  bg-lightMainBG dark:bg-darkMainBG h-[70svh] md:h-[85svh]
+        className={`blurFilter border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-[1124px]  flex justify-center items-center flex-col  bg-lightMainBG dark:bg-darkMainBG h-[70svh] md:h-[85svh]
         }`}
       >
         <div
@@ -338,6 +341,4 @@ const page: FC<pageProps> = ({}) => {
       </div>
     </PageWrapper>
   );
-};
-
-export default page;
+}
