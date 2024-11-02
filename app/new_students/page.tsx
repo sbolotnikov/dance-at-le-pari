@@ -69,21 +69,21 @@ const page: FC<pageProps> = ({}) => {
     {
       id: 48,
       name: 'Intro package',
-      tag: '$100',
+      tag: '$110',
       description:
         '<ul><li>Consultation on a dance style to chosen song</li>  <li>Learn the proper basic 2-3 dance steps to your chosen song</li></ul>',
     },
     {
       id: 78,
       name: 'Plus package',
-      tag: '$475',
+      tag: '$525',
       description:
         '<ul><li>Learn the proper 5-7 basic steps to your chosen song</li><li>Our most budget friendly package</li></ul>',
     },
     {
       id: 79,
       name: 'Premium package',
-      tag: '$925',
+      tag: '$1000',
       description:
         '<ul><li>Learn 10-15 basic steps to your chosen song</li><li>Complimentary choreography to your chosen song</li><li>Learn tricks to bring your first dance to an even higher level</li></ul>',
     },
@@ -284,7 +284,7 @@ const page: FC<pageProps> = ({}) => {
                           <p
                             className="  text-center"
                             dangerouslySetInnerHTML={{
-                              __html: `${item.price1} ($${item.options[0].price} credit card) includes: <br/> ${item.options[0].amount} (45 minute) private lessons for the bride & groom`,
+                              __html: `${item.price1} ($${item.options[0].price} credit card) includes: <br/> ${item.options[0].amount} (45 minute) private lessons for new students`,
                             }}
                           />
                           <div
