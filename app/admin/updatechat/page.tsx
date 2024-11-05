@@ -28,8 +28,16 @@ const page: FC<pageProps> = ({}) => {
   }, []);
   const handleChange =async (e: React.ChangeEvent<HTMLInputElement>)=> {
     e.preventDefault();
+    let file1 = e.currentTarget.files![0];
 
-    console.log(e.currentTarget.files![0]);
+    const reader = new FileReader();
+    reader.onload = (function (file) {
+      return async function () {
+        let resObj = this.result?.toString();
+        console.log(resObj);
+      };
+    })(file1);
+    reader.readAsText(file1); 
 }
 
   return (
