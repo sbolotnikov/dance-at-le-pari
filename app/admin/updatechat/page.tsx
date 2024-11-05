@@ -26,6 +26,11 @@ const page: FC<pageProps> = ({}) => {
     // GET request
     
   }, []);
+  const handleChange =async (e: React.ChangeEvent<HTMLInputElement>)=> {
+    e.preventDefault();
+
+    console.log(e.currentTarget.files![0]);
+}
 
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center md:items-end justify-center">
@@ -50,7 +55,17 @@ const page: FC<pageProps> = ({}) => {
             <div className=" h-20 w-20 md:h-28 md:w-28 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor">
               <ShowIcon icon={'ChatbotSmall'} stroke={'0.05'} />
             </div>
-
+            <input type="file" hidden id="inputField" accept="text/*" className="w-full mb-2 rounded-md text-gray-700" 
+        onChange={handleChange}/>
+            <button
+              className={`btnFancy dark:text-[#93c5fd] dark:border-blue-300 dark:hover:text-white`}
+              onClick={async (e) => {
+                e.preventDefault();
+                document.getElementById("inputField")!.click()
+              }}
+            >
+              Upload RAG file
+            </button> 
             
           </div>
         </div>
