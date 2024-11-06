@@ -6,6 +6,7 @@ import ShowIcon from '@/components/svg/showIcon';
 import { SettingsContext } from '@/hooks/useSettings';
 import { ScreenSettingsContextType } from '@/types/screen-settings';
 import { useDimensions } from '@/hooks/useDimensions';
+import { updateRAG } from '@/utils/makechain';
  
 
 interface pageProps {}
@@ -33,8 +34,15 @@ const page: FC<pageProps> = ({}) => {
     const reader = new FileReader();
     reader.onload = (function (file) {
       return async function () {
-        let resObj = this.result?.toString();
-        console.log(resObj);
+        let resText = this.result?.toString();
+        console.log(resText);
+        await updateRAG(resText!);
+
+  
+   
+
+
+
       };
     })(file1);
     reader.readAsText(file1); 

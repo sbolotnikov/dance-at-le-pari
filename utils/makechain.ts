@@ -277,3 +277,28 @@ concise.
 
   return response.answer;
 };
+
+
+
+export const updateRAG = async (text:string) => {
+  const pineconeIndex = new Pinecone({
+    apiKey: process.env.PINECONE_API_KEY!,
+  }).Index(process.env.PINECONE_INDEX!);
+
+  const splitter = new RecursiveCharacterTextSplitter({
+    chunkSize: 1536,
+  });
+
+  const documents = await splitter.createDocuments([text]);
+ 
+  await pineconeIndex.deleteAll();  
+  
+  
+    const vectorstore = await PineconeStore.fromDocuments(documents, new OpenAIEmbeddings({
+    model: "text-embedding-3-small",
+    }), {
+    pineconeIndex,
+  });
+
+
+}

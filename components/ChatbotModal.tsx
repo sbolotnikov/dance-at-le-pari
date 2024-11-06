@@ -3,8 +3,7 @@ import { useState, useEffect } from 'react';
 import ShowIcon from './svg/showIcon';
 import MessagesBox from './MessagesBox';
 import { useDimensions } from '@/hooks/useDimensions';
-import { AnimatePresence, motion } from 'framer-motion';
-import Fredbot from './svg/Fredbot'; 
+import { AnimatePresence, motion } from 'framer-motion'; 
 import { makeChain } from '@/utils/makechain';
 import JumpingLetters from './JumpingLetters';
 

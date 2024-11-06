@@ -13,8 +13,7 @@ import Logo from '../svg/logo';
 import { useDimensions } from '@/hooks/useDimensions';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store/store';
-import ChatbotModal from '../ChatbotModal';
-import Fredbot from '../svg/Fredbot';
+import ChatbotModal from '../ChatbotModal'; 
 import { sleep } from 'openai/core';
 
 type Props = {
