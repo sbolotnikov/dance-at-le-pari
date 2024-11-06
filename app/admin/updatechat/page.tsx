@@ -7,6 +7,7 @@ import { SettingsContext } from '@/hooks/useSettings';
 import { ScreenSettingsContextType } from '@/types/screen-settings';
 import { useDimensions } from '@/hooks/useDimensions';
 import { updateRAG } from '@/utils/makechain';
+import LoadingScreen from '@/components/LoadingScreen';
  
 
 interface pageProps {}
@@ -15,6 +16,7 @@ interface pageProps {}
 const page: FC<pageProps> = ({}) => {
   const { darkMode } = useContext(SettingsContext) as ScreenSettingsContextType; 
   const dimensions = useDimensions();
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     const r = document.querySelector(':root') as HTMLElement;
     const pr = r.style.getPropertyValue('--accent-color');
@@ -29,6 +31,7 @@ const page: FC<pageProps> = ({}) => {
   }, []);
   const handleChange =async (e: React.ChangeEvent<HTMLInputElement>)=> {
     e.preventDefault();
+    setLoading(true);
     let file1 = e.currentTarget.files![0];
 
     const reader = new FileReader();
@@ -37,12 +40,7 @@ const page: FC<pageProps> = ({}) => {
         let resText = this.result?.toString();
         console.log(resText);
         await updateRAG(resText!);
-
-  
-   
-
-
-
+        setLoading(false);
       };
     })(file1);
     reader.readAsText(file1); 
@@ -50,6 +48,7 @@ const page: FC<pageProps> = ({}) => {
 
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center md:items-end justify-center">
+      {loading ? <LoadingScreen /> :
       <div
         className={`blurFilter border-0 rounded-md p-2 mt-2  shadow-2xl w-[95%] md:h-[85svh] max-w-[1400px] md:w-full flex justify-center items-center flex-col bg-lightMainBG dark:bg-darkMainBG h-[70svh]
       }`}
@@ -85,7 +84,7 @@ const page: FC<pageProps> = ({}) => {
             
           </div>
         </div>
-      </div>
+      </div>}
     </PageWrapper>
   );
 };
