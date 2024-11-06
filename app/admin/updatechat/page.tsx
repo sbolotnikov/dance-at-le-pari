@@ -17,6 +17,7 @@ const page: FC<pageProps> = ({}) => {
   const { darkMode } = useContext(SettingsContext) as ScreenSettingsContextType; 
   const dimensions = useDimensions();
   const [loading, setLoading] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
   useEffect(() => {
     const r = document.querySelector(':root') as HTMLElement;
     const pr = r.style.getPropertyValue('--accent-color');
@@ -41,6 +42,7 @@ const page: FC<pageProps> = ({}) => {
         console.log(resText);
         await updateRAG(resText!);
         setLoading(false);
+        setShowMessage(true);
       };
     })(file1);
     reader.readAsText(file1); 
@@ -81,7 +83,7 @@ const page: FC<pageProps> = ({}) => {
             >
               Upload RAG file
             </button> 
-            
+            {showMessage && <div className="w-full text-green-600 text-center text-2xl">Update completed!</div>}
           </div>
         </div>
       </div>}
