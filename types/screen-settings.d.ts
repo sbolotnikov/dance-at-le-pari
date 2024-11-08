@@ -127,7 +127,7 @@ type TEventAgenda = {
   length: number;
   tag: string;
   minprice: number;
-  teacher: string | null;
+  teacher: string | null; 
 };
 type TPictureWithCapture = {
   urlData: string;
