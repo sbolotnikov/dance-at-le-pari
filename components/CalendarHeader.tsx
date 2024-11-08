@@ -83,7 +83,7 @@ export const CalendarHeader = ({
       )}
 
       {agendaView && !defaultView && (
-        <div className=" font-bold  w-full text-center text-base md:text-5xl   text-franceBlue dark:text-darkMainColor  md:font-DancingScript">
+        <div className=" font-bold  w-full text-center text-base md:text-5xl   text-franceBlue dark:text-[#93c5fd]  md:font-DancingScript">
           {'Agenda'}
         </div>
       )}

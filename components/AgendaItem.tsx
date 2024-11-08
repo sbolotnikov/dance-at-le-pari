@@ -2,6 +2,7 @@ import { useState } from 'react'
 import ImgFromDb from './ImgFromDb';
 import Link from 'next/link';
 import { TEventAgenda } from '@/types/screen-settings';
+import ShowIcon from './svg/showIcon';
 
 type Props = {
     item:TEventAgenda;
@@ -68,25 +69,30 @@ const AgendaItem = ({item, index}: Props) => {
                             timeStyle: 'short',
                           })}
                         </h3>
-                        <h3 className={`text-left transition duration-600 ease-in-out ${!agendaItemView?'h-[4.5rem] text-ellipsis overflow-hidden':''} md:min-h-fit`}>{item.description}</h3>
+                        <h3 className={`text-left transition duration-600 ease-in-out ${!agendaItemView?'h-[4.5rem] text-ellipsis overflow-hidden':''}`}>{item.description}</h3>
                         <h3 className="text-left">{`Price: ${item.eventtype=="Group"?"from":" "} $ ${item.minprice}` }</h3>
                         <ImgFromDb
                           url={item.image!}
-                          stylings={`object-contain m-auto transition duration-600 ease-in-out ${!agendaItemView?"h-0 md:h-full":""}`}
+                          stylings={`object-contain m-auto transition duration-600 ease-in-out ${!agendaItemView?"h-0":""}`}
                           alt="Event Picture"
                         />
                       </div>
                     </Link>
-                    <img className="w-5 h-5 transition duration-300 ease-in-out absolute top-2 right-2 md:hidden" src={"/icons/caret.svg"} id={'img.'+index} alt="chevron" 
+                    <div className="w-6 h-6 transition duration-300 ease-in-out absolute top-2 right-1 rotate-90 fill-franceBlue stroke-franceBlue dark:fill-[#93c5fd] dark:stroke-[#93c5fd]" id={'img.'+index}
+                    // style={{transform:"rotate(90deg)"}}
                     onClick={()=>{
                       let btn = document.getElementById("img."+index);
                       setAgendaItemView(!agendaItemView);
-                      if(btn?.classList.contains("rotate-180")){
-                        btn.classList.remove("rotate-180");
+                      if(btn?.classList.contains("rotate-90")){
+                        btn.classList.remove("rotate-90");
+                        btn?.classList.add("-rotate-90");
                       }else{
-                        btn?.classList.add("rotate-180");                        
+                        btn?.classList.remove("-rotate-90");
+                        btn?.classList.add("rotate-90");
                       }
-                    }} />
+                    }} >
+                      <ShowIcon icon={'ChevronRight'} stroke={'3'} />
+                    </div>
 
                   </div>
   )
