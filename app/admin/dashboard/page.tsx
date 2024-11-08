@@ -13,7 +13,7 @@ const page: FC<pageProps> = ({}) => {
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center  justify-center">
       <div
-        className="blurFilter border-0 rounded-md p-2  shadow-2xl w-[90%] h-[50svh]   max-w-[450px] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 md:mb-3"
+        className="blurFilter border-0 rounded-md p-2  shadow-2xl w-[90%] h-fit max-w-[450px] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 md:mb-3"
         // style={{ boxShadow: '0 0 150px rgb(113, 113, 109 / 50%),inset 0 0 20px #242422' }}
       >
         <div className="border rounded-md border-lightMainColor dark:border-darkMainColor w-full h-full   p-2 flex flex-col relative">
@@ -26,7 +26,7 @@ const page: FC<pageProps> = ({}) => {
           <div className=" h-16 w-16 m-auto hidden md:block">
             <ShowIcon icon={'Dashboard'} stroke={'0.1'} />
           </div>
-          <div className="flex flex-wrap justify-between items-center h-full w-full">
+          <div className="flex flex-wrap justify-center items-center h-full w-full">
           <button
             className="flex flex-col justify-center items-center h-28 w-28 p-1 m-1 border  shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md"
             onClick={() => router.replace('/admin/purchases')}
