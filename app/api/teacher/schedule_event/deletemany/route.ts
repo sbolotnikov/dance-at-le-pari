@@ -8,18 +8,16 @@ export  async function POST(
   try {
 
     const data = await req.json();
-    const {id} = data;
+    const {id, seq} = data;
     console.log(id)
-    const deletedScheduleEvent = await prisma.scheduleEvent.delete({
-        where: {
-         id
-        },
+    const deletedScheduleEvent = await prisma.scheduleEvent.deleteMany({
+        where: {AND:[{ id:{gte:id}},{sequence: seq}]}
       })
     console.log(deletedScheduleEvent)
     await prisma.$disconnect()
     //Send success response
     return new NextResponse(
-      JSON.stringify({ message: 'Event deleted', deletedScheduleEvent, status: 201,
+      JSON.stringify({ message: 'Sequence deleted', deletedScheduleEvent, status: 201,
       }),
     );
   } catch (error) {

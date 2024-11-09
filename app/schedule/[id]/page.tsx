@@ -296,6 +296,7 @@ export default function Page({ params }: { params: { id: string } }) {
             }
             if (del !== null) {
               setLoading(true);
+              if (del.s==='Delete'){
               const res = await fetch('/api/teacher/schedule_event/delete', {
                 method: 'POST',
                 headers: {
@@ -303,6 +304,15 @@ export default function Page({ params }: { params: { id: string } }) {
                 },
                 body: JSON.stringify({ id: del.id }),
               });
+            }else {
+              const res = await fetch('/api/teacher/schedule_event/deletemany', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id: del.id, seq: del.seq }),
+              });
+            }
               window.location.reload();
             }
           }}

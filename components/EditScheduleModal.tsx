@@ -22,7 +22,7 @@ type Props = {
   }[];
   onReturn: (
     n: TEventSchedule | null,
-    del: { s: string; id: number } | null
+    del: { s: string; id: number; seq:number } | null
   ) => void;
 };
 
@@ -180,8 +180,13 @@ export default function EditScheduleModal({
     if (decision1 == 'Confirm') {
       setRevealAlert(false);
       setIsVisible(false);
-      onReturn(null, { s: 'Delete', id: event.id });
+      onReturn(null, { s: 'Delete', id: event.id, seq: event.sequence });
     }
+    if (decision1 == 'Yes, Delete!') {
+      setRevealAlert(false);
+      setIsVisible(false);
+      onReturn(null, { s: 'DeleteSeq', id: event.id, seq: event.sequence });
+    } 
     setRevealAlert(false);
   };
   useEffect(() => {
@@ -653,6 +658,29 @@ export default function EditScheduleModal({
                       }}
                     >
                       {`Delete Event`}
+                    </button>
+                  )}
+                   {event.sequence !== undefined &&
+                  event.sequence > -1 &&
+                  role !== 'Student' && (
+                    <button
+                      className="w-[70%] btnFancy text-base text-center  rounded-md"
+                      style={{ padding: '0' }}
+                      onClick={() => {
+                        setAlertStyle({
+                          variantHead: 'danger',
+                          heading: 'Warning',
+                          text: 'Are you sure you want to delete this event sequence starting from this event?',
+                          color1: 'danger',
+                          button1: 'Yes, Delete!',
+                          color2: 'secondary',
+                          button2: 'Cancel',
+                          inputField: '',
+                        });
+                        setRevealAlert(!revealAlert);
+                      }}
+                    >
+                      {`Delete the Sequence starting this event`}
                     </button>
                   )}
               </div>
