@@ -84,6 +84,7 @@ export type TEventSchedule = {
   teachersid: number[];
   until: string | null;
   confirmed: boolean;
+  sequence: number;
 };
 type TEventScheduleArray = TEventSchedule[];
 type TDaySchedule = {

@@ -621,6 +621,7 @@ export default function EditScheduleModal({
                           until: eventDateTimeEnd,
                           id: event.id == undefined ? -1 : event.id,
                           confirmed: confirmed,
+                          sequence:-1
                         },
                         null
                       );

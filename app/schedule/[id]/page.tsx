@@ -177,6 +177,7 @@ export default function Page({ params }: { params: { id: string } }) {
               repeating: false,
               until: null,
               confirmed: false,
+              sequence:-1
             });
           }}
         />
@@ -210,10 +211,9 @@ export default function Page({ params }: { params: { id: string } }) {
               let newScheduleArr = [];
               let timeOriginal='';
               if (n.repeating == true && n.interval! > 0) {
-                let dateObj = Date.parse(n.date);
+                let dateObj = Date.parse(n.date); 
                 let newDateOBJ = new Date(dateObj + n.interval!);
-                timeOriginal = newDateOBJ.toLocaleString("en-US", { hour12: false }).split(' ')[1].slice(0, -3);
-
+                timeOriginal = n.date.split('T')[1]; 
                 let d =
                   newDateOBJ.toLocaleDateString('sv-SE', {
                     year: 'numeric',
