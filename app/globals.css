@@ -84,12 +84,10 @@ body {
 }
 
 .bgFancy{
-  background-color: rgba(247, 247, 252, 0.01);
-opacity: 1;
-background-image:  linear-gradient(135deg, rgba(242, 12, 27, 0.17) 25%, transparent 25%), linear-gradient(225deg, rgba(242, 12, 27, 0.17) 25%, transparent 25%), linear-gradient(45deg, rgba(242, 12, 27, 0.17) 25%, transparent 25%), linear-gradient(315deg, rgba(242, 12, 27, 0.17) 25%, rgba(247, 247, 252, 0.01) 25%);
-background-position:  35px 0, 35px 0, 0 0, 0 0;
-background-size: 35px 35px;
-background-repeat: repeat;
+  background: radial-gradient(circle at center ,#f3d3d1, #f3d3d1 10%, transparent 10%, transparent  20%, #f3d3d1 20%, #f3d3d1 30%, transparent 30%, transparent 40%, #f3d3d1 40%, #f3d3d1 50%, transparent 50%, transparent 60%, #f3d3d1 60%, #f3d3d1 70%, transparent 70%, transparent 80%, #f3d3d1 80%, #f3d3d1 90%, transparent 90%);
+        background-size: 2em 2em;
+        background-color: #dde1f6;
+        opacity: 1
 }
 .invalid_input {
   outline: 5px solid red;
