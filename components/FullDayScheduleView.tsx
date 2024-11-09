@@ -44,6 +44,7 @@ type DisplayEvent = {
   x_shift: number;
   date2: string;
   confirmed: boolean;
+  sequence: number;
 };
 const FullDayScheduleView = ({
   events,
