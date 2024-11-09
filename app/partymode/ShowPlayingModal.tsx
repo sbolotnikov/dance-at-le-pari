@@ -151,9 +151,9 @@ const ShowPlayingModal: React.FC<Props> = ({
 
   useEffect(() => {
     if (mode === 'Auto Full') {
-      console.log('changing mode'); 
+      console.log('changing mode');
       setAnimationOption(Math.floor(Math.random() * 4) + 1);
-      setRainAngle(Math.floor(Math.random() * 360)); 
+      setRainAngle(Math.floor(Math.random() * 360));
     }
   }, [message, mode]);
   useEffect(() => {
@@ -164,16 +164,18 @@ const ShowPlayingModal: React.FC<Props> = ({
     if (mode === 'Auto Full' && displayedPictures.length > 0) {
       let arr1 = displayedPictures
         .map((pic) => ({ link: pic.link, dances: pic.dances }))
-        .filter((pic) => pic.dances!==null && pic.dances.indexOf(message) >= 0);
+        .filter(
+          (pic) => pic.dances !== null && pic.dances.indexOf(message) >= 0
+        );
       let arr2 = displayedPictures
         .map((pic) => ({ link: pic.link, dances: pic.dances }))
-        .filter((pic) => pic.dances!==null && pic.dances.indexOf('All') >= 0);
+        .filter((pic) => pic.dances !== null && pic.dances.indexOf('All') >= 0);
       let arr = arr1.concat(arr2);
       let videoArr1 = displayedVideos.filter(
-        (vid) => vid.dances!==null && vid.dances.indexOf(message) >= 0
+        (vid) => vid.dances !== null && vid.dances.indexOf(message) >= 0
       );
       let videoArr2 = displayedVideos.filter(
-        (vid) => vid.dances!==null && vid.dances.indexOf('All') >= 0
+        (vid) => vid.dances !== null && vid.dances.indexOf('All') >= 0
       );
       let videoArr = videoArr1.concat(videoArr2);
 
@@ -191,7 +193,11 @@ const ShowPlayingModal: React.FC<Props> = ({
       const now = new Date();
       const currentDateTime = now.toLocaleString();
       console.log();
-      setTimeNow(currentDateTime.split(',')[1].split(' ')[1].slice(0,-3)+" "+currentDateTime.split(',')[1].split(' ')[2]);
+      setTimeNow(
+        currentDateTime.split(',')[1].split(' ')[1].slice(0, -3) +
+          ' ' +
+          currentDateTime.split(',')[1].split(' ')[2]
+      );
     }, 60000);
     !vis ? changeNav(false) : changeNav(true);
     return () => clearInterval(timerInterval);
@@ -202,7 +208,18 @@ const ShowPlayingModal: React.FC<Props> = ({
   };
   useEffect(() => {
     const svg = svgRef.current;
-    if (svg) {
+
+    if (svg && windowSize.width! > 0) {
+      // Set SVG viewport and size explicitly
+      svg.setAttribute('width', `${windowSize.width}`);
+      svg.setAttribute('height', `${windowSize.height}`);
+      svg.setAttribute(
+        'viewBox',
+        `0 0 ${windowSize.width} ${windowSize.height}`
+      );
+
+      // Clear any existing transforms
+      svg.setAttribute('transform', '');
       const svgNS = 'http://www.w3.org/2000/svg';
 
       const createParticle = () => {
@@ -279,8 +296,7 @@ const ShowPlayingModal: React.FC<Props> = ({
           animateTransform2.setAttribute('begin', `${randomDelay}s`);
           animateTransform2.setAttribute('repeatCount', 'indefinite');
           animateTransform2.setAttribute('additive', 'sum');
-          // animateTransform2.setAttribute('accumulate', 'sum');
-          // additive="sum" accumulate="sum"
+
           animateTransform.setAttribute('attributeName', 'transform');
           animateTransform.setAttribute('type', 'rotate');
           animateTransform.setAttribute('from', '0 50 20');
@@ -289,7 +305,6 @@ const ShowPlayingModal: React.FC<Props> = ({
           animateTransform.setAttribute('begin', `${randomDelay}s`);
           animateTransform.setAttribute('repeatCount', 'indefinite');
           animateTransform.setAttribute('additive', 'sum');
-          // animateTransform.setAttribute('accumulate', 'sum');
 
           animateOpacity.setAttribute('attributeName', 'opacity');
           animateOpacity.setAttribute('values', '0;1;1;0');
@@ -366,30 +381,174 @@ const ShowPlayingModal: React.FC<Props> = ({
         return particle;
       };
 
-      const init = () => {
-        while (svg.firstChild) {
-          svg.removeChild(svg.firstChild);
-        }
+      // FIREWORK
 
-        for (let i = 0; i < particleCount1; i++) {
-          svg.appendChild(createParticle());
+      const createFirework = () => {
+        // const startX = Math.random() * windowSize.width!;
+        // const startY = windowSize.height!;
+        // const peakY = windowSize.height! * 0.3;
+
+        // Random start position at bottom of canvas
+
+        const startX = Math.random() * windowSize.width!;
+        const startY = windowSize.height!;
+
+        // Random peak position in upper part of canvas
+        const peakX = startX + (Math.random() - 0.5) * 200; // Allow some horizontal drift
+        const peakY = windowSize.height! * (0.2 + Math.random() * 0.3); // Peak between 20-50% of height
+
+        const particleGroup = document.createElementNS(svgNS, 'g');
+         // Add a transform to ensure proper positioning
+         particleGroup.setAttribute('transform', `translate(0,0)`);
+        // Launch particle
+        const launchParticle = document.createElementNS(svgNS, 'path');
+        const launchMotion = document.createElementNS(svgNS, 'animateMotion');
+        const shape =
+          particleTypes1[Math.floor(Math.random() * particleTypes1.length)];
+        const size = Math.random() * maxSize1;
+
+        launchParticle.setAttribute('d', svgPath(shape));
+        launchParticle.setAttribute(
+          'fill',
+          `hsl(${Math.random() * 360}, 100%, 50%)`
+        );
+
+        // launchMotion.setAttribute('path', `M${startX},${startY} L${startX},${peakY}`);
+        launchMotion.setAttribute(
+          'path',
+          `M${startX},${startY} Q${startX},${
+            (startY + peakY) / 2
+          } ${peakX},${peakY}`
+        );
+        launchMotion.setAttribute('dur', '3s');
+        launchMotion.setAttribute('begin', '0s');
+        // launchMotion.setAttribute('repeatCount', '1');
+        launchMotion.setAttribute('additive', 'sum'); 
+        launchMotion.setAttribute('fill', 'freeze');
+
+        launchParticle.appendChild(launchMotion);
+        particleGroup.appendChild(launchParticle);
+        console.log(particleGroup);
+        // Create explosion particles
+        const particleCount = particleCount1;
+        for (let i = 0; i < particleCount; i++) {
+          const angle = (2 * Math.PI * i) / particleCount;
+          const distance = 100 + Math.random() * 50;
+          const endX = startX + Math.cos(angle) * distance;
+          const endY = peakY + Math.sin(angle) * distance;
+
+          const particle = document.createElementNS(svgNS, 'path');
+          const particleMotion = document.createElementNS(
+            svgNS,
+            'animateMotion'
+          );
+          const fadeOut = document.createElementNS(svgNS, 'animate');
+          const scale = document.createElementNS(svgNS, 'animateTransform');
+          // const animateColor = document.createElementNS(svgNS, 'animate');
+
+          particle.setAttribute('d', svgPath(shape));
+          particle.setAttribute(
+            'fill',
+            `hsl(${Math.random() * 360}, 100%, 50%)`
+          );
+          particle.setAttribute('fillRule', `evenodd`);
+          particle.setAttribute('clipRule', `evenodd`);
+
+          // particleMotion.setAttribute('path', `M${startX},${peakY} L${endX},${endY}`);
+          const controlX = peakX + (endX - peakX) * 0.5;
+          const controlY = peakY + (endY - peakY) * 0.5;
+          console.log('Firework coordinates:', { startX, startY, peakX, peakY });
+          particleMotion.setAttribute(
+            'path',
+            `M${peakX},${peakY} Q${controlX},${controlY} ${endX},${endY}`
+          );
+          particleMotion.setAttribute('dur', '2s');
+          particleMotion.setAttribute('begin', `${3000+i/particleCount*20}ms`);
+          // particleMotion.setAttribute('repeatCount', '1');
+          particleMotion.setAttribute('additive', 'sum'); 
+          particleMotion.setAttribute('fill', 'freeze');          
+
+          // fadeOut.setAttribute('attributeName', 'opacity');
+          fadeOut.setAttribute("attributeName", "transform");
+          fadeOut.setAttribute("type", "opacity");
+          fadeOut.setAttribute('from', '1');
+          fadeOut.setAttribute('to', '0.2');
+          fadeOut.setAttribute('dur', '2s');
+          fadeOut.setAttribute('begin', `${3000+i/particleCount*20}ms`);
+          fadeOut.setAttribute('repeatCount', '1');
+          // fadeOut.setAttribute('fill', 'freeze');
+
+          // animateColor.setAttribute('attributeName', 'fill');
+          // animateColor.setAttribute('dur', '2s');
+          // animateColor.setAttribute('begin', `3s`);
+          // animateColor.setAttribute('repeatCount', '1');
+          // animateColor.setAttribute(
+          //   'values',
+          //   'hsl(0, 100%, 50%); hsl(60, 100%, 50%); hsl(120, 100%, 50%); hsl(180, 100%, 50%); hsl(240, 100%, 50%); hsl(300, 100%, 50%); hsl(24, 80%, 50%)'
+          // );
+          // animateColor.setAttribute('calcMode', 'discrete');
+
+
+
+          scale.setAttribute('attributeName', 'transform');
+          scale.setAttribute('type', 'scale');
+          scale.setAttribute('from', `${size}`);
+          scale.setAttribute('to', `${size / 2}`);
+          scale.setAttribute('dur', '2s');
+          scale.setAttribute('begin', '3s');
+          scale.setAttribute('additive', 'sum'); 
+          // scale.setAttribute('fill', 'freeze');
+          // scale.setAttribute('repeatCount', '1');
+
+          particle.appendChild(particleMotion);
+          particle.appendChild(fadeOut);
+          particle.appendChild(scale);
+          particleGroup.appendChild(particle);
+        }
+        console.log(particleGroup);
+        // Remove the firework after animation
+        setTimeout(() => {
+          while (svg.firstChild) {
+            svg.removeChild(svg.firstChild);
+          }
+        }, 5000);
+
+        return particleGroup;
+      };
+
+      const nextAnimate = (n: number) => {
+        let timerInterval1 = setInterval(function () {
+          clearInterval(timerInterval1);
+          if (n < 0) return;
+          const firework = createFirework();
+          svg.appendChild(firework);
+
+          nextAnimate(n - 1);
+        }, 3000 + Math.random() * 1000);
+      };
+
+      const init = () => {
+        if (animationOption1 !== 5) {
+          while (svg.firstChild) {
+            svg.removeChild(svg.firstChild);
+          }
+
+          for (let i = 0; i < particleCount1; i++) {
+            svg.appendChild(createParticle());
+          }
+        } else {
+          // Initial firework
+          while (svg.firstChild) {
+            svg.removeChild(svg.firstChild);
+          }
+          console.log('Firework');
+          // animate();
+
+          nextAnimate(5);
         }
       };
 
       init();
-      // Background color transition
-      let bgColorIndex = 0;
-      // const bgRect = document.createElementNS(svgNS, "rect");
-      // bgRect.setAttribute('width', '100%');
-      // bgRect.setAttribute('height', '100%');
-      // svg.insertBefore(bgRect, svg.firstChild);
-
-      // const animateBgColor = document.createElementNS(svgNS, "animate");
-      // animateBgColor.setAttribute('attributeName', 'fill');
-      // animateBgColor.setAttribute('dur', '20s');
-      // animateBgColor.setAttribute('repeatCount', 'indefinite');
-      // animateBgColor.setAttribute('values', backgroundColor.join(';') + ';' + backgroundColor[0]);
-      // bgRect.appendChild(animateBgColor);
     }
   }, [
     particleCount1,
@@ -401,6 +560,8 @@ const ShowPlayingModal: React.FC<Props> = ({
     originY1,
     rainAngle1,
     particleTypes1,
+    windowSize.width,
+    windowSize.height,
   ]);
   return (
     <div
@@ -409,7 +570,14 @@ const ShowPlayingModal: React.FC<Props> = ({
       }`}
       style={gradientStyle}
     >
-      <div className="relative w-full h-full" style={{ backgroundImage:`url(${showBackdrop?'/images/backdrop.png':""})`, backgroundPosition: 'center', backgroundSize: 'cover'}}>
+      <div
+        className="relative w-full h-full"
+        style={{
+          backgroundImage: `url(${showBackdrop ? '/images/backdrop.png' : ''})`,
+          backgroundPosition: 'center',
+          backgroundSize: 'cover',
+        }}
+      >
         <div className="w-full h-full flex justify-start items-center">
           {mode === 'Video' && (
             <VideoPlayingComponent
@@ -469,31 +637,38 @@ const ShowPlayingModal: React.FC<Props> = ({
             />
           )}
           {mode === 'Default' && (
-
-<div
-className={`absolute left-0 right-0 m-auto   transition-opacity `}
-style={{top: `${fontSizeTime*1.8}px`, bottom: `${fontSizeTime*.8}px`}}
->
- 
-  <div
-    
-    className="h-full w-auto my-auto z-10 bg-center bg-no-repeat bg-contain"
-    style={{
-      backgroundImage: `url(${compLogo.link})`,
-      boxShadow: '0 30px 40px rgba(0,0,0,.1)',
-    }}
-  ></div>
- </div>
+            <div
+              className={`absolute left-0 right-0 m-auto   transition-opacity `}
+              style={{
+                top: `${fontSizeTime * 1.8}px`,
+                bottom: `${fontSizeTime * 0.8}px`,
+              }}
+            >
+              <div
+                className="h-full w-auto my-auto z-10 bg-center bg-no-repeat bg-contain"
+                style={{
+                  backgroundImage: `url(${compLogo.link})`,
+                  boxShadow: '0 30px 40px rgba(0,0,0,.1)',
+                }}
+              ></div>
+            </div>
           )}
 
           {showSVGAnimation1 && (
             <div className="absolute inset-0 flex justify-center items-center">
-              <svg
-                ref={svgRef}
-                width={windowSize.width}
-                height={windowSize.height}
-                fill={'tranparent'}
-              />
+              {windowSize.width! > 0 && windowSize.height! > 0 && (
+                <svg
+                  ref={svgRef}
+                  style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    background: 'transparent',
+                  }}
+                />
+              )}
             </div>
           )}
           {showUrgentMessage && (
@@ -508,31 +683,35 @@ style={{top: `${fontSizeTime*1.8}px`, bottom: `${fontSizeTime*.8}px`}}
               {/* <p className="font-bold m-0"
               style={{fontSize: `${fontSize}px`}}
               >{message}</p> */}
-              {message>"" &&<AnimatedTextMessage  
-              text={message}
-              duration={5}
-              delay={0}
-              height={fontSize*2+'px'}
-              name={fontName}
-              width={'90%'}
-              stroke={1}
-              color={textColor}
-              cutdelay={false}
-              rotate={true} 
-              />}
+              {message > '' && (
+                <AnimatedTextMessage
+                  text={message}
+                  duration={5}
+                  delay={0}
+                  height={fontSize * 2 + 'px'}
+                  name={fontName}
+                  width={'90%'}
+                  stroke={1}
+                  color={textColor}
+                  cutdelay={false}
+                  rotate={true}
+                />
+              )}
 
-{message2>'' &&<AnimatedTextMessage  
-              text={message2}
-              duration={5}
-              delay={3}
-              height={fontSize2*2+'px'}
-              name={'Lato'}
-              width={'90%'}
-              stroke={1}
-              color={textColor}
-              cutdelay={false}
-              rotate={false}
-              /> }
+              {message2 > '' && (
+                <AnimatedTextMessage
+                  text={message2}
+                  duration={5}
+                  delay={3}
+                  height={fontSize2 * 2 + 'px'}
+                  name={'Lato'}
+                  width={'90%'}
+                  stroke={1}
+                  color={textColor}
+                  cutdelay={false}
+                  rotate={false}
+                />
+              )}
 
               {/* <p className="font-bold m-0"
                style={{fontSize: `${fontSize2}px`}}
@@ -552,34 +731,38 @@ style={{top: `${fontSizeTime*1.8}px`, bottom: `${fontSizeTime*.8}px`}}
             </p>
           </div> */}
           <div className="absolute inset-0 flex flex-col justify-center items-center m-2">
-          <div
-            onClick={(e) => handleSubmit(e, button1)}
-            className=" w-full flex justify-center items-center cursor-pointer relative"
-            style={{ color: textColor, fontSize: `${fontSizeTime}px`, height: `${fontSizeTime+2}px` }}
-          >
-            <span className="font-bold m-0 leading-none">
-              {showHeatNumber ? heat : ""}
-            </span>
-            <span className="font-bold m-0 leading-none absolute right-0 top-0">
-              {timeNow}
-            </span>
+            <div
+              onClick={(e) => handleSubmit(e, button1)}
+              className=" w-full flex justify-center items-center cursor-pointer relative"
+              style={{
+                color: textColor,
+                fontSize: `${fontSizeTime}px`,
+                height: `${fontSizeTime + 2}px`,
+              }}
+            >
+              <span className="font-bold m-0 leading-none">
+                {showHeatNumber ? heat : ''}
+              </span>
+              <span className="font-bold m-0 leading-none absolute right-0 top-0">
+                {timeNow}
+              </span>
+            </div>
+            {frameStyle === 'Fire frame' && (
+              <FrameOnFire
+                className={'w-[90%] h-full flex justify-center items-center'}
+              />
+            )}
+            {frameStyle === 'Running frame' && (
+              <FrameRunnerEffect
+                className={'w-[90%] h-full flex justify-center items-center'}
+              />
+            )}
+            {frameStyle === 'No frame' && (
+              <div
+                className={'w-[90%] h-full flex justify-center items-center'}
+              ></div>
+            )}
           </div>
-          {(frameStyle==='Fire frame') && <FrameOnFire
-              className={'w-[90%] h-full flex justify-center items-center'}
-            />}
-            {(frameStyle==='Running frame') &&<FrameRunnerEffect
-              className={
-                'w-[90%] h-full flex justify-center items-center'
-              }
-            />}
-            {(frameStyle==='No frame') &&<div
-              className={
-                'w-[90%] h-full flex justify-center items-center'
-              }
-            ></div>}
-          </div>
-          
-          
         </div>
       </div>
     </div>

@@ -84,9 +84,9 @@ body {
 }
 
 .bgFancy{
-  background: radial-gradient(circle at center ,#f3d3d1, #f3d3d1 10%, transparent 10%, transparent  20%, #f3d3d1 20%, #f3d3d1 30%, transparent 30%, transparent 40%, #f3d3d1 40%, #f3d3d1 50%, transparent 50%, transparent 60%, #f3d3d1 60%, #f3d3d1 70%, transparent 70%, transparent 80%, #f3d3d1 80%, #f3d3d1 90%, transparent 90%);
-        background-size: 2em 2em;
-        background-color: #dde1f6;
+  background: radial-gradient(#f3d3d1 15%, transparent 16%), linear-gradient(45deg, transparent 49%, #f3d3d1 49% 51%, transparent 51%), linear-gradient(-45deg, transparent 49%, #f3d3d1 49% 51%, transparent 51%);
+        background-size: 1em 1em;
+        background-color: hsla(232, 40%, 92%, 0.282);
         opacity: 1
 }
 .invalid_input {
