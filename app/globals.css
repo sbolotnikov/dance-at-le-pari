@@ -82,6 +82,15 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+.bgFancy{
+  background-color: rgba(247, 247, 252, 0.01);
+opacity: 1;
+background-image:  linear-gradient(135deg, rgba(242, 12, 27, 0.17) 25%, transparent 25%), linear-gradient(225deg, rgba(242, 12, 27, 0.17) 25%, transparent 25%), linear-gradient(45deg, rgba(242, 12, 27, 0.17) 25%, transparent 25%), linear-gradient(315deg, rgba(242, 12, 27, 0.17) 25%, rgba(247, 247, 252, 0.01) 25%);
+background-position:  35px 0, 35px 0, 0 0, 0 0;
+background-size: 35px 35px;
+background-repeat: repeat;
+}
 .invalid_input {
   outline: 5px solid red;
 }

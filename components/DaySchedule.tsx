@@ -8,10 +8,10 @@ type Props = {
 };
 export const DaySchedule = ({ day, users,role, onClick, onEventClick }: Props) => {
   const className = `day ${day.value === 'padding' ? 'padding' : ''} ${
-    day.isCurrentDay ? ' border-red-800 border-2 rounded-md' : ''
+    day.isCurrentDay ? ' border-red-800 border-2 rounded-md bgFancy' : ''
   }`;
   const classNameDay = `cursor-pointer ${
-    day.isCurrentDay ? 'text-red-800 font-extrabold' : ''
+    day.isCurrentDay ? 'text-red-800 font-extrabold ' : ''
   }`;
   const getColor = (n: number) => {
     let color = users.filter((user) => user.id == n)[0];

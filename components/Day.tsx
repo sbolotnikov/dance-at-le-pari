@@ -11,7 +11,7 @@ export const Day = ({ day, onClick }: Props) => {
     SettingsContext
   ) as ScreenSettingsContextType;
   const className = `day ${day.value === 'padding' ? 'padding' : ''} ${
-    day.isCurrentDay ? ' border-red-800 border-2 rounded-md' : ''
+    day.isCurrentDay ? ' border-red-800 border-2 rounded-md bgFancy' : ''
   }`;
   const classNameDay = `cursor-pointer ${
     day.isCurrentDay ? 'text-red-800 font-extrabold' : ''
