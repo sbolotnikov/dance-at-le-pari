@@ -222,7 +222,7 @@ const ShowPlayingModal: React.FC<Props> = ({
       svg.setAttribute('transform', '');
       const svgNS = 'http://www.w3.org/2000/svg';
 
-      const createParticle = () => {
+      const createParticle = (num1: number,peakX:number | null, peakY:number | null) => {
         const particle = document.createElementNS(svgNS, 'path');
         const animateMotion = document.createElementNS(svgNS, 'animateMotion');
         const animateOpacity = document.createElementNS(svgNS, 'animate');
@@ -338,11 +338,60 @@ const ShowPlayingModal: React.FC<Props> = ({
           animateTransform.setAttribute('repeatCount', 'indefinite');
         }
 
-        if (animationOption1 !== 4) {
+        if (
+          animationOption1 === 1 ||
+          animationOption1 === 2 ||
+          animationOption1 === 3
+        ) {
           animateMotion.setAttribute(
             'path',
             `M${startX},${startY} L${endX},${endY}`
           );
+        }
+        if (animationOption1 === 5) {
+           
+
+          // redo with State
+
+          startX = Math.random() * windowSize.width!;
+           
+          const angle = (2 * Math.PI * num1) / particleCount;
+          const distance = 100 + Math.random() * 50;
+          const endX = startX + Math.cos(angle) * distance;
+          const endY = peakY! + Math.sin(angle) * distance;
+ 
+            const controlX = peakX! + (endX - peakX!) * 0.5;
+            const controlY = peakY! + (endY - peakY!) * 0.5;
+            console.log('Firework coordinates:', {
+              startX,
+              startY,
+              peakX,
+              peakY,
+            });
+            animateMotion.setAttribute(
+              'path',
+              `M${peakX},${peakY} Q${controlX},${controlY} ${endX},${endY}`
+            );
+            animateMotion.setAttribute('dur', '2s');
+            animateMotion.setAttribute(
+              'begin',
+              `${3 + (num1 / particleCount) * 0.02}s`
+            );
+            animateMotion.setAttribute('repeatCount', '1');
+            // animateMotion.setAttribute('additive', 'sum');
+            
+
+            animateOpacity.setAttribute('attributeName', 'opacity');
+          animateOpacity.setAttribute('values', '1;0');
+          animateOpacity.setAttribute('keyTimes', '0;1');
+           
+            animateOpacity.setAttribute('dur', '1s');
+            animateOpacity.setAttribute(
+              'begin',
+              `${3 }s`
+            );
+            animateOpacity.setAttribute('repeatCount', '1');
+            particle.appendChild(animateOpacity);
         }
         if (animationOption1 === 1) {
           animateTransform.setAttribute('attributeName', 'transform');
@@ -370,7 +419,7 @@ const ShowPlayingModal: React.FC<Props> = ({
 
         particle.appendChild(animateMotion);
         particle.appendChild(animateTransform);
-
+        
         particle.appendChild(animateColor);
 
         // Calculate individual particle speed
@@ -384,22 +433,15 @@ const ShowPlayingModal: React.FC<Props> = ({
       // FIREWORK
 
       const createFirework = () => {
-        // const startX = Math.random() * windowSize.width!;
-        // const startY = windowSize.height!;
-        // const peakY = windowSize.height! * 0.3;
-
-        // Random start position at bottom of canvas
-
         const startX = Math.random() * windowSize.width!;
         const startY = windowSize.height!;
-
-        // Random peak position in upper part of canvas
-        const peakX = startX + (Math.random() - 0.5) * 200; // Allow some horizontal drift
-        const peakY = windowSize.height! * (0.2 + Math.random() * 0.3); // Peak between 20-50% of height
+        const peakY = windowSize.height! * 0.3;
+        const peakX = startX + (Math.random() - 0.5) * 200;
+        // Random start position at bottom of canvas
 
         const particleGroup = document.createElementNS(svgNS, 'g');
-         // Add a transform to ensure proper positioning
-         particleGroup.setAttribute('transform', `translate(0,0)`);
+        // Add a transform to ensure proper positioning
+        particleGroup.setAttribute('transform', `translate(0,0)`);
         // Launch particle
         const launchParticle = document.createElementNS(svgNS, 'path');
         const launchMotion = document.createElementNS(svgNS, 'animateMotion');
@@ -423,7 +465,7 @@ const ShowPlayingModal: React.FC<Props> = ({
         launchMotion.setAttribute('dur', '3s');
         launchMotion.setAttribute('begin', '0s');
         // launchMotion.setAttribute('repeatCount', '1');
-        launchMotion.setAttribute('additive', 'sum'); 
+        launchMotion.setAttribute('additive', 'sum');
         launchMotion.setAttribute('fill', 'freeze');
 
         launchParticle.appendChild(launchMotion);
@@ -457,26 +499,34 @@ const ShowPlayingModal: React.FC<Props> = ({
           // particleMotion.setAttribute('path', `M${startX},${peakY} L${endX},${endY}`);
           const controlX = peakX + (endX - peakX) * 0.5;
           const controlY = peakY + (endY - peakY) * 0.5;
-          console.log('Firework coordinates:', { startX, startY, peakX, peakY });
+          console.log('Firework coordinates:', {
+            startX,
+            startY,
+            peakX,
+            peakY,
+          });
           particleMotion.setAttribute(
             'path',
             `M${peakX},${peakY} Q${controlX},${controlY} ${endX},${endY}`
           );
           particleMotion.setAttribute('dur', '2s');
-          particleMotion.setAttribute('begin', `${3000+i/particleCount*20}ms`);
-          // particleMotion.setAttribute('repeatCount', '1');
-          particleMotion.setAttribute('additive', 'sum'); 
-          particleMotion.setAttribute('fill', 'freeze');          
+          particleMotion.setAttribute(
+            'begin',
+            `${3000 + (i / particleCount) * 20}ms`
+          );
+          particleMotion.setAttribute('repeatCount', '1');
+          particleMotion.setAttribute('additive', 'sum');
+          particleMotion.setAttribute('fill', 'freeze');
 
           // fadeOut.setAttribute('attributeName', 'opacity');
-          fadeOut.setAttribute("attributeName", "transform");
-          fadeOut.setAttribute("type", "opacity");
+          fadeOut.setAttribute('attributeName', 'transform');
+          fadeOut.setAttribute('type', 'opacity');
           fadeOut.setAttribute('from', '1');
           fadeOut.setAttribute('to', '0.2');
           fadeOut.setAttribute('dur', '2s');
-          fadeOut.setAttribute('begin', `${3000+i/particleCount*20}ms`);
+          fadeOut.setAttribute('begin', `${3000 + (i / particleCount) * 20}ms`);
           fadeOut.setAttribute('repeatCount', '1');
-          // fadeOut.setAttribute('fill', 'freeze');
+          fadeOut.setAttribute('fill', 'freeze');
 
           // animateColor.setAttribute('attributeName', 'fill');
           // animateColor.setAttribute('dur', '2s');
@@ -488,17 +538,15 @@ const ShowPlayingModal: React.FC<Props> = ({
           // );
           // animateColor.setAttribute('calcMode', 'discrete');
 
-
-
           scale.setAttribute('attributeName', 'transform');
           scale.setAttribute('type', 'scale');
           scale.setAttribute('from', `${size}`);
           scale.setAttribute('to', `${size / 2}`);
           scale.setAttribute('dur', '2s');
           scale.setAttribute('begin', '3s');
-          scale.setAttribute('additive', 'sum'); 
-          // scale.setAttribute('fill', 'freeze');
-          // scale.setAttribute('repeatCount', '1');
+          scale.setAttribute('additive', 'sum');
+          scale.setAttribute('fill', 'freeze');
+          scale.setAttribute('repeatCount', '1');
 
           particle.appendChild(particleMotion);
           particle.appendChild(fadeOut);
@@ -520,10 +568,49 @@ const ShowPlayingModal: React.FC<Props> = ({
         let timerInterval1 = setInterval(function () {
           clearInterval(timerInterval1);
           if (n < 0) return;
-          const firework = createFirework();
-          svg.appendChild(firework);
+          // const firework = createFirework();
+          // svg.appendChild(firework);
 
-          nextAnimate(n - 1);
+          while (svg.firstChild) {
+            svg.removeChild(svg.firstChild);
+          }
+           
+       
+          const particle1 = document.createElementNS(svgNS, 'path');
+          const shape =
+          particleTypes1[Math.floor(Math.random() * particleTypes1.length)];
+        const size = Math.random() * maxSize1;
+
+        particle1.setAttribute('d', svgPath(shape));
+        particle1.setAttribute(
+          'fill',
+          `hsl(${Math.random() * 360}, 100%, 50%)`
+        );
+          const animateMotion1 = document.createElementNS(
+            svgNS,
+            'animateMotion'
+          );
+          const startX = Math.random() * windowSize.width!;
+          const startY = windowSize.height!;
+
+          // Random peak position in upper part of canvas
+          const peakX = startX + (Math.random() - 0.5) * 200; // Allow some horizontal drift
+          const peakY = windowSize.height! * (0.2 + Math.random() * 0.3); // Peak between 20-50% of height
+          animateMotion1.setAttribute(
+            'path',
+            `M${startX},${startY} Q${startX},${
+              (startY + peakY) / 2
+            } ${peakX},${peakY}`
+          );
+          animateMotion1.setAttribute('dur', '3s');
+          animateMotion1.setAttribute('begin', '0s');
+          animateMotion1.setAttribute('repeatCount', '1');
+          particle1.appendChild(animateMotion1);
+          svg.appendChild(particle1);
+          for (let i = 0; i < particleCount1; i++) {
+            svg.appendChild(createParticle(i, peakX, peakY));
+          }
+          nextAnimate(n - 1,);
         }, 3000 + Math.random() * 1000);
       };
 
@@ -534,15 +621,14 @@ const ShowPlayingModal: React.FC<Props> = ({
           }
 
           for (let i = 0; i < particleCount1; i++) {
-            svg.appendChild(createParticle());
+            svg.appendChild(createParticle(i,null,null));
           }
         } else {
-          // Initial firework
           while (svg.firstChild) {
             svg.removeChild(svg.firstChild);
           }
           console.log('Firework');
-          // animate();
+          
 
           nextAnimate(5);
         }
