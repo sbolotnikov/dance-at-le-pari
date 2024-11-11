@@ -113,8 +113,7 @@ const page: React.FC<Props> = () => {
     compChoice,
     showBackdrop,
     setCompID,
-  } = usePartySettings();
-  console.log('compChoice', compChoice);
+  } = usePartySettings(); 
   const [competition, setCompetition] = useState('T9FLgtEDmxQFYFTnfrvO');
   const { heat } = useComp(competition);
   useEffect(() => {
