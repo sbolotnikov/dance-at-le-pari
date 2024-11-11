@@ -69,7 +69,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
   const windowSize = useDimensions();
   useEffect(() => {
     if (audioRef.current) {
-      audioRef.current.src = music;
+      audioRef.current.src =  music;
       audioRef.current.playbackRate = rateSet;
       audioRef.current.load();
       console.log('rate set:', rateSet);

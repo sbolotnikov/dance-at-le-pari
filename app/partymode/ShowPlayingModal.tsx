@@ -469,20 +469,6 @@ const ShowPlayingModal: React.FC<Props> = ({
           // Random peak position in upper part of canvas
           const peakX = startX; // Allow some horizontal drift
           const peakY = windowSize.height! * (0.2 + Math.random() * 0.3); // Peak between 20-50% of height
-
-          // animateMotion1.setAttribute(
-          //   'path',
-          //   `M${startX},${startY} Q${startX + (peakX - startX) * 0.5},${
-          //     startY + (peakY - startY) * 0.5
-          //   } ${peakX},${peakY}`
-          // );
- 
-          // animateMotion1.setAttribute('dur', '3s');
-          // animateMotion1.setAttribute('begin', '0s');
-          // animateMotion1.setAttribute('repeatCount', '1');
-          // particle1.appendChild(animateMotion1);
-          // console.log(startX, startY, peakX, peakY);
-          // svg.appendChild(particle1);
           for (let i = 0; i < particleCount1; i++) {
             svg.appendChild(createParticle(i, peakX, peakY, startX, startY));
           }

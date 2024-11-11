@@ -56,13 +56,13 @@ export default function Page({ params }: { params: { id: string } }) {
     'group_classes',
     'floor_fees',
     'parties',
-    // 'special_events',
+    'special_events',
   ];
   const pageArray = [{title:'Page: Private Lessons Packages | Activities | Dance at Le Pari Studio',description:'Private Dance Instructions Packages. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below. ', keywords: 'private lessons, lessons packages, dance lessons packages, wedding dance packages'},
     { title: 'Page: Group Classes| Activities | Dance at Le Pari Studio', description: 'Group classes and group packages. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below.',keywords: 'group dance lessons, group classes packages, group lessons packages, group classes lessons'},
     { title: 'Page: Floor Fees | Activities | Dance at Le Pari Studio', description:'Floor fees for outside dance instructors. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below. ', keywords:'floor fees, rent dance space, teach dance lessons, outside dance teachers'},
     { title: 'Page: Parties or Socials | Activities | Dance at Le Pari Studio', description: 'Social Dancing Parties. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below.', keywords: 'dance party, socials, dance social events, ballroom social'},
-    // { title: 'Page: Special Dance Socials | Activities | Dance at Le Pari Studio', description: 'Special Dance Events at Dance at Le Pari. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below.', keywords:'special dance events, dance parties, dance events, ballroom social'}
+    { title: 'Page: Special Dance Socials | Activities | Dance at Le Pari Studio', description: 'Special Dance Events at Dance at Le Pari. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below.', keywords:'special dance events, dance parties, dance events, ballroom social'}
   ];
   console.log(params.id) 
   const selectedTab = slugArray.indexOf(params.id);
@@ -147,7 +147,7 @@ export default function Page({ params }: { params: { id: string } }) {
       .then((data) => {
         console.log(data);
         if (data.length > 0 && tabsArray.indexOf('Special Events') == -1) {
-          setTabsArray((prev) => [...prev, 'Special Events']);
+          setTabsArray([...tabsArray, 'Special Events']);
           setSpecialEvents(
             data.sort((a: any, b: any) => {
               if (a.price > b.price) return 1;
@@ -309,7 +309,7 @@ export default function Page({ params }: { params: { id: string } }) {
                   }`}
                   style={{ flex: '1 1 100%' }}
                 >
-                  {products.length > 0 && (
+                  {  products.length > 0 && (
                     <PaymentPageForm
                       paymentsArray={products.filter(
                         (product) => product.eventtype == item
@@ -320,7 +320,7 @@ export default function Page({ params }: { params: { id: string } }) {
                         actionTemplateChoice(action1, item1, option);
                       }}
                     />
-                  )}
+                  ) }
                 </TabPanel>
               );
             })}
