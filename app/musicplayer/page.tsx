@@ -613,7 +613,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
         url: await fileToBase64(file),
         name: file.name,
         id: uuidv4(),
-        rate:1,
+        rate,
         dance: dance,
       };
       console.log(newSong);
