@@ -10,6 +10,7 @@ const withTM = require('next-transpile-modules')([
   '@square/web-sdk',
   'react-square-web-payments-sdk',
 ]);
+module.exports = { crossOrigin: 'anonymous', };
 module.exports = withTM({
   // ...nextTranslate(),
   reactStrictMode: true,
