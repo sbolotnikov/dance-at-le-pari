@@ -24,12 +24,16 @@ export const GET = async (req: NextRequest) => {
             throw new Error('Failed to fetch file content');
         }
 
-        const fileContent = await response.arrayBuffer();
-        const base64Content = Buffer.from(fileContent).toString('base64');
-        const base64Uri = `data:audio/mpeg;base64,${base64Content}`;
+        const readableStream = response.body;
+        const streamingResponse = new NextResponse(readableStream, {
+            headers: {
+                ...headers,
+                'Content-Type': 'audio/mpeg',
+                'Content-Disposition': 'inline; filename="audiofile.mp3"',
+            },
+        });
 
-        headers.set('Content-Type', 'application/json');
-        return new NextResponse(JSON.stringify({ fileUrl: base64Uri }), { status: 200, headers });
+        return streamingResponse;
 
     } catch (error) {
         headers.set('Content-Type', 'application/json');

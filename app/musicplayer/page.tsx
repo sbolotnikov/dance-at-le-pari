@@ -13,6 +13,7 @@ import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
 import { useDimensions } from '@/hooks/useDimensions';
 import { useSession } from 'next-auth/react';
 import ListenSaveMp3Modal from './ListenSaveMp3Modal';
+import ChooseExternalSongModal from './ChooseExternalSongModal';
 
 interface MusicPlayerProps {
   rateSet: number;
@@ -167,7 +168,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
         <audio
           ref={audioRef}
           onTimeUpdate={updateTime}
-          onLoadedMetadata={() => setDuration(audioRef.current?.duration || 0)}
+          onLoadedMetadata={(e) =>{console.log(e.target); setDuration(audioRef.current?.duration || 0)}}
           onEnded={handleEnded}
         />
         <div className="flex justify-center space-x-4 mb-4">
@@ -1104,6 +1105,7 @@ const page: FC<pageProps> = ({}) => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isPlaylistOpen, setIsPlaylistOpen] = useState(false);
   const [isChooseMusicOpen, setIsChooseMusicOpen] = useState(false);
+  const [isChooseSongWebModal, setIsChooseSongWebModal] = useState(false);
   const [isAddToDBOpen, setIsAddToDBOpen] = useState(false);
   const [parties, setParties] = useState<{ name: string; id: string }[]>([]);
   const [choosenParty, setChoosenParty] = useState('');
@@ -1201,6 +1203,15 @@ const page: FC<pageProps> = ({}) => {
           onChangeFade={(duration) => setFadeTime(duration)}
         />
       )}
+      {isChooseSongWebModal && (
+        <ChooseExternalSongModal 
+            displaySongs={[]}
+            savedDances={dances}
+            vis={isChooseSongWebModal}
+            onClose={() => setIsChooseSongWebModal(false)}
+            onPlay={(song:Song)=>{setPlaylist([...playlist, song])}}
+            onReturn={(songs) => {console.log(songs)}}
+  />)}
       {isChooseMusicOpen && (
         <ChooseMusicModal
           isOpen={isChooseMusicOpen}
@@ -1285,6 +1296,18 @@ const page: FC<pageProps> = ({}) => {
                   }}
                 />
                 <span className="text-center">Choose a song</span>
+              </div>
+              <div className=" flex flex-col items-center justify-center">
+                <PlayerButtons
+                  icon={'File'}
+                  color="#504deb"
+                  color2="#FFFFFF"
+                  size={50}
+                  onButtonPress={() => {
+                    setIsChooseSongWebModal(true);
+                  }}
+                />
+                <span className="text-center">Choose web song</span>
               </div>
               <div className=" flex flex-col items-center justify-center">
                 <PlayerButtons

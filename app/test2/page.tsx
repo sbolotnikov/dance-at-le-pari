@@ -1,5 +1,6 @@
 'use client';
 import { FC, useEffect, useState } from 'react';
+import axios from 'axios';
 import { PageWrapper } from '../../components/page-wrapper';
 
 interface pageProps {}
@@ -10,22 +11,31 @@ const page: FC<pageProps> = ({}) => {
 
     useEffect(() => { 
         const fileId = '1BZ8qWSytiG4_3RsDFuEBD3UTtO4o9RoV'; // Replace with your actual file ID 
-        setFileUrl(`/api/music2play?file_id=${fileId}`); 
-        // const fetchFileContent = async () => { 
-        //     try { 
-        //         const response = await fetch(`/api/music2play?file_id=${fileId}`); 
+        const fetchFileContent = async () => { 
+            try { 
+                  fetch(`/api/music2play?file_id=${fileId}`).then(response => response.json()
+                    .then(data => {
+                        console.log(data);
+                        setFileUrl(data.fileUrl);
+                    }));
                 
-        //         if (!response.ok) { 
-        //             throw new Error('Failed to fetch file content'); 
-        //         } 
+                  
+
+
+
+                // if (!response.ok) { 
+                //     throw new Error('Failed to fetch file content'); 
+                // } 
                 
-        //         setFileUrl(`/api/music2play?file_id=${fileId}`); 
-        //     } catch (error) { 
-        //         const errorMessage = (error as Error).message; 
-        //         setError(errorMessage); 
-        //     } 
-        // }; 
-        // fetchFileContent(); 
+                // const url = await response.text(); 
+                // console.log(url);
+                // setFileUrl(url); 
+            } catch (error) { 
+                const errorMessage = (error as Error).message; 
+                setError(errorMessage); 
+            } 
+        }; 
+        fetchFileContent(); 
     }, []);
 
     return (
@@ -53,4 +63,3 @@ const page: FC<pageProps> = ({}) => {
 };
 
 export default page;
-
