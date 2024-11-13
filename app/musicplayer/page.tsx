@@ -1205,7 +1205,7 @@ const page: FC<pageProps> = ({}) => {
       )}
       {isChooseSongWebModal && (
         <ChooseExternalSongModal 
-            displaySongs={[]}
+             
             savedDances={dances}
             vis={isChooseSongWebModal}
             onClose={() => setIsChooseSongWebModal(false)}
@@ -1245,7 +1245,7 @@ const page: FC<pageProps> = ({}) => {
           onReturn={() => setIsPlaylistOpen(false)}
         />
       )}
-      <div className="blurFilter border-0 rounded-md p-2 shadow-2xl w-[90%] max-w-[450px] h-[85%] overflow-y-auto md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70">
+      <div className="blurFilter border-0 rounded-md p-2 shadow-2xl w-[95%] max-w-[450px] h-[85%] overflow-y-auto md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70">
         <div className="w-full h-full flex flex-col justify-center items-center border rounded-md border-lightMainColor dark:border-darkMainColor relative p-2 overflow-x-auto">
           {/* <div className="container mx-auto p-4"> */}
           <div className="   w-full h-fit p-2 flex flex-col justify-center items-center">
@@ -1284,7 +1284,7 @@ const page: FC<pageProps> = ({}) => {
                 }}
               />
             )}
-            <div className="mt-4 flex justify-between space-x-4">
+            <div className="mt-4 flex justify-between">
               <div className=" flex flex-col items-center justify-center">
                 <PlayerButtons
                   icon={'File'}
@@ -1307,7 +1307,7 @@ const page: FC<pageProps> = ({}) => {
                     setIsChooseSongWebModal(true);
                   }}
                 />
-                <span className="text-center">Choose web song</span>
+                <span className="text-center">Choose webSong</span>
               </div>
               <div className=" flex flex-col items-center justify-center">
                 <PlayerButtons

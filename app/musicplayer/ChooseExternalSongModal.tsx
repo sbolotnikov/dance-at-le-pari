@@ -2,7 +2,8 @@
 
 import AnimateModalLayout from '@/components/AnimateModalLayout';
 import ShowIcon from '@/components/svg/showIcon';
-import Image from 'next/image';
+import {   addDoc, collection, doc, getDocs,  } from 'firebase/firestore';
+import { db } from '@/firebase';
 import React, { useState, useEffect } from 'react'; 
 import PlayerButtons from './PlayerButtons';
 import Slider from '@/components/Slider';
@@ -15,8 +16,7 @@ interface Song {
     id: string | null;
   }
 
-type Props = {
-  displaySongs: Song[];
+type Props = { 
   savedDances: string[]; 
   vis: boolean;
   onReturn: (songs: Song[]  ) => void;
@@ -25,7 +25,7 @@ type Props = {
 }
 
 const ChooseExternalSongModal: React.FC<Props> = ({
-  displaySongs,
+  
   savedDances, 
   vis,
   onReturn,
@@ -34,15 +34,20 @@ const ChooseExternalSongModal: React.FC<Props> = ({
 }) => {
   const [displaySngs, setDisplaySngs] = useState<Song[] >([]);
   const [songLink, setSongLink] = useState('');
+  const [link1, setLink1] = useState('');   
   const [songName, setSongName] = useState('');
   const [dance, setDance] = useState<string | null>(null);
   const [rate, setRate] = useState(1);
-
-  useEffect(() => {
-    setDisplaySngs(displaySongs);
-    console.log(displaySongs)
-  }, [displaySongs]);
-
+  const songsCollection = collection(db, 'songs');
+  useEffect(() =>{
+      const fetchSongs = async () => {
+        
+        const songsSnapshot = await getDocs(songsCollection);
+        const songsList = songsSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as Song));
+        setDisplaySngs(songsList);
+      };
+      fetchSongs();
+    },[])
   const handleSubmit = (submitType: 'Save' | 'Close') => {
     if (submitType === 'Save') {
       onReturn(displaySngs);
@@ -65,7 +70,11 @@ const ChooseExternalSongModal: React.FC<Props> = ({
     newPictures.splice(index, 1);
     setDisplaySngs(newPictures);
   };
-
+  const handleSongAdd = async({ name, url, dance, rate }:{name: string, url: string, dance: string, rate:number} ) => {
+    const songsSnapshot = await addDoc(songsCollection, { name, url, dance, rate });
+    const newSong = { ...{ name, url, dance, rate }, id: songsSnapshot.id } as Song;
+    console.log(newSong);
+  }
   const handleSongLinkChange = (text: string) => {
      
       const id = text.split('/file/d/')[1]?.split('/')[0];
@@ -104,15 +113,27 @@ const ChooseExternalSongModal: React.FC<Props> = ({
           <div className="flex flex-wrap items-center justify-start">
             {displaySngs.map((item, i) => (
               <div key={`songsavailable${i}`} className="relative m-1">
-                <PlayerButtons
-                  icon={'File'}
-                  color="#504deb"
-                  color2="#FFFFFF"
-                  size={50}
-                  onButtonPress={() => {
-                    console.log("Choosen song", item);
-                  }}
-                />  
+                <button  
+                    onClick={(e) => {
+                        e.preventDefault();
+                        fetch(`/api/music2play?file_id=${item.url}`).then(response => response.json()
+                    .then(data => {
+                        console.log(data);
+                        onPlay({ name: item.name, url: data.fileUrl, dance:item.dance, id:item.id, rate:item.rate })
+                        setSongLink(data.fileUrl);
+                    }));
+                        
+                    }}>
+                    <PlayerButtons
+                      icon={'File'}
+                      color="#504deb"
+                      color2="#FFFFFF"
+                      size={50}
+                      onButtonPress={() => {
+                        console.log("Choosen song", item);
+                      }}
+                    />  
+                </button>
                 <button 
                   onClick={() => handleDeletePicture(i)}
                   className="absolute top-0 right-0 fill-alertcolor  stroke-alertcolor  rounded-md border-alertcolor  w-8 h-8"
@@ -141,7 +162,10 @@ const ChooseExternalSongModal: React.FC<Props> = ({
             type="text"
             placeholder="Enter song link"
              
-            onChange={(e) => handleSongLinkChange(e.target.value)}
+            onChange={(e) =>{ 
+                e.preventDefault();
+                setLink1(e.target.value.split('/file/d/')[1]?.split('/')[0])
+                handleSongLinkChange(e.target.value)}}
             className="w-full p-2 border border-gray-300 rounded mb-2"
           />
 
@@ -185,10 +209,10 @@ const ChooseExternalSongModal: React.FC<Props> = ({
               </div>
         </div>
         <button
-          onClick={() => onPlay({ name: songName, url: songLink, dance, id:null, rate })}
+          onClick={() => handleSongAdd({ name: songName, url: link1, dance:dance?dance:"", rate })}
           className="w-full bg-purple-800 text-white p-2 rounded hover:bg-purple-700 transition-colors mb-2"
         >
-          Play Song
+          Add Song to Database
         </button>
         <button
           onClick={() => handleSubmit('Save')}
