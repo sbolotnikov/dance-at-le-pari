@@ -202,10 +202,13 @@ const page: FC<pageProps> = ({}) => {
             {guestCheckout && (
               <div className=" md:w-64 flex flex-col justify-center items-end">
                 <p className="w-full text-base text-center">
-                  Enter name telephone and email
+                  Enter name, telephone and email.  
+                  </p>
+                  <p className="w-full text-base text-center">
+                  *  required fields
                 </p> 
                 <label className="flex flex-row items-center p-1  rounded-t-md bottom-0">
-                Name
+                *Name
                 <input
                   name="user_name"
                   id="user_name"
@@ -216,7 +219,7 @@ const page: FC<pageProps> = ({}) => {
                 />
               </label>
                 <label className="flex flex-row items-center p-1  rounded-t-md bottom-0">
-                Telephone:
+                *Telephone:
                 <input
                   className="flex-1 outline-none bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor border-none rounded-md bg-main-bg p-0.5 mx-1 my-1"
                   name="telephone"
@@ -228,7 +231,7 @@ const page: FC<pageProps> = ({}) => {
                 />
                 </label>
                 <label className="flex flex-row items-center p-1  rounded-t-md bottom-0">
-                Email Address
+                *Email Address
                 <input
                   name="user_email"
                   id="user_email"
@@ -238,27 +241,7 @@ const page: FC<pageProps> = ({}) => {
                   value={email}
                 />
               </label>
-                 {/* <button
-                  className="w-full btnFancy my-1 text-base text-center  rounded-md"
-                  style={{ padding: '0' }}
-                  onClick={async (e) => {
-                    e.preventDefault();
-                    if (!session?.user?.id) {
-                      const response = await fetch('/api/create_user', {
-                        method: 'POST',
-                        headers: {
-                          'Content-type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                          email, telephone:phone, name 
-                        }),
-                      });
-                      const ids = await response.json();
-                      console.log(parseInt(ids.message)) 
-                    }  
-                  }}>
-                  {'Create user'}
-                  </button> */}
+                 
 
               </div>
             )}
@@ -369,11 +352,11 @@ const page: FC<pageProps> = ({}) => {
               <CreditCard />
             </PaymentForm>:
             <div className="w-full h-full flex flex-col justify-center items-center">
-              <h2>To make purchases please {!session?<span><Link href='/signin' className="font-semibold text-franceBlue hover:uppercase">register</Link> or <Link href='/login' className="font-semibold text-franceBlue hover:uppercase">login</Link> and  provide a phone number so we can contact you</span>:session.user.telephone!>""?"":<span> update your phone number in <Link href='/profile' className="font-semibold text-franceBlue hover:uppercase">Profile</Link> so we can contact you</span>}!</h2>
+              <h2>To make purchases please {!session?<span><Link href='/signin' className="font-semibold text-franceBlue hover:uppercase">register</Link> or <Link href='/login' className="font-semibold text-franceBlue hover:uppercase">log in</Link> and  provide a phone number so we can contact you</span>:session.user.telephone!>""?"":<span> update your phone number in <Link href='/profile' className="font-semibold text-franceBlue hover:uppercase">Profile</Link> so we can contact you</span>}!</h2>
               <p className='cursor-pointer text-franceBlue hover:uppercase'  onClick={(e)=>{
                 e.preventDefault();
                 setGuestCheckout(true)
-                }}>Click if you want check out as guest</p>
+                }}>To check out as a guest click here</p>
             </div>}
              {/* {session?.user.role=='Admin'&&<button className="bg-franceBlue hover:bg-franceBlueHover text-white font-bold py-2 px-4 rounded-full" onClick={() =>{ setVisibleModal(true); setTransactionID('ciedodx1')}}>try</button>} */}
             <div className="m-2">{'  '}</div>
