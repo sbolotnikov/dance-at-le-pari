@@ -73,7 +73,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
       audioRef.current.src =  music;
       audioRef.current.playbackRate = rateSet;
       audioRef.current.load();
-      console.log('rate set:', rateSet);
+      console.log('rateSet set:', rateSet);
       setLoaded(true);
 
       let timerInterval: any;
@@ -1106,10 +1106,45 @@ const page: FC<pageProps> = ({}) => {
   const [isPlaylistOpen, setIsPlaylistOpen] = useState(false);
   const [isChooseMusicOpen, setIsChooseMusicOpen] = useState(false);
   const [isChooseSongWebModal, setIsChooseSongWebModal] = useState(false);
+  const [autoPlayMode, setAutoPlayMode] = useState(false);
   const [isAddToDBOpen, setIsAddToDBOpen] = useState(false);
   const [parties, setParties] = useState<{ name: string; id: string }[]>([]);
   const [choosenParty, setChoosenParty] = useState('');
   const { data: session } = useSession();
+  const [autoPlayDances, setAutoPlayDances] = useState<string[]>([ 'Waltz','Cha Cha','Foxtrot','Salsa','Argentine Tango','Merengue','Viennese Waltz','Swing','Bolero','Quickstep','Rumba','Hustle','Tango','Bachata','Samba','West Coast Swing','Two Step','Waltz','Cha Cha','Foxtrot','Salsa','Argentine Tango','Merengue','Viennese Waltz','Swing','Bolero','Quickstep','Rumba','Hustle','Tango','Bachata','West Coast Swing','Samba','Two Step','Waltz','Cha Cha','Foxtrot','Salsa','Argentine Tango','Merengue','Viennese Waltz','Swing','Bolero','Quickstep','Rumba','Hustle','Tango','Bachata','West Coast Swing','Samba','Two Step','Waltz','Cha Cha','Foxtrot','Salsa','Merengue','Viennese Waltz','Swing','Bolero','Quickstep','Rumba','Hustle','Tango','Bachata','West Coast Swing','Samba','Rumba','Salsa','Swing','West Coast Swing','Foxtrot','Waltz','Cha Cha','Hustle','Samba','Quickstep','Viennese Waltz','Two Step','Rumba','Salsa','Swing','West Coast Swing','Foxtrot','Waltz','Cha Cha','Hustle','Tango','Rumba','Salsa','Swing','Foxtrot','Waltz']);
+
+// 'Waltz', 'Tango', 'Viennese Waltz', 'Foxtrot','Quickstep'
+
+  // 'Argentine Tango',
+  // 'Bachata',
+  // 'Bolero',
+  // 'Cha Cha',
+  // 'Foxtrot',
+  // 'Hustle',
+  // 'Jive',
+  // 'Mambo',
+  // 'Merengue',
+  // 'POLKA',
+  // 'Paso Doble',
+  // 'Quickstep',
+  // 'Rumba',
+  // 'Salsa',
+  // 'Samba',
+  // 'Swing',
+  // 'Tango',
+  // 'Two Step',
+  // 'Viennese Waltz',
+  // 'Waltz',
+  // 'West Coast Swing',
+
+   
+
+
+
+
+  const [autoPlayIndex, setAutoPlayIndex] = useState(0);
+  const [webSongs, setWebSongs] = useState<Song[] >([]);
+  const [webSongsAll, setWebSongsAll] = useState<Song[] >([]);
 
   async function getPartyArray() {
     const q = await getDocs(collection(db, 'parties'));
@@ -1125,7 +1160,42 @@ const page: FC<pageProps> = ({}) => {
   useEffect(() => {
     getPartyArray();
   }, []);
+  useEffect(() => {
+    const fetchSongs = async () => {
+        
+      const songsSnapshot = await getDocs(collection(db, 'songs'));
+      const songsList = songsSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as Song));
+      setWebSongsAll(songsList);
+      let songsArr=songsList.filter(song => song.dance==autoPlayDances[autoPlayIndex]);
+      setAutoPlayIndex(autoPlayIndex + 1);
+      let randomIndex = Math.floor(Math.random() * songsArr.length);
+      
+      fetch(`/api/music2play?file_id=${songsArr[randomIndex].url}`).then(response => response.json()
+                    .then(data => {
+                      setPlaylist([{url:data.fileUrl,
+                        name:  songsArr[randomIndex].name,
+                        rate:  songsArr[randomIndex].rate,
+                        dance:  songsArr[randomIndex].dance,
+                        id:  songsArr[randomIndex].id }]); 
+                        setRate(songsArr[randomIndex].rate!==undefined?songsArr[randomIndex].rate:1);
+                        setWebSongs(songsList.filter(song => song.id!==songsArr[randomIndex].id))
+                        if ( choosenParty != '') {  
+                          console.log(`Next Dance: ${(autoPlayIndex==autoPlayDances.length-1)?autoPlayDances[0]: autoPlayDances[autoPlayIndex+1]}`)
+                          updateDoc(doc(db, 'parties', choosenParty), {
+                            message: autoPlayDances[0],
+                            message2:`Next Dance: ${ autoPlayDances[1]}`
+                              
+                          }).then((res) => console.log(res));
+                        }
 
+                    })); 
+    };
+    
+    if (autoPlayMode) {
+      
+      fetchSongs();
+    }
+  }, [autoPlayMode]);
   const handleSongChange = (index: number) => {
     setCurrentSongIndex(index);
     setRate(playlist[index].rate!==undefined?playlist[index].rate:1)
@@ -1147,11 +1217,50 @@ const page: FC<pageProps> = ({}) => {
     }
   }, [currentSongIndex]);
   const handleSongEnd = () => {
-    if (currentSongIndex < playlist.length - 1) {
+
+    if (autoPlayMode) {
+
+      let songsArr=webSongs.filter(song => song.dance==autoPlayDances[autoPlayIndex]);
+      if(songsArr.length==0){
+        songsArr=webSongsAll.filter(song => song.dance==autoPlayDances[autoPlayIndex]);
+      }
+      autoPlayIndex==autoPlayDances.length-1?setAutoPlayIndex(0):setAutoPlayIndex(autoPlayIndex + 1);
+      let randomIndex = Math.floor(Math.random() * songsArr.length);
+      
+      fetch(`/api/music2play?file_id=${songsArr[randomIndex].url}`).then(response => response.json()
+                    .then(data => {
+                      setPlaylist([{url:data.fileUrl,
+                        name:  songsArr[randomIndex].name,
+                        rate:  songsArr[randomIndex].rate,
+                        dance:  songsArr[randomIndex].dance,
+                        id:  songsArr[randomIndex].id }]); 
+                        setRate(songsArr[randomIndex].rate!==undefined?songsArr[randomIndex].rate:1);
+                        if (webSongs.filter(song => song.dance==autoPlayDances[autoPlayIndex]).length==0){
+                          setWebSongs([...webSongsAll.filter(song => song.dance==autoPlayDances[autoPlayIndex] && song.id!==songsArr[randomIndex].id), ...webSongs])
+                        }
+                        setWebSongs(webSongs.filter(song => song.id!==songsArr[randomIndex].id))
+                        if ( choosenParty != '') {  
+                          updateDoc(doc(db, 'parties', choosenParty), {
+                            message: autoPlayDances[autoPlayIndex],
+                            message2:`Next Dance: ${(autoPlayIndex==autoPlayDances.length-1)?autoPlayDances[0]: autoPlayDances[autoPlayIndex+1]}`
+                              
+                          }).then((res) => console.log(res));
+                        }
+                    })); 
+
+
+
+
+    } else { 
+      if (currentSongIndex < playlist.length - 1) {
+        setRate(playlist[currentSongIndex + 1].rate ?? 1);
       setCurrentSongIndex(currentSongIndex + 1);
     } else {
       setCurrentSongIndex(0);
+      setRate(playlist[0].rate ?? 1);
     }
+    
+  }
   };
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -1368,6 +1477,16 @@ const page: FC<pageProps> = ({}) => {
                 })}
               </select>
             )}
+            <div className="flex flex-col items-center justify-center">
+                <PlayerButtons
+                  icon={'Auto'}
+                  color="#504deb"
+                  color2="#FFFFFF"
+                  size={50}
+                  onButtonPress={() => setAutoPlayMode(true)}
+                />
+                <span className="text-center">Autoplay Mode</span>
+              </div>
           </div>
         </div>
       </div>

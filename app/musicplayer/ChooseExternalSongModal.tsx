@@ -109,10 +109,10 @@ const ChooseExternalSongModal: React.FC<Props> = ({
           > 
         <h2 className="text-xl font-bold mb-4">Available songs</h2>
 
-        <div className="w-full h-28 border border-black p-1 rounded-md overflow-x-auto mb-4">
-          <div className="flex flex-wrap items-center justify-start">
-            {displaySngs.map((item, i) => (
-              <div key={`songsavailable${i}`} className="relative m-1">
+        <div className="w-full h-64 border border-black p-1 rounded-md overflow-x-auto mb-4">
+          <div className="flex flex-col flex-wrap items-center justify-start">
+            {displaySngs .sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0)).map((item, i) => (
+              <div key={`songsavailable${i}`} className="relative m-1 w-full flex justify-start items-center">
                 <button  
                     onClick={(e) => {
                         e.preventDefault();
@@ -140,7 +140,7 @@ const ChooseExternalSongModal: React.FC<Props> = ({
                 >
                   <ShowIcon icon={'Close'} stroke={'2'} />
                 </button> 
-                  <p className="mt-1 text-center max-w-[100px] truncate">{item.name}</p>
+                  <p className="mt-1 text-center truncate">{item.name}</p>
                  
               </div>
             ))}
