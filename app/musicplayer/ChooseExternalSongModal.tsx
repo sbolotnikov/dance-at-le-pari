@@ -2,7 +2,7 @@
 
 import AnimateModalLayout from '@/components/AnimateModalLayout';
 import ShowIcon from '@/components/svg/showIcon';
-import {   addDoc, collection, doc, getDocs,  } from 'firebase/firestore';
+import {   addDoc, collection, deleteDoc, doc, getDocs,  } from 'firebase/firestore';
 import { db } from '@/firebase';
 import React, { useState, useEffect } from 'react'; 
 import PlayerButtons from './PlayerButtons';
@@ -22,6 +22,7 @@ type Props = {
   onReturn: (songs: Song[]  ) => void;
   onPlay: (song: Song) => void;
   onClose:()=>void;
+  onLoad:(a:boolean)=>void
 }
 
 const ChooseExternalSongModal: React.FC<Props> = ({
@@ -31,7 +32,7 @@ const ChooseExternalSongModal: React.FC<Props> = ({
   onReturn,
   onClose,
     onPlay
-}) => {
+, onLoad}) => {
   const [displaySngs, setDisplaySngs] = useState<Song[] >([]);
   const [songLink, setSongLink] = useState('');
   const [link1, setLink1] = useState('');   
@@ -65,14 +66,32 @@ const ChooseExternalSongModal: React.FC<Props> = ({
     setDance(null);
   };
 
-  const handleDeletePicture = (index: number) => {
-    const newPictures = [...displaySngs];
-    newPictures.splice(index, 1);
-    setDisplaySngs(newPictures);
+  const handleDeletePicture = async(index: number) => {
+    onLoad(true)
+    const newSongs = [...displaySngs];
+    await deleteDoc(doc(db, 'songs', displaySngs[index].id!));
+    newSongs.splice(index, 1);
+    setDisplaySngs(newSongs);
+    onLoad(false)
   };
   const handleSongAdd = async({ name, url, dance, rate }:{name: string, url: string, dance: string, rate:number} ) => {
+    onLoad(true)
     const songsSnapshot = await addDoc(songsCollection, { name, url, dance, rate });
     const newSong = { ...{ name, url, dance, rate }, id: songsSnapshot.id } as Song;
+    setDisplaySngs([...displaySngs, newSong]);
+    setLink1('');
+    setSongName('');
+    setSongLink('');
+    const songLinkElement = document.getElementById('songLink') as HTMLInputElement | null;
+    if (songLinkElement) {
+      songLinkElement.value = '';
+    }
+    const danceSelectElement = document.getElementById('danceSelect') as HTMLSelectElement | null;
+    if (danceSelectElement) {
+      danceSelectElement.value = '';
+    }
+    setDance(null);
+    onLoad(false)
     console.log(newSong);
   }
   const handleSongLinkChange = (text: string) => {
@@ -161,7 +180,7 @@ const ChooseExternalSongModal: React.FC<Props> = ({
           <input
             type="text"
             placeholder="Enter song link"
-             
+            id="songLink" 
             onChange={(e) =>{ 
                 e.preventDefault();
                 setLink1(e.target.value.split('/file/d/')[1]?.split('/')[0])
@@ -181,6 +200,7 @@ const ChooseExternalSongModal: React.FC<Props> = ({
                   
                 <select
                 className="w-full p-2 border border-gray-300 rounded mb-2"
+                id='danceSelect'
                 onChange={(e) => setDance(e.target.value)}
               >
                 {savedDances &&

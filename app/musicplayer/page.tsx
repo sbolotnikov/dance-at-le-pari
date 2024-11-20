@@ -14,6 +14,7 @@ import { useDimensions } from '@/hooks/useDimensions';
 import { useSession } from 'next-auth/react';
 import ListenSaveMp3Modal from './ListenSaveMp3Modal';
 import ChooseExternalSongModal from './ChooseExternalSongModal';
+import LoadingScreen from '@/components/LoadingScreen';
 
 interface MusicPlayerProps {
   rateSet: number;
@@ -1141,7 +1142,7 @@ const page: FC<pageProps> = ({}) => {
 
 
 
-
+  const [loading, setLoading] = useState(false);
   const [autoPlayIndex, setAutoPlayIndex] = useState(0);
   const [webSongs, setWebSongs] = useState<Song[] >([]);
   const [webSongsAll, setWebSongsAll] = useState<Song[] >([]);
@@ -1320,6 +1321,7 @@ const page: FC<pageProps> = ({}) => {
             onClose={() => setIsChooseSongWebModal(false)}
             onPlay={(song:Song)=>{setPlaylist([...playlist, song])}}
             onReturn={(songs) => {console.log(songs)}}
+            onLoad={(a)=>setLoading(a)}
   />)}
       {isChooseMusicOpen && (
         <ChooseMusicModal
@@ -1354,6 +1356,7 @@ const page: FC<pageProps> = ({}) => {
           onReturn={() => setIsPlaylistOpen(false)}
         />
       )}
+      {loading && <LoadingScreen />}
       <div className="blurFilter border-0 rounded-md p-2 shadow-2xl w-[95%] max-w-[450px] h-[85%] overflow-y-auto md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70">
         <div className="w-full h-full flex flex-col justify-center items-center border rounded-md border-lightMainColor dark:border-darkMainColor relative p-2 overflow-x-auto">
           {/* <div className="container mx-auto p-4"> */}
