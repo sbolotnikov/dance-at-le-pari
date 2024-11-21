@@ -335,7 +335,7 @@ const page: FC<pageProps> = ({}) => {
                     sourceId: token.token,
                     currency: 'USD',
                     items: items,
-                    userID: session?.user.id? session?.user.id:id,
+                    userID: (session?.user.id!==undefined)? session?.user.id:id,
                     amount: items.reduce(function (acc, item) {
                       return acc + item.price;
                     }, 0),
@@ -358,7 +358,24 @@ const page: FC<pageProps> = ({}) => {
                 setGuestCheckout(true)
                 }}>To check out as a guest click here</p>
             </div>}
-             {/* {session?.user.role=='Admin'&&<button className="bg-franceBlue hover:bg-franceBlueHover text-white font-bold py-2 px-4 rounded-full" onClick={() =>{ setVisibleModal(true); setTransactionID('ciedodx1')}}>try</button>} */}
+             {session?.user.role=='Admin'&&
+             <button className="bg-franceBlue hover:bg-franceBlueHover text-white font-bold py-2 px-4 rounded-full" onClick={async() =>{ 
+             
+             const resp = await fetch('/api/create_user', {
+              method: 'POST',
+              headers: {
+                'Content-type': 'application/json',
+              },
+              body: JSON.stringify({
+                email, telephone:phone, name 
+              }),
+            });
+            const ids = await resp.json();
+            console.log(ids)
+            //  setVisibleModal(true); 
+            //   setTransactionID('ciedodx1')
+              }}>try</button>
+               }
             <div className="m-2">{'  '}</div>
           </div>
         </div>
