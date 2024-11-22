@@ -138,6 +138,7 @@ const page: React.FC<Props> = () => {
     'lightning',
     'hydrangea',
     'fred',
+    'christmasBall'
   ];
   const reverseColor = (str: string) => {
     console.log(str);
