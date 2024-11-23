@@ -14,6 +14,7 @@ import ImgFromDb from '@/components/ImgFromDb';
 import FrameOnFire from '@/components/FrameOnFire';
 import FrameRunnerEffect from '@/components/FrameRunnerEffect';
 import AnimatedTextMessage from '@/components/AnimatedTextMessage';
+import FrameGlow from '@/components/FrameGlow';
 
 type Props = {
   videoUri: { link: string; name: string };
@@ -698,6 +699,11 @@ const ShowPlayingModal: React.FC<Props> = ({
             {frameStyle === 'Fire frame' && (
               <FrameOnFire
                 className={'w-[90%] h-full flex justify-center items-center'}
+              />
+            )}
+            {frameStyle === 'Glow frame' && (
+              <FrameGlow
+                className={'w-[99%] h-full flex justify-center items-center'}
               />
             )}
             {frameStyle === 'Running frame' && (

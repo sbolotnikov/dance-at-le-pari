@@ -808,7 +808,7 @@ const page: React.FC<Props> = () => {
                             }
                             className="w-28 h-9 bg-white rounded-lg border border-[#776548] text-[#444] text-left"
                           >
-                            {['No frame', 'Fire frame', 'Running frame'].map(
+                            {['No frame', 'Fire frame', 'Running frame','Glow frame'].map(
                               (option) => (
                                 <option key={option} value={option}>
                                   {option}
