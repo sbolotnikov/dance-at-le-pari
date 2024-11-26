@@ -15,6 +15,7 @@ import FrameOnFire from '@/components/FrameOnFire';
 import FrameRunnerEffect from '@/components/FrameRunnerEffect';
 import AnimatedTextMessage from '@/components/AnimatedTextMessage';
 import FrameGlow from '@/components/FrameGlow';
+import TablePage from './TablePage';
 
 type Props = {
   videoUri: { link: string; name: string };
@@ -194,8 +195,7 @@ const ShowPlayingModal: React.FC<Props> = ({
       setVideoArrAutoMode([]);
     }
   }, [message, mode, displayedPictures, displayedVideos]);
-console.log( tablePages,
-  tableChoice)
+
   useEffect(() => {
     const timerInterval = setInterval(() => {
       const now = new Date();
@@ -609,7 +609,7 @@ console.log( tablePages,
               ></div>
             </div>
           )}
-
+          {showTable && (<TablePage tablePages={tablePages} tableChoice={tableChoice} fontSize={fontSize} fontSize2={fontSize2} fontName={fontName} textColor={textColor}/>)}
           {showSVGAnimation1 && (
             <div className="absolute inset-0 flex justify-center items-center">
               {windowSize.width! > 0 && windowSize.height! > 0 && (
