@@ -26,6 +26,9 @@ interface PartyContextType {
   compLogo: { link: string; name: string };
   titleBarHider: boolean;
   showUrgentMessage: boolean;
+  showTable:boolean;
+  tablePages:{name:string, tableRows:string[], rowsChecked:boolean[]}[];
+  tableChoice:number;
   showHeatNumber: boolean;
   showSVGAnimation: boolean;
   showBackdrop: boolean;
@@ -68,6 +71,9 @@ interface ReturnPartyContextType {
   compLogo: { link: string; name: string };
   titleBarHider: boolean;
   showUrgentMessage: boolean;
+  showTable: boolean;
+  tablePages:{name:string, tableRows:string[], rowsChecked:boolean[]}[]
+  tableChoice:number;
   showHeatNumber: boolean;
   showBackdrop: boolean;
   showSVGAnimation: boolean;
@@ -111,6 +117,9 @@ export default function usePartySettings(): ReturnPartyContextType {
     compLogo:{link:"",name:""},
     titleBarHider:false,
     showUrgentMessage:false,
+    showTable:false,
+    tablePages:[{name:"", tableRows:[""], rowsChecked:[false]}],
+    tableChoice:0,
     showHeatNumber:false,
     showSVGAnimation:false,
     showBackdrop:false,

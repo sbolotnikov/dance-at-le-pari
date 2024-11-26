@@ -22,7 +22,8 @@ import { useSession } from 'next-auth/react';
 import ChoosePartyModal from '@/components/ChoosePartyModal';
 import AlertMenu from '@/components/alertMenu';
 import ChoosePicture from '@/components/ChoosePicture';
-import ImgFromDb from '@/components/ImgFromDb';
+import ImgFromDb from '@/components/ImgFromDb';  
+import PageTableSettings from './PageTableSettings';
 
 type Props = {
   // Add any props if needed
@@ -96,6 +97,9 @@ const page: React.FC<Props> = () => {
     compLogo,
     titleBarHider,
     showUrgentMessage,
+    showTable,
+    tablePages,
+    tableChoice,
     showHeatNumber,
     savedMessages,
     textColor,
@@ -321,6 +325,9 @@ const page: React.FC<Props> = () => {
           compLogo={compLogo}
           titleBarHider={titleBarHider}
           showUrgentMessage={showUrgentMessage}
+          showTable={showTable}
+          tablePages={tablePages}
+          tableChoice={tableChoice}
           showBackdrop={showBackdrop}
           showHeatNumber={showHeatNumber}
           textColor={textColor}
@@ -742,6 +749,23 @@ const page: React.FC<Props> = () => {
                       />
                       <p className="ml-2">Show Urgent Message</p>
                     </div>
+                    <div className="flex flex-row mb-2.5 mt-2.5">
+                      <input
+                        type="checkbox"
+                        checked={showTable}
+                        onChange={(e) =>
+                          handleChange(e.target.checked, 'showTable')
+                        }
+                        className="self-center"
+                      />
+                      <p className="ml-2">Show Table</p>
+                       
+                    </div>
+                    <select value={tableChoice} onChange={(e)=>{handleChange(parseInt(e.target.value),'tableChoice')}} className="w-60 bg-white rounded-lg border border-[#776548] text-[#444] text-left">
+                        {tablePages && tablePages.map((option, i)=>(<option value={i}>{option.name}</option>))}
+                      </select> 
+                    <PageTableSettings tablePages={tablePages} onTablePageChange={(newValue)=>{ handleChange(newValue, 'tablePages')}}/>
+                     
                     <div className="flex flex-row mb-2.5 mt-2.5">
                       <input
                         type="checkbox"

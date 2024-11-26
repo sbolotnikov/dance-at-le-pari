@@ -39,6 +39,9 @@ type Props = {
   message: string;
   titleBarHider: boolean;
   showUrgentMessage: boolean;
+  showTable: boolean;
+  tablePages:{name:string, tableRows:string[], rowsChecked:boolean[]}[];
+  tableChoice:number;
   showHeatNumber: boolean;
   textColor: string;
   animationSpeed: number;
@@ -79,6 +82,9 @@ const ShowPlayingModal: React.FC<Props> = ({
   message2,
   titleBarHider,
   showUrgentMessage,
+  showTable,
+  tablePages,
+  tableChoice,
   showHeatNumber,
   showBackdrop,
   textColor,
@@ -188,7 +194,8 @@ const ShowPlayingModal: React.FC<Props> = ({
       setVideoArrAutoMode([]);
     }
   }, [message, mode, displayedPictures, displayedVideos]);
-
+console.log( tablePages,
+  tableChoice)
   useEffect(() => {
     const timerInterval = setInterval(() => {
       const now = new Date();

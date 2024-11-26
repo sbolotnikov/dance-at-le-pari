@@ -338,15 +338,7 @@ const FullDayScheduleView = ({
           }
         } else {
           if (item.id > 0) {
-            console.log({
-              tag: item.tag,
-              eventtype: item.eventtype,
-              length: item.length,
-              teachersid: item.teachersid,
-              studentid: item.studentid,
-              location: item.location,
-              date: selectedTime,
-            })
+             
             const res1 = await fetch('/api/teacher/schedule_event/create', {
               method: 'POST',
               headers: {
@@ -362,8 +354,7 @@ const FullDayScheduleView = ({
                 date: selectedTime,
               }]),
             });
-            
-            console.log(res1)
+             
             window.location.reload();
           }
         }

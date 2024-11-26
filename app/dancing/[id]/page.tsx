@@ -247,7 +247,7 @@ export default function Page({ params }: { params: { id: string } }) {
               <ShowIcon icon={'Activities'} stroke={'0.1'} />
             </div>
             <div className="w-full  flex justify-center items-center">
-              <h2 className="text-center font-semibold md:text-lg italic">
+              <h2 className="text-center text-yellow-600 font-bold text-lg md:text-3xl italic">
                 All online payments include credit card fees
               </h2>
               <button
