@@ -4,7 +4,8 @@ type Props = {
     className: string;
 }
 const FrameRunnerEffect: React.FC<Props> = ({className}) => {
-    let colors=['#fd0909','#faf601', '#faf601','#fd0909','#faf601','#faf601', ]
+    let colors=["#183657","#A7C9E7","#C8F1F6","#183657","#A7C9E7","#C8F1F6" ]
+    // '#fd0909','#faf601', '#faf601','#fd0909','#faf601','#faf601',
     let gradient=`conic-gradient(
               from var(--gradient-angle),
               ${colors.join(',')}

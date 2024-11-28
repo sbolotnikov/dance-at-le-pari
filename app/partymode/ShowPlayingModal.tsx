@@ -212,8 +212,9 @@ const ShowPlayingModal: React.FC<Props> = ({
   }, [vis, refreshVar]);
 
   const gradientStyle = {
-    background: 'linear-gradient(135deg, white, red, blue, red, white)',
+    background: "conic-gradient(at 40% 20%,#183657,#A7C9E7,#C8F1F6,#183657,#A7C9E7,#C8F1F6,#183657,#A7C9E7,#C8F1F6)",
   };
+  // white, red, blue, red, white
   useEffect(() => {
     const svg = svgRef.current;
 
@@ -646,7 +647,7 @@ const ShowPlayingModal: React.FC<Props> = ({
                   delay={0}
                   height={fontSize * 2 + 'px'}
                   name={fontName}
-                  width={'100%'}
+                  width={'90%'}
                   stroke={1}
                   color={textColor}
                   cutdelay={false}
@@ -661,7 +662,7 @@ const ShowPlayingModal: React.FC<Props> = ({
                   delay={3}
                   height={fontSize2 * 2 + 'px'}
                   name={'Lato'}
-                  width={'100%'}
+                  width={'98%'}
                   stroke={1}
                   color={textColor}
                   cutdelay={false}
@@ -715,7 +716,7 @@ const ShowPlayingModal: React.FC<Props> = ({
             )}
             {frameStyle === 'Running frame' && (
               <FrameRunnerEffect
-                className={'w-[90%] h-full flex justify-center items-center'}
+                className={'w-[100%] h-full flex justify-center items-center'}
               />
             )}
             {frameStyle === 'No frame' && (

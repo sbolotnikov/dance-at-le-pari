@@ -52,8 +52,8 @@ const TablePage = ({
       } while (i < rowsChecked.length);
 
       setRowsChecked(tablePages[tableChoice].rowsChecked);
-    }}
-  }, [tablePages[tableChoice].tableRows, tablePages[tableChoice].rowsChecked]);
+    }} 
+  }, [tablePages[tableChoice].tableRows, tablePages[tableChoice].rowsChecked,tableChoice]);
   useEffect(() => {
     if (choosenRow !== -1) {
         setTimeout(() => {
@@ -88,9 +88,10 @@ const TablePage = ({
             return (
               <div
                 key={`row${index}`}
-                className={`blurFilter p-1 m-1 max-w-1/2   rounded-md  border-0 shadow-xl transition duration-[800] delay-[${delayShow}ms] ease-in-out opacity-${
+                className={`blurFilter p-1 mx-5 my-3 max-w-1/2   rounded-md  border-0 shadow-xl transition duration-[800] ease-in-out opacity-${
                   rowsChecked[index] ? 100 : 0
                 }`}
+                style={{transitionDelay: `${delayShow}ms`}}
               >
                 <p className="text-shadow" style={{ fontSize:rowsText.length>5?fontSize2*0.857:fontSize2, color: textColor }}>
                   {rowText}
