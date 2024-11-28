@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import AnimatedTextMessage from '@/components/AnimatedTextMessage';
 type Props = {
   tablePages: { name: string; tableRows: string[]; rowsChecked: boolean[] }[];
   tableChoice: number;
@@ -24,8 +25,17 @@ const TablePage = ({
   const [rowsChecked, setRowsChecked] = useState<boolean[]>(
     tablePages[tableChoice].rowsChecked
   );
+  const [currentPage, setCurrentPage] = useState<number>(tableChoice);
   const [choosenRow, setChoosenRow] = useState<number>(-1);
+  const [delayShow, setDelayShow] = useState<number>(0);
   useEffect(() => {
+    if (currentPage !== tableChoice) {
+      setDelayShow(0);  
+      setRowsText(tablePages[tableChoice].tableRows);
+      setRowsChecked(tablePages[tableChoice].rowsChecked);
+      setCurrentPage(tableChoice);
+    } else{
+    setDelayShow(8000);    
     if (tablePages[tableChoice].tableRows !== rowsText) {
       setRowsText(tablePages[tableChoice].tableRows);
     }
@@ -34,7 +44,7 @@ const TablePage = ({
       do {
         if (
           tablePages[tableChoice].rowsChecked[i] !== rowsChecked[i] &&
-          rowsChecked[i] == false
+          rowsChecked[i] == false 
         ) {
           setChoosenRow(i);
         }
@@ -42,36 +52,47 @@ const TablePage = ({
       } while (i < rowsChecked.length);
 
       setRowsChecked(tablePages[tableChoice].rowsChecked);
-    }
+    }}
   }, [tablePages[tableChoice].tableRows, tablePages[tableChoice].rowsChecked]);
   useEffect(() => {
     if (choosenRow !== -1) {
         setTimeout(() => {
             setChoosenRow(-1);
-        }, 5000);
+        }, 9000);
     }
   }, [choosenRow]);
   return (
     <AnimatePresence >
     <div className="w-full h-full  inset-0 absolute ">
-      <div className="w-full h-full flex flex-col justify-center items-start relative">
-        <h2
-          className={`w-full blurFilter h-1/6 text-center mt-5 font-${fontName}`}
-          style={{ fontSize: fontSize, color: textColor }}
+      <div className="w-full h-full flex flex-col justify-center items-center relative">
+        <div
+          className={`w-11/12 blurFilter h-1/6 mt-5 flex justify-centeritems-center border-0 shadow-xl`} 
         >
-          {tablePages[tableChoice].name}
-        </h2>
-        <div className="w-full h-5/6 flex flex-wrap flex-col justify-center items-start p-10">
+            <AnimatedTextMessage
+                  text={tablePages[tableChoice].name}
+                  duration={4}
+                  delay={0}
+                  height={fontSize*1.8 + 'px'}
+                  name={fontName}
+                  width={'100%'}
+                  stroke={1}
+                  color={textColor}
+                  cutdelay={false}
+                  rotate={false}
+                />
+        </div>
+        <div className={`w-full h-5/6 flex flex-wrap flex-col justify-center ${rowsText.length>5?'items-start':'items-center '}`}
+        
+        >
           {rowsText.map((rowText, index) => {
             return (
               <div
                 key={`row${index}`}
-                className={`blurFilter p-1 m-1 max-w-1/2   rounded-md  border border-[${textColor}] transition duration-[600] delay-[3500ms] ease-in-out opacity-${
+                className={`blurFilter p-1 m-1 max-w-1/2   rounded-md  border-0 shadow-xl transition duration-[800] delay-[${delayShow}ms] ease-in-out opacity-${
                   rowsChecked[index] ? 100 : 0
                 }`}
               >
-                <p style={{ fontSize: fontSize2, color: textColor }}>
-                  {index + 1 + '. '}
+                <p className="text-shadow" style={{ fontSize:rowsText.length>5?fontSize2*0.857:fontSize2, color: textColor }}>
                   {rowText}
                 </p>
               </div>
@@ -86,12 +107,12 @@ const TablePage = ({
               initial={{ opacity: 0, x: -600 }}
               transition={{
                 ease: 'easeOut',
-                duration: 4,
-                times: [0, 0.2, 0.5, 0.8, 1],
+                duration: 9,
+                times: [0,0.1, 0.2,0.3, 0.4,0.5,0.6,0.8,0.9, 1],
               }}
               animate={{
                 opacity: [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-                rotateX: ['90deg', '89deg', '89deg', '0deg', '0deg', '0deg', '0deg', '89deg', '89deg', '90deg'],
+                rotateX: ['90deg', '89deg', '0deg', '0deg', '0deg', '0deg', '0deg', '0deg', '89deg', '90deg'],
                 x: ['-100vw', '0vw', '0vw', '0vw', '0vw', '0vw', '0vw', '0vw', '0vw', '-100vw'],
               }}
               exit={{
@@ -99,10 +120,20 @@ const TablePage = ({
                 rotateX: ['0deg', '0deg', '89deg', '89deg', '90deg'],
                 x: ['0vw', '0vw', '0vw', '0vw', '-100vw'],
               }}
-               className={`w-fit blurFilter p-1 m-1 rounded-md  border border-[${textColor}] text-center`}
+               className={`w-[1000px] blurFilter p-1 m-1 rounded-md flex justify-center items-center border border-[${textColor}] `}
             >
-              {choosenRow + 1 + '. '}
-              {rowsText[choosenRow]}
+                {rowsText[choosenRow] &&<AnimatedTextMessage
+                  text={rowsText[choosenRow]}
+                  duration={4}
+                  delay={1}
+                  height={fontSize * 2 + 'px'}
+                  name={fontName}
+                  width={'100%'}
+                  stroke={1}
+                  color={textColor}
+                  cutdelay={false}
+                  rotate={false}
+                />} 
             </motion.div> 
             </div>
         )}
