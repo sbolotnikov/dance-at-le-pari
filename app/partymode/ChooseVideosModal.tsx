@@ -104,6 +104,13 @@ const ChooseVideosModal: React.FC<ChooseVideosModalProps> = ({
                         src={item.image}
                         alt={item.name}
                         className="h-16 w-16 md:h-20 md:w-20 bg-gray-300 p-2 rounded-sm"
+                        onClick={() => {
+                          setVideoLinkType('Regular link');
+                          setVideoLink(item.link);
+                          setVideoText(item.name);
+                          setVideoThumbnailLink(item.image);
+                          setVideoDances(item.dances || []);
+                        }}                       
                       />
 
                       <button

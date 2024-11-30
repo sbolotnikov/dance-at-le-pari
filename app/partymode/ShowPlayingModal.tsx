@@ -601,16 +601,16 @@ const ShowPlayingModal: React.FC<Props> = ({
                 bottom: `${fontSizeTime * 0.8}px`,
               }}
             >
-              <div
+              {!showTable &&<div
                 className="h-full w-auto my-auto z-10 bg-center bg-no-repeat bg-contain"
                 style={{
                   backgroundImage: `url(${compLogo.link})`,
                   boxShadow: '0 30px 40px rgba(0,0,0,.1)',
                 }}
-              ></div>
+              ></div>}
             </div>
           )}
-          {showTable && (<TablePage tablePages={tablePages} tableChoice={tableChoice} fontSize={fontSize} fontSize2={fontSize2} fontName={fontName} textColor={textColor}/>)}
+          {showTable && (<TablePage tablePages={tablePages} tableChoice={tableChoice} fontSize={fontSize} fontSize2={fontSize2} picture1={compLogo.link} fontName={fontName} textColor={textColor}/>)}
           {showSVGAnimation1 && (
             <div className="absolute inset-0 flex justify-center items-center">
               {windowSize.width! > 0 && windowSize.height! > 0 && (

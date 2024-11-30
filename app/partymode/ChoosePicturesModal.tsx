@@ -100,6 +100,12 @@ const ChoosePicturesModal: React.FC<Props> = ({
                   src={ item.link} 
                   alt={galleryType === 'auto' ? `Picture ${i}` : item.name}
                   className="h-16 w-16 bg-gray-300 p-1 rounded-sm"
+                  onClick={()=>{
+                    setPictureLinkType('Regular link');
+                    setPictureLink(item.link);
+                    setPictureText(item.name);
+                    setPictureDances(item.dances || []);
+                  }}
                 />
                 <button 
                   onClick={() => handleDeletePicture(i)}

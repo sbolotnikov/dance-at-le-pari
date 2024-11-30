@@ -9,6 +9,7 @@ type Props = {
   fontSize2: number;
   textColor: string;
   fontName: string;
+  picture1: string;
 };
 
 const TablePage = ({
@@ -18,6 +19,7 @@ const TablePage = ({
   fontSize2,
   textColor,
   fontName,
+  picture1
 }: Props) => {
   const [rowsText, setRowsText] = useState<string[]>(
     tablePages[tableChoice].tableRows
@@ -66,7 +68,7 @@ const TablePage = ({
     <div className="w-full h-full  inset-0 absolute ">
       <div className="w-full h-full flex flex-col justify-center items-center relative">
         <div
-          className={`w-11/12 blurFilter h-1/6 mt-5 flex justify-centeritems-center border-0 shadow-xl`} 
+          className={`w-[97%] blurFilter h-1/6 mt-5 flex justify-centeritems-center border-0 shadow-xl relative`} 
         >
             <AnimatedTextMessage
                   text={tablePages[tableChoice].name}
@@ -78,22 +80,24 @@ const TablePage = ({
                   stroke={1}
                   color={textColor}
                   cutdelay={false}
-                  rotate={false}
+                  rotate={true}
                 />
+            <img src={picture1} className="h-[95%] w-auto absolute top-4 left-0" alt="Company Logo" />    
+                 
         </div>
-        <div className={`w-full h-5/6 flex flex-wrap flex-col justify-center ${rowsText.length>5?'items-start':'items-center '}`}
+        <div className={`w-full h-5/6 flex flex-wrap flex-col justify-center ${rowsText.length>6?'items-start':'items-center '}`}
         
         >
           {rowsText.map((rowText, index) => {
             return (
               <div
                 key={`row${index}`}
-                className={`blurFilter p-1 mx-5 my-3 max-w-1/2   rounded-md  border-0 shadow-xl transition duration-[800] ease-in-out opacity-${
+                className={`blurFilter mx-5 my-1 max-w-1/2   rounded-md  border-0 shadow-xl transition duration-[800] ease-in-out opacity-${
                   rowsChecked[index] ? 100 : 0
                 }`}
                 style={{transitionDelay: `${delayShow}ms`}}
               >
-                <p className="text-shadow" style={{ fontSize:rowsText.length>5?fontSize2*0.857:fontSize2, color: textColor }}>
+                <p className="text-shadow" style={{ fontSize:rowsText.length>6?fontSize2*0.9:fontSize2, color: textColor }}>
                   {rowText}
                 </p>
               </div>
