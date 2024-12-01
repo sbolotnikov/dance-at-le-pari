@@ -676,7 +676,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
 
 
-                          console.log(consolidator);
+                          // console.log(consolidator);
                         })
                         .catch((error) => {
                           console.log(error);
