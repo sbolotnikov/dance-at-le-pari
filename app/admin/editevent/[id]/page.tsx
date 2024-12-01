@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react';
 import ChooseTeacher from '@/components/ChooseTeacher';
 import { TTeacherInfo } from '@/types/screen-settings';
 import { useRouter } from 'next/navigation';
+import * as XLSX from 'xlsx';
 
 export default function Page({ params }: { params: { id: string } }) {
   const [eventData, setEventData] = useState<TFullEvent>();
@@ -600,7 +601,101 @@ export default function Page({ params }: { params: { id: string } }) {
                 {'Submit'}
               </button>
             </form>
+            {eventData?.tables != null && eventData?.tables != undefined && (
 
+<div className="group flex  cursor-pointer  flex-col items-center ">
+                <div className="  h-6 w-6 md:h-10 md:w-10 relative hover:scale-110 group-hover:animate-bounce fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor ">
+                  <div
+                    className="cursor-pointer h-6 w-6 md:h-10 md:w-10 border-2 rounded-md   m-auto "
+                    onClick={(e) => {
+                      e.preventDefault(); 
+                      let arr: string[] = []  
+                      fetch('/api/event_tickets/get', {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                          id: params.id,
+                        }),
+                      })
+                        .then((response) => response.json())
+                        .then((data) => {
+                          // onReturn('Loading', 'Finish');
+                          if (eventData?.tables != null)
+                            for (let i = 0; i < eventData?.tables.length; i++) {
+                              for (let j = 0; j < eventData?.tables[i]; j++) {
+                                if (j == 0) arr[i] = 'Open';
+                                else arr[i] = arr[i] + ',' + 'Open';
+                              }
+                            }
+                          console.log(arr);
+                          let count = [];
+                          if (arr.length > 0)
+                            for (let i = 0; i < data.length; i++) {
+                              let arr2 = arr[data[i].table].split(',');
+                              data[i].personNote != null && data[i].personNote != ''
+                                ? (arr2[data[i].seat] = data[i].personNote)
+                                : (arr2[data[i].seat] = data[i].name);
+                              if (((data[i].personNote == null)||(data[i].personNote == "")) && data[i].name == null) (arr2[data[i].seat] = 'Unknown purchaser');
+                              arr[data[i].table] = arr2.toString();
+                            }
+                  
+                          console.log(arr);   
+                          // let consolidator=[]
+                          let obj1  = []
+                          for (let i=0; i<arr.length; i++){
+                            // consolidator.push({"Table":i < 12 ? i + 1 : i + 2})
+                            
+                            // obj1.push({"Table":i < 12 ? i + 1 : i + 2})
+                            let key1='';
+                            for (let j=0; j<arr[i].split(',').length; j++){
+                              
+                              obj1.push({Table:i < 12 ? i + 1 : i + 2,seat:String(j+1),name:arr[i].split(',')[j]})
+                            }
+                            // consolidator.push(obj1)
+                          } 
+                          
+                          
+                          let wb = XLSX.utils.book_new();
+                          
+                           
+                            
+                            let ws = XLSX.utils.json_to_sheet(obj1);
+                            XLSX.utils.book_append_sheet(wb, ws, 'Seating table');
+                             
+                            XLSX.writeFile(
+                              wb,
+                              `seating map.xlsx`
+                            );
+                        
+
+
+
+
+
+
+
+                          console.log(consolidator);
+                        })
+                        .catch((error) => {
+                          console.log(error);
+                        });             
+                      // setRevealModal1(true);
+                    }}
+                  >
+                    <ShowIcon icon={'Summary'} stroke={'0.05'} />
+                  </div>
+                </div>
+                <p className=" tracking-widest mx-3 text-lightMainColor rounded-md text-center text-[6px] md:text-base md:dark:bg-lightMainBG      ">
+                  Download
+                </p>
+              </div>
+
+
+
+
+            )}
             <EditTablesForEvent
               tables={eventData?.tables}
               onReturn={(str1, n) => {
