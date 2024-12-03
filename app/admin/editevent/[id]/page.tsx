@@ -97,8 +97,7 @@ export default function Page({ params }: { params: { id: string } }) {
       if (eventDataCopy?.tables && eventDataCopy?.tables != undefined) {
         if (eventDataCopy.tables[tableIndex] < parseInt(val2 ? val2 : '0')) {
           eventDataCopy.tables[tableIndex] = parseInt(val2 ? val2 : '0');
-          fixTables(eventDataCopy?.tables);
-          // console.log(tableIndex, val2, 'new table size', eventDataCopy?.tables);
+          fixTables(eventDataCopy?.tables); 
         } else {
           console.log('update less seats');
           setLoading(true);
@@ -272,8 +271,7 @@ export default function Page({ params }: { params: { id: string } }) {
         });
         setLength(data.length);
         setTitle(data.title);
-        setTag(data.tag);
-        // setVisible(data.visible);
+        setTag(data.tag); 
         setSpecialEvent(data.specialEvent);
         setEventDateTime(data.date);
         console.log(data);
@@ -552,19 +550,6 @@ export default function Page({ params }: { params: { id: string } }) {
                   required
                 />
               </label>
-              {/* <label className="flex flex-row justify-between items-center mb-1">
-              Service Visibility
-              <input
-                className=" outline-none border-none rounded-md  text-lightMainColor p-0.5 mx-1"
-                id="visible"
-                name="visible"
-                type="checkbox"
-                checked={visible}
-                onChange={(e) => {
-                  setVisible(!visible);
-                }}
-              />
-            </label> */}
               <label className="flex flex-row justify-between items-center mb-1">
                 Special Event Status
                 <input
@@ -621,7 +606,6 @@ export default function Page({ params }: { params: { id: string } }) {
                       })
                         .then((response) => response.json())
                         .then((data) => {
-                          // onReturn('Loading', 'Finish');
                           if (eventData?.tables != null)
                             for (let i = 0; i < eventData?.tables.length; i++) {
                               for (let j = 0; j < eventData?.tables[i]; j++) {
@@ -629,7 +613,6 @@ export default function Page({ params }: { params: { id: string } }) {
                                 else arr[i] = arr[i] + ',' + 'Open';
                               }
                             }
-                          console.log(arr);
                           let count = [];
                           if (arr.length > 0)
                             for (let i = 0; i < data.length; i++) {
@@ -640,27 +623,14 @@ export default function Page({ params }: { params: { id: string } }) {
                               if (((data[i].personNote == null)||(data[i].personNote == "")) && data[i].name == null) (arr2[data[i].seat] = 'Unknown purchaser');
                               arr[data[i].table] = arr2.toString();
                             }
-                  
-                          console.log(arr);   
-                          // let consolidator=[]
                           let obj1  = []
                           for (let i=0; i<arr.length; i++){
-                            // consolidator.push({"Table":i < 12 ? i + 1 : i + 2})
-                            
-                            // obj1.push({"Table":i < 12 ? i + 1 : i + 2})
                             let key1='';
-                            for (let j=0; j<arr[i].split(',').length; j++){
-                              
+                            for (let j=0; j<arr[i].split(',').length; j++){                              
                               obj1.push({Table:i < 12 ? i + 1 : i + 2,seat:String(j+1),name:arr[i].split(',')[j]})
                             }
-                            // consolidator.push(obj1)
-                          } 
-                          
-                          
-                          let wb = XLSX.utils.book_new();
-                          
-                           
-                            
+                          }                       
+                          let wb = XLSX.utils.book_new(); 
                             let ws = XLSX.utils.json_to_sheet(obj1);
                             XLSX.utils.book_append_sheet(wb, ws, 'Seating table');
                              
@@ -668,20 +638,10 @@ export default function Page({ params }: { params: { id: string } }) {
                               wb,
                               `seating map.xlsx`
                             );
-                        
-
-
-
-
-
-
-
-                          // console.log(consolidator);
                         })
                         .catch((error) => {
                           console.log(error);
                         });             
-                      // setRevealModal1(true);
                     }}
                   >
                     <ShowIcon icon={'Summary'} stroke={'0.05'} />

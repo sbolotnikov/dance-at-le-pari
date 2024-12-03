@@ -70,9 +70,7 @@ function page() {
         setUsers(data);
         setUsersDisplay(data);
       });
-    });
-    // setDimensions({ height: window.innerHeight, width: window.innerWidth });
-    // document.getElementById('userContainer')?.style({height:`[${window.innerHeight-100}px]`});
+    }); 
   }, []);
   const handleDelete = (id: number, name: string) => {
     console.log(id);

@@ -148,6 +148,7 @@ export default function Page({ params }: { params: { id: string } }) {
         console.log(data);
         if (data.length > 0 && tabsArray.indexOf('Special Events') == -1) {
           setTabsArray([...tabsArray, 'Special Events']);
+          console.log(data[0])
           setSpecialEvents(
             data.sort((a: any, b: any) => {
               if (a.price > b.price) return 1;
