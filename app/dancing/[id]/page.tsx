@@ -233,7 +233,7 @@ export default function Page({ params }: { params: { id: string } }) {
   };
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex flex-col items-center  justify-start">
-      <div className="w-full h-1/5 relative overflow-auto mt-1 md:mt-6  rounded-md">
+      {specialEvents[0] !== undefined ?<div className="w-full h-1/5 relative overflow-auto mt-1 md:mt-6  rounded-md">
         <div
           id="galleryContainer"
           className="h-full w-full relative overflow-hidden rounded-md flex flex-col"
@@ -244,7 +244,7 @@ export default function Page({ params }: { params: { id: string } }) {
            
           onClick={handleImageClick}
         >
-          {specialEvents[0] !== undefined &&
+          {
             windowSize.width! > 767 &&
             (typeof specialEvents[0].id === 'number' ? (
               <div className="h-full w-fit m-auto relative">
@@ -266,19 +266,21 @@ export default function Page({ params }: { params: { id: string } }) {
             ))}
           <div className={`w-full ${windowSize.width! > 767?'absolute bottom-0 right-0':'h-full flex justify-center items-center'}`}>  
           
-            {specialEvents[0] !== undefined &&specialEvents[0]!==null &&(typeof specialEvents[0].id === 'number')
-              ? <h2 className={`w-full text-center text-xs md:text-base ${windowSize.width! > 767 ? "":"flex flex-col justify-center items-center"} z-100 bg-lightMainBG/70 dark:bg-darkMainBG/70`}>
-                <span className={`${windowSize.width! > 767 ? "":"font-DancingScript text-2xl text-center max-w-[80%] text-red-600 animate-pulse text-shadow  dark:text-shadow-light"}`}>{specialEvents[0].tag!}</span> 
-                <span>{windowSize.width! > 767 ? ' Join us on ' : ''}</span> 
-                <span>{specialEvents[0].tag}</span>
+            {specialEvents[0] !== undefined &&specialEvents[0]!==null &&(typeof specialEvents[0].id === 'number') &&
+               <h2 className={`w-full text-center text-xs md:text-base ${windowSize.width! > 767 ? "":"flex flex-col justify-center items-center"} z-100 bg-lightMainBG/70 dark:bg-darkMainBG/70`}>
+                <span className={`${windowSize.width! > 767 ? "":"  text-2xl text-center max-w-[80%] text-red-600 animate-pulse"}`}>{specialEvents[0].tag!}</span>               
                 </h2>  
-              : <h2 className={`w-full text-center ${windowSize.width! > 767 ? "":"font-DancingScript text-red-600 animate-pulse text-shadow  dark:text-shadow-light"} text-2xl md:text-base  z-100 bg-lightMainBG/70 dark:bg-darkMainBG/70`}>{specialEvents[0].tag!}</h2>
-              }
+            }
           
           </div>
         </div>
         </div>
-      </div>
+      </div>:events != undefined && (
+          <BannerGallery
+            events={[...events]}
+            seconds={7}
+          />
+        )}
       <SharePostModal
         title={pageArray[tabIndex].title}
         url={process.env.NEXT_PUBLIC_URL + '/dancing/' + params.id}
