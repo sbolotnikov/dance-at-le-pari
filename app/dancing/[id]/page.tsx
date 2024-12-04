@@ -4,10 +4,13 @@ import { PageWrapper } from '@/components/page-wrapper';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { useSession } from 'next-auth/react';
 import PaymentPageForm from '@/components/PaymentPageForm';
-import { ScreenSettingsContextType, TPaymentType } from '@/types/screen-settings';
+import {
+  ScreenSettingsContextType,
+  TPaymentType,
+} from '@/types/screen-settings';
 import EventTemplateEditingForm from '@/components/EventTemplateEditingForm';
-import AlertMenu from '@/components/alertMenu'; 
-import  PDFDisplay  from "@/components/PDFDIsplay" ;
+import AlertMenu from '@/components/alertMenu';
+import PDFDisplay from '@/components/PDFDIsplay';
 import { useDispatch } from 'react-redux';
 import { addItem } from '../../../slices/cartSlice';
 import { useDimensions } from '@/hooks/useDimensions';
@@ -17,6 +20,8 @@ import { useRouter } from 'next/navigation';
 import SharePostModal from '@/components/SharePostModal';
 import BannerGallery from '@/components/BannerGallery';
 import { SettingsContext } from '@/hooks/useSettings';
+import ImgFromDb from '@/components/ImgFromDb';
+import Image from 'next/image';
 interface pageProps {}
 
 export default function Page({ params }: { params: { id: string } }) {
@@ -26,9 +31,7 @@ export default function Page({ params }: { params: { id: string } }) {
   const [revealSharingModal, setRevealSharingModal] = useState(false);
   const [products, setProducts] = useState<TPaymentType[]>([]);
   const [specialEvents, setSpecialEvents] = useState<TPaymentType[]>([]);
-  const { events } = useContext(
-    SettingsContext
-  ) as ScreenSettingsContextType;
+  const { events } = useContext(SettingsContext) as ScreenSettingsContextType;
   const [alertStyle, setAlertStyle] = useState({
     variantHead: '',
     heading: '',
@@ -58,16 +61,48 @@ export default function Page({ params }: { params: { id: string } }) {
     'parties',
     'special_events',
   ];
-  const pageArray = [{title:'Page: Private Lessons Packages | Activities | Dance at Le Pari Studio',description:'Private Dance Instructions Packages. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below. ', keywords: 'private lessons, lessons packages, dance lessons packages, wedding dance packages'},
-    { title: 'Page: Group Classes| Activities | Dance at Le Pari Studio', description: 'Group classes and group packages. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below.',keywords: 'group dance lessons, group classes packages, group lessons packages, group classes lessons'},
-    { title: 'Page: Floor Fees | Activities | Dance at Le Pari Studio', description:'Floor fees for outside dance instructors. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below. ', keywords:'floor fees, rent dance space, teach dance lessons, outside dance teachers'},
-    { title: 'Page: Parties or Socials | Activities | Dance at Le Pari Studio', description: 'Social Dancing Parties. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below.', keywords: 'dance party, socials, dance social events, ballroom social'},
-    { title: 'Page: Special Dance Socials | Activities | Dance at Le Pari Studio', description: 'Special Dance Events at Dance at Le Pari. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below.', keywords:'special dance events, dance parties, dance events, ballroom social'}
+  const pageArray = [
+    {
+      title:
+        'Page: Private Lessons Packages | Activities | Dance at Le Pari Studio',
+      description:
+        'Private Dance Instructions Packages. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below. ',
+      keywords:
+        'private lessons, lessons packages, dance lessons packages, wedding dance packages',
+    },
+    {
+      title: 'Page: Group Classes| Activities | Dance at Le Pari Studio',
+      description:
+        'Group classes and group packages. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below.',
+      keywords:
+        'group dance lessons, group classes packages, group lessons packages, group classes lessons',
+    },
+    {
+      title: 'Page: Floor Fees | Activities | Dance at Le Pari Studio',
+      description:
+        'Floor fees for outside dance instructors. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below. ',
+      keywords:
+        'floor fees, rent dance space, teach dance lessons, outside dance teachers',
+    },
+    {
+      title: 'Page: Parties or Socials | Activities | Dance at Le Pari Studio',
+      description:
+        'Social Dancing Parties. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below.',
+      keywords: 'dance party, socials, dance social events, ballroom social',
+    },
+    {
+      title:
+        'Page: Special Dance Socials | Activities | Dance at Le Pari Studio',
+      description:
+        'Special Dance Events at Dance at Le Pari. All studio activities may be paid online. Dance at Le Pari Privacy policy may be found in the link below.',
+      keywords:
+        'special dance events, dance parties, dance events, ballroom social',
+    },
   ];
-  console.log(params.id) 
+  console.log(params.id);
   const selectedTab = slugArray.indexOf(params.id);
   const tabIndex =
-    (selectedTab !== null && selectedTab >= 0 && selectedTab < 5)
+    selectedTab !== null && selectedTab >= 0 && selectedTab < 5
       ? selectedTab
       : 0;
   const actionTemplateChoice = (
@@ -148,7 +183,7 @@ export default function Page({ params }: { params: { id: string } }) {
         console.log(data);
         if (data.length > 0 && tabsArray.indexOf('Special Events') == -1) {
           setTabsArray([...tabsArray, 'Special Events']);
-          console.log(data[0])
+          console.log(data[0]);
           setSpecialEvents(
             data.sort((a: any, b: any) => {
               if (a.price > b.price) return 1;
@@ -190,24 +225,68 @@ export default function Page({ params }: { params: { id: string } }) {
         console.log(error);
       });
   }, [session?.user.role!]);
+  const handleImageClick = () => {
+    const eventId = specialEvents[0].id;
+    location.replace(
+      typeof eventId === 'number' ? `/events/${eventId}` : eventId || ''
+    );
+  };
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex flex-col items-center  justify-start">
       <div className="w-full h-1/5 relative overflow-auto mt-1 md:mt-6  rounded-md">
-        {events != undefined && (
-          <BannerGallery
-            events={[...events]}
-            seconds={7}
-          />
-        )}
+        <div
+          id="galleryContainer"
+          className="h-full w-full relative overflow-hidden rounded-md flex flex-col"
+          style={{ zIndex: 99 }}
+        >
+           <div 
+          className="h-full w-screen flex flex-row justify-start items-start absolute top-0 left-0 cursor-pointer"
+           
+          onClick={handleImageClick}
+        >
+          {specialEvents[0] !== undefined &&
+            windowSize.width! > 767 &&
+            (typeof specialEvents[0].id === 'number' ? (
+              <div className="h-full w-fit m-auto relative">
+                <ImgFromDb
+                  stylings="object-contain  h-full"
+                  url={specialEvents[0].image}
+                  alt={`Event Picture ${specialEvents[0].id}`}
+                />
+              </div>
+            ) : (
+              <div className="h-full w-full m-auto relative">
+                <Image
+                  src={specialEvents[0].image}
+                  alt={`Event Picture ${specialEvents[0].id}`}
+                  fill
+                  style={{ objectFit: 'contain' }}
+                />
+              </div>
+            ))}
+          <div className={`w-full ${windowSize.width! > 767?'absolute bottom-0 right-0':'h-full flex justify-center items-center'}`}>  
+          
+            {specialEvents[0] !== undefined &&specialEvents[0]!==null &&(typeof specialEvents[0].id === 'number')
+              ? <h2 className={`w-full text-center text-xs md:text-base ${windowSize.width! > 767 ? "":"flex flex-col justify-center items-center"} z-100 bg-lightMainBG/70 dark:bg-darkMainBG/70`}>
+                <span className={`${windowSize.width! > 767 ? "":"font-DancingScript text-2xl text-center max-w-[80%] text-red-600 animate-pulse text-shadow  dark:text-shadow-light"}`}>{specialEvents[0].tag!}</span> 
+                <span>{windowSize.width! > 767 ? ' Join us on ' : ''}</span> 
+                <span>{specialEvents[0].tag}</span>
+                </h2>  
+              : <h2 className={`w-full text-center ${windowSize.width! > 767 ? "":"font-DancingScript text-red-600 animate-pulse text-shadow  dark:text-shadow-light"} text-2xl md:text-base  z-100 bg-lightMainBG/70 dark:bg-darkMainBG/70`}>{specialEvents[0].tag!}</h2>
+              }
+          
+          </div>
+        </div>
+        </div>
       </div>
       <SharePostModal
         title={pageArray[tabIndex].title}
-        url={process.env.NEXT_PUBLIC_URL + '/dancing/'+params.id}
+        url={process.env.NEXT_PUBLIC_URL + '/dancing/' + params.id}
         quote={pageArray[tabIndex].description}
         hashtag={pageArray[tabIndex].keywords}
         onReturn={() => setRevealSharingModal(false)}
         visibility={revealSharingModal}
-      />    
+      />
       <AlertMenu
         visibility={revealAlert}
         onReturn={onReturn}
@@ -215,11 +294,11 @@ export default function Page({ params }: { params: { id: string } }) {
       />
       {revealPDF && (
         <PDFDisplay
-        onReturn={() => {
-          sleep(1200).then(() => {
-            setRevealPDF(false);
-          });
-        }} 
+          onReturn={() => {
+            sleep(1200).then(() => {
+              setRevealPDF(false);
+            });
+          }}
         />
       )}
       {revealTemplateEdit == true ? (
@@ -236,7 +315,9 @@ export default function Page({ params }: { params: { id: string } }) {
           <Tabs
             selectedIndex={tabIndex}
             className="w-full h-full flex flex-col border rounded-md relative border-lightMainColor dark:border-darkMainColor"
-            onSelect={(index: number) => router.push(`/dancing/${slugArray[index]}`)}
+            onSelect={(index: number) =>
+              router.push(`/dancing/${slugArray[index]}`)
+            }
           >
             <h2
               className="text-center font-semibold md:text-4xl uppercase"
@@ -310,7 +391,7 @@ export default function Page({ params }: { params: { id: string } }) {
                   }`}
                   style={{ flex: '1 1 100%' }}
                 >
-                  {  products.length > 0 && (
+                  {products.length > 0 && (
                     <PaymentPageForm
                       paymentsArray={products.filter(
                         (product) => product.eventtype == item
@@ -321,7 +402,7 @@ export default function Page({ params }: { params: { id: string } }) {
                         actionTemplateChoice(action1, item1, option);
                       }}
                     />
-                  ) }
+                  )}
                 </TabPanel>
               );
             })}
