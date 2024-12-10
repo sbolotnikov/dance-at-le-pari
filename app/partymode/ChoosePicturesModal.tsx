@@ -1,8 +1,7 @@
 'use client';
 
 import AnimateModalLayout from '@/components/AnimateModalLayout';
-import ShowIcon from '@/components/svg/showIcon';
-import Image from 'next/image';
+import ShowIcon from '@/components/svg/showIcon'; 
 import React, { useState, useEffect } from 'react'; 
 
 interface Picture {

@@ -36,21 +36,7 @@ const ChooseMessageModal: React.FC<Props> = ({
     setDisplayMessages(savedMessages.sort((a: string, b: string) => a>b?1:-1));
   }, [savedMessages]);
 
-  //   const handleSubmit = (submitType: 'Save' | 'Close') => {
-  //     if (submitType === 'Save') {
-  //       onReturn(displayPictures.map((item)=>JSON.stringify(item)));
-  //     } else {
-  //       onReturn([]);
-  //     }
-  //   };
-
-  //   const handleAddPicture = () => {
-  //     const newPicture =   { name: pictureText, link: pictureLink } as Picture;
-
-  //     setDisplayMessages([...displayMessages, newPicture]);
-  //     setPictureLink('');
-  //     setPictureText('');
-  //   };
+   
 
   const handleDeleteMessages = (index: number) => {
     const newMessages = [...displayMessages];
