@@ -159,6 +159,23 @@ const ChooseExternalSongModal: React.FC<Props> = ({
                 >
                   <ShowIcon icon={'Close'} stroke={'2'} />
                 </button> 
+                <button 
+                  onClick={() => {
+                    console.log(displaySngs[i])
+                    const songLinkElement = document.getElementById('songLink') as HTMLInputElement | null;
+                    if (songLinkElement) {
+                      songLinkElement.value='https://drive.google.com/file/d/'+displaySngs[i].url+'/view?usp=sharing';
+                    }
+                    setSongName(displaySngs[i].name);
+                    setDance(displaySngs[i].dance);
+                    setSongLink(displaySngs[i].url);
+                    setRate(displaySngs[i].rate!==undefined?displaySngs[i].rate:1); 
+
+                  }}
+                  className="absolute top-0 right-9 fill-editcolor  stroke-editcolor  rounded-md border-editcolor  w-8 h-8"
+                >
+                  <ShowIcon icon={'Edit'} stroke={'0.5'} />
+                </button> 
                   <p className="mt-1 text-center truncate">{item.name}</p>
                  
               </div>
@@ -198,20 +215,21 @@ const ChooseExternalSongModal: React.FC<Props> = ({
             /> 
            
                   
-                <select
+                 {dance &&<select
                 className="w-full p-2 border border-gray-300 rounded mb-2"
                 id='danceSelect'
+                defaultValue={dance || ''}
                 onChange={(e) => setDance(e.target.value)}
               >
                 {savedDances &&
                   savedDances.sort((a, b) => a.localeCompare(b)).map((item, index) => {
                      return (
-                      <option key={'opt' + index} value={item}>
+                      <option key={'opt' + index}  value={item}>
                         {item}
                       </option>
                     );
                   })}
-              </select>
+              </select>}
               <div>
                 <label className="block mb-2">Playback Speed</label>
                 <Slider
