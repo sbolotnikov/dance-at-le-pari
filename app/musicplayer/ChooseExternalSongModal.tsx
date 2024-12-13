@@ -132,7 +132,7 @@ const ChooseExternalSongModal: React.FC<Props> = ({
           <div className="flex flex-col flex-wrap items-center justify-start">
             {displaySngs .sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0)).map((item, i) => (
               <div key={`songsavailable${i}`} className="relative m-1 w-full flex justify-start items-center">
-                <button  
+                <div  
                     onClick={(e) => {
                         e.preventDefault();
                         fetch(`/api/music2play?file_id=${item.url}`).then(response => response.json()
@@ -152,7 +152,7 @@ const ChooseExternalSongModal: React.FC<Props> = ({
                         console.log("Choosen song", item);
                       }}
                     />  
-                </button>
+                </div>
                 <button 
                   onClick={() => handleDeletePicture(i)}
                   className="absolute top-0 right-0 fill-alertcolor  stroke-alertcolor  rounded-md border-alertcolor  w-8 h-8"
@@ -166,9 +166,10 @@ const ChooseExternalSongModal: React.FC<Props> = ({
                     if (songLinkElement) {
                       songLinkElement.value='https://drive.google.com/file/d/'+displaySngs[i].url+'/view?usp=sharing';
                     }
+                    document.getElementById('danceSelect')?.setAttribute('defaultValue', displaySngs[i].dance?displaySngs[i].dance:"");
                     setSongName(displaySngs[i].name);
                     setDance(displaySngs[i].dance);
-                    setSongLink(displaySngs[i].url);
+                    setLink1(displaySngs[i].url);
                     setRate(displaySngs[i].rate!==undefined?displaySngs[i].rate:1); 
 
                   }}
@@ -215,16 +216,15 @@ const ChooseExternalSongModal: React.FC<Props> = ({
             /> 
            
                   
-                 {dance &&<select
+                 {dance!==undefined &&<select
                 className="w-full p-2 border border-gray-300 rounded mb-2"
-                id='danceSelect'
-                defaultValue={dance || ''}
+                id='danceSelect' 
                 onChange={(e) => setDance(e.target.value)}
               >
                 {savedDances &&
                   savedDances.sort((a, b) => a.localeCompare(b)).map((item, index) => {
                      return (
-                      <option key={'opt' + index}  value={item}>
+                      <option key={'opt' + index} selected={item==dance}  value={item}>
                         {item}
                       </option>
                     );
