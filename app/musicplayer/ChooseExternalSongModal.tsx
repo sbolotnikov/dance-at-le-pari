@@ -14,11 +14,13 @@ interface Song {
     rate: number | undefined;
     dance: string | null;
     id: string | null;
+
   }
 
 type Props = { 
   savedDances: string[]; 
   vis: boolean;
+  role: string | undefined;
   onReturn: (songs: Song[]  ) => void;
   onPlay: (song: Song) => void;
   onClose:()=>void;
@@ -29,6 +31,7 @@ const ChooseExternalSongModal: React.FC<Props> = ({
   
   savedDances, 
   vis,
+  role,
   onReturn,
   onClose,
     onPlay
@@ -153,13 +156,13 @@ const ChooseExternalSongModal: React.FC<Props> = ({
                       }}
                     />  
                 </div>
-                <button 
+                {role=="Admin" &&<button 
                   onClick={() => handleDeletePicture(i)}
                   className="absolute top-0 right-0 fill-alertcolor  stroke-alertcolor  rounded-md border-alertcolor  w-8 h-8"
                 >
                   <ShowIcon icon={'Close'} stroke={'2'} />
-                </button> 
-                <button 
+                </button>}
+                {role=="Admin"&&<button 
                   onClick={() => {
                     console.log(displaySngs[i])
                     const songLinkElement = document.getElementById('songLink') as HTMLInputElement | null;
@@ -179,7 +182,7 @@ const ChooseExternalSongModal: React.FC<Props> = ({
                   className="absolute top-0 right-9 fill-editcolor  stroke-editcolor  rounded-md border-editcolor  w-8 h-8"
                 >
                   <ShowIcon icon={'Edit'} stroke={'0.5'} />
-                </button> 
+                </button>} 
                   <p className="mt-1 text-center truncate">{item.name}</p>
                  
               </div>

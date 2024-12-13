@@ -1112,7 +1112,14 @@ const page: FC<pageProps> = ({}) => {
   const [parties, setParties] = useState<{ name: string; id: string }[]>([]);
   const [choosenParty, setChoosenParty] = useState('');
   const { data: session } = useSession();
-  const [autoPlayDances, setAutoPlayDances] = useState<string[]>([ 'Waltz','Cha Cha','Foxtrot','Salsa','Argentine Tango','Merengue','Viennese Waltz','Swing','Bolero','Quickstep','Rumba','Hustle','Tango','Bachata','Samba','West Coast Swing','Two Step','Waltz','Cha Cha','Foxtrot','Salsa','Argentine Tango','Merengue','Viennese Waltz','Swing','Bolero','Quickstep','Rumba','Hustle','Tango','Bachata','West Coast Swing','Samba','Two Step','Waltz','Cha Cha','Foxtrot','Salsa','Argentine Tango','Merengue','Viennese Waltz','Swing','Bolero','Quickstep','Rumba','Hustle','Tango','Bachata','West Coast Swing','Samba','Two Step','Waltz','Cha Cha','Foxtrot','Salsa','Merengue','Viennese Waltz','Swing','Bolero','Quickstep','Rumba','Hustle','Tango','Bachata','West Coast Swing','Samba','Rumba','Salsa','Swing','West Coast Swing','Foxtrot','Waltz','Cha Cha','Hustle','Samba','Quickstep','Viennese Waltz','Two Step','Rumba','Salsa','Swing','West Coast Swing','Foxtrot','Waltz','Cha Cha','Hustle','Tango','Rumba','Salsa','Swing','Foxtrot','Waltz']);
+  const [autoPlayDances, setAutoPlayDances] = useState<string[]>([ 
+    'Waltz','Cha Cha','Foxtrot','Salsa','Argentine Tango','Merengue','Viennese Waltz','Swing','Bolero','Quickstep','Rumba','Hustle','Tango','Bachata',
+    'Samba','West Coast Swing','Two Step','Waltz','Cha Cha','Foxtrot','Salsa','Argentine Tango','Merengue','Viennese Waltz','Swing','Bolero','Quickstep',
+    'Rumba','Hustle','Tango','Bachata','West Coast Swing','Samba','Two Step','Waltz','Cha Cha','Foxtrot','Salsa','Argentine Tango','Merengue','Viennese Waltz',
+    'Swing','Bolero','Quickstep','Rumba','Hustle','Tango','Bachata','West Coast Swing','Samba','Two Step','Waltz','Cha Cha','Foxtrot','Salsa','Merengue',
+    'Viennese Waltz','Swing','Bolero','Quickstep','Rumba','Hustle','Tango','Bachata','West Coast Swing','Samba','Rumba','Salsa','Swing','West Coast Swing',
+    'Foxtrot','Waltz','Cha Cha','Hustle','Samba','Quickstep','Viennese Waltz','Two Step','Rumba','Salsa','Swing','West Coast Swing','Foxtrot','Waltz',
+    'Cha Cha','Hustle','Tango','Rumba','Salsa','Swing','Foxtrot','Waltz']);
 
 // 'Waltz', 'Tango', 'Viennese Waltz', 'Foxtrot','Quickstep'
 
@@ -1318,6 +1325,7 @@ const page: FC<pageProps> = ({}) => {
              
             savedDances={dances}
             vis={isChooseSongWebModal}
+            role={session?.user.role}
             onClose={() => setIsChooseSongWebModal(false)}
             onPlay={(song:Song)=>{setPlaylist([...playlist, song])}}
             onReturn={(songs) => {console.log(songs)}}
@@ -1480,7 +1488,7 @@ const page: FC<pageProps> = ({}) => {
                 })}
               </select>
             )}
-            <div className="flex flex-col items-center justify-center">
+            {session?.user.role == 'Admin' && (<div className="flex flex-col items-center justify-center">
                 <PlayerButtons
                   icon={'Auto'}
                   color="#504deb"
@@ -1489,7 +1497,7 @@ const page: FC<pageProps> = ({}) => {
                   onButtonPress={() => setAutoPlayMode(true)}
                 />
                 <span className="text-center">Autoplay Mode</span>
-              </div>
+              </div>)}
           </div>
         </div>
       </div>
