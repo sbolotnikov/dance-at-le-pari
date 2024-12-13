@@ -166,7 +166,10 @@ const ChooseExternalSongModal: React.FC<Props> = ({
                     if (songLinkElement) {
                       songLinkElement.value='https://drive.google.com/file/d/'+displaySngs[i].url+'/view?usp=sharing';
                     }
-                    document.getElementById('danceSelect')?.setAttribute('defaultValue', displaySngs[i].dance?displaySngs[i].dance:"");
+                    const danceSelectElement = document.getElementById('danceSelect') as HTMLSelectElement | null;
+                    if (danceSelectElement) {
+                      danceSelectElement.value = displaySngs[i].dance ? displaySngs[i].dance : "";
+                    }
                     setSongName(displaySngs[i].name);
                     setDance(displaySngs[i].dance);
                     setLink1(displaySngs[i].url);
@@ -224,7 +227,7 @@ const ChooseExternalSongModal: React.FC<Props> = ({
                 {savedDances &&
                   savedDances.sort((a, b) => a.localeCompare(b)).map((item, index) => {
                      return (
-                      <option key={'opt' + index} selected={item==dance}  value={item}>
+                      <option key={'opt' + index}  value={item}>
                         {item}
                       </option>
                     );
