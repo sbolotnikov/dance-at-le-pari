@@ -15,10 +15,11 @@ import { useSession } from 'next-auth/react';
 import ListenSaveMp3Modal from './ListenSaveMp3Modal';
 import ChooseExternalSongModal from './ChooseExternalSongModal';
 import LoadingScreen from '@/components/LoadingScreen';
+import ChoosePlaylistsModal from './ChoosePlaylistsModal';
 
 interface MusicPlayerProps {
   rateSet: number;
-  rate:number;
+  rate: number;
   songDuration: number;
   fadeTime: number;
   delayLength: number;
@@ -71,7 +72,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
   const windowSize = useDimensions();
   useEffect(() => {
     if (audioRef.current) {
-      audioRef.current.src =  music;
+      audioRef.current.src = music;
       audioRef.current.playbackRate = rateSet;
       audioRef.current.load();
       console.log('rateSet set:', rateSet);
@@ -169,7 +170,10 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
         <audio
           ref={audioRef}
           onTimeUpdate={updateTime}
-          onLoadedMetadata={(e) =>{console.log(e.target); setDuration(audioRef.current?.duration || 0)}}
+          onLoadedMetadata={(e) => {
+            console.log(e.target);
+            setDuration(audioRef.current?.duration || 0);
+          }}
           onEnded={handleEnded}
         />
         <div className="flex justify-center space-x-4 mb-4">
@@ -279,7 +283,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   const [fadeLength, setFadeLength] = useState(fadeTime);
 
   useEffect(() => {
-    console.log(rate)
+    console.log(rate);
     onChangeRate(rate);
   }, [rate]);
 
@@ -317,9 +321,16 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                 <span>{`${Math.floor(songLength / 60000)}m ${Math.floor(
                   (songLength % 60000) / 1000
                 )}s`}</span>
-                <input type="number" className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG border border-lightMainColor dark:border-darkMainColor" min={1} max={600} value={songLength/1000}
-                  onChange={(e) =>{ setSongLength(e.target.valueAsNumber*1000); }}
-                  />
+                <input
+                  type="number"
+                  className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG border border-lightMainColor dark:border-darkMainColor"
+                  min={1}
+                  max={600}
+                  value={songLength / 1000}
+                  onChange={(e) => {
+                    setSongLength(e.target.valueAsNumber * 1000);
+                  }}
+                />
               </div>
               <div>
                 <label className="block mb-2">Playback Speed</label>
@@ -332,9 +343,16 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                   thumbColor="#4a5568"
                 />
                 <span>{`${(rate * 100).toFixed(0)}%`}</span>
-                <input type="number" className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG border border-lightMainColor dark:border-darkMainColor" min={0.5} max={2} value={rate}
-                  onChange={(e) =>{ setRate(e.target.valueAsNumber); }}
-                  />
+                <input
+                  type="number"
+                  className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG border border-lightMainColor dark:border-darkMainColor"
+                  min={0.5}
+                  max={2}
+                  value={rate}
+                  onChange={(e) => {
+                    setRate(e.target.valueAsNumber);
+                  }}
+                />
               </div>
               <div>
                 <label className="block mb-2">Delay in seconds</label>
@@ -349,9 +367,16 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                 <span>{`${Math.floor(delayLength / 60000)}m ${Math.floor(
                   (delayLength % 60000) / 1000
                 )}s`}</span>
-                <input type="number" className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG border border-lightMainColor dark:border-darkMainColor" min={1} max={60} value={delayLength/1000}
-                  onChange={(e) =>{ setDelayLength(e.target.valueAsNumber*1000); }}
-                  />
+                <input
+                  type="number"
+                  className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG border border-lightMainColor dark:border-darkMainColor"
+                  min={1}
+                  max={60}
+                  value={delayLength / 1000}
+                  onChange={(e) => {
+                    setDelayLength(e.target.valueAsNumber * 1000);
+                  }}
+                />
               </div>
               <div>
                 <label className="block mb-2">Fade out in seconds</label>
@@ -366,9 +391,16 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                 <span>{`${Math.floor(fadeLength / 60000)}m ${Math.floor(
                   (fadeLength % 60000) / 1000
                 )}s`}</span>
-                <input type="number" className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG border border-lightMainColor dark:border-darkMainColor" min={1} max={60} value={fadeLength/1000}
-                  onChange={(e) =>{ setFadeLength(e.target.valueAsNumber*1000); }}
-                  />
+                <input
+                  type="number"
+                  className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG border border-lightMainColor dark:border-darkMainColor"
+                  min={1}
+                  max={60}
+                  value={fadeLength / 1000}
+                  onChange={(e) => {
+                    setFadeLength(e.target.valueAsNumber * 1000);
+                  }}
+                />
               </div>
             </div>
           </div>
@@ -424,7 +456,13 @@ const ChooseMusicModal: React.FC<ChooseMusicModalProps> = ({
               <button
                 className="btnFancy"
                 onClick={() => {
-                  onChoice({ url: songLink, name: songTag, rate:1, dance: '', id: '' });
+                  onChoice({
+                    url: songLink,
+                    name: songTag,
+                    rate: 1,
+                    dance: '',
+                    id: '',
+                  });
                   onClose();
                 }}
               >
@@ -494,7 +532,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
   const [revealSaveModal, setRevealSaveModal] = useState(false);
   const [songToSave, setSongToSave] = useState('');
   const [songName, setSongName] = useState('');
-  const [currentIndex, setCurrentIndex] = useState(-1)
+  const [currentIndex, setCurrentIndex] = useState(-1);
   const [currentDance, setCurrentDance] = useState<string | null>(null);
   const [currentRate, setCurrentRate] = useState(1);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
@@ -639,20 +677,20 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
         fileName={songName}
         rateOrigin={currentRate}
         currentDance={currentDance}
-        onRate={(rate)=>{
-          let songArr=songDB;
+        onRate={(rate) => {
+          let songArr = songDB;
           songArr[currentIndex].rate = rate;
           setSongDB(songArr);
         }}
-        onDance={(dance)=>{
-          let songArr=songDB;
+        onDance={(dance) => {
+          let songArr = songDB;
           songArr[currentIndex].dance = dance;
           setSongDB(songArr);
         }}
         onReturn={() => {
           sleep(1200).then(() => {
-            setSongToSave("");
-            setCurrentDance("");
+            setSongToSave('');
+            setCurrentDance('');
             setCurrentRate(1);
             setRevealSaveModal(false);
           });
@@ -719,8 +757,10 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
                               setSongToSave(item.url);
                               setSongName(item.name);
                               setCurrentIndex(i);
-                              setCurrentDance(item.dance)
-                              setCurrentRate(item.rate!==undefined?item.rate:1);
+                              setCurrentDance(item.dance);
+                              setCurrentRate(
+                                item.rate !== undefined ? item.rate : 1
+                              );
                               setRevealSaveModal(true);
                             }}
                           />
@@ -795,8 +835,15 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
                     thumbColor="#4a5568"
                   />
                   <span>{`${(rate * 100).toFixed(0)}%`}</span>
-                  <input type="number" className="mt-2 text-sm h-8 rounded-md w-14 float-right text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG border border-lightMainColor dark:border-darkMainColor" min={0.5} max={2} value={rate}
-                  onChange={(e) =>{ setRate(e.target.valueAsNumber); }}
+                  <input
+                    type="number"
+                    className="mt-2 text-sm h-8 rounded-md w-14 float-right text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG border border-lightMainColor dark:border-darkMainColor"
+                    min={0.5}
+                    max={2}
+                    value={rate}
+                    onChange={(e) => {
+                      setRate(e.target.valueAsNumber);
+                    }}
                   />
                 </div>
                 <input
@@ -1111,17 +1158,108 @@ const page: FC<pageProps> = ({}) => {
   const [isAddToDBOpen, setIsAddToDBOpen] = useState(false);
   const [parties, setParties] = useState<{ name: string; id: string }[]>([]);
   const [choosenParty, setChoosenParty] = useState('');
+  const [isChoosePlaylistsModal, setIsChoosePlaylistsModal] = useState(false);
+  const [playlists, setPlaylists] = useState<
+    { name: string; id: string; listArray: string[] }[]
+  >([]);
+  const [choosenPlaylist, setChoosenPlaylist] = useState('');
   const { data: session } = useSession();
-  const [autoPlayDances, setAutoPlayDances] = useState<string[]>([ 
-    'Waltz','Cha Cha','Foxtrot','Salsa','Argentine Tango','Merengue','Viennese Waltz','Swing','Bolero','Quickstep','Rumba','Hustle','Tango','Bachata',
-    'Samba','West Coast Swing','Two Step','Waltz','Cha Cha','Foxtrot','Salsa','Argentine Tango','Merengue','Viennese Waltz','Swing','Bolero','Quickstep',
-    'Rumba','Hustle','Tango','Bachata','West Coast Swing','Samba','Two Step','Waltz','Cha Cha','Foxtrot','Salsa','Argentine Tango','Merengue','Viennese Waltz',
-    'Swing','Bolero','Quickstep','Rumba','Hustle','Tango','Bachata','West Coast Swing','Samba','Two Step','Waltz','Cha Cha','Foxtrot','Salsa','Merengue',
-    'Viennese Waltz','Swing','Bolero','Quickstep','Rumba','Hustle','Tango','Bachata','West Coast Swing','Samba','Rumba','Salsa','Swing','West Coast Swing',
-    'Foxtrot','Waltz','Cha Cha','Hustle','Samba','Quickstep','Viennese Waltz','Two Step','Rumba','Salsa','Swing','West Coast Swing','Foxtrot','Waltz',
-    'Cha Cha','Hustle','Tango','Rumba','Salsa','Swing','Foxtrot','Waltz']);
+  const [autoPlayDances, setAutoPlayDances] = useState<string[]>([
+    'Waltz',
+    'Cha Cha',
+    'Foxtrot',
+    'Salsa',
+    'Argentine Tango',
+    'Merengue',
+    'Viennese Waltz',
+    'Swing',
+    'Bolero',
+    'Quickstep',
+    'Rumba',
+    'Hustle',
+    'Tango',
+    'Bachata',
+    'Samba',
+    'West Coast Swing',
+    'Two Step',
+    'Waltz',
+    'Cha Cha',
+    'Foxtrot',
+    'Salsa',
+    'Argentine Tango',
+    'Merengue',
+    'Viennese Waltz',
+    'Swing',
+    'Bolero',
+    'Quickstep',
+    'Rumba',
+    'Hustle',
+    'Tango',
+    'Bachata',
+    'West Coast Swing',
+    'Samba',
+    'Two Step',
+    'Waltz',
+    'Cha Cha',
+    'Foxtrot',
+    'Salsa',
+    'Argentine Tango',
+    'Merengue',
+    'Viennese Waltz',
+    'Swing',
+    'Bolero',
+    'Quickstep',
+    'Rumba',
+    'Hustle',
+    'Tango',
+    'Bachata',
+    'West Coast Swing',
+    'Samba',
+    'Two Step',
+    'Waltz',
+    'Cha Cha',
+    'Foxtrot',
+    'Salsa',
+    'Merengue',
+    'Viennese Waltz',
+    'Swing',
+    'Bolero',
+    'Quickstep',
+    'Rumba',
+    'Hustle',
+    'Tango',
+    'Bachata',
+    'West Coast Swing',
+    'Samba',
+    'Rumba',
+    'Salsa',
+    'Swing',
+    'West Coast Swing',
+    'Foxtrot',
+    'Waltz',
+    'Cha Cha',
+    'Hustle',
+    'Samba',
+    'Quickstep',
+    'Viennese Waltz',
+    'Two Step',
+    'Rumba',
+    'Salsa',
+    'Swing',
+    'West Coast Swing',
+    'Foxtrot',
+    'Waltz',
+    'Cha Cha',
+    'Hustle',
+    'Tango',
+    'Rumba',
+    'Salsa',
+    'Swing',
+    'Foxtrot',
+    'Waltz',
+  ]);
 
-// 'Waltz', 'Tango', 'Viennese Waltz', 'Foxtrot','Quickstep'
+  // 'Waltz', 'Tango', 'Viennese Waltz', 'Foxtrot','Quickstep'
 
   // 'Argentine Tango',
   // 'Bachata',
@@ -1145,14 +1283,10 @@ const page: FC<pageProps> = ({}) => {
   // 'Waltz',
   // 'West Coast Swing',
 
-   
-
-
-
   const [loading, setLoading] = useState(false);
   const [autoPlayIndex, setAutoPlayIndex] = useState(0);
-  const [webSongs, setWebSongs] = useState<Song[] >([]);
-  const [webSongsAll, setWebSongsAll] = useState<Song[] >([]);
+  const [webSongs, setWebSongs] = useState<Song[]>([]);
+  const [webSongsAll, setWebSongsAll] = useState<Song[]>([]);
 
   async function getPartyArray() {
     const q = await getDocs(collection(db, 'parties'));
@@ -1164,56 +1298,92 @@ const page: FC<pageProps> = ({}) => {
     setParties(arr);
     setChoosenParty(arr[0].id);
   }
-
+  async function getPlaylistsArray() {
+    const q = await getDocs(collection(db, 'playlists'));
+    let arr1 = q.docs.map((doc) => doc.data());
+    let arr2 = q.docs.map((doc) => doc.id);
+    let arr = arr1.map((x, i) => ({
+      name: x.name,
+      listArray: x.listArray,
+      id: arr2[i],
+    }));
+    arr = [{ name: 'None', id: '', listArray: [] }, ...arr];
+    console.log(arr);
+    setPlaylists(arr);
+    setChoosenPlaylist(arr[0].id);
+  }
   useEffect(() => {
     getPartyArray();
+    getPlaylistsArray();
   }, []);
   useEffect(() => {
     const fetchSongs = async () => {
-        
       const songsSnapshot = await getDocs(collection(db, 'songs'));
-      const songsList = songsSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as Song));
+      const songsList = songsSnapshot.docs.map(
+        (doc) => ({ ...doc.data(), id: doc.id } as Song)
+      );
       setWebSongsAll(songsList);
-      let songsArr=songsList.filter(song => song.dance==autoPlayDances[autoPlayIndex]);
+      let songsArr = songsList.filter(
+        (song) => song.dance == autoPlayDances[autoPlayIndex]
+      );
       setAutoPlayIndex(autoPlayIndex + 1);
       let randomIndex = Math.floor(Math.random() * songsArr.length);
-      
-      fetch(`/api/music2play?file_id=${songsArr[randomIndex].url}`).then(response => response.json()
-                    .then(data => {
-                      setPlaylist([{url:data.fileUrl,
-                        name:  songsArr[randomIndex].name,
-                        rate:  songsArr[randomIndex].rate,
-                        dance:  songsArr[randomIndex].dance,
-                        id:  songsArr[randomIndex].id }]); 
-                        setRate(songsArr[randomIndex].rate!==undefined?songsArr[randomIndex].rate:1);
-                        setWebSongs(songsList.filter(song => song.id!==songsArr[randomIndex].id))
-                        if ( choosenParty != '') {  
-                          console.log(`Next Dance: ${(autoPlayIndex==autoPlayDances.length-1)?autoPlayDances[0]: autoPlayDances[autoPlayIndex+1]}`)
-                          updateDoc(doc(db, 'parties', choosenParty), {
-                            message: autoPlayDances[0],
-                            message2:`Next Dance: ${ autoPlayDances[1]}`
-                              
-                          }).then((res) => console.log(res));
-                        }
 
-                    })); 
+      fetch(`/api/music2play?file_id=${songsArr[randomIndex].url}`).then(
+        (response) =>
+          response.json().then((data) => {
+            setPlaylist([
+              {
+                url: data.fileUrl,
+                name: songsArr[randomIndex].name,
+                rate: songsArr[randomIndex].rate,
+                dance: songsArr[randomIndex].dance,
+                id: songsArr[randomIndex].id,
+              },
+            ]);
+            setRate(
+              songsArr[randomIndex].rate !== undefined
+                ? songsArr[randomIndex].rate
+                : 1
+            );
+            setWebSongs(
+              songsList.filter((song) => song.id !== songsArr[randomIndex].id)
+            );
+            if (choosenParty != '') {
+              console.log(
+                `Next Dance: ${
+                  autoPlayIndex == autoPlayDances.length - 1
+                    ? autoPlayDances[0]
+                    : autoPlayDances[autoPlayIndex + 1]
+                }`
+              );
+              updateDoc(doc(db, 'parties', choosenParty), {
+                message: autoPlayDances[0],
+                message2: `Next Dance: ${autoPlayDances[1]}`,
+              }).then((res) => console.log(res));
+            }
+          })
+      );
     };
-    
+
     if (autoPlayMode) {
-      
       fetchSongs();
     }
   }, [autoPlayMode]);
   const handleSongChange = (index: number) => {
     setCurrentSongIndex(index);
-    setRate(playlist[index].rate!==undefined?playlist[index].rate:1)
+    setRate(playlist[index].rate !== undefined ? playlist[index].rate : 1);
   };
   useEffect(() => {
     console.log(currentSongIndex, 'in useeffect', playlist);
     if (currentSongIndex >= 0 && playlist.length > 0 && choosenParty != '') {
       console.log(playlist[currentSongIndex].dance);
-      setRate(playlist[currentSongIndex].rate!==undefined?playlist[currentSongIndex].rate:1);
-      
+      setRate(
+        playlist[currentSongIndex].rate !== undefined
+          ? playlist[currentSongIndex].rate
+          : 1
+      );
+
       updateDoc(doc(db, 'parties', choosenParty), {
         message: playlist[currentSongIndex].dance,
         message2:
@@ -1225,50 +1395,75 @@ const page: FC<pageProps> = ({}) => {
     }
   }, [currentSongIndex]);
   const handleSongEnd = () => {
-
     if (autoPlayMode) {
-
-      let songsArr=webSongs.filter(song => song.dance==autoPlayDances[autoPlayIndex]);
-      if(songsArr.length==0){
-        songsArr=webSongsAll.filter(song => song.dance==autoPlayDances[autoPlayIndex]);
+      let songsArr = webSongs.filter(
+        (song) => song.dance == autoPlayDances[autoPlayIndex]
+      );
+      if (songsArr.length == 0) {
+        songsArr = webSongsAll.filter(
+          (song) => song.dance == autoPlayDances[autoPlayIndex]
+        );
       }
-      autoPlayIndex==autoPlayDances.length-1?setAutoPlayIndex(0):setAutoPlayIndex(autoPlayIndex + 1);
+      autoPlayIndex == autoPlayDances.length - 1
+        ? setAutoPlayIndex(0)
+        : setAutoPlayIndex(autoPlayIndex + 1);
       let randomIndex = Math.floor(Math.random() * songsArr.length);
-      
-      fetch(`/api/music2play?file_id=${songsArr[randomIndex].url}`).then(response => response.json()
-                    .then(data => {
-                      setPlaylist([{url:data.fileUrl,
-                        name:  songsArr[randomIndex].name,
-                        rate:  songsArr[randomIndex].rate,
-                        dance:  songsArr[randomIndex].dance,
-                        id:  songsArr[randomIndex].id }]); 
-                        setRate(songsArr[randomIndex].rate!==undefined?songsArr[randomIndex].rate:1);
-                        if (webSongs.filter(song => song.dance==autoPlayDances[autoPlayIndex]).length==0){
-                          setWebSongs([...webSongsAll.filter(song => song.dance==autoPlayDances[autoPlayIndex] && song.id!==songsArr[randomIndex].id), ...webSongs])
-                        }
-                        setWebSongs(webSongs.filter(song => song.id!==songsArr[randomIndex].id))
-                        if ( choosenParty != '') {  
-                          updateDoc(doc(db, 'parties', choosenParty), {
-                            message: autoPlayDances[autoPlayIndex],
-                            message2:`Next Dance: ${(autoPlayIndex==autoPlayDances.length-1)?autoPlayDances[0]: autoPlayDances[autoPlayIndex+1]}`
-                              
-                          }).then((res) => console.log(res));
-                        }
-                    })); 
 
-
-
-
-    } else { 
+      fetch(`/api/music2play?file_id=${songsArr[randomIndex].url}`).then(
+        (response) =>
+          response.json().then((data) => {
+            setPlaylist([
+              {
+                url: data.fileUrl,
+                name: songsArr[randomIndex].name,
+                rate: songsArr[randomIndex].rate,
+                dance: songsArr[randomIndex].dance,
+                id: songsArr[randomIndex].id,
+              },
+            ]);
+            setRate(
+              songsArr[randomIndex].rate !== undefined
+                ? songsArr[randomIndex].rate
+                : 1
+            );
+            if (
+              webSongs.filter(
+                (song) => song.dance == autoPlayDances[autoPlayIndex]
+              ).length == 0
+            ) {
+              setWebSongs([
+                ...webSongsAll.filter(
+                  (song) =>
+                    song.dance == autoPlayDances[autoPlayIndex] &&
+                    song.id !== songsArr[randomIndex].id
+                ),
+                ...webSongs,
+              ]);
+            }
+            setWebSongs(
+              webSongs.filter((song) => song.id !== songsArr[randomIndex].id)
+            );
+            if (choosenParty != '') {
+              updateDoc(doc(db, 'parties', choosenParty), {
+                message: autoPlayDances[autoPlayIndex],
+                message2: `Next Dance: ${
+                  autoPlayIndex == autoPlayDances.length - 1
+                    ? autoPlayDances[0]
+                    : autoPlayDances[autoPlayIndex + 1]
+                }`,
+              }).then((res) => console.log(res));
+            }
+          })
+      );
+    } else {
       if (currentSongIndex < playlist.length - 1) {
         setRate(playlist[currentSongIndex + 1].rate ?? 1);
-      setCurrentSongIndex(currentSongIndex + 1);
-    } else {
-      setCurrentSongIndex(0);
-      setRate(playlist[0].rate ?? 1);
+        setCurrentSongIndex(currentSongIndex + 1);
+      } else {
+        setCurrentSongIndex(0);
+        setRate(playlist[0].rate ?? 1);
+      }
     }
-    
-  }
   };
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -1281,7 +1476,7 @@ const page: FC<pageProps> = ({}) => {
         url: await fileToBase64(file),
         name: file.name,
         id: '',
-        rate:1,
+        rate: 1,
         dance: '',
       };
       console.log(newSong);
@@ -1320,17 +1515,33 @@ const page: FC<pageProps> = ({}) => {
           onChangeFade={(duration) => setFadeTime(duration)}
         />
       )}
+      {isChoosePlaylistsModal && (
+        <ChoosePlaylistsModal
+          // savedDances={dances}
+          vis={isChoosePlaylistsModal}
+          role={session?.user.role}
+          // choosenPlaylist={playlists.filter(playlist => playlist.id==choosenPlaylist)[0]}
+          onClose={() => setIsChooseSongWebModal(false)}
+          // onPlay={(song:Song)=>{setPlaylist([...playlist, song])}}
+          // onReturn={(songs) => {console.log(songs)}}
+          onLoad={(a) => setLoading(a)}
+        />
+      )}
       {isChooseSongWebModal && (
-        <ChooseExternalSongModal 
-             
-            savedDances={dances}
-            vis={isChooseSongWebModal}
-            role={session?.user.role}
-            onClose={() => setIsChooseSongWebModal(false)}
-            onPlay={(song:Song)=>{setPlaylist([...playlist, song])}}
-            onReturn={(songs) => {console.log(songs)}}
-            onLoad={(a)=>setLoading(a)}
-  />)}
+        <ChooseExternalSongModal
+          savedDances={dances}
+          vis={isChooseSongWebModal}
+          role={session?.user.role}
+          onClose={() => setIsChooseSongWebModal(false)}
+          onPlay={(song: Song) => {
+            setPlaylist([...playlist, song]);
+          }}
+          onReturn={(songs) => {
+            console.log(songs);
+          }}
+          onLoad={(a) => setLoading(a)}
+        />
+      )}
       {isChooseMusicOpen && (
         <ChooseMusicModal
           isOpen={isChooseMusicOpen}
@@ -1388,13 +1599,17 @@ const page: FC<pageProps> = ({}) => {
             )}
             {playlist.length > 0 && currentSongIndex > -1 && (
               <MusicPlayer
-                rateSet={playlist[currentSongIndex].rate!==undefined?playlist[currentSongIndex].rate:1}
+                rateSet={
+                  playlist[currentSongIndex].rate !== undefined
+                    ? playlist[currentSongIndex].rate
+                    : 1
+                }
                 rate={rate}
                 songDuration={songLength}
                 fadeTime={fadeTime}
                 delayLength={delayLength}
                 startPos={songPosition}
-                music={playlist[currentSongIndex].url} 
+                music={playlist[currentSongIndex].url}
                 onSongEnd={handleSongEnd}
                 onSongPrev={() => {
                   console.log('prev song', currentSongIndex - 1);
@@ -1488,7 +1703,8 @@ const page: FC<pageProps> = ({}) => {
                 })}
               </select>
             )}
-            {session?.user.role == 'Admin' && (<div className="flex flex-col items-center justify-center">
+            {session?.user.role == 'Admin' && (
+              <div className="flex flex-col items-center justify-center">
                 <PlayerButtons
                   icon={'Auto'}
                   color="#504deb"
@@ -1497,7 +1713,38 @@ const page: FC<pageProps> = ({}) => {
                   onButtonPress={() => setAutoPlayMode(true)}
                 />
                 <span className="text-center">Autoplay Mode</span>
-              </div>)}
+              </div>
+            )}
+            {session?.user.role == 'Admin' && (
+              <div className="w-full flex flex-row justify-between items-center">
+                <span>Auto Playlist Dances</span>
+                <select
+                  className="w-1/3 p-2 mx-auto mt-2 bg-lightMainBG dark:bg-darkMainBG text-lightMainColor dark:text-darkMainColor border border-lightMainColor dark:border-darkMainColor rounded-md"
+                  // name="parties"
+                  // id="parties"
+                  onChange={(e) => {
+                    setChoosenPlaylist(e.target.value);
+                  }}
+                >
+                  {playlists.map((party, index) => {
+                    return (
+                      <option key={index} value={party.id}>
+                        {party.name}
+                      </option>
+                    );
+                  })}
+                </select>
+                <button
+                  onClick={() => {
+                    setIsChoosePlaylistsModal(true);
+                  }}
+                  className=" fill-editcolor  stroke-editcolor  rounded-md border-editcolor  w-8 h-8"
+                >
+                  <ShowIcon icon={'Edit'} stroke={'0.5'} />
+                </button>
+              </div>
+              // )}
+            )}
           </div>
         </div>
       </div>
