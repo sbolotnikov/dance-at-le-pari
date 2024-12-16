@@ -9,7 +9,7 @@ import {
   getDocs,
 } from 'firebase/firestore';
 import { db } from '@/firebase';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PlayerButtons from './PlayerButtons';
 import Slider from '@/components/Slider';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -45,8 +45,96 @@ const ChoosePlaylistsModal: React.FC<Props> = ({
   const [link1, setLink1] = useState('');
   const [songName, setSongName] = useState('');
   const [dance, setDance] = useState<string | null>(null);
-  const [rate, setRate] = useState(1);
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const [ghostPosition, setGhostPosition] = useState({ x: 0, y: 0 });
+  const [placeholderIndex, setPlaceholderIndex] = useState<number | null>(null);
+  const [dragging, setDragging] = useState(false);
+  const listRef = useRef<HTMLUListElement>(null);
+  const ghostRef = useRef<HTMLDivElement>(null);
+  const topMargin = 12;
+  const itemHeight = 40;
   const playlistsCollection = collection(db, 'playlists');
+  const getClientPos = (
+    e: React.TouchEvent | React.MouseEvent | TouchEvent | MouseEvent
+  ) => {
+    if ('touches' in e) {
+      return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    }
+    return { x: e.clientX, y: e.clientY };
+  };
+
+  const onDragStart = (
+    e: React.TouchEvent | React.MouseEvent,
+    index: number
+  ) => {
+    setDragging(true);
+    setDraggedIndex(index);
+    setPlaceholderIndex(index);
+
+    const { x, y } = getClientPos(e);
+    setGhostPosition({ x, y });
+
+    if (ghostRef.current) {
+      ghostRef.current.innerText = songDB[index].name;
+    }
+  };
+
+  const onDragMove = (
+    e: React.TouchEvent | React.MouseEvent | TouchEvent | MouseEvent
+  ) => {
+    if (!dragging || draggedIndex === null || !listRef.current) return;
+
+    const { x, y } = getClientPos(e);
+    setGhostPosition({ x, y });
+
+    const listRect = listRef.current.getBoundingClientRect();
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const relativeY = y + scrollTop - listRect.top;
+    console.log('coordinateY =', relativeY);
+
+    let newIndex = Math.floor((relativeY - topMargin) / itemHeight);
+    newIndex = Math.max(0, Math.min(newIndex, songDB.length - 1));
+    setPlaceholderIndex(newIndex);
+  };
+
+  const onDragEnd = () => {
+    if (
+      draggedIndex !== null &&
+      placeholderIndex !== null &&
+      draggedIndex !== placeholderIndex
+    ) {
+      const newItems = [...songDB];
+      const [removed] = newItems.splice(draggedIndex, 1);
+      newItems.splice(placeholderIndex, 0, removed);
+      setSongDB(newItems);
+    }
+    setDragging(false);
+    setDraggedIndex(null);
+    setPlaceholderIndex(null);
+  };
+  useEffect(() => {
+    window.addEventListener('beforeunload', handleOnBeforeUnload, {
+      capture: true,
+    });
+  }, []);
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => onDragMove(e);
+    const handleTouchMove = (e: TouchEvent) => onDragMove(e);
+
+    if (dragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', onDragEnd);
+      document.addEventListener('touchmove', handleTouchMove);
+      document.addEventListener('touchend', onDragEnd);
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', onDragEnd);
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('touchend', onDragEnd);
+    };
+  }, [dragging, draggedIndex, placeholderIndex, songDB]);
   useEffect(() => {
     const fetchPlaylists = async () => {
       const playlistsSnapshot = await getDocs(playlistsCollection);
@@ -161,8 +249,87 @@ const ChoosePlaylistsModal: React.FC<Props> = ({
                 className={`absolute top-0 left-0 flex flex-col w-full p-1 justify-center items-center`}
               >
                 <h2 className="text-xl font-bold mb-4">Available Playlists</h2>
-
-                <div className="w-full h-64 md:h-[28.5rem] border border-black p-1 rounded-md overflow-x-auto mb-4">
+                <div
+              className={`w-full h-[350px] border border-black p-1 rounded-md ${
+                draggedIndex !== null ? 'overflow-hidden' : 'overflow-x-auto'
+              } mb-4 `}
+            >
+              <div className="flex flex-col flex-wrap items-center justify-start relative">
+                <ul
+                  ref={listRef}
+                  className="w-full mx-auto mt-8 bg-lightMainBG dark:bg-darkMainBG rounded-lg shadow-md  relative"
+                >
+                  {songDB.map((item, i) => (
+                    <React.Fragment key={item.name}>
+                      {i === placeholderIndex &&
+                        draggedIndex !== null &&
+                        draggedIndex !== i && (
+                          <li className="h-12 bg-blue-100 border-2 border-blue-300 border-dashed"></li>
+                        )}
+                      <li
+                        className={`px-4 flex items-center justify-between relative h-fit min-h-[2.5rem] border-b last:border-b-0 cursor-move hover:bg-gray-50 transition-colors duration-150 ease-in-out 
+                          ${i === draggedIndex ? 'hidden' : ''}`}
+                        style={{ userSelect: 'none' }}
+                      >
+                        <p
+                          className=" text-left w-full "
+                          style={{ userSelect: 'none' }}
+                          onMouseDown={(e) => onDragStart(e, i)}
+                          onTouchStart={(e) => onDragStart(e, i)}
+                        >
+                          <span>{i + 1}. </span>
+                          <span className=" bg-gray-300 text-sm rounded-sm truncate">
+                            {item.dance}
+                          </span>
+                          {'  '}
+                          {item.name}
+                        </p>
+                         
+                        <button
+                          onClick={() => {
+                            let newDB = songDB.filter(
+                              (item2) => item2.id !== item.id
+                            );
+                            setSongDB(newDB);
+                          }}
+                          className="  fill-alertcolor  stroke-alertcolor  rounded-md border-alertcolor  w-8 h-8 mt-2 hover:scale-110 transition-all duration-150 ease-in-out"
+                        >
+                          <ShowIcon icon={'Close'} stroke={'2'} />
+                        </button>
+                      </li>
+                    </React.Fragment>
+                  ))}
+                  {placeholderIndex === songDB.length && (
+                    <li className="h-12 bg-blue-100 border-2 border-blue-300 border-dashed"></li>
+                  )}
+                </ul>
+                {dragging && draggedIndex !== null && (
+                  <div
+                    ref={ghostRef}
+                    className="fixed px-4 py-2 bg-white shadow-lg rounded opacity-80 pointer-events-none"
+                    style={{
+                      left: `${5}px`,
+                      top: `${
+                        topMargin + (placeholderIndex! + 1) * itemHeight
+                      }px`,
+                      width: listRef.current
+                        ? `${listRef.current.offsetWidth - 32}px`
+                        : 'auto',
+                    }}
+                  >
+                    <p className=" text-center max-w-[300px]">
+                      <span>{draggedIndex + 1}. </span>
+                      <span className=" bg-gray-300 text-sm rounded-sm truncate">
+                        {songDB[draggedIndex].dance}
+                      </span>
+                      {'  '}
+                      {songDB[draggedIndex].name}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+                {/* <div className="w-full h-64 md:h-[28.5rem] border border-black p-1 rounded-md overflow-x-auto mb-4">
                   <div className="flex flex-col flex-wrap items-center justify-start">
                     {displayPlaylists
                       .sort((a, b) =>
@@ -214,7 +381,7 @@ const ChoosePlaylistsModal: React.FC<Props> = ({
                         </div>
                       ))}
                   </div>
-                </div>
+                </div> */}
 
                 <div className="w-full flex flex-col items-center mb-4">
  
@@ -235,7 +402,7 @@ const ChoosePlaylistsModal: React.FC<Props> = ({
 
                   <input
                     type="text"
-                    placeholder="Enter song name"
+                    placeholder="Enter playlist name"
                     value={songName}
                     onChange={(e) => setSongName(e.target.value)}
                     className="w-full p-2 border border-gray-300 rounded mb-2"
