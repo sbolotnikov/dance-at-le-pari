@@ -1163,6 +1163,7 @@ const page: FC<pageProps> = ({}) => {
     { name: string; id: string; listArray: string[] }[]
   >([]);
   const [choosenPlaylist, setChoosenPlaylist] = useState('');
+  const [collectionsArray, setCollectionsArray] = useState<string[]>([]);
   const { data: session } = useSession();
   const [autoPlayDances, setAutoPlayDances] = useState<string[]>([
     'Waltz'
@@ -1567,6 +1568,33 @@ const page: FC<pageProps> = ({}) => {
                 <span className="text-center">Show Playlist</span>
               </div>
             </div>
+            {session?.user.role == 'Admin' && (
+
+<select
+                      className="w-full p-2 border border-gray-300 rounded mb-2"
+                      multiple
+                      id="collectionSelect1"
+                      onChange={(e) =>{
+                         e.preventDefault();
+                         const selectElement = document.getElementById("collectionSelect1") as HTMLSelectElement;
+                         const selectedValues = Array.from(selectElement.selectedOptions).map(option => option.value);
+                         console.log(selectedValues); 
+                        //  setDisplaySngs(songs.filter((item)=>selectedValues.includes(item.collectionName)));
+                        }}
+                    >
+                      {collectionsArray &&
+                        collectionsArray.map((item, index) => {
+                            return (
+                              <option key={'opt' + index} value={item}>
+                                {item}
+                              </option>
+                            );
+                          })}
+                    </select>
+
+
+
+            )}
             {session?.user.role == 'Admin' && (
               <select
                 className="w-1/2 p-2 mx-auto mt-2 bg-lightMainBG dark:bg-darkMainBG text-lightMainColor dark:text-darkMainColor border border-lightMainColor dark:border-darkMainColor rounded-md"
