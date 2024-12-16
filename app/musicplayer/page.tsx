@@ -1165,124 +1165,8 @@ const page: FC<pageProps> = ({}) => {
   const [choosenPlaylist, setChoosenPlaylist] = useState('');
   const { data: session } = useSession();
   const [autoPlayDances, setAutoPlayDances] = useState<string[]>([
-    'Waltz',
-    'Cha Cha',
-    'Foxtrot',
-    'Salsa',
-    'Argentine Tango',
-    'Merengue',
-    'Viennese Waltz',
-    'Swing',
-    'Bolero',
-    'Quickstep',
-    'Rumba',
-    'Hustle',
-    'Tango',
-    'Bachata',
-    'Samba',
-    'West Coast Swing',
-    'Two Step',
-    'Waltz',
-    'Cha Cha',
-    'Foxtrot',
-    'Salsa',
-    'Argentine Tango',
-    'Merengue',
-    'Viennese Waltz',
-    'Swing',
-    'Bolero',
-    'Quickstep',
-    'Rumba',
-    'Hustle',
-    'Tango',
-    'Bachata',
-    'West Coast Swing',
-    'Samba',
-    'Two Step',
-    'Waltz',
-    'Cha Cha',
-    'Foxtrot',
-    'Salsa',
-    'Argentine Tango',
-    'Merengue',
-    'Viennese Waltz',
-    'Swing',
-    'Bolero',
-    'Quickstep',
-    'Rumba',
-    'Hustle',
-    'Tango',
-    'Bachata',
-    'West Coast Swing',
-    'Samba',
-    'Two Step',
-    'Waltz',
-    'Cha Cha',
-    'Foxtrot',
-    'Salsa',
-    'Merengue',
-    'Viennese Waltz',
-    'Swing',
-    'Bolero',
-    'Quickstep',
-    'Rumba',
-    'Hustle',
-    'Tango',
-    'Bachata',
-    'West Coast Swing',
-    'Samba',
-    'Rumba',
-    'Salsa',
-    'Swing',
-    'West Coast Swing',
-    'Foxtrot',
-    'Waltz',
-    'Cha Cha',
-    'Hustle',
-    'Samba',
-    'Quickstep',
-    'Viennese Waltz',
-    'Two Step',
-    'Rumba',
-    'Salsa',
-    'Swing',
-    'West Coast Swing',
-    'Foxtrot',
-    'Waltz',
-    'Cha Cha',
-    'Hustle',
-    'Tango',
-    'Rumba',
-    'Salsa',
-    'Swing',
-    'Foxtrot',
-    'Waltz',
+    'Waltz'
   ]);
-
-  // 'Waltz', 'Tango', 'Viennese Waltz', 'Foxtrot','Quickstep'
-
-  // 'Argentine Tango',
-  // 'Bachata',
-  // 'Bolero',
-  // 'Cha Cha',
-  // 'Foxtrot',
-  // 'Hustle',
-  // 'Jive',
-  // 'Mambo',
-  // 'Merengue',
-  // 'POLKA',
-  // 'Paso Doble',
-  // 'Quickstep',
-  // 'Rumba',
-  // 'Salsa',
-  // 'Samba',
-  // 'Swing',
-  // 'Tango',
-  // 'Two Step',
-  // 'Viennese Waltz',
-  // 'Waltz',
-  // 'West Coast Swing',
-
   const [loading, setLoading] = useState(false);
   const [autoPlayIndex, setAutoPlayIndex] = useState(0);
   const [webSongs, setWebSongs] = useState<Song[]>([]);
@@ -1301,13 +1185,14 @@ const page: FC<pageProps> = ({}) => {
   async function getPlaylistsArray() {
     const q = await getDocs(collection(db, 'playlists'));
     let arr1 = q.docs.map((doc) => doc.data());
+    console.log(arr1);
     let arr2 = q.docs.map((doc) => doc.id);
     let arr = arr1.map((x, i) => ({
       name: x.name,
-      listArray: x.listArray,
+      listArray: x.playlist,
       id: arr2[i],
     }));
-    arr = [{ name: 'None', id: '', listArray: [] }, ...arr];
+    arr = [{ name: 'New', id: '', listArray: [] }, ...arr];
     console.log(arr);
     setPlaylists(arr);
     setChoosenPlaylist(arr[0].id);
@@ -1516,14 +1401,11 @@ const page: FC<pageProps> = ({}) => {
         />
       )}
       {isChoosePlaylistsModal && (
-        <ChoosePlaylistsModal
-          // savedDances={dances}
+        <ChoosePlaylistsModal 
           vis={isChoosePlaylistsModal}
           role={session?.user.role}
-          // choosenPlaylist={playlists.filter(playlist => playlist.id==choosenPlaylist)[0]}
-          onClose={() => setIsChooseSongWebModal(false)}
-          // onPlay={(song:Song)=>{setPlaylist([...playlist, song])}}
-          // onReturn={(songs) => {console.log(songs)}}
+          choosenPlaylist={playlists.filter(playlist => playlist.id==choosenPlaylist)[0]}
+          onClose={() => setIsChoosePlaylistsModal(false)} 
           onLoad={(a) => setLoading(a)}
         />
       )}
@@ -1720,10 +1602,10 @@ const page: FC<pageProps> = ({}) => {
                 <span>Auto Playlist Dances</span>
                 <select
                   className="w-1/3 p-2 mx-auto mt-2 bg-lightMainBG dark:bg-darkMainBG text-lightMainColor dark:text-darkMainColor border border-lightMainColor dark:border-darkMainColor rounded-md"
-                  // name="parties"
-                  // id="parties"
+                  
                   onChange={(e) => {
                     setChoosenPlaylist(e.target.value);
+                    setAutoPlayDances(playlists.filter(item => item.id==e.target.value)[0].listArray);
                   }}
                 >
                   {playlists.map((party, index) => {
@@ -1735,7 +1617,9 @@ const page: FC<pageProps> = ({}) => {
                   })}
                 </select>
                 <button
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.preventDefault();
+                    console.log("clicked on button")
                     setIsChoosePlaylistsModal(true);
                   }}
                   className=" fill-editcolor  stroke-editcolor  rounded-md border-editcolor  w-8 h-8"
