@@ -1241,15 +1241,14 @@ const page: FC<pageProps> = ({}) => {
     getPlaylistsArray();
     getWebSongsArray();
   }, []);
+  const selectElement = document.getElementById("collectionSelect1") as HTMLSelectElement;
   useEffect(() => {
-    const fetchSongs = async () => {
-
-     
-
-
-       
-      setWebSongsAll(songsAll);
-      let songsArr = songsAll.filter(
+    const fetchSongs = async () => { 
+      const selectedValues = Array.from(selectElement.selectedOptions).map(option => option.value); 
+      const songsChoosenArr = songsAll.filter((item)=>selectedValues.includes(item.collectionName));
+      setWebSongsAll(songsChoosenArr);
+        
+      let songsArr = songsChoosenArr.filter(
         (song) => song.dance == autoPlayDances[autoPlayIndex]
       );
       setAutoPlayIndex(autoPlayIndex + 1);
@@ -1273,7 +1272,7 @@ const page: FC<pageProps> = ({}) => {
                 : 1
             );
             setWebSongs(
-              songsAll.filter((song) => song.id !== songsArr[randomIndex].id)
+              songsChoosenArr.filter((song) => song.id !== songsArr[randomIndex].id)
             );
             if (choosenParty != '') {
               console.log(
@@ -1619,8 +1618,7 @@ const page: FC<pageProps> = ({}) => {
                       onChange={(e) =>{
                          e.preventDefault();
                          const selectElement = document.getElementById("collectionSelect1") as HTMLSelectElement;
-                         const selectedValues = Array.from(selectElement.selectedOptions).map(option => option.value);
-                         console.log(selectedValues); 
+                         const selectedValues = Array.from(selectElement.selectedOptions).map(option => option.value); 
                          setWebSongsAll(songsAll.filter((item)=>selectedValues.includes(item.collectionName)));
                         }}
                     >
