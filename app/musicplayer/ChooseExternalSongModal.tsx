@@ -38,6 +38,8 @@ type Props = {
   savedDances: string[];
   vis: boolean;
   role: string | undefined;
+  collectionsArray: string[];
+  songs: Song[];
   onReturn: (songs: Song[]) => void;
   onPlay: (song: {url: string,name: string,rate: number | undefined,dance: string | null,id: string | null}) => void;
   onClose: () => void;
@@ -48,35 +50,35 @@ const ChooseExternalSongModal: React.FC<Props> = ({
   savedDances,
   vis,
   role,
+  collectionsArray,
+  songs,
   onReturn,
   onClose,
   onPlay,
   onLoad,
-}) => {
+}) => { 
   const [displaySngs, setDisplaySngs] = useState<Song[]>([]);
-  const [songs, setSongs] = useState<Song[]>([]);
   const [isVisible, setIsVisible] = useState(vis);
   const [songLink, setSongLink] = useState('');
   const [link1, setLink1] = useState('');
   const [songName, setSongName] = useState('');
   const [collectionName, setCollectionName] = useState('');
   const [dance, setDance] = useState<string | null>(null);
-  const [rate, setRate] = useState(1);
-  const [collectionsArray, setCollectionsArray] = useState<string[]>([]);
+  const [rate, setRate] = useState(1); 
   const songsCollection = collection(db, 'songs');
-  useEffect(() => {
-    const fetchSongs = async () => {
-      const songsSnapshot = await getDocs(songsCollection);
-      const songsList = songsSnapshot.docs.map(
-        (doc) => ({ ...doc.data(), id: doc.id } as Song)
-      );
-      setSongs(songsList);
-      let collectionArray = songsList.map((item)=>(item.collectionName))
-      collectionArray = collectionArray.filter((item, index) => collectionArray.indexOf(item) === index);
-      setCollectionsArray(collectionArray.sort((a: string, b: string) => a.localeCompare(b)));
-    };
-    fetchSongs();
-  }, []); 
+  // useEffect(() => {
+  //   const fetchSongs = async () => {
+  //     const songsSnapshot = await getDocs(songsCollection);
+  //     const songsList = songsSnapshot.docs.map(
+  //       (doc) => ({ ...doc.data(), id: doc.id } as Song)
+  //     );
+  //     setSongs(songsList);
+  //     let collectionArray = songsList.map((item)=>(item.collectionName))
+  //     collectionArray = collectionArray.filter((item, index) => collectionArray.indexOf(item) === index);
+  //     setCollectionsArray(collectionArray.sort((a: string, b: string) => a.localeCompare(b)));
+  //   };
+  //   fetchSongs();
+  // }, []); 
   useEffect(() => {
     if (role !== 'Admin') {
       setDisplaySngs(songs.filter((item) => item.collectionName === 'Default'));

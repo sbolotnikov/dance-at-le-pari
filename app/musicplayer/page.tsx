@@ -1170,8 +1170,28 @@ const page: FC<pageProps> = ({}) => {
   ]);
   const [loading, setLoading] = useState(false);
   const [autoPlayIndex, setAutoPlayIndex] = useState(0);
-  const [webSongs, setWebSongs] = useState<Song[]>([]);
-  const [webSongsAll, setWebSongsAll] = useState<Song[]>([]);
+  const [webSongs, setWebSongs] = useState<{url: string;
+    name: string;
+    rate: number | undefined;
+    dance: string | null;
+    collectionName: string;
+    id: string | null;}[]>([]);
+    const [songsAll, setSongsAll] = useState<{
+      url: string;
+      name: string;
+      rate: number | undefined;
+      dance: string | null;
+      collectionName: string;
+      id: string | null;
+    }[]>([]);
+  const [webSongsAll, setWebSongsAll] = useState<{
+    url: string;
+    name: string;
+    rate: number | undefined;
+    dance: string | null;
+    collectionName: string;
+    id: string | null;
+  }[]>([]);
 
   async function getPartyArray() {
     const q = await getDocs(collection(db, 'parties'));
@@ -1198,18 +1218,38 @@ const page: FC<pageProps> = ({}) => {
     setPlaylists(arr);
     setChoosenPlaylist(arr[0].id);
   }
+  async function getWebSongsArray(){
+    const songsSnapshot = await getDocs(collection(db, 'songs'));
+    const songsList = songsSnapshot.docs.map(
+      (doc) => ({ ...doc.data(), id: doc.id } as {
+        url: string;
+        name: string;
+        rate: number | undefined;
+        dance: string | null;
+        collectionName: string;
+        id: string | null;
+      })
+    );
+    setSongsAll(songsList);
+    let collectionArr = songsList.map((item)=>(item.collectionName))
+    collectionArr = collectionArr.filter((item, index) => collectionArr.indexOf(item) === index);
+    setCollectionsArray(collectionArr.sort((a: string, b: string) => a.localeCompare(b)));
+    console.log(collectionArr)
+  }
   useEffect(() => {
     getPartyArray();
     getPlaylistsArray();
+    getWebSongsArray();
   }, []);
   useEffect(() => {
     const fetchSongs = async () => {
-      const songsSnapshot = await getDocs(collection(db, 'songs'));
-      const songsList = songsSnapshot.docs.map(
-        (doc) => ({ ...doc.data(), id: doc.id } as Song)
-      );
-      setWebSongsAll(songsList);
-      let songsArr = songsList.filter(
+
+     
+
+
+       
+      setWebSongsAll(songsAll);
+      let songsArr = songsAll.filter(
         (song) => song.dance == autoPlayDances[autoPlayIndex]
       );
       setAutoPlayIndex(autoPlayIndex + 1);
@@ -1233,7 +1273,7 @@ const page: FC<pageProps> = ({}) => {
                 : 1
             );
             setWebSongs(
-              songsList.filter((song) => song.id !== songsArr[randomIndex].id)
+              songsAll.filter((song) => song.id !== songsArr[randomIndex].id)
             );
             if (choosenParty != '') {
               console.log(
@@ -1415,6 +1455,8 @@ const page: FC<pageProps> = ({}) => {
           savedDances={dances}
           vis={isChooseSongWebModal}
           role={session?.user.role}
+          collectionsArray={collectionsArray}
+          songs={songsAll}
           onClose={() => setIsChooseSongWebModal(false)}
           onPlay={(song: Song) => {
             setPlaylist([...playlist, song]);
@@ -1579,7 +1621,7 @@ const page: FC<pageProps> = ({}) => {
                          const selectElement = document.getElementById("collectionSelect1") as HTMLSelectElement;
                          const selectedValues = Array.from(selectElement.selectedOptions).map(option => option.value);
                          console.log(selectedValues); 
-                        //  setDisplaySngs(songs.filter((item)=>selectedValues.includes(item.collectionName)));
+                         setWebSongsAll(songsAll.filter((item)=>selectedValues.includes(item.collectionName)));
                         }}
                     >
                       {collectionsArray &&
