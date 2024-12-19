@@ -342,7 +342,8 @@ const page: FC<pageProps> = ({}) => {
                       currency: 'USD',
                       items: items,
                       userID:
-                        session?.user.id !== undefined ? session?.user.id : id,
+                        // session?.user.id !== undefined ? session?.user.id : id,
+                        (!session?.user?.id) ? id : session?.user.id,
                       amount: items.reduce(function (acc, item) {
                         return acc + item.price;
                       }, 0),
