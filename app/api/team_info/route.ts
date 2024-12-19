@@ -1,7 +1,6 @@
   
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma';
-import { image } from 'html2canvas/dist/types/css/types/image';
 
 export async function GET() {
 
@@ -25,3 +24,4 @@ export async function GET() {
     status: 201,
   });
 }
+export const dynamic = 'force-dynamic'
