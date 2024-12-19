@@ -1241,9 +1241,10 @@ const page: FC<pageProps> = ({}) => {
     getPlaylistsArray();
     getWebSongsArray();
   }, []);
-  const selectElement = document.getElementById("collectionSelect1") as HTMLSelectElement;
+  
   useEffect(() => {
     const fetchSongs = async () => { 
+      const selectElement = document.getElementById("collectionSelect1") as HTMLSelectElement;
       const selectedValues = Array.from(selectElement.selectedOptions).map(option => option.value); 
       const songsChoosenArr = songsAll.filter((item)=>selectedValues.includes(item.collectionName));
       setWebSongsAll(songsChoosenArr);
