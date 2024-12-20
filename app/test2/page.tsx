@@ -57,6 +57,10 @@ const page: FC<pageProps> = ({}) => {
                         <p>Loading file content...</p>
                     )}
                 </div>
+                  <iframe src="https://drive.google.com/file/d/12RDsL12LCUR-LugtydalC_E4YHaK64Db/preview?&autoplay=1&mute=1" width="640"
+                  height="350" 
+                  allowFullScreen 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe>
             </div>
         </PageWrapper>
     );
