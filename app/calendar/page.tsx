@@ -37,6 +37,7 @@ const page: FC<pageProps> = ({}) => {
       .then((response) => response.json())
       .then((data) => {
         setEventsSet(data.eventJSON);
+        console.log(data.eventJSON);
       })
       .catch((error) => {
         console.log(error);
