@@ -30,13 +30,14 @@ const FullAutoMode = ({
 }: Props) => {
   const [activePic, setActivePic] = useState(0);
   const [activeVideo, setActiveVideo] = useState(0);
+  const [usedPictures, setUsedPictures] = useState<string[]>([]);
   let timerIntervalID: any;
   let timerIntervalVideoID: any;
   const nextActive = (num: number) => {
     timerIntervalID = window.setTimeout(function () {
       window.clearTimeout(timerIntervalID);
       console.log('interval cleared in nextActive pictures', num);  
-      setActivePic(Math.floor(Math.random() * picsArray.length));
+      setActivePic(getValidPictureId( picsArray.length));
       nextActive(num);
     }, num * 1000);
   };
@@ -48,6 +49,23 @@ const FullAutoMode = ({
       nextActiveVideo(num);
     }, num * 1000);
   };
+  const getValidPictureId = (base:number) => {
+    let currentPictureID= Math.floor(Math.random() * base);
+    while (usedPictures.indexOf(picsArray[currentPictureID].link)!==-1) {
+      currentPictureID= Math.floor(Math.random() * base);
+    }
+    let arrCopy=usedPictures;
+      arrCopy.push(picsArray[currentPictureID].link);
+      
+    if (arrCopy.length>5){
+      arrCopy.shift();
+    }
+    setUsedPictures(arrCopy)
+    console.log(arrCopy)
+    console.log(picsArray[currentPictureID].link)
+    return currentPictureID
+  }
+
   useEffect(() => {
     console.log(picsArray);
     let id = window.setTimeout(function () {}, 0);
@@ -55,7 +73,9 @@ const FullAutoMode = ({
       window.clearTimeout(id); // will do nothing if no timeout with id is present
     }
     console.log('interval cleared in useEffect pictures');
-    setActivePic(Math.floor(Math.random() * picsArray.length));
+    
+
+    setActivePic(getValidPictureId(picsArray.length));
     nextActive(seconds);
     console.log(vidsArray);    
     setActiveVideo(Math.floor(Math.random()*vidsArray.length));
