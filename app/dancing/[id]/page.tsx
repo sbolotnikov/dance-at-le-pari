@@ -233,7 +233,8 @@ export default function Page({ params }: { params: { id: string } }) {
   };
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex flex-col items-center  justify-start">
-      {specialEvents[0] !== undefined ?<div className="w-full h-1/5 relative overflow-auto mt-1 md:mt-6  rounded-md">
+      <div className="w-full h-1/5 relative overflow-auto mt-1 md:mt-6  rounded-md">
+      {specialEvents[0] !== undefined ?
         <div
           id="galleryContainer"
           className="h-full w-full relative overflow-hidden rounded-md flex flex-col"
@@ -274,13 +275,13 @@ export default function Page({ params }: { params: { id: string } }) {
           
           </div>
         </div>
-        </div>
-      </div>:events != undefined && (
+        </div>:events != undefined && (
           <BannerGallery
             events={[...events]}
             seconds={7}
           />
         )}
+        </div>
       <SharePostModal
         title={pageArray[tabIndex].title}
         url={process.env.NEXT_PUBLIC_URL + '/dancing/' + params.id}
