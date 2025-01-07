@@ -34,6 +34,7 @@ const dances = [
   'Bachata',
   'Bolero',
   'Cha Cha',
+  'Country Two Step',
   'Foxtrot',
   'Hustle',
   'Jive',
@@ -72,6 +73,12 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
   const windowSize = useDimensions();
   useEffect(() => {
     if (audioRef.current) {
+      audioRef.current.playbackRate = rate;
+      console.log('rate set:', rate);
+    }
+  }, [rate]);
+  useEffect(() => {
+    if (audioRef.current) {
       audioRef.current.src = music;
       audioRef.current.playbackRate = rateSet;
       audioRef.current.load();
@@ -86,12 +93,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
       }, delayLength);
     }
   }, [music]);
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.playbackRate = rate;
-      console.log('rate set:', rate);
-    }
-  }, [rate]);
+
 
   useEffect(() => {
     if (

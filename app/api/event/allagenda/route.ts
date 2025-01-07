@@ -2,11 +2,12 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
 export async function GET() {
- 
+  let date1 = new Date(); 
+  date1.setHours(date1.getHours() - 5);
   const event1 = await prisma.event.findMany({
     where: {
       date: {
-        gte: new Date().toISOString().split('T')[0],
+        gte: date1.toISOString().split('T')[0],
       },
     },
   });

@@ -16,7 +16,6 @@ export const Day = ({ day, onClick }: Props) => {
   const classNameDay = `cursor-pointer ${
     day.isCurrentDay ? 'text-red-800 font-extrabold' : ''
   }`;
-  console.log(day)
   return (
     <div
       className={className}
