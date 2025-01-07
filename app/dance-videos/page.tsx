@@ -52,6 +52,7 @@ const page: FC<pageProps> = ({}) => {
             </div>
             <button
               className=" outline-none border-none absolute right-0 top-0  rounded-md  mt-2  w-8 h-8"
+              aria-label='Share this page'
               onClick={(e) => {
                 e.preventDefault();
                 setRevealSharingModal(!revealSharingModal);

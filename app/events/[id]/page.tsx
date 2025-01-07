@@ -222,6 +222,7 @@ console.log("Event Data:",eventData)
                   </h2>
                   <button
                     className=" outline-none border-none   rounded-md  mt-2  w-8 h-8"
+                    aria-label='Share this event'
                     onClick={(e) => {
                       e.preventDefault();
                       setRevealSharingModal(true);

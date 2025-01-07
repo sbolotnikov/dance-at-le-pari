@@ -81,6 +81,7 @@ export default function Page(params: { params: { slug: string } }) {
                     <div className="flex flex-row items-center justify-center">
                       <button
                         className=" outline-none border-none   rounded-md  mt-2  w-8 h-8"
+                        aria-label='Share this blog post'
                         onClick={(e) => {
                           e.preventDefault();
                           setRevealSharingModal(!revealSharingModal);

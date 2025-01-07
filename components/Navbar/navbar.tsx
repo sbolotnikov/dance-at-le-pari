@@ -370,7 +370,7 @@ const Navbar = ({ path, locale, children }: Props) => {
         } `}
         style={{ height: '100%' }}
       >
-        <div className="fixed bottom-12 right-1 md:bottom-5 md:right-5 group flex  cursor-pointer  hover:scale-110  flex-col items-center ">
+        <button aria-label='Talk to our chatbot' className="fixed bottom-12 right-1 md:bottom-5 md:right-5 group flex  cursor-pointer  hover:scale-110  flex-col items-center ">
         <div
           className=" cursor-pointer w-10 md:w-14  rounded-full group-hover:animate-bounce shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor bg-lightMainBG dark:bg-lightMainColor border border-lightMainColor dark:border-darkMainColor fill-lightMainColor stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor"
           onClick={() => {
@@ -384,7 +384,7 @@ const Navbar = ({ path, locale, children }: Props) => {
         <p className="hidden tracking-widest mx-3 transition duration-300 ease-in-out opacity-100 rounded-md text-lightMainColor md:bg-lightMainBG md:dark:bg-lightMainColor md:dark:text-darkMainColor md:text-lightMainColor group-hover:inline-flex md:block md:opacity-0 md:group-hover:opacity-100 ">
             Chatbot
           </p>
-       </div>
+       </button>
         <div
           className={
             `fixed bottom-0 right-0 w-screen bg-franceBlue  flex justify-between px-3 items-center md:relative md:flex-1 md:justify-around ${
@@ -399,16 +399,15 @@ const Navbar = ({ path, locale, children }: Props) => {
             return (
               <Link
                 href={item.link}
+                aria-label={item.icon}
                 key={'link' + index}
                 className="flex-row flex items-center"
               >
-                <button
-                  type="button"
-                  name={item.icon}
+                <h2          
                   className={`cursor-pointer h-8 w-8 md:h-6 md:w-6 hover:animate-bounce hover:scale-110 stroke-darkMainColor ${item.additionalStyle}`}
                 >
                   <ShowIcon icon={item.icon} stroke={item.stroke} />
-                </button>
+                </h2>
                 <h3 className=" text-darkMainColor hidden md:block ml-1">
                   {item.text}
                 </h3>
@@ -442,6 +441,7 @@ const Navbar = ({ path, locale, children }: Props) => {
           {!session && (
             <button
               type="button"
+              aria-label='login button'
               className="  h-6 w-6 mr-3 md:mr-6 md:h-8 md:w-8 rounded-sm outline-none"
               onClick={() => {
                 signIn();
@@ -460,6 +460,7 @@ const Navbar = ({ path, locale, children }: Props) => {
           {session && (
             <button
               id="profile-toggle"
+              aria-label='profile-toggle'
               type="button"
               className="  rounded-full h-full  mr-3 md:mr-6 outline-none "
               onClick={() => {
@@ -490,6 +491,7 @@ const Navbar = ({ path, locale, children }: Props) => {
           )}
           <button
             id="theme-toggle"
+            aria-label='theme-toggle'
             type="button"
             onClick={() => {
               changeTheme(!darkMode);
@@ -521,12 +523,13 @@ const Navbar = ({ path, locale, children }: Props) => {
             <button
               id="cart-toggle"
               type="button"
+              aria-label='shopping cart'
               onClick={() => {
                 burgerState ? changeMenu(false) : {};
               }}
               className=" h-6 w-6 md:h-8 md:w-8  mr-3 md:mr-6 rounded-sm outline-none"
             >
-              <Link href={'/shopping'}>
+              <Link href={'/shopping'} >
                 <div className="group flex  cursor-pointer  hover:scale-110  flex-col items-center ">
                   <div className="  h-6 w-6 md:h-8 md:w-8 relative group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor ">
                     <div className=" h-6 w-6 md:h-8 md:w-8 mr-2  rounded-full bg-lightMainBG dark:bg-darkMainBG p-1 fill-none  stroke-lightMainColor dark:stroke-darkMainColor ">
@@ -549,6 +552,7 @@ const Navbar = ({ path, locale, children }: Props) => {
           )}
           <button
             id="burger-toggle"
+            aria-label='burger-toggle'
             className={`relative m-1 flex cursor-pointer p-1.5  outline-none rounded-md hover:ring-2 bg-lightMainBG dark:bg-lightMainColor  hover:ring-lightAccentColor focus:ring-lightAccentColor dark:hover:ring-darkAccentColor dark:focus:ring-darkAccentColor ${
               windowSize.height! < 760 || windowSize.width! < 768
                 ? ''

@@ -151,7 +151,8 @@ const NavigationButton = ({
   onClick: () => void;
 }) => (
   <button
-    name={direction === 'next' ? 'nextEventButton' : 'prevEventButton'} 
+    name={direction === 'next' ? 'nextEventButton' : 'prevEventButton'}
+    aria-label={direction === 'next' ? 'nextEventButton' : 'prevEventButton'}
     className={`absolute top-1/2 ${
       direction === 'next' ? 'right-0' : 'left-0'
     } cursor-pointer hover:scale-125`}
@@ -169,7 +170,7 @@ const NavigationButton = ({
       />
     </div>
   </button>
-);
 
+);
 export default BannerGallery;
 export const dynamic = 'force-dynamic';

@@ -215,6 +215,7 @@ export default function Page({ params }: { params: { id: string } }) {
             <ShowIcon icon={imgArray[tabIndex]} stroke={'0.1'} />
           </div>
           <button
+            aria-label='Share this page'
             className=" outline-none border-none absolute right-0 top-0  rounded-md  mt-2  w-8 h-8"
             onClick={(e) => {
               e.preventDefault();

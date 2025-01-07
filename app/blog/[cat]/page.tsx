@@ -160,6 +160,7 @@ export default function Page(params: {
             <ShowIcon icon={'Blog'} stroke={'0.1'} />
           </div>
           <button
+            aria-label='Share this blog category page'
             className=" outline-none border-none absolute right-1 top-1  rounded-md  mt-2  w-8 h-8"
             onClick={(e) => {
               e.preventDefault();
