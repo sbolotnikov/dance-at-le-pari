@@ -152,7 +152,7 @@ const page: FC<pageProps> = ({}) => {
             <div className="w-full m-2  rounded-md md:grid md:grid-cols-3 md:gap-1">
               <div className="h-[240px] w-[240px] m-auto">
                 <Iframe
-                  url="https://www.youtube.com/embed/O_y1uix4GkA?&amp;&amp;controls=1&amp;loop=0&amp;origin=https%3A%2F%2Fwww.leparidancenter.com&amp;playsinline=1&amp;enablejsapi=1&amp;widgetid=3"
+                  url="https://www.youtube.com/embed/O_y1uix4GkA?&amp;controls=1&amp;loop=0"
                   width="100%"
                   height="100%"
                   title="Best Dance Studio in New Jersey. Wedding event/ Special events rental.  Dance events in New Jersey."
@@ -237,20 +237,9 @@ const page: FC<pageProps> = ({}) => {
                           >
                             {item.title}
                           </h1>
- 
-                          <div
-                            className="list-disc"
-                            dangerouslySetInnerHTML={{
-                              __html: item.description!,
-                            }}
-                          ></div>
-                          <ImgFromDb
-                            url={item.image}
-                            stylings="object-contain w-[250px] h-[250px] aspect-square"
-                            alt={'Package Image' + index}
-                          />
                           <div
                             className="w-full btnFancy my-1 text-base text-center  rounded-md "
+                            aria-label={`Add ${item.title} to shopping cart`}
                             style={{ padding: '0' }}
                             onClick={async () => {
                               // let info = await get_package(item.id);
@@ -283,6 +272,18 @@ const page: FC<pageProps> = ({}) => {
                           >
                             {'Add to Cart'}
                           </div>
+                          <div
+                            className="list-disc"
+                            dangerouslySetInnerHTML={{
+                              __html: item.description!,
+                            }}
+                          ></div>
+                          <ImgFromDb
+                            url={item.image}
+                            stylings="object-contain w-[250px] h-[250px] aspect-square"
+                            alt={'Package Image' + index}
+                          />
+                          
                         </div>
                       );
                     })}

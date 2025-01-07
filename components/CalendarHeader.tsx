@@ -50,6 +50,7 @@ export const CalendarHeader = ({
       {!defaultView && (
         <button
           className="group flex shadow-lg pointer border-0 outline-none rounded cursor-pointer items-center md:group-hover:scale-125 justify-start  md:w-14 flex-col md:items-center  absolute bottom-0 left-0"
+          aria-label={!agendaView ? 'Switch to Agenda view' : 'Switch to Classic view'}
           style={{ padding: '5px 5px', margin: '5px 5px' }}
           onClick={(e) => {
             e.preventDefault();

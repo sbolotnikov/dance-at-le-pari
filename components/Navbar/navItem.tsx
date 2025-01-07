@@ -9,7 +9,7 @@ type IProps = {
 };
 function NavItem({ icon, title, url }: IProps) {
   return (
-    <Link href={url}  className='relative'>
+    <Link href={url}  className='relative' aria-label={title}>
       <Ribbon />
       <div className="group flex  absolute inset-0 cursor-pointer justify-start ml-11 flex-row items-center md:group-hover:scale-125 md:ml-0 md:justify-center  md:w-12 md:flex-col md:items-center ">
      
