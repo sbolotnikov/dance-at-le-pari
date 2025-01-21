@@ -89,7 +89,7 @@ export default function Page(params: { params: { slug: string } }) {
     } else {
     const { name, email } = emailList.pop()!;
     console.log(email, name);
-
+    if (email!=='email'){
     fetch('/api/admin/email_mass_send', {
       method: 'POST',
       headers: {
@@ -120,6 +120,7 @@ export default function Page(params: { params: { slug: string } }) {
           sendConsecativeEmails(emailList,html,[...sentEmails, 'Failed to send email to ' + email],1,errNumber+1);
          
       });
+    }
     }
   }
   const sendTestEmail = (email: string) => {

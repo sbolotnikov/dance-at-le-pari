@@ -65,6 +65,7 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
 
     
     let searchRes=users.filter(user=>user.name!.toLowerCase().includes(searchPar.toLowerCase())||user.lastname!.toLowerCase().includes(searchPar.toLowerCase())||user.email.toLowerCase().includes(searchPar.toLowerCase())||user.telephone1!.includes(searchPar)||user.telephone2!.includes(searchPar));
+    console.log(users);
     setUsersFiltered([...searchRes]);
  },[searchPar]);
   useEffect(() => {
@@ -106,34 +107,58 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
 
   useEffect(() => {
     let secondIndex=0
+    let usersEmails = [] as string[];
     if (newUsers.length > 0) { 
-        for (let i = 0; i < newUsers.length; i++) {
-          if (newUsers.filter(user=>user.email===newUsers[i].email).length>1) {
-            secondIndex=newUsers.map(user=>user.email).indexOf(newUsers[i].email,i+1);
-            console.log(newUsers[i],newUsers[secondIndex]); 
-            setOne(i);
-            setTwo(secondIndex)
-            setAlertStyle({
-              variantHead: 'danger',
-              heading: `Email ${newUsers[i].email} already exists`,
-              text: `Choose 1: ${newUsers[i].name} ${newUsers[i].lastname} ${newUsers[i].telephone1} ${newUsers[i].telephone2} or 2: ${newUsers[secondIndex].name} ${newUsers[secondIndex].lastname}  ${newUsers[secondIndex].telephone1} ${newUsers[secondIndex].telephone2}`,
-              color1: 'danger',
-              button1: '1',
-              color2: 'secondary',
-              button2: '2',
-              inputField: '',
-            });
-            setRevealAlert(true);
-            return; 
-          }
-        }
+      console.log(newUsers)
+      usersEmails = newUsers.map((user) => user.email)
+      usersEmails=newUsers.map((user) => user.email).filter((value,index)=>usersEmails.indexOf(value)===index);
+      let usersFiltered = usersEmails.map((email1) => newUsers.filter((user) => user.email === email1)[0]).map((user) => ({
+        name: user.name,
+        lastname: user.lastname,
+        telephone1: user.telephone1,
+        telephone2: user.telephone2,
+        email: user.email,
+        labels: user.labels,
+        createdAt: !isNaN(new Date(user.createdAt).getTime()) ? new Date(user.createdAt) : new Date(Date.now()),
+        status: 'Subscribed',
+        lastactivity: user.lastactivity,
+        source: user.source,
+        lastcontact: user.lastcontact  ,
+      }));
+     console.log(usersFiltered )
+// lastcontact and createdAt
+
+      // for (let i=0; i<usersFiltered.length; i++) usersFiltered[i].id=i+1;
+      // console.log(usersFiltered)
+
+
+        // for (let i = 0; i < newUsers.length; i++) {
+        //   if (newUsers.filter(user=>user.email===newUsers[i].email).length>1) {
+        //     secondIndex=newUsers.map(user=>user.email).indexOf(newUsers[i].email,i+1);
+        //     console.log(newUsers[i],newUsers[secondIndex]); 
+        //     setOne(i);
+        //     setTwo(secondIndex)
+        //     setAlertStyle({
+        //       variantHead: 'danger',
+        //       heading: `Email ${newUsers[i].email} already exists`,
+        //       text: `Choose 1: ${newUsers[i].name} ${newUsers[i].lastname} ${newUsers[i].telephone1} ${newUsers[i].telephone2} or 2: ${newUsers[secondIndex].name} ${newUsers[secondIndex].lastname}  ${newUsers[secondIndex].telephone1} ${newUsers[secondIndex].telephone2}`,
+        //       color1: 'danger',
+        //       button1: '1',
+        //       color2: 'secondary',
+        //       button2: '2',
+        //       inputField: '',
+        //     });
+        //     setRevealAlert(true);
+        //     return; 
+        //   }
+        // }
         onReturn(1)
         fetch('/api/admin/contacts_import', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify( newUsers),
+          body: JSON.stringify( usersFiltered)
         }).then((data) => {
           setNewContact(false);
           console.log(data.json());
@@ -168,7 +193,7 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
 
       }
   }, [newUsers.length]);
-  
+    
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
 
@@ -178,7 +203,8 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
     reader.onload = (function (file) {
       return function () {
         let res = this.result?.toString(); 
-        setNewUsers(csvJSON(res as string, "'", ','));       
+        setNewUsers(csvJSON(res as string, "'", ','));     
+        
       };
     })(file1);
     reader.readAsText(file1);
@@ -459,6 +485,7 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
                         telephone1: '',
                         telephone2: '',
                         labels: null,
+                        source:'Entered Manually',
                         createdAt: new Date(),
                         status: 'Subscribed',
                         lastactivity: null,

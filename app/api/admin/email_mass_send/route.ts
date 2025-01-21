@@ -11,7 +11,7 @@ export async function POST(req: Request) {
  
         const res = await sendAnyEmail({
           email1: email,
-          email2: process.env.EMAIL_SERVER_USER ? process.env.EMAIL_SERVER_USER : '',
+          email2: process.env.EMAIL_SERVER_USER1 ? process.env.EMAIL_SERVER_USER1 : '',
           subject: title,
           text: message.replace(/<[^>]*>/g, '').replace('&NAME', name.trim() || ""),
           html: message.replace('&amp;NAME', name.trim() || ""),
