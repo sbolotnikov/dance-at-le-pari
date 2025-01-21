@@ -333,7 +333,7 @@ export default function Page({ params }: { params: { id: string } }) {
             </div>
             <div className="w-full  flex justify-center items-center">
               <h2 className="text-center text-yellow-600 font-bold text-lg md:text-3xl italic">
-                All online payments include credit card fees
+                Fees applied to online payments
               </h2>
               <button
                 className=" btnFancy mx-auto text-base text-center w-28 rounded-md absolute top-0 left-0"

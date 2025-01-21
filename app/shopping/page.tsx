@@ -130,7 +130,7 @@ const page: FC<pageProps> = ({}) => {
               Shopping Cart
             </h2>
             <h2 className="text-center text-yellow-600 font-bold text-lg md:text-3xl italic">
-              All online payments include credit card fees
+             Fees applied to online payments
             </h2>
             <div className=" h-20 w-20 md:h-28 md:w-28 mb-6 fill-lightMainColor  stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor m-auto">
               <ShowIcon icon={'ShoppingCart'} stroke={'0.1'} />
