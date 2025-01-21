@@ -89,8 +89,8 @@ export default function Page(params: { params: { slug: string } }) {
     } else {
     const { name, email } = emailList.pop()!;
     console.log(email, name);
-    if (email!=='email'){
-    fetch('/api/admin/email_mass_send', {
+    if (isEmailValid(email)) {
+     fetch('/api/admin/email_mass_send', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -101,7 +101,7 @@ export default function Page(params: { params: { slug: string } }) {
         email: email,
         name: name,
       }),
-    })
+     })
       .then(async (res) => {
         const data = await res.json();
         setSendingStatus([...sentEmails, 'Sent successfully '+data.accepted[0]]);
@@ -121,6 +121,7 @@ export default function Page(params: { params: { slug: string } }) {
          
       });
     }
+    sendConsecativeEmails(emailList,html,[...sentEmails, 'Wrong email ' + email+'. Skipped'],1,1);
     }
   }
   const sendTestEmail = (email: string) => {
