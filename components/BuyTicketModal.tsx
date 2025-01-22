@@ -162,6 +162,9 @@ export default function BuyTicketModal({
                 : 'h-full'
             }`}
           >
+              <h2 className="text-center text-amber-600 font-bold md:text-xl italic">
+                Fees applied to online payments
+              </h2>
             {seatmap !== null ? (
               <div>
                 <h2 className="w-full text-center uppercase">Choose your seats</h2>
