@@ -6,19 +6,13 @@ import { gsap } from '../utils/gsap';
 import ImgFromDb from './ImgFromDb';
 import { useDimensions } from '@/hooks/useDimensions';
 import Image from 'next/image';
+import { TBannerEvent } from '@/types/screen-settings';
 
 
-type Event = {
-  date: string;
-  tag: string;
-  id: number | string;
-  image: string;
-  eventtype: string;
-};
 
 type Props = {
   seconds: number;
-  events: Event[];
+  events: TBannerEvent[];
 };
 
 const BannerGallery = ({ seconds, events }: Props) => {

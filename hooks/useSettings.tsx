@@ -2,7 +2,7 @@ import dataObject from '@/DataObject';
 import {
   ScreenSettingsContextType,
   TDance,
-  TEventArray,
+  TEvent,
   TPriceOption,
 } from '@/types/screen-settings';
 import { createContext, useState, useEffect } from 'react';
@@ -16,7 +16,7 @@ export const SettingsContext = createContext<ScreenSettingsContextType | null>(
 export const SettingsProvider = ({ children }: Props) => {
   const [darkMode, setDarkMode] = useState(false);
   const [hideNav, setHideNav] = useState(false);
-  const [events, setEvents] = useState<TEventArray>([]);
+  const [events, setEvents] = useState<TEvent[]>([]);
   const [hours, setHours] = useState<string[]>([]);
   const [selectedWeddingPackages, setSelectedWeddingPackages] = useState<number[]>([]);
   const [specialWeddingPackage, setSpecialWeddingPackage] = useState<number>(-1);

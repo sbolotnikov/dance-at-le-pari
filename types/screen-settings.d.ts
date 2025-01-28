@@ -31,6 +31,13 @@ export type TEvent = {
   image: string;
   eventtype: string;
 };
+export type TBannerEvent  = {
+  date: string;
+  tag: string;
+  id: number | string;
+  image: string;
+  eventtype: string;
+};
 type ContactType={
   id: number,
   name: string | null,
