@@ -409,9 +409,14 @@ export default function Page({ params }: { params: { id: string } }) {
                         users={users}
                         role={session?.user.role!}
                         onClick={() => {
-                          if (d.value !== 'padding') {
-                            let dt = new Date();
-                            dt.setMonth(new Date().getMonth() + nav);
+                          let dt = new Date();
+                          if (d.value !== 'padding') { 
+   
+                            console.log("month:",dt.getMonth(), "nav:",nav)
+                            dt.setDate(15);// otherwisse in february it will skip the month
+                            dt.setMonth(dt.getMonth() + nav);
+                            
+                            console.log(dt)
                             let dayStr =
                               dt.toISOString().split('-')[0] +
                               '-' +
@@ -425,8 +430,7 @@ export default function Page({ params }: { params: { id: string } }) {
                               setRevealDayView(true);
                             }
                           }
-                        }}
-                        onEventClick={(e) => {
+                        }}                        onEventClick={(e) => {
                           setRevealModal(true);
                           setSelectedEvent(
                             events.filter((event) => event.id == e)[0]
