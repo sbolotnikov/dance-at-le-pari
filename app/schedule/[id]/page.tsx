@@ -416,7 +416,7 @@ export default function Page({ params }: { params: { id: string } }) {
                             dt.setDate(15);// otherwisse in february it will skip the month
                             dt.setMonth(dt.getMonth() + nav);
                             
-                            console.log(dt)
+                            console.log(dt)// it show date after applying all setMonth and setDate. It wil not show original date
                             let dayStr =
                               dt.toISOString().split('-')[0] +
                               '-' +
