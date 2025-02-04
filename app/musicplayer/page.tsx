@@ -1381,6 +1381,9 @@ const page: FC<pageProps> = ({}) => {
                 }`,
               }).then((res) => console.log(res));
             }
+            sleep(1200).then(()=>{setRate(songsArr[randomIndex].rate !== undefined
+              ? songsArr[randomIndex].rate+0.0001
+              : 1)})
           })
       );
     } else {
