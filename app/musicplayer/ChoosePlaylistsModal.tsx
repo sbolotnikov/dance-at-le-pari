@@ -407,6 +407,14 @@ useEffect(() => {
                   >
                     Add New Playlist Item
                   </button>
+
+                  <div className="w-full flex flex-row items-start flex-wrap">
+                    {playlist !== undefined && (
+                    Array.from(new Set(playlist)).map((item, i) => (
+                      <div key={i} className="w-fit m-1">{item}-{playlist.filter(i2=>i2===item).length}{'. '}</div>
+                    ))
+                    )}
+                    </div>
                   {(playlistName!==choosenPlaylist.name || playlist!==choosenPlaylist.listArray)&&(choosenPlaylist.id.length!==0)&&<button
                     onClick={() =>
                       handlePlaylistEdit({
