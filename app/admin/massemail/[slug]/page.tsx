@@ -106,7 +106,7 @@ export default function Page(params: { params: { slug: string } }) {
         const data = await res.json();
         setSendingStatus([...sentEmails, 'Sent successfully '+data.accepted[0]]);
         console.log(data);  
-          sendConsecativeEmails(emailList,html,[...sentEmails, 'Sent successfully '+data.accepted[0]],1,1);
+          sleep(2000).then(()=>sendConsecativeEmails(emailList,html,[...sentEmails, 'Sent successfully '+data.accepted[0]],1,1));
       })
       .catch(async (err) => {
         setSendingStatus([
