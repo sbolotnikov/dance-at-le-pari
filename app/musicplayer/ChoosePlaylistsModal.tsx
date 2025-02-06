@@ -414,6 +414,7 @@ useEffect(() => {
                       <div key={i} className="w-fit m-1">{item}-{playlist.filter(i2=>i2===item).length}{'. '}</div>
                     ))
                     )}
+                    <div className="w-fit m-1">Total:{playlist.length}</div>
                     </div>
                   {(playlistName!==choosenPlaylist.name || playlist!==choosenPlaylist.listArray)&&(choosenPlaylist.id.length!==0)&&<button
                     onClick={() =>
