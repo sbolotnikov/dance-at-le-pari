@@ -79,7 +79,7 @@ export const csvJSON = (text: string, quoteChar: string, delimiter: string) => {
 };
   export const isEmailValid = (st: string) => {
     const emailRegex = new RegExp(
-      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/,
       'gm'
     );
     return emailRegex.test(st);

@@ -82,14 +82,17 @@ export default function Page(params: { params: { slug: string } }) {
         });
     });
   };
-  const sendConsecativeEmails = (emailList:{ name: string; email: string }[],html:any, sentEmails:string[],counter:number,errNumber:number) => {
-    if (emailList.length == 0) {
-      setSendingStatus([...sentEmails,'Finished']);
+  const sendConsecativeEmails = async(emailList:{ name: string; email: string }[],html:any, sentEmails:string[],counter:number,errNumber:number) => {
+    if (emailList.length === 0) {
+      let el = sentEmails.filter(a =>!a.includes("Sent successfully")).map(a=>a.split(" ")[3]);
+            console.log(el)
+      setSendingStatus([...sentEmails,'Not Send: '+el]);
+      console.log(sentEmails)
       // setRevealModal1(false);
     } else {
     const { name, email } = emailList.pop()!;
-    console.log(email, name);
-    if (isEmailValid(email)) {
+    console.log(email, isEmailValid(email));
+    if (isEmailValid(email)) {    
      fetch('/api/admin/email_mass_send', {
       method: 'POST',
       headers: {
@@ -104,24 +107,24 @@ export default function Page(params: { params: { slug: string } }) {
      })
       .then(async (res) => {
         const data = await res.json();
-        setSendingStatus([...sentEmails, 'Sent successfully '+data.accepted[0]]);
-        console.log(data);  
-          sleep(2000).then(()=>sendConsecativeEmails(emailList,html,[...sentEmails, 'Sent successfully '+data.accepted[0]],1,1));
+        setSendingStatus([...sentEmails,  (sentEmails.length+1)+'. Sent successfully '+email]); 
+        // await sleep(100);
+        sendConsecativeEmails(emailList,html,[...sentEmails, (sentEmails.length+1)+'. Sent successfully '+email],1,1)
       })
       .catch(async (err) => {
-        setSendingStatus([
-          ...sentEmails,
-          'Failed to send email to ' + email,
-        ]); 
+        
         console.log("batch size: ",counter,". ",errNumber*60,'seconds wait error, email:', email);
           await sleep(60000*errNumber);
           
           emailList.push({ name, email });
-          sendConsecativeEmails(emailList,html,[...sentEmails, 'Failed to send email to ' + email],1,errNumber+1);
-         
+          setSendingStatus([...sentEmails,(sentEmails.length+1)+'. Failed_to_send_email to ' + email,]); 
+          sendConsecativeEmails(emailList,html,[...sentEmails, (sentEmails.length+1)+'. Failed_to_send_email to ' + email],1,errNumber+1);
       });
     }
-    sendConsecativeEmails(emailList,html,[...sentEmails, 'Wrong email ' + email+'. Skipped'],1,1);
+    else{
+    setSendingStatus([...sentEmails,  (sentEmails.length+1)+'. Wrong email '+email+' . Skipped']);
+    sendConsecativeEmails(emailList,html,[...sentEmails,(sentEmails.length+1)+'. Wrong email ' + email+' . Skipped'],1,1);
+    }
     }
   }
   const sendTestEmail = (email: string) => {
