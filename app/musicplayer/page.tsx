@@ -1048,7 +1048,30 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
     >
       <div className="blurFilter border-0 rounded-md p-2 shadow-2xl w-[90%] max-w-[450px] max-h-[85%] overflow-y-auto md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70">
         <div className="w-full max-w-md mx-auto mt-4 relative">
+          <div className="flex justify-between items-center w-full">
           <h4 className="text-lg font-semibold mb-2">Playlist</h4>
+          <div className=" flex flex-col items-center justify-center m-1.5">
+                <PlayerButtons
+                  icon={'Save'}
+                  color="#504deb"
+                  color2="#FFFFFF"
+                  size={50}
+                  onButtonPress={() => {
+                    if (playlist.length === 0) {
+                      alert('Playlist is empty');
+                      return;
+                    }else if (playlist.length<47){
+                    save_File(JSON.stringify([...playlist]), 'musicDB.sdb');
+                    }else{
+                      let newPlaylist = playlist.slice(0,47);
+                      save_File(JSON.stringify([...newPlaylist]), 'musicDB.sdb');
+                      save_File(JSON.stringify([...playlist.slice(47)]), 'musicDB part 2.sdb');
+                    }
+                  }}
+                />
+                {'Save Playlist'}
+              </div>
+              </div>
           <ul className="space-y-2" ref={listRef1}>
             {playlist.map((song, index) => (
               <React.Fragment key={song.name}>
@@ -1159,6 +1182,7 @@ const page: FC<pageProps> = ({}) => {
   const [isChooseMusicOpen, setIsChooseMusicOpen] = useState(false);
   const [isChooseSongWebModal, setIsChooseSongWebModal] = useState(false);
   const [autoPlayMode, setAutoPlayMode] = useState(false);
+  const [autoPlayList, setAutoPlayList] = useState(false);
   const [isAddToDBOpen, setIsAddToDBOpen] = useState(false);
   const [parties, setParties] = useState<{ name: string; id: string }[]>([]);
   const [choosenParty, setChoosenParty] = useState('');
@@ -1202,6 +1226,7 @@ const page: FC<pageProps> = ({}) => {
     let arr1 = q.docs.map((doc) => doc.data());
     let arr2 = q.docs.map((doc) => doc.id);
     let arr = arr1.map((x, i) => ({ name: x.name, id: arr2[i] }));
+    arr.sort((a, b) => a.name.localeCompare(b.name));
     arr = [{ name: 'None', id: '' }, ...arr];
     console.log(arr);
     setParties(arr);
@@ -1217,6 +1242,7 @@ const page: FC<pageProps> = ({}) => {
       listArray: x.playlist,
       id: arr2[i],
     }));
+    arr.sort((a, b) => a.name.localeCompare(b.name));
     arr = [{ name: 'New', id: '', listArray: [] }, ...arr];
     console.log(arr);
     setPlaylists(arr);
@@ -1262,7 +1288,7 @@ const page: FC<pageProps> = ({}) => {
       fetch(`/api/music2play?file_id=${songsArr[randomIndex].url}`).then(
         (response) =>
           response.json().then((data) => {
-            setPlaylist([
+            setPlaylist([...playlist,
               {
                 url: data.fileUrl,
                 name: songsArr[randomIndex].name,
@@ -1295,14 +1321,48 @@ const page: FC<pageProps> = ({}) => {
           })
       );
     };
-
     if (autoPlayMode) {
       fetchSongs();
     }
   }, [autoPlayMode]);
+  useEffect(() => {
+    const fetchSongsAll = async () => { 
+      const selectElement = document.getElementById("collectionSelect1") as HTMLSelectElement;
+      const selectedValues = Array.from(selectElement.selectedOptions).map(option => option.value); 
+      let songsChoosenArr = songsAll.filter((item)=>selectedValues.includes(item.collectionName));
+      let playlist1 : Song[] = []; 
+      for (let autoPlayIndex1 = 0; autoPlayIndex1 < autoPlayDances.length; autoPlayIndex1++) {
+      let songsArr = songsChoosenArr.filter(
+        (song) => song.dance == autoPlayDances[autoPlayIndex1]
+      );
+      let randomIndex = Math.floor(Math.random() * songsArr.length);
+
+      const response = await fetch(`/api/music2play?file_id=${songsArr[randomIndex].url}`);
+      const data = await response.json();
+      playlist1=[...playlist1,
+              {
+                url: data.fileUrl,
+                name: songsArr[randomIndex].name,
+                rate: songsArr[randomIndex].rate,
+                dance: songsArr[randomIndex].dance,
+                id: songsArr[randomIndex].id,
+              },
+            ];
+
+            songsChoosenArr=songsChoosenArr.filter((song) => song.id !== songsArr[randomIndex].id)   
+              setPlaylist(playlist1);
+  
+            
+    }
+    };
+    if (autoPlayList) {
+      fetchSongsAll();
+    }
+  }, [autoPlayList]);  
   const handleSongChange = (index: number) => {
     setCurrentSongIndex(index);
     setRate(playlist[index].rate !== undefined ? playlist[index].rate : 1);
+    
   };
   useEffect(() => {
     console.log(currentSongIndex, 'in useeffect', playlist);
@@ -1391,10 +1451,16 @@ const page: FC<pageProps> = ({}) => {
     } else {
       if (currentSongIndex < playlist.length - 1) {
         setRate(playlist[currentSongIndex + 1].rate ?? 1);
+        sleep(1200).then(()=>{setRate(playlist[currentSongIndex + 1].rate !== undefined
+          ? playlist[currentSongIndex + 1].rate!+0.0001
+          : 1)})
         setCurrentSongIndex(currentSongIndex + 1);
       } else {
         setCurrentSongIndex(0);
         setRate(playlist[0].rate ?? 1);
+        sleep(1200).then(()=>{setRate(playlist[0].rate !== undefined
+          ? playlist[0].rate!+0.0001
+          : 1)})
       }
     }
   };
@@ -1662,7 +1728,8 @@ const page: FC<pageProps> = ({}) => {
               </select>
             )}
             {session?.user.role == 'Admin' && (
-              <div className="flex flex-col items-center justify-center">
+              <div className="flex justify-center items-center">
+              <div className="flex flex-col items-center justify-center mx-2">
                 <PlayerButtons
                   icon={'Auto'}
                   color="#504deb"
@@ -1672,6 +1739,17 @@ const page: FC<pageProps> = ({}) => {
                 />
                 <span className="text-center">Autoplay Mode</span>
               </div>
+              <div className="flex flex-col items-center justify-center">
+              <PlayerButtons
+                icon={'CreatePlaylist'}
+                color="#504deb"
+                color2="#FFFFFF"
+                size={50}
+                onButtonPress={() => setAutoPlayList(true)}
+              />
+              <span className="text-center">Make Playlist</span>
+            </div>
+            </div>
             )}
             {session?.user.role == 'Admin' && (
               <div className="w-full flex flex-row justify-between items-center">
