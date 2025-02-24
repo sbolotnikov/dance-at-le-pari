@@ -212,15 +212,20 @@ const DraggableList: React.FC<DraggableListProps> = ({
   }, []);
   
   return (
+    <div className={`${containerClassName} relative`}>
     <ul
       ref={listRef}
-      className={`draggable-list ${containerClassName}`}
+      className={`draggable-list `}
       style={{
         padding: '0',
         margin: '0',
         listStyle: 'none',
         maxHeight: '100%',
-        overflowY: 'auto'
+        overflowY: 'auto',
+        position: 'absolute',
+        top: '0',
+        left: '0',
+        width: '100%',
       }}
     >
       {items.map((item, index) => (
@@ -259,6 +264,7 @@ const DraggableList: React.FC<DraggableListProps> = ({
         </li>
       ))}
     </ul>
+    </div>
   );
 };
 
