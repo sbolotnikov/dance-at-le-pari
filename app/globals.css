@@ -322,6 +322,10 @@ body {
    
   animation: rotation2 5s 1s linear infinite;
 } */
+.draggable-item {
+  transition: transform 0.2s ease;
+  touch-action: none;
+}
 .frameAnimate {
   position: relative;
   filter:url(#wavy) blur(1px);
