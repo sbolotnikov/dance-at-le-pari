@@ -395,7 +395,7 @@ export default function Page({ params }: { params: { id: string } }) {
                   }`}
                   style={{ flex: '1 1 100%' }}
                 >
-                  {products.length > 0 && (
+                  {products.length > 0 ? (
                     <PaymentPageForm
                       paymentsArray={products.filter(
                         (product) => product.eventtype == item
@@ -406,7 +406,9 @@ export default function Page({ params }: { params: { id: string } }) {
                         actionTemplateChoice(action1, item1, option);
                       }}
                     />
-                  )}
+                  ):<div className="w-full h-full flex justify-center items-center">
+                    <h1 className="text-2xl font-bold text-center">For more information please call</h1>
+                    </div>}
                 </TabPanel>
               );
             })}
