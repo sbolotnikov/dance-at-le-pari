@@ -1,30 +1,30 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import 'react-quill/dist/quill.snow.css';
 import { useSession } from 'next-auth/react';
 import EmailEditor, { EditorRef, EmailEditorProps } from 'react-email-editor';
 import sleep, { isEmailValid, save_Template } from '@/utils/functions';
-import { FC } from 'react';
 import { useRouter } from 'next/navigation';
 import { PageWrapper } from '@/components/page-wrapper';
 import ShowIcon from '@/components/svg/showIcon';
 import EditContactsModal from '@/components/EditContactsModal';
 import { useDimensions } from '@/hooks/useDimensions';
-import LoadingScreen from '@/components/LoadingScreen';
-import ShowSendingEmailResultsModal from '@/components/ShowSendingEmailResultsModal';
+import LoadingScreen from '@/components/LoadingScreen'; 
+import ShowSendingEmailResultsModal from '@/components/ShowSendingEmailResultsModal'; 
 type Props = {
   params: { slug: string };
 };
 
 export default function Page(params: { params: { slug: string } }) {
   const slug = params.params.slug;
-  const { data: session, status } = useSession();
+  const { data: session, status } = useSession(); 
   const router = useRouter();
   const [value, setValue] = useState('');
   const [title, setTitle] = useState('');
   const [loading, setLoading] = useState(false);
   const [vis, setVis] = useState(false);
+  const [vis2, setVis2] = useState(false);
   const [revealModal, setRevealModal] = useState(false);
   const [revealModal1, setRevealModal1] = useState(false);
   const [sendingStatus, setSendingStatus] = useState<string[]>([]);
@@ -43,7 +43,7 @@ export default function Page(params: { params: { slug: string } }) {
   //   };
   const emailEditorRef = useRef<EditorRef>(null);
 
-  const exportHtml = () => {
+  const exportHtml = (firstEmail:string) => {
     fetch('/api/admin/contacts', {
       method: 'POST',
       headers: {
@@ -59,7 +59,6 @@ export default function Page(params: { params: { slug: string } }) {
           let contacts = data;
           let name1 = '' as string;
           let emailList = [] as { name: string; email: string }[];
-          console.log(contacts);
           const unlayer = emailEditorRef.current?.editor;
           setRevealModal1(true);
           unlayer?.exportHtml((data) => {
@@ -72,6 +71,15 @@ export default function Page(params: { params: { slug: string } }) {
               emailList.push({ name: name1, email: contacts[i].email });
              
             }
+            emailList =emailList.sort((a, b) => (a.email > b.email) ? 1 : ((b.email > a.email) ? -1 : 0))
+            if (firstEmail.length > 0) {
+             let index = emailList.findIndex(contact => contact.email === firstEmail);
+             console.log(index)
+             if (index !== -1) {
+              emailList=emailList.slice(index);
+             }
+            }
+            console.log(emailList)
             sendConsecativeEmails(emailList,html,[] as string[],1,1);
         
             
@@ -114,9 +122,9 @@ export default function Page(params: { params: { slug: string } }) {
       .catch(async (err) => {
         
         console.log("batch size: ",counter,". ",errNumber*60,'seconds wait error, email:', email);
-          await sleep(60000*errNumber);
+          await sleep(3000);
           
-          emailList.push({ name, email });
+          // emailList.push({ name, email });
           setSendingStatus([...sentEmails,(sentEmails.length+1)+'. Failed_to_send_email to ' + email,]); 
           sendConsecativeEmails(emailList,html,[...sentEmails, (sentEmails.length+1)+'. Failed_to_send_email to ' + email],1,errNumber+1);
       });
@@ -292,7 +300,7 @@ export default function Page(params: { params: { slug: string } }) {
               <div className=" w-full">{value}</div>
             </label>
             <div className="w-full">
-              <button className="btnFancy" onClick={exportHtml}>
+              <button className="btnFancy" onClick={ () => setVis2(true)}>
                 Send Emails
               </button>
               <button className="btnFancy" onClick={() => setVis(true)}>
@@ -334,6 +342,30 @@ export default function Page(params: { params: { slug: string } }) {
                     ).value;
                     if (isEmailValid(email)) sendTestEmail(email);
                     else alert('Invalid email');
+                  }}
+                >
+                  Send
+                </button>
+              </label>
+            )}
+                        {vis2 && (
+              <label className="flex flex-row items-center">
+                Start Emailing from:
+                <input
+                  className="flex-1 outline-none border-none rounded-md   text-lightMainColor p-0.5 mx-1"
+                  id="email2"
+                  type="email"
+                  required
+                />
+                <button
+                  className="btnFancy"
+                  onClick={() => {
+                    setVis2(false);
+                    let email = (
+                      document.getElementById('email2') as HTMLInputElement
+                    ).value;
+                    if (isEmailValid(email)) exportHtml(email);
+                    else exportHtml("");
                   }}
                 >
                   Send
