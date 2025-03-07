@@ -51,8 +51,12 @@ const FullAutoMode = ({
   };
   const getValidPictureId = (base:number) => {
     let currentPictureID= Math.floor(Math.random() * base);
-    while (usedPictures.indexOf(picsArray[currentPictureID].link)!==-1) {
+    let index1=0;
+    while ((usedPictures.indexOf(picsArray[currentPictureID].link)!==-1)
+      &&(index1>base)
+    ) {
       currentPictureID= Math.floor(Math.random() * base);
+      index1++;
     }
     let arrCopy=usedPictures;
       arrCopy.push(picsArray[currentPictureID].link);

@@ -187,7 +187,7 @@ const ShowPlayingModal: React.FC<Props> = ({
       );
       let videoArr = videoArr1.concat(videoArr2);
 
-      console.log(message, arr);
+      console.log(message, arr, videoArr);
       setPicArrAutoMode(arr);
       setVideoArrAutoMode(videoArr);
     } else {

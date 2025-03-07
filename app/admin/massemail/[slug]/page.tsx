@@ -121,8 +121,8 @@ export default function Page(params: { params: { slug: string } }) {
       })
       .catch(async (err) => {
         
-        console.log("batch size: ",counter,". ",errNumber*60,'seconds wait error, email:', email);
-          await sleep(3000);
+        // console.log("batch size: ",counter,". ",errNumber*60,'seconds wait error, email:', email);
+          // await sleep(3000);
           
           // emailList.push({ name, email });
           setSendingStatus([...sentEmails,(sentEmails.length+1)+'. Failed_to_send_email to ' + email,]); 
