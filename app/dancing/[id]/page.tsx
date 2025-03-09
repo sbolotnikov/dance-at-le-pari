@@ -22,6 +22,7 @@ import BannerGallery from '@/components/BannerGallery';
 import { SettingsContext } from '@/hooks/useSettings';
 import ImgFromDb from '@/components/ImgFromDb';
 import Image from 'next/image';
+import Link from 'next/link';
 interface pageProps {}
 
 export default function Page({ params }: { params: { id: string } }) {
@@ -234,54 +235,72 @@ export default function Page({ params }: { params: { id: string } }) {
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex flex-col items-center  justify-start">
       <div className="w-full h-1/5 relative overflow-auto mt-1 md:mt-6  rounded-md">
-      {specialEvents[0] !== undefined ?
-        <div
-          id="galleryContainer"
-          className="h-full w-full relative overflow-hidden rounded-md flex flex-col"
-          style={{ zIndex: 99 }}
-        >
-           <div 
-          className="h-full w-screen flex flex-row justify-start items-start absolute top-0 left-0 cursor-pointer"
-           
-          onClick={handleImageClick}
-        >
-          {
-            windowSize.width! > 767 &&
-            (typeof specialEvents[0].id === 'number' ? (
-              <div className="h-full w-fit m-auto relative">
-                <ImgFromDb
-                  stylings="object-contain  h-full"
-                  url={specialEvents[0].image}
-                  alt={`Event Picture ${specialEvents[0].id}`}
-                />
+        {specialEvents[0] !== undefined ? (
+          <div
+            id="galleryContainer"
+            className="h-full w-full relative overflow-hidden rounded-md flex flex-col"
+            style={{ zIndex: 99 }}
+          >
+            <div
+              className="h-full w-screen flex flex-row justify-start items-start absolute top-0 left-0 cursor-pointer"
+              onClick={handleImageClick}
+            >
+              {windowSize.width! > 767 &&
+                (typeof specialEvents[0].id === 'number' ? (
+                  <div className="h-full w-fit m-auto relative">
+                    <ImgFromDb
+                      stylings="object-contain  h-full"
+                      url={specialEvents[0].image}
+                      alt={`Event Picture ${specialEvents[0].id}`}
+                    />
+                  </div>
+                ) : (
+                  <div className="h-full w-full m-auto relative">
+                    <Image
+                      src={specialEvents[0].image}
+                      alt={`Event Picture ${specialEvents[0].id}`}
+                      fill
+                      style={{ objectFit: 'contain' }}
+                    />
+                  </div>
+                ))}
+              <div
+                className={`w-full ${
+                  windowSize.width! > 767
+                    ? 'absolute bottom-0 right-0'
+                    : 'h-full flex justify-center items-center'
+                }`}
+              >
+                {specialEvents[0] !== undefined &&
+                  specialEvents[0] !== null &&
+                  typeof specialEvents[0].id === 'number' && (
+                    <h2
+                      className={`w-full text-center text-xs md:text-base ${
+                        windowSize.width! > 767
+                          ? ''
+                          : 'flex flex-col justify-center items-center'
+                      } z-100 bg-lightMainBG/70 dark:bg-darkMainBG/70`}
+                    >
+                      <span
+                        className={`${
+                          windowSize.width! > 767
+                            ? ''
+                            : '  text-2xl text-center max-w-[80%] text-red-600 animate-pulse'
+                        }`}
+                      >
+                        {specialEvents[0].tag!}
+                      </span>
+                    </h2>
+                  )}
               </div>
-            ) : (
-              <div className="h-full w-full m-auto relative">
-                <Image
-                  src={specialEvents[0].image}
-                  alt={`Event Picture ${specialEvents[0].id}`}
-                  fill
-                  style={{ objectFit: 'contain' }}
-                />
-              </div>
-            ))}
-          <div className={`w-full ${windowSize.width! > 767?'absolute bottom-0 right-0':'h-full flex justify-center items-center'}`}>  
-          
-            {specialEvents[0] !== undefined &&specialEvents[0]!==null &&(typeof specialEvents[0].id === 'number') &&
-               <h2 className={`w-full text-center text-xs md:text-base ${windowSize.width! > 767 ? "":"flex flex-col justify-center items-center"} z-100 bg-lightMainBG/70 dark:bg-darkMainBG/70`}>
-                <span className={`${windowSize.width! > 767 ? "":"  text-2xl text-center max-w-[80%] text-red-600 animate-pulse"}`}>{specialEvents[0].tag!}</span>               
-                </h2>  
-            }
-          
+            </div>
           </div>
-        </div>
-        </div>:events != undefined && (
-          <BannerGallery
-            events={[...events]}
-            seconds={7}
-          />
+        ) : (
+          events != undefined && (
+            <BannerGallery events={[...events]} seconds={7} />
+          )
         )}
-        </div>
+      </div>
       <SharePostModal
         title={pageArray[tabIndex].title}
         url={process.env.NEXT_PUBLIC_URL + '/dancing/' + params.id}
@@ -344,7 +363,7 @@ export default function Page({ params }: { params: { id: string } }) {
               </button>
               <button
                 className=" outline-none border-none absolute right-0 top-0  rounded-md  mt-2  w-8 h-8"
-                aria-label='Share this page'
+                aria-label="Share this page"
                 onClick={(e) => {
                   e.preventDefault();
                   setRevealSharingModal(!revealSharingModal);
@@ -395,7 +414,8 @@ export default function Page({ params }: { params: { id: string } }) {
                   }`}
                   style={{ flex: '1 1 100%' }}
                 >
-                  {(products.filter((product) => product.eventtype == item).length > 0) ? 
+                  {products.filter((product) => product.eventtype == item)
+                    .length > 0 ? (
                     <PaymentPageForm
                       paymentsArray={products.filter(
                         (product) => product.eventtype == item
@@ -406,9 +426,20 @@ export default function Page({ params }: { params: { id: string } }) {
                         actionTemplateChoice(action1, item1, option);
                       }}
                     />
-                  :<div className="w-full h-48 flex justify-center items-center">
-                    <h1 className="text-2xl font-bold text-center">For more information please call</h1>
-                    </div>}
+                  ) : (
+                    <div className="w-full h-fit flex justify-center items-center absolute top-0 left-0">
+                      <p className="text-lg italic text-center">
+                        Dance at Le Pari offers a variety of private lesson
+                        packages, including 5, 12, 24 and 32 lesson packs. Bonus
+                        lesson packages are available as well! Single lesson
+                        purchase is also available. Private lessons are 45
+                        minutes in length.<br/> Please email:{' '}
+                        <Link href="/mail_page" className="font-semibold hover:text-xl">Lepari34@gmail.com</Link>
+                        <br/>or <br/> call{' '}<Link href="tel:1-8482440512" className="font-semibold hover:text-xl">848-244-0512</Link>{' '}for package
+                        and pricing information.
+                      </p>
+                    </div>
+                  )}
                 </TabPanel>
               );
             })}
