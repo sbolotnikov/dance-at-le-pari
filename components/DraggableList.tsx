@@ -1,9 +1,12 @@
  
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import ShowIcon from './svg/showIcon';
 
 interface DraggableListProps {
   initialItems: string[];
   onListChange?: (items: string[]) => void;
+  isTouching:(isTouching:boolean)=>void;
+  addItems: string[];
   containerClassName?: string;
   itemHeight?: number;
   autoScrollSpeed?: number;
@@ -11,7 +14,9 @@ interface DraggableListProps {
 
 const DraggableList: React.FC<DraggableListProps> = ({
   initialItems,
+  addItems,
   onListChange,
+  isTouching,
   containerClassName = '',
   itemHeight = 48,
   autoScrollSpeed = 15
@@ -20,7 +25,6 @@ const DraggableList: React.FC<DraggableListProps> = ({
   const [dragging, setDragging] = useState<number | null>(null);
   const [touchStartY, setTouchStartY] = useState<number | null>(null);
   const [touchDragging, setTouchDragging] = useState<boolean>(false);
-  
   const listRef = useRef<HTMLUListElement>(null);
   const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
   const dragOverItemIndex = useRef<number | null>(null);
@@ -33,11 +37,18 @@ const DraggableList: React.FC<DraggableListProps> = ({
   
   // Notify parent component about list changes
   useEffect(() => {
-    if (onListChange) {
-      onListChange(items);
+    if ((onListChange)&&(items.length<addItems.length))
+      {
+        setItems(addItems);
+        onListChange(addItems)
+      } else {
+      if (onListChange) {
+        onListChange(items);
+      }
+      
     }
-  }, [items, onListChange]);
-  
+  }, [items,addItems, onListChange]);
+
   const updateList = useCallback((dragIndex: number, hoverIndex: number) => {
     if (dragIndex === hoverIndex) return;
     
@@ -109,6 +120,7 @@ const DraggableList: React.FC<DraggableListProps> = ({
   
   // Touch event handlers
   const handleTouchStart = (index: number, e: React.TouchEvent<HTMLLIElement>) => {
+    isTouching(true);
     if (e.touches.length === 1) {
       setTouchStartY(e.touches[0].clientY);
       
@@ -185,6 +197,7 @@ const DraggableList: React.FC<DraggableListProps> = ({
   }, [dragging, touchDragging, itemHeight, autoScrollSpeed, updateList]);
   
   const handleTouchEnd = () => {
+    isTouching(false);
     if (dragging !== null && touchDragging) {
       // Reset styling for the dragged item
       if (itemRefs.current[dragging]) {
@@ -218,8 +231,8 @@ const DraggableList: React.FC<DraggableListProps> = ({
       ref={listRef}
       className={`draggable-list `}
       style={{
-        padding: '0',
-        margin: '0',
+        padding: '2px',
+        margin: '4px',
         listStyle: 'none',
         maxHeight: '100%',
         overflowY: 'auto',
@@ -229,7 +242,7 @@ const DraggableList: React.FC<DraggableListProps> = ({
         width: '100%',
       }}
     >
-      {items.map((item, index) => (
+      {items.length>0 && items.map((item, index) => (
         <li
           key={`${item}-${index}`}
           ref={el => itemRefs.current[index] = el}
@@ -240,11 +253,11 @@ const DraggableList: React.FC<DraggableListProps> = ({
           onTouchStart={e => handleTouchStart(index, e)}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
+          className=' bg-lightMainBG dark:bg-darkMainBG text-lightMainColor dark:text-darkMainColor border border-lightMainColor dark:border-darkMainColor'
           style={{
             padding: '10px 16px',
             margin: '4px 0',
-            backgroundColor: dragging === index ? '#f0f0f0' : 'white',
-            border: '1px solid #ddd',
+            border: `1px solid ${dragging === index ? '#ed0808' : 'white'}`,
             borderRadius: '4px',
             cursor: 'grab',
             height: `${itemHeight}px`,
@@ -256,12 +269,24 @@ const DraggableList: React.FC<DraggableListProps> = ({
             transform: touchDragging && dragging === index ? 'scale(1.02)' : 'scale(1)'
           }}
         >
-          <div className="drag-handle" style={{ marginRight: '10px', cursor: 'grab' }}>
+          <div className='drag-handle' style={{ marginRight: '10px', cursor: 'grab' }}>
             ≡ {index+1}.
           </div>
           <div className="item-content" style={{ flexGrow: 1 }}>
             {item}
           </div>
+          <button
+                                onClick={() => {
+                                  let newList = items.filter(
+                                    (item2, j) => j !== index
+                                  );
+                                  setItems(newList);
+                                  onListChange && onListChange(newList);
+                                }}
+                                className="  fill-alertcolor  stroke-alertcolor  rounded-md border-alertcolor  w-8 h-8 mt-2 hover:scale-110 transition-all duration-150 ease-in-out"
+                              >
+                                <ShowIcon icon={'Close'} stroke={'2'} />
+                              </button>
         </li>
       ))}
     </ul>

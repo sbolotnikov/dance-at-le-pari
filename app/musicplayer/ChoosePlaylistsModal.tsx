@@ -65,101 +65,14 @@ const ChoosePlaylistsModal: React.FC<Props> = ({
   const [isVisible, setIsVisible] = useState(vis); 
   const [dancesList, setDancesList] = useState<string[]>(danceArrayDefault); 
   const [playlistName, setPlaylistName] = useState(choosenPlaylist.name); 
-  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
-  const [ghostPosition, setGhostPosition] = useState({ x: 0, y: 0 });
-  const [placeholderIndex, setPlaceholderIndex] = useState<number | null>(null);
+ 
   const [currentEditItem, setCurrentEditItem] = useState<number | null>(null);
   const [playlistItem, setPlaylistItem] = useState<string>('');
   const [dragging, setDragging] = useState(false);
-  const listRef = useRef<HTMLUListElement>(null);
-  const ghostRef = useRef<HTMLDivElement>(null);
-  const topMargin = 12;
-  const itemHeight = 40;
+
   const playlistsCollection = collection(db, 'playlists');
-  const getClientPos = (
-    e: React.TouchEvent | React.MouseEvent | TouchEvent | MouseEvent
-  ) => {
-    if ('touches' in e) {
-      return { x: e.touches[0].clientX, y: e.touches[0].clientY };
-    }
-    return { x: e.clientX, y: e.clientY };
-  };
-  function handleOnBeforeUnload(event: BeforeUnloadEvent) {
-    event.preventDefault();
-    return (event.returnValue = '');
-  }
-  const onDragStart = (
-    e: React.TouchEvent | React.MouseEvent,
-    index: number
-  ) => {
-    setDragging(true);
-    setDraggedIndex(index);
-    setPlaceholderIndex(index);
-
-    const { x, y } = getClientPos(e);
-    setGhostPosition({ x, y });
-
-    if (ghostRef.current) {
-      ghostRef.current.innerText = playlist[index];
-    }
-  };
-
-  const onDragMove = (
-    e: React.TouchEvent | React.MouseEvent | TouchEvent | MouseEvent
-  ) => {
-    if (!dragging || draggedIndex === null || !listRef.current) return;
-
-    const { x, y } = getClientPos(e);
-    setGhostPosition({ x, y });
-
-    const listRect = listRef.current.getBoundingClientRect();
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    const relativeY = y + scrollTop - listRect.top;
-    console.log('coordinateY =', relativeY);
-
-    let newIndex = Math.floor((relativeY - topMargin) / itemHeight);
-    newIndex = Math.max(0, Math.min(newIndex, playlist.length - 1));
-    setPlaceholderIndex(newIndex);
-  };
-
-  const onDragEnd = () => {
-    if (
-      draggedIndex !== null &&
-      placeholderIndex !== null &&
-      draggedIndex !== placeholderIndex
-    ) {
-      const newItems = [...playlist];
-      const [removed] = newItems.splice(draggedIndex, 1);
-      newItems.splice(placeholderIndex, 0, removed);
-      setPlaylist(newItems);
-    }
-    setDragging(false);
-    setDraggedIndex(null);
-    setPlaceholderIndex(null);
-  };
-  useEffect(() => {
-    window.addEventListener('beforeunload', handleOnBeforeUnload, {
-      capture: true,
-    });
-  }, []);
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => onDragMove(e);
-    const handleTouchMove = (e: TouchEvent) => onDragMove(e);
-
-    if (dragging) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', onDragEnd);
-      document.addEventListener('touchmove', handleTouchMove);
-      document.addEventListener('touchend', onDragEnd);
-    }
-
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', onDragEnd);
-      document.removeEventListener('touchmove', handleTouchMove);
-      document.removeEventListener('touchend', onDragEnd);
-    };
-  }, [dragging, draggedIndex, placeholderIndex, playlist]);
+  
+  
   const handleDeletePlaylist = async () => {
     onLoad(true); 
     await deleteDoc(doc(db, 'playlists', choosenPlaylist.id));
@@ -235,7 +148,7 @@ useEffect(() => {
           >
             <div
               id="wrapperDiv"
-              className="w-full h-full relative  p-1  overflow-y-auto border border-lightMainColor dark:border-darkMainColor rounded-md flex flex-col justify-center items-center"
+              className={`w-full h-full relative  p-1  ${dragging?"overflow-hidden":"overflow-y-auto"} border border-lightMainColor dark:border-darkMainColor rounded-md flex flex-col justify-center items-center`}
             >
               <button
                 className={` flex flex-col justify-center items-center origin-center cursor-pointer z-10 hover:scale-125 absolute top-3 right-3`}
@@ -269,107 +182,17 @@ useEffect(() => {
 
                 <DraggableList
             initialItems={playlist.map((item) => item)}
+            addItems={playlist.map((item) => item)}
             onListChange={(newItems: string[]) => {
+              console.log('newItems', newItems);
               setPlaylist(newItems)        
             }}
-            containerClassName={'h-[350px]  w-full border border-black p-1 rounded-lg my-1 overflow-hidden'}
+            isTouching={(isTouching:boolean) => setDragging(isTouching)}
+            containerClassName={'h-[350px]  w-full border border-lightMainColor dark:border-darkMainColor p-1 rounded-lg my-1 overflow-hidden'}
             itemHeight={48}
             autoScrollSpeed={15}
           /> 
 
-
-
-
-
-
-                {/* <div
-                  className={`w-full h-[350px] border border-black p-1 rounded-md ${
-                    draggedIndex !== null
-                      ? 'overflow-hidden'
-                      : 'overflow-x-auto'
-                  } mb-4 `}
-                >
-                  <div className="flex flex-col flex-wrap items-center justify-start relative">
-                    {playlist !== undefined && (
-                      <ul
-                        ref={listRef}
-                        className="w-full mx-auto mt-8 bg-lightMainBG dark:bg-darkMainBG rounded-lg shadow-md  relative"
-                      >
-                        {playlist.map((item, i) => (
-                          <React.Fragment key={item}>
-                            {i === placeholderIndex &&
-                              draggedIndex !== null &&
-                              draggedIndex !== i && (
-                                <li className="h-12 bg-blue-100 border-2 border-blue-300 border-dashed"></li>
-                              )}
-                            <li
-                              className={`px-4 flex items-center justify-between relative h-fit min-h-[2.5rem] border-b last:border-b-0 cursor-move hover:bg-gray-50 transition-colors duration-150 ease-in-out 
-                          ${i === draggedIndex ? 'hidden' : ''}`}
-                              style={{ userSelect: 'none' }}
-                            >
-                              <p
-                                className=" text-left w-full "
-                                style={{ userSelect: 'none' }}
-                                onMouseDown={(e) => onDragStart(e, i)}
-                                onTouchStart={(e) => onDragStart(e, i)}
-                              >
-                                <span>{i + 1}. </span>
-
-                                {item}
-                              </p>
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setCurrentEditItem(i);
-                                  setPlaylistItem(item);
-                                   
-                                }}
-                                className="  fill-editcolor  stroke-editcolor  rounded-md border-editcolor  w-8 h-8 mt-2 hover:scale-110 transition-all duration-150 ease-in-out"
-                              >
-                                <ShowIcon icon={'Edit'} stroke={'0.5'} />
-                              </button>
-                              <button
-                                onClick={() => {
-                                  let newList = playlist.filter(
-                                    (item2, j) => j !== i
-                                  );
-                                  setPlaylist(newList);
-                                }}
-                                className="  fill-alertcolor  stroke-alertcolor  rounded-md border-alertcolor  w-8 h-8 mt-2 hover:scale-110 transition-all duration-150 ease-in-out"
-                              >
-                                <ShowIcon icon={'Close'} stroke={'2'} />
-                              </button>
-                            </li>
-                          </React.Fragment>
-                        ))}
-                        {placeholderIndex === playlist.length && (
-                          <li className="h-12 bg-blue-100 border-2 border-blue-300 border-dashed"></li>
-                        )}
-                      </ul>
-                    )}
-                    {dragging && draggedIndex !== null && (
-                      <div
-                        ref={ghostRef}
-                        className="fixed px-4 py-2 bg-white shadow-lg rounded opacity-80 pointer-events-none"
-                        style={{
-                          left: `${5}px`,
-                          top: `${
-                            topMargin + (placeholderIndex! + 1) * itemHeight
-                          }px`,
-                          width: listRef.current
-                            ? `${listRef.current.offsetWidth - 32}px`
-                            : 'auto',
-                        }}
-                      >
-                        <p className=" text-center max-w-[300px]">
-                          <span>{draggedIndex + 1}. </span>
-
-                          {playlist[draggedIndex]}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                </div> */}
                 <div className="w-full flex flex-col items-center mb-2">
                 <div className="w-full flex flex-col md:flex-row items-start">
                       <h2 className="w-full md:w-1/4 p-2 text-xl font-bold">
