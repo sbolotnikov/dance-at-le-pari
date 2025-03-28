@@ -4,9 +4,9 @@ import ShowIcon from './svg/showIcon';
 
 interface DraggableListProps {
   initialItems: string[];
+  addItems: string[];
   onListChange?: (items: string[]) => void;
   isTouching?:(isTouching:boolean)=>void;
-  addItems: string[];
   containerClassName?: string;
   itemHeight?: number;
   autoScrollSpeed?: number;
