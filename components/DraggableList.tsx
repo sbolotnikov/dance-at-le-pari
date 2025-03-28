@@ -5,7 +5,7 @@ import ShowIcon from './svg/showIcon';
 interface DraggableListProps {
   initialItems: string[];
   onListChange?: (items: string[]) => void;
-  isTouching:(isTouching:boolean)=>void;
+  isTouching?:(isTouching:boolean)=>void;
   addItems: string[];
   containerClassName?: string;
   itemHeight?: number;
@@ -120,7 +120,9 @@ const DraggableList: React.FC<DraggableListProps> = ({
   
   // Touch event handlers
   const handleTouchStart = (index: number, e: React.TouchEvent<HTMLLIElement>) => {
-    isTouching(true);
+    if (isTouching) {
+      isTouching(true);
+    }
     if (e.touches.length === 1) {
       setTouchStartY(e.touches[0].clientY);
       
@@ -197,7 +199,9 @@ const DraggableList: React.FC<DraggableListProps> = ({
   }, [dragging, touchDragging, itemHeight, autoScrollSpeed, updateList]);
   
   const handleTouchEnd = () => {
-    isTouching(false);
+    if (isTouching) {
+      isTouching(false);
+    }
     if (dragging !== null && touchDragging) {
       // Reset styling for the dragged item
       if (itemRefs.current[dragging]) {
