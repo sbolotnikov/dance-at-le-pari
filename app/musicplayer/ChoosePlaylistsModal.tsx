@@ -13,6 +13,7 @@ import React, { useState, useEffect, useRef, use } from 'react';
 import PlayerButtons from './PlayerButtons'; 
 import { AnimatePresence, motion } from 'framer-motion';
 import sleep from '@/utils/functions';
+import DraggableList from '@/components/DraggableList';
 
 
 interface Playlist {
@@ -264,7 +265,24 @@ useEffect(() => {
                   />
                 </div>
                 <h2 className="text-xl font-bold mb-4">Playlist dances</h2>
-                <div
+
+
+                <DraggableList
+            initialItems={playlist.map((item) => item)}
+            onListChange={(newItems: string[]) => {
+              setPlaylist(newItems)        
+            }}
+            containerClassName={'h-[350px]  w-full border border-black p-1 rounded-lg my-1 overflow-hidden'}
+            itemHeight={48}
+            autoScrollSpeed={15}
+          /> 
+
+
+
+
+
+
+                {/* <div
                   className={`w-full h-[350px] border border-black p-1 rounded-md ${
                     draggedIndex !== null
                       ? 'overflow-hidden'
@@ -351,7 +369,7 @@ useEffect(() => {
                       </div>
                     )}
                   </div>
-                </div>
+                </div> */}
                 <div className="w-full flex flex-col items-center mb-2">
                 <div className="w-full flex flex-col md:flex-row items-start">
                       <h2 className="w-full md:w-1/4 p-2 text-xl font-bold">

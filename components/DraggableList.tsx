@@ -257,7 +257,7 @@ const DraggableList: React.FC<DraggableListProps> = ({
           }}
         >
           <div className="drag-handle" style={{ marginRight: '10px', cursor: 'grab' }}>
-            ≡
+            ≡ {index+1}.
           </div>
           <div className="item-content" style={{ flexGrow: 1 }}>
             {item}
