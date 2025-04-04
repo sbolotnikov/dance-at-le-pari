@@ -37,6 +37,7 @@ interface PartyContextType {
   manualPicture: { link: string; name: string };
   savedMessages: string[];
   textColor: string;
+  colorBG:string;
   id: string;
   animationSpeed: number;
   speedVariation: number;
@@ -82,6 +83,7 @@ interface ReturnPartyContextType {
   manualPicture: { link: string; name: string };
   savedMessages: string[];
   textColor: string;
+  colorBG:string;
   animationSpeed: number;
   speedVariation: number;
   particleCount: number;
@@ -128,6 +130,7 @@ export default function usePartySettings(): ReturnPartyContextType {
     manualPicture:{link:"",name:""},
     savedMessages:[""],
     textColor:"",
+    colorBG:"",
     id:"",
     animationSpeed: 0,
     speedVariation: 0,

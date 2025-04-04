@@ -103,6 +103,7 @@ const page: React.FC<Props> = () => {
     showHeatNumber,
     savedMessages,
     textColor,
+    colorBG,
     animationSpeed,
     speedVariation,
     particleCount,
@@ -331,6 +332,7 @@ const page: React.FC<Props> = () => {
           showBackdrop={showBackdrop}
           showHeatNumber={showHeatNumber}
           textColor={textColor}
+          colorBG={colorBG}
           animationSpeed={animationSpeed}
           speedVariation={speedVariation}
           heat={heat}
@@ -487,6 +489,25 @@ const page: React.FC<Props> = () => {
                         )}
                       </div>
                       <p className="text-center w-8">Text Color</p>
+                    </div>
+                    <div className="flex flex-col justify-center items-center">
+                      <div className="h-8 w-8 rounded-full overflow-hidden border-none relative">
+                        {/* {colorBG && ( */}
+                          <input
+                            className=" outline-none h-10 w-10  absolute -top-1 -left-1  border-none "
+                            name="color"
+                            id="color"
+                            type="color"
+                            value={colorBG!==undefined?colorBG:"black"}
+                            onChange={async (e) => {
+                              console.log(e.target.value);
+
+                              handleChange(e.target.value, 'colorBG');
+                            }}
+                          />
+                        {/* )} */}
+                      </div>
+                      <p className="text-center w-8">Color BG</p>
                     </div>
                     <div className="flex flex-col justify-center items-center">
                       {seconds && (

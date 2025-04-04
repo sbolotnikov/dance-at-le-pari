@@ -45,6 +45,7 @@ type Props = {
   tableChoice:number;
   showHeatNumber: boolean;
   textColor: string;
+  colorBG: string;
   animationSpeed: number;
   speedVariation: number;
   particleCount: number;
@@ -89,6 +90,7 @@ const ShowPlayingModal: React.FC<Props> = ({
   showHeatNumber,
   showBackdrop,
   textColor,
+  colorBG,
   animationSpeed,
   speedVariation,
   particleCount,
@@ -212,9 +214,10 @@ const ShowPlayingModal: React.FC<Props> = ({
   }, [vis, refreshVar]);
 
   const gradientStyle = {
-    background: "conic-gradient(at 40% 20%,#183657,#A7C9E7,#C8F1F6,#183657,#A7C9E7,#C8F1F6,#183657,#A7C9E7,#C8F1F6)",
+    background:colorBG!==undefined?colorBG:'linear-gradient(to right, #183657, #A7C9E7, #C8F1F6, #183657, #A7C9E7, #C8F1F6, #183657, #A7C9E7, #C8F1F6)'
   };
   // white, red, blue, red, white
+  // "conic-gradient(at 40% 20%,#183657,#A7C9E7,#C8F1F6,#183657,#A7C9E7,#C8F1F6,#183657,#A7C9E7,#C8F1F6)"
   useEffect(() => {
     const svg = svgRef.current;
 
