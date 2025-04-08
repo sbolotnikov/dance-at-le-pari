@@ -139,7 +139,7 @@ const TablePage = ({
                   alt={`Picture ${choosenRow}`}
                 />
               ):<img
-              src={picture2}
+              src={picture1}
               className={`h-[80%] w-auto`}
               alt={`Picture ${choosenRow}`}
             />}
