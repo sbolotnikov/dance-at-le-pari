@@ -3,13 +3,14 @@ import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import AnimatedTextMessage from '@/components/AnimatedTextMessage';
 type Props = {
-  tablePages: { name: string; tableRows: string[]; rowsChecked: boolean[] }[];
+  tablePages: { name: string; tableRows: string[];rowsPictures: string[] | undefined; rowsChecked: boolean[] }[];
   tableChoice: number;
   fontSize: number;
   fontSize2: number;
   textColor: string;
   fontName: string;
   picture1: string;
+  picture2: string;
 };
 
 const TablePage = ({
@@ -19,7 +20,8 @@ const TablePage = ({
   fontSize2,
   textColor,
   fontName,
-  picture1
+  picture1,
+  picture2
 }: Props) => {
   const [rowsText, setRowsText] = useState<string[]>(
     tablePages[tableChoice].tableRows
@@ -82,7 +84,7 @@ const TablePage = ({
                   cutdelay={false}
                   rotate={true}
                 />
-            <img src={picture1} className="h-[95%] w-auto absolute top-4 left-0" alt="Company Logo" />    
+            <img src={picture2} className="h-[95%] w-auto absolute top-4 left-0" alt="Company Logo" />    
                  
         </div>
         <div className={`w-full h-5/6 flex flex-wrap flex-col justify-center ${rowsText.length>6?'items-start':'items-center '}`}
@@ -125,8 +127,22 @@ const TablePage = ({
                 rotateX: ['0deg', '0deg', '89deg', '89deg', '90deg'],
                 x: ['0vw', '0vw', '0vw', '0vw', '-100vw'],
               }}
-               className={`w-[1000px] blurFilter p-1 m-1 rounded-md flex justify-center items-center border border-[${textColor}] `}
+               className={`w-[1000px] h-[768px] blurFilter p-1 m-1 rounded-md flex flex-col items-center justify-center  border border-[${textColor}] `}
+              // style={{ backgroundImage: `url(${tablePages[tableChoice].rowsPictures && tablePages[tableChoice].rowsPictures[choosenRow]?tablePages[tableChoice].rowsPictures[choosenRow]:""})`, backgroundSize: 'contain', backgroundPosition: 'center', boxShadow: '0 30px 40px rgba(0,0,0,.1)',
+              //   backgroundRepeat: 'no-repeat', }}
+             
             >
+              {(tablePages[tableChoice].rowsPictures && tablePages[tableChoice].rowsPictures[choosenRow])? (
+                <img
+                  src={tablePages[tableChoice].rowsPictures[choosenRow]}
+                  className={`h-[80%] w-auto`}
+                  alt={`Picture ${choosenRow}`}
+                />
+              ):<img
+              src={picture2}
+              className={`h-[80%] w-auto`}
+              alt={`Picture ${choosenRow}`}
+            />}
                 {rowsText[choosenRow] &&<AnimatedTextMessage
                   text={rowsText[choosenRow]}
                   duration={4}

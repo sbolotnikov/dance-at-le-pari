@@ -27,7 +27,7 @@ interface PartyContextType {
   titleBarHider: boolean;
   showUrgentMessage: boolean;
   showTable:boolean;
-  tablePages:{name:string, tableRows:string[], rowsChecked:boolean[]}[];
+  tablePages:{name:string, tableRows:string[],rowsPictures:string[] | undefined; rowsChecked:boolean[]}[];
   tableChoice:number;
   showHeatNumber: boolean;
   showSVGAnimation: boolean;
@@ -73,7 +73,7 @@ interface ReturnPartyContextType {
   titleBarHider: boolean;
   showUrgentMessage: boolean;
   showTable: boolean;
-  tablePages:{name:string, tableRows:string[], rowsChecked:boolean[]}[]
+  tablePages:{name:string, tableRows:string[],rowsPictures:string[] | undefined; rowsChecked:boolean[]}[]
   tableChoice:number;
   showHeatNumber: boolean;
   showBackdrop: boolean;
@@ -120,7 +120,7 @@ export default function usePartySettings(): ReturnPartyContextType {
     titleBarHider:false,
     showUrgentMessage:false,
     showTable:false,
-    tablePages:[{name:"", tableRows:[""], rowsChecked:[false]}],
+    tablePages:[{name:"", tableRows:[""],rowsPictures: undefined, rowsChecked:[false]}],
     tableChoice:0,
     showHeatNumber:false,
     showSVGAnimation:false,

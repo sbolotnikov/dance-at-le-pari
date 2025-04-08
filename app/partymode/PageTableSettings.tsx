@@ -2,9 +2,9 @@ import ShowIcon from '@/components/svg/showIcon';
 import React from 'react';
 
 type Props = {
-  tablePages: { name: string; tableRows: string[]; rowsChecked: boolean[] }[];
+  tablePages: { name: string; tableRows: string[]; rowsPictures:string[] | undefined; rowsChecked: boolean[] }[];
   onTablePageChange: (
-    tablePage: { name: string; tableRows: string[]; rowsChecked: boolean[] }[]
+    tablePage: { name: string; tableRows: string[]; rowsPictures: string[] | undefined; rowsChecked: boolean[] }[]
   ) => void;
 };
 
@@ -65,6 +65,7 @@ const PageTableSettings = ({ tablePages, onTablePageChange }: Props) => {
                             }}
                             className="m-1"
                           />
+                          <div className="w-64 flex flex-col fill-lightMainColor dark:fill-darkMainColor">
                           <input
                             type="text"
                             className="w-64 m-1"
@@ -78,6 +79,20 @@ const PageTableSettings = ({ tablePages, onTablePageChange }: Props) => {
                               onTablePageChange(pagesArr);
                             }}
                           />
+                           <input
+                            type="text"
+                            className="w-64 m-1"
+                            defaultValue={page.rowsPictures ? page.rowsPictures[index] : ''}
+                            onBlur={(e) => {
+                              e.preventDefault();
+                              let picsArr = page.rowsPictures? page.rowsPictures : page.tableRows.map(() => "");
+                              picsArr[index] = e.target.value;
+                              let pagesArr = tablePages;
+                              pagesArr[ind].rowsPictures = picsArr;
+                              onTablePageChange(pagesArr);
+                            }}
+                          />
+                          </div>
                           <button
                             onClick={(e) => {
                               e.preventDefault();
@@ -122,10 +137,10 @@ const PageTableSettings = ({ tablePages, onTablePageChange }: Props) => {
             tablePages
               ? onTablePageChange([
                   ...tablePages,
-                  { name: '', tableRows: [''], rowsChecked: [false] },
+                  { name: '', tableRows: [''], rowsPictures: undefined, rowsChecked: [false] },
                 ])
               : onTablePageChange([
-                  { name: '', tableRows: [''], rowsChecked: [false] },
+                  { name: '', tableRows: [''],rowsPictures: undefined, rowsChecked: [false] },
                 ]);
           }}
         >

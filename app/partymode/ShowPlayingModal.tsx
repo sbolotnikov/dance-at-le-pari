@@ -41,7 +41,7 @@ type Props = {
   titleBarHider: boolean;
   showUrgentMessage: boolean;
   showTable: boolean;
-  tablePages:{name:string, tableRows:string[], rowsChecked:boolean[]}[];
+  tablePages:{name:string, tableRows:string[], rowsPictures:string[] | undefined; rowsChecked:boolean[]}[];
   tableChoice:number;
   showHeatNumber: boolean;
   textColor: string;
@@ -613,7 +613,7 @@ const ShowPlayingModal: React.FC<Props> = ({
               ></div>}
             </div>
           )}
-          {showTable && (<TablePage tablePages={tablePages} tableChoice={tableChoice} fontSize={fontSize} fontSize2={fontSize2} picture1={compLogo.link} fontName={fontName} textColor={textColor}/>)}
+          {showTable && (<TablePage tablePages={tablePages} tableChoice={tableChoice} fontSize={fontSize} fontSize2={fontSize2} picture1={compLogo.link} picture2={manualPicture.link} fontName={fontName} textColor={textColor}/>)}
           {showSVGAnimation1 && (
             <div className="absolute inset-0 flex justify-center items-center">
               {windowSize.width! > 0 && windowSize.height! > 0 && (
