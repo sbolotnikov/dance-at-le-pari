@@ -62,9 +62,9 @@ const page: FC<pageProps> = ({}) => {
             status: item.status,
             table: item.table,
             tag: item.tag,
-            email: item.user.email ? item.user.email : null,
-            name: item.user.name ? item.user.name : null,
-            telephone: item.user.telephone ? item.user.telephone : null,
+            email: item.user!==null && item.user.email!==null ? item.user.email : "",
+            name: item.user!==null && item.user.name!==null? item.user.name : "",
+            telephone:  item.user!==null && item.user.telephone!==null ? item.user.telephone : null,
           }))
           .sort((a: TPurchases, b: TPurchases) =>
             a.purchasedAt > b.purchasedAt
