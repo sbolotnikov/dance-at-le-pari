@@ -137,10 +137,10 @@ const PageTableSettings = ({ tablePages, onTablePageChange }: Props) => {
             tablePages
               ? onTablePageChange([
                   ...tablePages,
-                  { name: '', tableRows: [''], rowsPictures: undefined, rowsChecked: [false] },
+                  { name: '', tableRows: [''], rowsPictures: [""], rowsChecked: [false] },
                 ])
               : onTablePageChange([
-                  { name: '', tableRows: [''],rowsPictures: undefined, rowsChecked: [false] },
+                  { name: '', tableRows: [''],rowsPictures: [""], rowsChecked: [false] },
                 ]);
           }}
         >

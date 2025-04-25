@@ -193,7 +193,7 @@ const page: React.FC<Props> = () => {
   // };
 
   const handleChange = (
-    text: number | string | boolean | object,
+    text: number | string | boolean | object | { name: string; tableRows: string[]; rowsPictures: string[] | undefined; rowsChecked: boolean[] }[],
     eventName: string
   ) => {
     if (session?.user.role == 'Admin')
