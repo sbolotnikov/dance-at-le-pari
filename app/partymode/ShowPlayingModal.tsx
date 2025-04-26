@@ -16,6 +16,7 @@ import FrameRunnerEffect from '@/components/FrameRunnerEffect';
 import AnimatedTextMessage from '@/components/AnimatedTextMessage';
 import FrameGlow from '@/components/FrameGlow';
 import TablePage from './TablePage';
+import AutoTableMode from './AutoTableMode';
 
 type Props = {
   videoUri: { link: string; name: string };
@@ -584,6 +585,17 @@ const ShowPlayingModal: React.FC<Props> = ({
                 }}
               />
             )}
+          {mode === 'Auto Table' && (
+            <AutoTableMode
+              message={message}
+              tablePages={tablePages}
+              showBackdrop={showBackdrop} 
+              fontSize={fontSize}
+              compLogo={compLogo.link}
+              fontName={fontName}
+              textColor={textColor}
+            />
+          )}  
           {mode === 'Manual' && (
             <ManualImage
               image1={manualPicture.link}

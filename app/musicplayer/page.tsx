@@ -827,7 +827,13 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
                     </option>
                   ))}
                 </select>
-
+                <input
+                    type="text"
+                    placeholder="Enter dance"
+                    value={dance}
+                    onChange={(e) => setDance(e.target.value)}
+                    className="w-full p-2 m-1 border border-gray-300 rounded mb-2"
+                  />
                 <div>
                   <label className="block mb-2">Playback Speed</label>
                   <Slider

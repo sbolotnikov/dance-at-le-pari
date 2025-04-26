@@ -444,6 +444,7 @@ const page: React.FC<Props> = () => {
                           {[
                             'Auto',
                             'Auto Full',
+                            'Auto Table',
                             'Video',
                             'Manual',
                             'Default',
