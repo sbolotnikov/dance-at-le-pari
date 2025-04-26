@@ -19,9 +19,10 @@ type Props = {
         const [text1, setText] = useState("");
     
       useEffect(() => {
+        console.log("message",message);
             if (message === '') return;
          let activeTable=parseInt(message.split('_')[0])-1;
-         let activeRow=parseInt(message.split('_')[0])-1;
+         let activeRow=parseInt(message.split('_')[1])-1;
             setImage(((tablePages[activeTable].rowsPictures!==undefined)&&(tablePages[activeTable].rowsPictures[activeRow]!==undefined))?tablePages[activeTable].rowsPictures[activeRow]:compLogo);
             setText(((tablePages[activeTable].tableRows!==undefined)&&(tablePages[activeTable].tableRows[activeRow]!==undefined))?tablePages[activeTable].tableRows[activeRow]:'');
             console.log("image",((tablePages[activeTable].rowsPictures!==undefined)&&(tablePages[activeTable].rowsPictures[activeRow]!==undefined))?tablePages[activeTable].rowsPictures[activeRow]:compLogo);
