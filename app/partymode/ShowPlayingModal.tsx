@@ -585,7 +585,7 @@ const ShowPlayingModal: React.FC<Props> = ({
                 }}
               />
             )}
-          {mode === 'Auto Table' && (
+          {mode === 'Auto Table' && message && (
             <AutoTableMode
               message={message}
               tablePages={tablePages}
