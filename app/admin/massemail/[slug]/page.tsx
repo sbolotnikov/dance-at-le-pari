@@ -98,7 +98,7 @@ export default function Page(params: { params: { slug: string } }) {
       console.log(sentEmails)
       // setRevealModal1(false);
     } else {
-    const { name, email } = emailList.pop()!;
+    const { name, email } = emailList.shift()!;
     console.log(email, isEmailValid(email));
     if (isEmailValid(email)) {    
      fetch('/api/admin/email_mass_send', {
