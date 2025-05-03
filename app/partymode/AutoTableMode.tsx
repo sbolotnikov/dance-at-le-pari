@@ -45,7 +45,7 @@ type Props = {
                             stroke={1}
                             color={textColor}
                             cutdelay={false}
-                            rotate={true}
+                            rotate={false}
                           />
                         )}
                         </div>
