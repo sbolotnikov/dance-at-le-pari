@@ -233,7 +233,7 @@ export default function Page(params: { params: { slug: string } }) {
         >
           <div
             id="containedDiv"
-            className={`absolute top-0 left-0 flex flex-col w-fit p-1 justify-center items-center`}
+            className={`absolute top-0 left-0 bottom-0 right-0 flex flex-col p-1 justify-center items-center`}
           >
             <h2
               className="text-center font-semibold md:text-4xl uppercase"
