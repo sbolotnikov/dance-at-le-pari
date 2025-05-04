@@ -372,7 +372,9 @@ export default function Page(params: { params: { slug: string } }) {
                 </button>
               </label>
             )}
+            <div className='w-full h-full flex justify-center items-center'>
             <EmailEditor ref={emailEditorRef} onReady={onReady} />
+            </div>
           </div>
         </div>
       </div>
