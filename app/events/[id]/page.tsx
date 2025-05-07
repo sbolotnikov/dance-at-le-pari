@@ -270,7 +270,7 @@ console.log("Event Data:",eventData)
                   className="btnFancy w-[90%] "
                   onClick={() => setRevealBuyTicketModal(true)}
                 >
-                  Choose tickets
+                  {eventData?.eventtype== 'Group' ? "Register" : 'Buy tickets'}
                 </button>
                 <h2 className="flex flex-row items-center justify-center">
                   {new Date(eventData!.date).toLocaleDateString('en-us', {
