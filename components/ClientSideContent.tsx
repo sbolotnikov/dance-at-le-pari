@@ -22,7 +22,17 @@ function ClientSideContent() {
     {
       name: 'Dancing',
       path: '/images/social.jpg',
-      link: '/dancing/private-lessons',
+      link: '/dancing/parties',
+    },
+    {
+      name: 'Groups',
+      path: '/images/group.jpeg',
+      link: '/dancing/group_classes',
+    },
+    {
+      name: 'New Students Offer',
+      path: '/images/new_offer.jpg',
+      link: '/new_students',
     },
     {
       name: 'Wedding Dance',
@@ -62,15 +72,17 @@ function ClientSideContent() {
             return (
               <div
                 key={'Links' + index}
-                className={`absolute -top-[${
-                  Math.round(containerSize.height! / 6) > 260
+                className={`
+                  absolute -top-[${
+                  Math.round(containerSize.height! / departmentsArray.length) > 260
                     ? 130
-                    : Math.round(containerSize.height! / 6)
+                    : Math.round(containerSize.height! / departmentsArray.length)
                 }px] -left-[${
-                  Math.round(containerSize.width! / 5.5) > 260
+                  Math.round(containerSize.width! / departmentsArray.length) > 260
                     ? 130
                     : Math.round(containerSize.width! / 11)
-                }px] flex flex-col justify-between items-center`}
+                }px]
+                 flex flex-col justify-between items-center`}
               >
                 <Link
                   href={item.link}
@@ -78,17 +90,17 @@ function ClientSideContent() {
                   style={
                     {
                       width: Math.round(containerSize.width! / 5.5) + 'px',
-                      height: Math.round(containerSize.height! / 3) + 'px',
+                      height: Math.round(containerSize.height! / 4) + 'px',
                       maxHeight: '260px',
                       backgroundImage: `url(${item.path})`,
                       backgroundPosition: 'center',
                       backgroundSize: 'cover',
                       '--item-x':
                         Math.round(
-                          (containerSize.width / 2.4) *
+                          (containerSize.width / 2.8) *
                             Math.cos(
                               degrees_to_radians(
-                                (index * 360) / departmentsArray.length - 240
+                                (index * 360) / departmentsArray.length-22
                               )
                             )
                         ) + 'px',
@@ -100,7 +112,7 @@ function ClientSideContent() {
                               : 2.5)) *
                             Math.sin(
                               degrees_to_radians(
-                                (index * 360) / departmentsArray.length - 240
+                                (index * 360) / departmentsArray.length-22
                               )
                             )
                         ) + 'px',
@@ -116,7 +128,7 @@ function ClientSideContent() {
           })}
             <div
           id="text"
-          className="blurFilter centerOrigin bgGradientSize50 cards__item  flex flex-col justify-center items-center  text-lightMainColor bg-lightMainBG/60 dark:text-darkMainColor dark:bg-darkMainBG/60  shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2"
+          className="blurFilter absolute bottom-[27%]  centerOrigin bgGradientSize50 cards__item  flex flex-col justify-center items-center  text-lightMainColor bg-lightMainBG/60 dark:text-darkMainColor dark:bg-darkMainBG/60  shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2"
         >
           <h1
             className={`font-bold   text-franceBlue  text-center font-DancingScript text-shadow  dark:text-shadow-light p-3 `}
@@ -131,7 +143,7 @@ function ClientSideContent() {
             {' '}
             The place that brings People <br /> together through Dancing
           </p>
-          <Link
+          {/* <Link
               href={'/new_students'}
               className="text-2xl text-center   text-shadow  dark:text-shadow-light blurFilter w-[230px]  m-2 relative flex flex-col justify-center items-center text-lightMainColor bg-lightMainBG/75 dark:text-darkMainColor dark:bg-darkMainBG/75    shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2"
             >
@@ -142,7 +154,7 @@ function ClientSideContent() {
                 Click for
               </div>
               <span>New student offer!</span>
-            </Link>
+            </Link> */}
           <p className="text-center md:text-xl text-lg">
             Best viewed in fullscreen mode
           </p>
