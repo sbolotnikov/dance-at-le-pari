@@ -22,12 +22,11 @@ function ClientSideContent() {
       path: '/images/new_offer.jpg',
       link: '/new_students',
     },
-    { name: 'Studio', path: '/images/ballroom.jpg', link: '/about_us/welcome' },
     { name: 'Calendar', path: '/images/calendar.jpg', link: '/calendar' },
     {
-      name: 'Dancing',
-      path: '/images/social.jpg',
-      link: '/dancing/parties',
+      name: 'Wedding Dance',
+      path: '/images/weddingcouple.jpg',
+      link: '/weddings',
     },
     {
       name: 'Groups',
@@ -35,16 +34,18 @@ function ClientSideContent() {
       link: '/dancing/group_classes',
     },
     {
-      name: 'Wedding Dance',
-      path: '/images/weddingcouple.jpg',
-      link: '/weddings',
+      name: 'Dancing',
+      path: '/images/social.jpg',
+      link: '/dancing/parties',
     },
+ 
     { name: 'Dance Blog', path: '/images/style.jpg', link: '/blog/0' },
     {
       name: 'Extras',
       path: '/images/competitive.jpg',
       link: '/extra',
     },
+    { name: 'Studio', path: '/images/ballroom.jpg', link: '/about_us/welcome' },
   ];
   const ContainerLoaded = () => {
     function degrees_to_radians(degrees: number) {
@@ -100,7 +101,7 @@ function ClientSideContent() {
                           (containerSize.width / 2.8) *
                             Math.cos(
                               degrees_to_radians(
-                                (index * 360) / departmentsArray.length-22
+                                (index * 360) / departmentsArray.length-22-135
                               )
                             )
                         ) + 'px',
@@ -112,7 +113,7 @@ function ClientSideContent() {
                               : 2.5)) *
                             Math.sin(
                               degrees_to_radians(
-                                (index * 360) / departmentsArray.length-22
+                                (index * 360) / departmentsArray.length-22-135
                               )
                             )
                         ) + 'px',
