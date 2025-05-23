@@ -17,6 +17,11 @@ function ClientSideContent() {
     }
   }, [windowSize.width]);
   var departmentsArray = [
+    {
+      name: 'New Student Offer',
+      path: '/images/new_offer.jpg',
+      link: '/new_students',
+    },
     { name: 'Studio', path: '/images/ballroom.jpg', link: '/about_us/welcome' },
     { name: 'Calendar', path: '/images/calendar.jpg', link: '/calendar' },
     {
@@ -26,13 +31,8 @@ function ClientSideContent() {
     },
     {
       name: 'Groups',
-      path: '/images/group.jpeg',
+      path: '/images/groupv2.jpg',
       link: '/dancing/group_classes',
-    },
-    {
-      name: 'New Students Offer',
-      path: '/images/new_offer.jpg',
-      link: '/new_students',
     },
     {
       name: 'Wedding Dance',
