@@ -87,14 +87,14 @@ function ClientSideContent() {
               >
                 <Link
                   href={item.link}
-                  className={`cards__item    p-2 max-w-[260px] flex flex-col justify-start  items-center  shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2`}
+                  className={`cards__item    p-2 max-w-[260px] flex flex-col justify-end  items-center  shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2`}
                   style={
                     {
                       width: Math.round(containerSize.width! / 5.5) + 'px',
                       height: Math.round(containerSize.height! / 4) + 'px',
                       maxHeight: '260px',
                       backgroundImage: `url(${item.path})`,
-                      backgroundPosition: 'center',
+                      backgroundPosition: 'top',
                       backgroundSize: 'cover',
                       '--item-x':
                         Math.round(
