@@ -90,9 +90,9 @@ function ClientSideContent() {
                   className={`cards__item    p-2 max-w-[260px] flex flex-col justify-end  items-center  shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md border-2`}
                   style={
                     {
-                      width: Math.round(containerSize.width! / 5.5) + 'px',
-                      height: Math.round(containerSize.height! / 4) + 'px',
-                      maxHeight: '260px',
+                      width: Math.round((containerSize.width!>containerSize.height!)?containerSize.height!/3.5:containerSize.width! /3.5) + 'px',
+                      height: Math.round((containerSize.width!>containerSize.height!)?containerSize.height!/3.5:containerSize.width! / 3.5) + 'px',
+                      
                       backgroundImage: `url(${item.path})`,
                       backgroundPosition: 'top',
                       backgroundSize: 'cover',
@@ -110,7 +110,7 @@ function ClientSideContent() {
                           ((containerSize.height - 50) /
                             (containerSize.height > containerSize.width
                               ? 2.5
-                              : 2.5)) *
+                              :2.5)) *
                             Math.sin(
                               degrees_to_radians(
                                 (index * 360) / departmentsArray.length-22-135
