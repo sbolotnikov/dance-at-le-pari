@@ -88,7 +88,16 @@ const page: FC<pageProps> = ({}) => {
             itemHeight={48}
             autoScrollSpeed={15}
           /> 
-      </div>
+ <video
+      src="https://drive.google.com/uc?export=download&id=1ZDbR3ouFGd9kEMSXJDGqQ8wclGl5wtav"
+      autoPlay
+      controls
+      muted
+      playsInline
+      style={{ width: '100%', maxWidth: '800px' }}
+    />
+      </div> 
+      
     </PageWrapper>
   );
 };
