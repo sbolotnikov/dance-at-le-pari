@@ -57,7 +57,7 @@ const page: FC<pageProps> = ({}) => {
       )}
       {loading && <LoadingScreen />}
       <div
-        className="blurFilter border-0 rounded-md p-4  shadow-2xl w-[90%] max-h-[760px]  max-w-[450px] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70"
+        className="blurFilter border-0 rounded-md p-4  shadow-2xl w-[90%] max-h-[760px]  max-w-[450px] md:w-full bg-lightMainBG/70 dark:bg-darkMainBG/70 scroll-auto"
         // style={{ boxShadow: '0 0 150px rgb(113, 113, 109 / 50%),inset 0 0 20px #242422' }}
       >
         <h2

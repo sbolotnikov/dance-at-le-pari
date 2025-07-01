@@ -16,6 +16,7 @@ import ListenSaveMp3Modal from './ListenSaveMp3Modal';
 import ChooseExternalSongModal from './ChooseExternalSongModal';
 import LoadingScreen from '@/components/LoadingScreen';
 import ChoosePlaylistsModal from './ChoosePlaylistsModal';
+import DraggableList from '@/components/DraggableList';
 
 interface MusicPlayerProps {
   rateSet: number;
@@ -1078,7 +1079,30 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
                 {'Save Playlist'}
               </div>
               </div>
-          <ul className="space-y-2" ref={listRef1}>
+
+<DraggableList
+            initialItems={playlist.map((item) => item.name)}
+            addItems={playlist.map((item) =>  item.name)}
+            onListChange={(newItems: string[]) => {
+              console.log('newItems', newItems);
+              // Map back to Song objects based on id or name
+              const newPlaylist = newItems
+                .map(idOrName =>
+                  playlist.find(
+                    song => song.id === idOrName || song.name === idOrName
+                  )
+                )
+                .filter((song): song is Song => !!song);
+              onUpdate(newPlaylist);
+            }}
+            isTouching={(isTouching:boolean) => setDragging(isTouching)}
+            containerClassName={'h-[350px]  w-full border border-lightMainColor dark:border-darkMainColor p-1 rounded-lg my-1 overflow-hidden'}
+            itemHeight={48}
+            autoScrollSpeed={15}
+          /> 
+
+
+          {/* <ul className="space-y-2" ref={listRef1}>
             {playlist.map((song, index) => (
               <React.Fragment key={song.name}>
                 {index === placeholderIndex &&
@@ -1138,8 +1162,8 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
             {placeholderIndex === playlist.length && (
               <li className="h-12 bg-blue-100 border-2 border-blue-300 border-dashed"></li>
             )}
-          </ul>
-          {dragging && draggedIndex !== null && placeholderIndex !== null && (
+          </ul> */}
+          {/* {dragging && draggedIndex !== null && placeholderIndex !== null && (
             <div
               ref={ghostRef}
               className="fixed px-4 py-2 bg-white shadow-lg rounded opacity-80 pointer-events-none"
@@ -1164,7 +1188,7 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
                 </span>
               </div>
             </div>
-          )}
+          )} */}
         </div>
       </div>
     </AnimateModalLayout>
