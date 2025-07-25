@@ -147,7 +147,7 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
           source: user.source,
           lastcontact: user.lastcontact,
         }));
-      console.log(usersFiltered);
+      // console.log(usersFiltered);
       // lastcontact and createdAt
 
       // for (let i=0; i<usersFiltered.length; i++) usersFiltered[i].id=i+1;
@@ -173,13 +173,38 @@ const EditContactsModal = ({ visibility, onReturn }: Props) => {
       //     return;
       //   }
       // }
+      // Filter out emails that already exist in the current users list
+      const existingEmails = users.map((user) => user.email.toLowerCase());
+      const filteredNewUsers = usersFiltered.filter(
+        (newUser) => !existingEmails.includes(newUser.email.toLowerCase())
+      );
+
+      if (filteredNewUsers.length === 0) {
+        setNewContact(false);
+        setNewUsers([]);
+        onReturn(2);
+        setAlertStyle({
+          variantHead: 'warning',
+          heading: `No new contacts`,
+          text: `All email addresses already exist in the database`,
+          color1: 'warning',
+          button1: 'Ok',
+          color2: '',
+          button2: '',
+          inputField: '',
+        });
+        sleep(1000).then(() => setRevealAlert(true));
+        return;
+      }
+
       onReturn(1);
+      console.log('newUsers: ', filteredNewUsers);
       fetch('/api/admin/contacts_import', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(usersFiltered),
+        body: JSON.stringify(filteredNewUsers),
       })
         .then((data) => {
           setNewContact(false);

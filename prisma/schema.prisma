@@ -31,6 +31,8 @@ model User {
   purchases Purchase[]
   comments Comment[]
   posts Post[]
+  customerInvoices Invoice[] @relation("CustomerInvoices")
+  managerInvoices Invoice[] @relation("ManagerInvoices")
 }
 model Contact {
   id   Int @id @default(autoincrement())
@@ -137,6 +139,7 @@ model ScheduleEvent {
    location String?
    confirmed Boolean @default(false)
    sequence Int @default(-1)
+   sessionNumber String?
 }
 model Purchase {
 id Int @id @default(autoincrement())
@@ -239,4 +242,48 @@ model Picture {
   id        String  @id @default(cuid())
   file      String
   file_name String
+}
+
+
+model Invoice {
+  id             String           @id @default(cuid()) @map("_id")
+  manager        User             @relation("ManagerInvoices", fields: [managerId], references: [id])
+  customer       User             @relation("CustomerInvoices", fields: [customerId], references: [id])
+  customerId     Int 
+  managerId      Int
+  installments   Installment[]
+  expirationDate DateTime?
+  sessions       InvoiceSession[]
+  discount       Float?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  // Mongoose virtual 'invoiceTotal' was here.
+  // It calculated the total invoice amount based on sessions and discounts.
+  // Mongoose virtual 'paid' was here.
+  // It calculated the total amount paid from installments.
+
+  @@map("invoices")
+}
+
+model Installment {
+  id        String   @id @default(cuid()) @map("_id")
+  date      DateTime
+  amount    Float
+  isPaid    Boolean
+  invoice   Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  invoiceId String
+
+  @@map("installments")
+}
+
+model InvoiceSession {
+  id               String      @id @default(cuid()) @map("_id")
+  sessionType      EventType
+  price            Float
+  discount         Float
+  numberOfSessions Int
+  invoice          Invoice     @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  invoiceId        String
+
+  @@map("invoice_sessions")
 }
