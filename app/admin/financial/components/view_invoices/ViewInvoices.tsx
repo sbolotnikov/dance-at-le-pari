@@ -9,13 +9,28 @@ interface Invoice {
   total: number;
 }
 
-interface ViewInvoicesProps {}
+interface ViewInvoicesProps {
+  onAlert: (invoiceNum: string) => void;
+  delInvoice: string;
+}
 
-const ViewInvoices: FC<ViewInvoicesProps> = ({}) => {
+const ViewInvoices: FC<ViewInvoicesProps> = ({ onAlert, delInvoice }) => {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    if (delInvoice.length > 0) {
+
+const match = delInvoice.match(/#(.*?)!/);
+
+if (match && match[1]) {
+   handleDelete(match[1]);
+} else {
+  console.log("No match found.");
+}
+    }
+  }, [delInvoice]);
   useEffect(() => {
     const fetchInvoices = async () => {
       try {
@@ -144,7 +159,10 @@ const ViewInvoices: FC<ViewInvoicesProps> = ({}) => {
                     </Link>
                     <button
                       className="text-red-500"
-                      onClick={() => handleDelete(invoice.id)}
+                      onClick={() => {
+                       onAlert(invoice.id);
+                      }
+                    }
                     >
                       <div className="mr-2 h-10 w-10 md:h-12 md:w-12 stroke-alertcolor fill-alertcolor">
                         <ShowIcon icon={'Close'} stroke={'2'} />
@@ -157,6 +175,7 @@ const ViewInvoices: FC<ViewInvoicesProps> = ({}) => {
           </table>
         </div>
       )}
+    
     </div>
   );
 };
