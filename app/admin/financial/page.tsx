@@ -12,18 +12,22 @@ interface pageProps {}
 
 const page: FC<pageProps> = ({}) => {
   const { darkMode } = useContext(SettingsContext) as ScreenSettingsContextType;
-  const dimensions = useDimensions();
+  const windowSize = useDimensions();
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const r = document.querySelector(':root') as HTMLElement;
-    if (darkMode) {
-      r.style.setProperty('--accent-color', '#93c5fd');
-    } else {
-      r.style.setProperty('--accent-color', '#504deb');
-    }
-  }, [darkMode]);
-
+//   useEffect(() => {
+//     const r = document.querySelector(':root') as HTMLElement;
+//     if (darkMode) {
+//       r.style.setProperty('--accent-color', '#93c5fd');
+//     } else {
+//       r.style.setProperty('--accent-color', '#504deb');
+//     }
+//   }, [darkMode]);
+ useEffect(() => {
+    windowSize.width! > 768 && windowSize.height! > 768
+      ? (document.getElementById('icon')!.style.display = 'block')
+      : (document.getElementById('icon')!.style.display = 'none');
+  }, [windowSize.height]);
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center md:items-end justify-center">
       <div
@@ -39,9 +43,9 @@ const page: FC<pageProps> = ({}) => {
             <h2
               className="text-center font-semibold md:text-4xl uppercase"
               style={{ letterSpacing: '1px' }}>
-              Financial Block
+              Studio Finance Dashboard
             </h2>
-            <div className="h-20 w-20 md:h-28 md:w-28 fill-lightMainColor stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor">
+            <div id="icon" className="h-20 w-20 md:h-28 md:w-28 fill-lightMainColor stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor">
               <ShowIcon icon={'FinanceLogo'} stroke={'0.05'} />
             </div>
             <FinancialTabs />

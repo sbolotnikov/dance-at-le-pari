@@ -204,7 +204,7 @@ const ShowIcon = ({ icon, stroke, widthSvg, heightSvg, fillSvg }: Props) => {
       return (
         <g
           strokeWidth={0.1}
-          className="fill-lightMainColor  dark:stroke-lightMainColor dark:fill-darkMainColor stroke-darkMainColor"
+          className= ""
         >
           <path
             fillRule="evenodd"

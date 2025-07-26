@@ -10,8 +10,8 @@ const InvoiceActions = () => {
         </div>
         Cancel
       </button>
-      <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded flex items-center">
-        <ShowIcon icon={'Plus'} stroke={"2"} />
+      <button type="submit" className="btnFancy px-4 py-2 rounded flex items-center">
+        <ShowIcon icon={'Save'} stroke={"2"} />
         Save Invoice
       </button>
     </div>

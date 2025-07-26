@@ -135,8 +135,8 @@ const ViewInvoices: FC<ViewInvoicesProps> = ({}) => {
                   </td>
                   <td className="py-2 px-4 border-b border-lightMainColor dark:border-darkMainColor flex space-x-2">
                     <Link href={`/admin/financial/edit/${invoice.id}`}>
-                      <button className="text-lightMainColor dark:text-darkMainColor hover:text-green-600 dark:hover:text-green-400">
-                        <div className="  h-6 w-6 md:h-7 md:w-7 fill-green-600 m-auto stroke-lightMainColor dark:fill-green-600 dark:stroke-darkMainColor cursor-pointer ">
+                      <button className="text-lightMainColor dark:text-darkMainColor hover:text-green-600 dark:hover:text-editcolor">
+                        <div className="  h-10 w-10 md:h-12 md:w-12 fill-editcolor m-auto stroke-editcolor dark:fill-editcolor cursor-pointer ">
                           <ShowIcon icon={'Edit'} stroke={'0.5'} />
                           <span className="sr-only">Edit</span>
                         </div>

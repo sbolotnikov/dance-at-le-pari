@@ -4,12 +4,13 @@ import { useRouter, useParams } from 'next/navigation';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import CustomerSelect from '../../components/create_invoice/CustomerSelect';
 import SessionForm from '../../components/create_invoice/SessionForm';
 import InstallmentForm from '../../components/create_invoice/InstallmentForm';
 import InvoicePreview from '../../components/create_invoice/InvoicePreview';
 import InvoiceActions from '../../components/create_invoice/InvoiceActions';
 import { PageWrapper } from '@/components/page-wrapper';
+import ShowIcon from '@/components/svg/showIcon';
+import { useDimensions } from '@/hooks/useDimensions';
 
 const invoiceSchema = z.object({
   customerId: z.preprocess(
@@ -43,12 +44,17 @@ const invoiceSchema = z.object({
 
 const EditInvoicePage: FC = () => {
   const router = useRouter();
+  const windowSize = useDimensions();
   const { id } = useParams();
   const [invoiceDetails, setInvoiceDetails] = useState<any>(null);
   const methods = useForm({
     resolver: zodResolver(invoiceSchema),
   });
-
+ useEffect(() => {
+    windowSize.width! > 768 && windowSize.height! > 768
+      ? (document.getElementById('icon')!.style.display = 'block')
+      : (document.getElementById('icon')!.style.display = 'none');
+  }, [windowSize.height]);
   useEffect(() => {
     const fetchInvoice = async () => {
       if (id) {
@@ -110,22 +116,63 @@ const EditInvoicePage: FC = () => {
               className="text-center font-semibold md:text-4xl uppercase"
               style={{ letterSpacing: '1px' }}
             >
-              Edit Invoice
+              Studio Finance Dashboard
+            </h2>
+            <div
+              id="icon"
+              className="h-20 w-20 md:h-28 md:w-28 fill-lightMainColor stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor"
+            >
+              <ShowIcon icon={'FinanceLogo'} stroke={'0.05'} />
+            </div>
+            <div className="w-full">
+              <div className="flex border-b border-gray-200 dark:border-gray-700">
+                <button
+                  className={`px-4 py-2 text-lg font-medium text-gray-500 dark:text-gray-400'}`}
+                  onClick={() => router.push('/admin/financial?tab=create')}
+                >
+                  Create Invoice
+                </button>
+                <button
+                  className={`px-4 py-2 text-lg font-medium text-gray-500 dark:text-gray-400'}`}
+                  onClick={() => router.push('/admin/financial?tab=view')}
+                >
+                  View Invoices
+                </button>
+                <div
+                  className={`px-4 py-2 text-lg font-medium border-b-2 border-blue-500 text-blue-500`}
+                >
+                  Edit Invoice
+                </div>
+              </div>
+            </div>
+
+            <h2
+              className="text-center font-semibold md:text-xl uppercase"
+              style={{ letterSpacing: '1px' }}
+            >
+              Invoice # {id}
             </h2>
             {invoiceDetails && (
               <div className="text-center text-sm mb-2">
+                <p>{`Customer: ${invoiceDetails.customer?.name || 'N/A'} <${
+                  invoiceDetails.customer?.email || 'N/A'
+                }>`}</p>
                 <p>Manager: {invoiceDetails.manager?.name || 'N/A'}</p>
-                <p>Created: {new Date(invoiceDetails.createdAt).toLocaleString()}</p>
-                <p>Last Updated: {new Date(invoiceDetails.updatedAt).toLocaleString()}</p>
+                <p>
+                  Created: {new Date(invoiceDetails.createdAt).toLocaleString()}
+                </p>
+                <p>
+                  Last Updated:{' '}
+                  {new Date(invoiceDetails.updatedAt).toLocaleString()}
+                </p>
               </div>
             )}
+            {/* <div className="w-full text-center mb-4 flex justify-center space-x-4">
+              
+            </div> */}
             <FormProvider {...methods}>
               <div className="container mx-auto p-2">
-                <form
-                  onSubmit={methods.handleSubmit(onSubmit)}
-                  
-                >
-                  <CustomerSelect />
+                <form onSubmit={methods.handleSubmit(onSubmit)}>
                   <SessionForm />
                   <InstallmentForm />
                   <div className="flex justify-end">
@@ -133,7 +180,7 @@ const EditInvoicePage: FC = () => {
                     <input
                       type="number"
                       {...methods.register('discount', { valueAsNumber: true })}
-                      className="border rounded p-1 w-24"
+                      className="border rounded p-1 w-24 dark:bg-darkMainBG"
                     />
                   </div>
                   <InvoicePreview />
