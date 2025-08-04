@@ -5,8 +5,7 @@ import ShowIcon from '@/components/svg/showIcon';
 import { SettingsContext } from '@/hooks/useSettings';
 import { ScreenSettingsContextType } from '@/types/screen-settings';
 import { useDimensions } from '@/hooks/useDimensions';
-import LoadingScreen from '@/components/LoadingScreen';
-import FinancialTabs from './components/FinancialTabs';
+import FinancialTabsWrapper from './components/FinancialTabsWrapper';
 import AlertMenu from '@/components/alertMenu';
 
 interface pageProps {}
@@ -77,7 +76,7 @@ const page: FC<pageProps> = ({}) => {
             >
               <ShowIcon icon={'FinanceLogo'} stroke={'0.05'} />
             </div>
-            <FinancialTabs
+            <FinancialTabsWrapper
               delInvoice={delInvoice}
               onAlert={(invoiceNum) => {
                 // Show alert for confirmation
