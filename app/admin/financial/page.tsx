@@ -33,7 +33,7 @@ const page: FC<pageProps> = ({}) => {
     };
 
   useEffect(() => {
-    if (windowSize.width && windowSize.height) {
+    if (typeof document !== 'undefined' && windowSize.width && windowSize.height) {
       const r = document.documentElement;
       if (darkMode) {
         r.style.setProperty('--accent-color', '#93c5fd');
