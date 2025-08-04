@@ -33,18 +33,23 @@ const page: FC<pageProps> = ({}) => {
     };
 
   useEffect(() => {
-    const r = document.querySelector(':root') as HTMLElement;
-    if (darkMode) {
-      r.style.setProperty('--accent-color', '#93c5fd');
-    } else {
-      r.style.setProperty('--accent-color', '#504deb');
+    if (windowSize.width && windowSize.height) {
+      const r = document.documentElement;
+      if (darkMode) {
+        r.style.setProperty('--accent-color', '#93c5fd');
+      } else {
+        r.style.setProperty('--accent-color', '#504deb');
+      }
+      const icon = document.getElementById('icon');
+      if (icon) {
+        if (windowSize.width > 768 && windowSize.height > 768) {
+          icon.style.display = 'block';
+        } else {
+          icon.style.display = 'none';
+        }
+      }
     }
-  }, [darkMode]);
-  useEffect(() => {
-    windowSize.width! > 768 && windowSize.height! > 768
-      ? (document.getElementById('icon')!.style.display = 'block')
-      : (document.getElementById('icon')!.style.display = 'none');
-  }, [windowSize.height]);
+  }, [darkMode, windowSize.width, windowSize.height]);
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center md:items-end justify-center">
         <AlertMenu
