@@ -1410,54 +1410,67 @@ const page: FC<pageProps> = ({}) => {
           `/api/music2play?file_id=${songsArr[randomIndex].url}`
         );
         const data = await response.json();
-        const intro1 = await makeChainDJ(
-          introArray,
-          'Party theme:' + parties.find((p) => p.id === choosenParty)?.name ||
-            'no party theme',
-          'Dance: ' +
-            songsArr[randomIndex].dance +
-            ' - ' +
-            songsArr[randomIndex].name
-        );
-        // if (typeof intro1 === 'object' && intro1 !== null && 'content' in intro1) {
-        introArray = [
-          ...introArray,
-          [
-            'human',
+        if (autoDJMode === true) {
+          const intro1 = await makeChainDJ(
+            introArray,
+            'Party theme:' + parties.find((p) => p.id === choosenParty)?.name ||
+              'no party theme',
             'Dance: ' +
               songsArr[randomIndex].dance +
               ' - ' +
-              songsArr[randomIndex].name,
-          ] as unknown as BaseMessage,
-          ['system', intro1] as unknown as BaseMessage,
-        ];
-        // }
-        playlist1 = [
-          ...playlist1,
-          {
-            url: data.fileUrl,
-            name: songsArr[randomIndex].name,
-            rate: songsArr[randomIndex].rate,
-            dance: songsArr[randomIndex].dance,
-            id: songsArr[randomIndex].id,
-            introduction: Array.isArray(intro1)
-              ? intro1
-                  .map((msg: any) =>
-                    typeof msg === 'string'
-                      ? msg
-                      : msg && typeof msg === 'object' && 'content' in msg
-                      ? (msg as { content?: string }).content ?? ''
-                      : ''
-                  )
-                  .join(' ')
-              : typeof intro1 === 'string'
-              ? intro1
-              : intro1 && typeof intro1 === 'object' && 'content' in intro1
-              ? (intro1 as { content?: string }).content ?? ''
-              : '',
-          },
-        ];
+              songsArr[randomIndex].name
+          );
 
+          // if (typeof intro1 === 'object' && intro1 !== null && 'content' in intro1) {
+          introArray = [
+            ...introArray,
+            [
+              'human',
+              'Dance: ' +
+                songsArr[randomIndex].dance +
+                ' - ' +
+                songsArr[randomIndex].name,
+            ] as unknown as BaseMessage,
+            ['system', intro1] as unknown as BaseMessage,
+          ];
+          // }
+          playlist1 = [
+            ...playlist1,
+            {
+              url: data.fileUrl,
+              name: songsArr[randomIndex].name,
+              rate: songsArr[randomIndex].rate,
+              dance: songsArr[randomIndex].dance,
+              id: songsArr[randomIndex].id,
+              introduction: Array.isArray(intro1)
+                ? intro1
+                    .map((msg: any) =>
+                      typeof msg === 'string'
+                        ? msg
+                        : msg && typeof msg === 'object' && 'content' in msg
+                        ? (msg as { content?: string }).content ?? ''
+                        : ''
+                    )
+                    .join(' ')
+                : typeof intro1 === 'string'
+                ? intro1
+                : intro1 && typeof intro1 === 'object' && 'content' in intro1
+                ? (intro1 as { content?: string }).content ?? ''
+                : '',
+            },
+          ];
+        } else {
+          playlist1 = [
+            ...playlist1,
+            {
+              url: data.fileUrl,
+              name: songsArr[randomIndex].name,
+              rate: songsArr[randomIndex].rate,
+              dance: songsArr[randomIndex].dance,
+              id: songsArr[randomIndex].id,
+            },
+          ];
+        }
         songsChoosenArr = songsChoosenArr.filter(
           (song) => song.id !== songsArr[randomIndex].id
         );
@@ -1589,7 +1602,7 @@ const page: FC<pageProps> = ({}) => {
                 : null;
             });
           }
-        } else setCurrentSongIndex(currentSongIndex + 1)
+        } else setCurrentSongIndex(currentSongIndex + 1);
       } else {
         setRate(playlist[0].rate ?? 1);
         sleep(1200).then(() => {
