@@ -6,7 +6,7 @@ import Slider from '@/components/Slider';
 import PlayerButtons from './PlayerButtons';
 import ShowIcon from '@/components/svg/showIcon';
 import { fileToBase64 } from '@/utils/picturemanipulation';
-import sleep, { save_File } from '@/utils/functions';
+import sleep, { save_File, speaking_Func } from '@/utils/functions';
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '@/firebase';
 import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
@@ -17,6 +17,8 @@ import ChooseExternalSongModal from './ChooseExternalSongModal';
 import LoadingScreen from '@/components/LoadingScreen';
 import ChoosePlaylistsModal from './ChoosePlaylistsModal';
 import DraggableList from '@/components/DraggableList';
+import { makeChainDJ } from '@/utils/makechain';
+import { BaseMessage } from '@langchain/core/messages';
 
 interface MusicPlayerProps {
   rateSet: number;
@@ -96,7 +98,6 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
       }, delayLength);
     }
   }, [music]);
-
 
   useEffect(() => {
     if (
@@ -829,12 +830,12 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
                   ))}
                 </select>
                 <input
-                    type="text"
-                    placeholder="Enter dance"
-                    value={dance}
-                    onChange={(e) => setDance(e.target.value)}
-                    className="w-full p-2 m-1 border border-gray-300 rounded mb-2"
-                  />
+                  type="text"
+                  placeholder="Enter dance"
+                  value={dance}
+                  onChange={(e) => setDance(e.target.value)}
+                  className="w-full p-2 m-1 border border-gray-300 rounded mb-2"
+                />
                 <div>
                   <label className="block mb-2">Playback Speed</label>
                   <Slider
@@ -927,6 +928,7 @@ interface Song {
   rate: number | undefined;
   dance: string | null;
   id: string | null;
+  introduction?: string;
 }
 
 interface PlaylistManagerProps {
@@ -1056,51 +1058,56 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
       <div className="blurFilter border-0 rounded-md p-2 shadow-2xl w-[90%] max-w-[450px] max-h-[85%] overflow-y-auto md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70">
         <div className="w-full max-w-md mx-auto mt-4 relative">
           <div className="flex justify-between items-center w-full">
-          <h4 className="text-lg font-semibold mb-2">Playlist</h4>
-          <div className=" flex flex-col items-center justify-center m-1.5">
-                <PlayerButtons
-                  icon={'Save'}
-                  color="#504deb"
-                  color2="#FFFFFF"
-                  size={50}
-                  onButtonPress={() => {
-                    if (playlist.length === 0) {
-                      alert('Playlist is empty');
-                      return;
-                    }else if (playlist.length<47){
+            <h4 className="text-lg font-semibold mb-2">Playlist</h4>
+            <div className=" flex flex-col items-center justify-center m-1.5">
+              <PlayerButtons
+                icon={'Save'}
+                color="#504deb"
+                color2="#FFFFFF"
+                size={50}
+                onButtonPress={() => {
+                  if (playlist.length === 0) {
+                    alert('Playlist is empty');
+                    return;
+                  } else if (playlist.length < 47) {
                     save_File(JSON.stringify([...playlist]), 'musicDB.sdb');
-                    }else{
-                      let newPlaylist = playlist.slice(0,47);
-                      save_File(JSON.stringify([...newPlaylist]), 'musicDB.sdb');
-                      save_File(JSON.stringify([...playlist.slice(47)]), 'musicDB part 2.sdb');
-                    }
-                  }}
-                />
-                {'Save Playlist'}
-              </div>
-              </div>
+                  } else {
+                    let newPlaylist = playlist.slice(0, 47);
+                    save_File(JSON.stringify([...newPlaylist]), 'musicDB.sdb');
+                    save_File(
+                      JSON.stringify([...playlist.slice(47)]),
+                      'musicDB part 2.sdb'
+                    );
+                  }
+                  console.log(playlist.map((item) => item.introduction));
+                }}
+              />
+              {'Save Playlist'}
+            </div>
+          </div>
 
-<DraggableList
+          <DraggableList
             initialItems={playlist.map((item) => item.name)}
-            addItems={playlist.map((item) =>  item.name)}
+            addItems={playlist.map((item) => item.name)}
             onListChange={(newItems: string[]) => {
-              console.log('newItems', newItems);
+              // console.log('newItems', newItems);
               // Map back to Song objects based on id or name
               const newPlaylist = newItems
-                .map(idOrName =>
+                .map((idOrName) =>
                   playlist.find(
-                    song => song.id === idOrName || song.name === idOrName
+                    (song) => song.id === idOrName || song.name === idOrName
                   )
                 )
                 .filter((song): song is Song => !!song);
               onUpdate(newPlaylist);
             }}
-            isTouching={(isTouching:boolean) => setDragging(isTouching)}
-            containerClassName={'h-[350px]  w-full border border-lightMainColor dark:border-darkMainColor p-1 rounded-lg my-1 overflow-hidden'}
+            isTouching={(isTouching: boolean) => setDragging(isTouching)}
+            containerClassName={
+              'h-[350px]  w-full border border-lightMainColor dark:border-darkMainColor p-1 rounded-lg my-1 overflow-hidden'
+            }
             itemHeight={48}
             autoScrollSpeed={15}
-          /> 
-
+          />
 
           {/* <ul className="space-y-2" ref={listRef1}>
             {playlist.map((song, index) => (
@@ -1214,6 +1221,7 @@ const page: FC<pageProps> = ({}) => {
   const [autoPlayMode, setAutoPlayMode] = useState(false);
   const [autoPlayList, setAutoPlayList] = useState(false);
   const [isAddToDBOpen, setIsAddToDBOpen] = useState(false);
+  const [autoDJMode, setAutoDJMode] = useState(false);
   const [parties, setParties] = useState<{ name: string; id: string }[]>([]);
   const [choosenParty, setChoosenParty] = useState('');
   const [isChoosePlaylistsModal, setIsChoosePlaylistsModal] = useState(false);
@@ -1223,33 +1231,39 @@ const page: FC<pageProps> = ({}) => {
   const [choosenPlaylist, setChoosenPlaylist] = useState('');
   const [collectionsArray, setCollectionsArray] = useState<string[]>([]);
   const { data: session } = useSession();
-  const [autoPlayDances, setAutoPlayDances] = useState<string[]>([
-    'Waltz'
-  ]);
+  const [autoPlayDances, setAutoPlayDances] = useState<string[]>(['Waltz']);
   const [loading, setLoading] = useState(false);
   const [autoPlayIndex, setAutoPlayIndex] = useState(0);
-  const [webSongs, setWebSongs] = useState<{url: string;
-    name: string;
-    rate: number | undefined;
-    dance: string | null;
-    collectionName: string;
-    id: string | null;}[]>([]);
-    const [songsAll, setSongsAll] = useState<{
+  const [webSongs, setWebSongs] = useState<
+    {
       url: string;
       name: string;
       rate: number | undefined;
       dance: string | null;
       collectionName: string;
       id: string | null;
-    }[]>([]);
-  const [webSongsAll, setWebSongsAll] = useState<{
-    url: string;
-    name: string;
-    rate: number | undefined;
-    dance: string | null;
-    collectionName: string;
-    id: string | null;
-  }[]>([]);
+    }[]
+  >([]);
+  const [songsAll, setSongsAll] = useState<
+    {
+      url: string;
+      name: string;
+      rate: number | undefined;
+      dance: string | null;
+      collectionName: string;
+      id: string | null;
+    }[]
+  >([]);
+  const [webSongsAll, setWebSongsAll] = useState<
+    {
+      url: string;
+      name: string;
+      rate: number | undefined;
+      dance: string | null;
+      collectionName: string;
+      id: string | null;
+    }[]
+  >([]);
 
   async function getPartyArray() {
     const q = await getDocs(collection(db, 'parties'));
@@ -1278,37 +1292,48 @@ const page: FC<pageProps> = ({}) => {
     setPlaylists(arr);
     setChoosenPlaylist(arr[0].id);
   }
-  async function getWebSongsArray(){
+  async function getWebSongsArray() {
     const songsSnapshot = await getDocs(collection(db, 'songs'));
     const songsList = songsSnapshot.docs.map(
-      (doc) => ({ ...doc.data(), id: doc.id } as {
-        url: string;
-        name: string;
-        rate: number | undefined;
-        dance: string | null;
-        collectionName: string;
-        id: string | null;
-      })
+      (doc) =>
+        ({ ...doc.data(), id: doc.id } as {
+          url: string;
+          name: string;
+          rate: number | undefined;
+          dance: string | null;
+          collectionName: string;
+          id: string | null;
+        })
     );
     setSongsAll(songsList);
-    let collectionArr = songsList.map((item)=>(item.collectionName))
-    collectionArr = collectionArr.filter((item, index) => collectionArr.indexOf(item) === index);
-    setCollectionsArray(collectionArr.sort((a: string, b: string) => a.localeCompare(b)));
-    console.log(collectionArr)
+    let collectionArr = songsList.map((item) => item.collectionName);
+    collectionArr = collectionArr.filter(
+      (item, index) => collectionArr.indexOf(item) === index
+    );
+    setCollectionsArray(
+      collectionArr.sort((a: string, b: string) => a.localeCompare(b))
+    );
+    console.log(collectionArr);
   }
   useEffect(() => {
     getPartyArray();
     getPlaylistsArray();
     getWebSongsArray();
   }, []);
-  
+
   useEffect(() => {
-    const fetchSongs = async () => { 
-      const selectElement = document.getElementById("collectionSelect1") as HTMLSelectElement;
-      const selectedValues = Array.from(selectElement.selectedOptions).map(option => option.value); 
-      const songsChoosenArr = songsAll.filter((item)=>selectedValues.includes(item.collectionName));
+    const fetchSongs = async () => {
+      const selectElement = document.getElementById(
+        'collectionSelect1'
+      ) as HTMLSelectElement;
+      const selectedValues = Array.from(selectElement.selectedOptions).map(
+        (option) => option.value
+      );
+      const songsChoosenArr = songsAll.filter((item) =>
+        selectedValues.includes(item.collectionName)
+      );
       setWebSongsAll(songsChoosenArr);
-        
+
       let songsArr = songsChoosenArr.filter(
         (song) => song.dance == autoPlayDances[autoPlayIndex]
       );
@@ -1318,7 +1343,8 @@ const page: FC<pageProps> = ({}) => {
       fetch(`/api/music2play?file_id=${songsArr[randomIndex].url}`).then(
         (response) =>
           response.json().then((data) => {
-            setPlaylist([...playlist,
+            setPlaylist([
+              ...playlist,
               {
                 url: data.fileUrl,
                 name: songsArr[randomIndex].name,
@@ -1333,7 +1359,9 @@ const page: FC<pageProps> = ({}) => {
                 : 1
             );
             setWebSongs(
-              songsChoosenArr.filter((song) => song.id !== songsArr[randomIndex].id)
+              songsChoosenArr.filter(
+                (song) => song.id !== songsArr[randomIndex].id
+              )
             );
             if (choosenParty != '') {
               console.log(
@@ -1356,43 +1384,93 @@ const page: FC<pageProps> = ({}) => {
     }
   }, [autoPlayMode]);
   useEffect(() => {
-    const fetchSongsAll = async () => { 
-      const selectElement = document.getElementById("collectionSelect1") as HTMLSelectElement;
-      const selectedValues = Array.from(selectElement.selectedOptions).map(option => option.value); 
-      let songsChoosenArr = songsAll.filter((item)=>selectedValues.includes(item.collectionName));
-      let playlist1 : Song[] = []; 
-      for (let autoPlayIndex1 = 0; autoPlayIndex1 < autoPlayDances.length; autoPlayIndex1++) {
-      let songsArr = songsChoosenArr.filter(
-        (song) => song.dance == autoPlayDances[autoPlayIndex1]
+    const fetchSongsAll = async () => {
+      const selectElement = document.getElementById(
+        'collectionSelect1'
+      ) as HTMLSelectElement;
+      const selectedValues = Array.from(selectElement.selectedOptions).map(
+        (option) => option.value
       );
-      let randomIndex = Math.floor(Math.random() * songsArr.length);
+      let songsChoosenArr = songsAll.filter((item) =>
+        selectedValues.includes(item.collectionName)
+      );
+      let playlist1: Song[] = [];
+      let introArray: BaseMessage[] = [];
+      for (
+        let autoPlayIndex1 = 0;
+        autoPlayIndex1 < autoPlayDances.length;
+        autoPlayIndex1++
+      ) {
+        let songsArr = songsChoosenArr.filter(
+          (song) => song.dance == autoPlayDances[autoPlayIndex1]
+        );
+        let randomIndex = Math.floor(Math.random() * songsArr.length);
 
-      const response = await fetch(`/api/music2play?file_id=${songsArr[randomIndex].url}`);
-      const data = await response.json();
-      playlist1=[...playlist1,
-              {
-                url: data.fileUrl,
-                name: songsArr[randomIndex].name,
-                rate: songsArr[randomIndex].rate,
-                dance: songsArr[randomIndex].dance,
-                id: songsArr[randomIndex].id,
-              },
-            ];
+        const response = await fetch(
+          `/api/music2play?file_id=${songsArr[randomIndex].url}`
+        );
+        const data = await response.json();
+        const intro1 = await makeChainDJ(
+          introArray,
+          'Party theme:' + parties.find((p) => p.id === choosenParty)?.name ||
+            'no party theme',
+          'Dance: ' +
+            songsArr[randomIndex].dance +
+            ' - ' +
+            songsArr[randomIndex].name
+        );
+        // if (typeof intro1 === 'object' && intro1 !== null && 'content' in intro1) {
+        introArray = [
+          ...introArray,
+          [
+            'human',
+            'Dance: ' +
+              songsArr[randomIndex].dance +
+              ' - ' +
+              songsArr[randomIndex].name,
+          ] as unknown as BaseMessage,
+          ['system', intro1] as unknown as BaseMessage,
+        ];
+        // }
+        playlist1 = [
+          ...playlist1,
+          {
+            url: data.fileUrl,
+            name: songsArr[randomIndex].name,
+            rate: songsArr[randomIndex].rate,
+            dance: songsArr[randomIndex].dance,
+            id: songsArr[randomIndex].id,
+            introduction: Array.isArray(intro1)
+              ? intro1
+                  .map((msg: any) =>
+                    typeof msg === 'string'
+                      ? msg
+                      : msg && typeof msg === 'object' && 'content' in msg
+                      ? (msg as { content?: string }).content ?? ''
+                      : ''
+                  )
+                  .join(' ')
+              : typeof intro1 === 'string'
+              ? intro1
+              : intro1 && typeof intro1 === 'object' && 'content' in intro1
+              ? (intro1 as { content?: string }).content ?? ''
+              : '',
+          },
+        ];
 
-            songsChoosenArr=songsChoosenArr.filter((song) => song.id !== songsArr[randomIndex].id)   
-              setPlaylist(playlist1);
-  
-            
-    }
+        songsChoosenArr = songsChoosenArr.filter(
+          (song) => song.id !== songsArr[randomIndex].id
+        );
+        setPlaylist(playlist1);
+      }
     };
     if (autoPlayList) {
       fetchSongsAll();
     }
-  }, [autoPlayList]);  
+  }, [autoPlayList]);
   const handleSongChange = (index: number) => {
     setCurrentSongIndex(index);
     setRate(playlist[index].rate !== undefined ? playlist[index].rate : 1);
-    
   };
   useEffect(() => {
     console.log(currentSongIndex, 'in useeffect', playlist);
@@ -1473,24 +1551,64 @@ const page: FC<pageProps> = ({}) => {
                 }`,
               }).then((res) => console.log(res));
             }
-            sleep(1200).then(()=>{setRate(songsArr[randomIndex].rate !== undefined
-              ? songsArr[randomIndex].rate+0.0001
-              : 1)})
+            sleep(1200).then(() => {
+              setRate(
+                songsArr[randomIndex].rate !== undefined
+                  ? songsArr[randomIndex].rate + 0.0001
+                  : 1
+              );
+            });
           })
       );
     } else {
       if (currentSongIndex < playlist.length - 1) {
         setRate(playlist[currentSongIndex + 1].rate ?? 1);
-        sleep(1200).then(()=>{setRate(playlist[currentSongIndex + 1].rate !== undefined
-          ? playlist[currentSongIndex + 1].rate!+0.0001
-          : 1)})
-        setCurrentSongIndex(currentSongIndex + 1);
+        sleep(1200).then(() => {
+          setRate(
+            playlist[currentSongIndex + 1].rate !== undefined
+              ? playlist[currentSongIndex + 1].rate! + 0.0001
+              : 1
+          );
+        });
+
+        /*Add Talking DJ */
+
+        console.log(
+          'next song INTRO',
+          playlist[currentSongIndex + 1].introduction
+            ? playlist[currentSongIndex + 1].introduction
+            : 'No introduction available'
+        );
+        if (autoDJMode === true) {
+          if (playlist[currentSongIndex + 1].introduction) {
+            const introMessage = playlist[currentSongIndex + 1].introduction!;
+
+            speaking_Func(introMessage, (endF) => {
+              endF === 'ended'
+                ? setCurrentSongIndex(currentSongIndex + 1)
+                : null;
+            });
+          }
+        } else setCurrentSongIndex(currentSongIndex + 1)
       } else {
-        setCurrentSongIndex(0);
         setRate(playlist[0].rate ?? 1);
-        sleep(1200).then(()=>{setRate(playlist[0].rate !== undefined
-          ? playlist[0].rate!+0.0001
-          : 1)})
+        sleep(1200).then(() => {
+          setRate(
+            playlist[0].rate !== undefined ? playlist[0].rate! + 0.0001 : 1
+          );
+        });
+        console.log(
+          'next song INTRO',
+          playlist[0].introduction
+            ? playlist[0].introduction
+            : 'No introduction available'
+        );
+        if (autoDJMode === true) {
+          const introMessage = playlist[0].introduction!;
+          speaking_Func(introMessage, (endF) => {
+            endF === 'ended' ? setCurrentSongIndex(0) : null;
+          });
+        } else setCurrentSongIndex(0);
       }
     }
   };
@@ -1545,11 +1663,13 @@ const page: FC<pageProps> = ({}) => {
         />
       )}
       {isChoosePlaylistsModal && (
-        <ChoosePlaylistsModal 
+        <ChoosePlaylistsModal
           vis={isChoosePlaylistsModal}
           role={session?.user.role}
-          choosenPlaylist={playlists.filter(playlist => playlist.id==choosenPlaylist)[0]}
-          onClose={() => setIsChoosePlaylistsModal(false)} 
+          choosenPlaylist={
+            playlists.filter((playlist) => playlist.id == choosenPlaylist)[0]
+          }
+          onClose={() => setIsChoosePlaylistsModal(false)}
           onLoad={(a) => setLoading(a)}
         />
       )}
@@ -1714,30 +1834,34 @@ const page: FC<pageProps> = ({}) => {
               </div>
             </div>
             {session?.user.role == 'Admin' && (
-
-<select
-                      className="w-full p-2 border border-gray-300 rounded mb-2"
-                      multiple
-                      id="collectionSelect1"
-                      onChange={(e) =>{
-                         e.preventDefault();
-                         const selectElement = document.getElementById("collectionSelect1") as HTMLSelectElement;
-                         const selectedValues = Array.from(selectElement.selectedOptions).map(option => option.value); 
-                         setWebSongsAll(songsAll.filter((item)=>selectedValues.includes(item.collectionName)));
-                        }}
-                    >
-                      {collectionsArray &&
-                        collectionsArray.map((item, index) => {
-                            return (
-                              <option key={'opt' + index} value={item}>
-                                {item}
-                              </option>
-                            );
-                          })}
-                    </select>
-
-
-
+              <select
+                className="w-full p-2 border border-gray-300 rounded mb-2"
+                multiple
+                id="collectionSelect1"
+                onChange={(e) => {
+                  e.preventDefault();
+                  const selectElement = document.getElementById(
+                    'collectionSelect1'
+                  ) as HTMLSelectElement;
+                  const selectedValues = Array.from(
+                    selectElement.selectedOptions
+                  ).map((option) => option.value);
+                  setWebSongsAll(
+                    songsAll.filter((item) =>
+                      selectedValues.includes(item.collectionName)
+                    )
+                  );
+                }}
+              >
+                {collectionsArray &&
+                  collectionsArray.map((item, index) => {
+                    return (
+                      <option key={'opt' + index} value={item}>
+                        {item}
+                      </option>
+                    );
+                  })}
+              </select>
             )}
             {session?.user.role == 'Admin' && (
               <select
@@ -1759,37 +1883,51 @@ const page: FC<pageProps> = ({}) => {
             )}
             {session?.user.role == 'Admin' && (
               <div className="flex justify-center items-center">
-              <div className="flex flex-col items-center justify-center mx-2">
-                <PlayerButtons
-                  icon={'Auto'}
-                  color="#504deb"
-                  color2="#FFFFFF"
-                  size={50}
-                  onButtonPress={() => setAutoPlayMode(true)}
-                />
-                <span className="text-center">Autoplay Mode</span>
+                <div className="flex flex-col items-center justify-center mx-2">
+                  <PlayerButtons
+                    icon={'Auto'}
+                    color="#504deb"
+                    color2="#FFFFFF"
+                    size={50}
+                    onButtonPress={() => setAutoPlayMode(true)}
+                  />
+                  <span className="text-center">Autoplay Mode</span>
+                </div>
+                <div className="flex flex-col items-center justify-center">
+                  <PlayerButtons
+                    icon={'CreatePlaylist'}
+                    color="#504deb"
+                    color2="#FFFFFF"
+                    size={50}
+                    onButtonPress={() => setAutoPlayList(true)}
+                  />
+                  <span className="text-center">Make Playlist</span>
+                </div>
+                <div className="flex flex-col items-center justify-center mx-2">
+                  <input
+                    type="checkbox"
+                    placeholder="Enter DJ Name"
+                    className="p-2 border border-lightMainColor dark:border-darkMainColor rounded-md"
+                    checked={autoDJMode}
+                    onChange={(e) => {
+                      setAutoDJMode(e.target.checked);
+                    }}
+                  />
+                  <span className="text-center w-20">Add DJ to playlist</span>
+                </div>
               </div>
-              <div className="flex flex-col items-center justify-center">
-              <PlayerButtons
-                icon={'CreatePlaylist'}
-                color="#504deb"
-                color2="#FFFFFF"
-                size={50}
-                onButtonPress={() => setAutoPlayList(true)}
-              />
-              <span className="text-center">Make Playlist</span>
-            </div>
-            </div>
             )}
             {session?.user.role == 'Admin' && (
-              <div className="w-full flex flex-row justify-between items-center">
-                <span>Auto Playlist Dances</span>
+              <div className="w-full flex flex-row justify-start items-center">
+                <span className="min-w-fit">Auto Playlist Dances</span>
                 <select
                   className="w-1/3 p-2 mx-auto mt-2 bg-lightMainBG dark:bg-darkMainBG text-lightMainColor dark:text-darkMainColor border border-lightMainColor dark:border-darkMainColor rounded-md"
-                  
                   onChange={(e) => {
                     setChoosenPlaylist(e.target.value);
-                    setAutoPlayDances(playlists.filter(item => item.id==e.target.value)[0].listArray);
+                    setAutoPlayDances(
+                      playlists.filter((item) => item.id == e.target.value)[0]
+                        .listArray
+                    );
                   }}
                 >
                   {playlists.map((party, index) => {
@@ -1803,13 +1941,25 @@ const page: FC<pageProps> = ({}) => {
                 <button
                   onClick={(e) => {
                     e.preventDefault();
-                    console.log("clicked on button")
+                    console.log('clicked on button');
                     setIsChoosePlaylistsModal(true);
                   }}
                   className=" fill-editcolor  stroke-editcolor  rounded-md border-editcolor  w-8 h-8"
                 >
                   <ShowIcon icon={'Edit'} stroke={'0.5'} />
                 </button>
+              </div>
+              // )}
+            )}
+            {session?.user.role == 'Admin' && (
+              <div className="w-full flex flex-row justify-between items-center mt-2">
+                <span className="min-w-fit">DJ comment every</span>
+                <input
+                  type="number"
+                  className="w-16 p-1 border border-lightMainColor dark:border-darkMainColor rounded-md text-center"
+                  placeholder="5"
+                />
+                <span className="text-center">song</span>
               </div>
               // )}
             )}

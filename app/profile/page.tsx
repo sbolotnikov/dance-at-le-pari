@@ -23,6 +23,7 @@ const page: FC<pageProps> = () => {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const userNameRef = useRef<HTMLInputElement>(null);
+  const telephoneRef = useRef<HTMLInputElement>(null);
 
   const passwordConfirmRef = useRef<HTMLInputElement>(null);
   const [revealAlert, setRevealAlert] = useState(false);
@@ -84,6 +85,11 @@ const page: FC<pageProps> = () => {
       setLoading(false);
     }
   };
+    const scrollIntoView = (ref: React.RefObject<HTMLInputElement>) => {
+    ref.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
+
   const onReturnAvatar = (decision1: string, fileLink: string) => {
     setRevealCloud(false);
     if (decision1 == 'Close') {
@@ -327,6 +333,7 @@ const page: FC<pageProps> = () => {
                   id="password"
                   type="password"
                   ref={passwordRef}
+                  onFocus={() => scrollIntoView(passwordRef)} 
                   placeholder="leave blank if not needed to change"
                 />
               </label>
@@ -338,6 +345,7 @@ const page: FC<pageProps> = () => {
                   id="passwordConfirm"
                   type="password"
                   ref={passwordConfirmRef}
+                  onFocus={() => scrollIntoView(passwordConfirmRef)} 
                   placeholder="leave blank if not needed to change"
                 />
               </label>
@@ -349,8 +357,7 @@ const page: FC<pageProps> = () => {
                   id="telephone"
                   type="tel"
                   placeholder="1234567890"
-                  required 
-                 
+                  onFocus={() => scrollIntoView(telephoneRef)}
                   onChange={(e) => {
                     setPhone(e.target.value);
                   }}
@@ -380,7 +387,7 @@ const page: FC<pageProps> = () => {
                 <label className="flex flex-col items-center p-1  rounded-t-md bottom-0">
                   Bio:
                   <textarea
-                    className="flex-1 outline-none bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor border-none rounded-md bg-main-bg p-0.5 mx-1 my-1"
+                    className="flex-1 outline-none bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor border-none rounded-md bg-main-bg w-full min-h-[120px] p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] resize-y mx-1 my-1"
                     name="bio"
                     id="bio"
                     placeholder="Enter your bio here"

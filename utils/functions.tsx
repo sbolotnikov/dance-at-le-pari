@@ -128,3 +128,53 @@ export const fetchInstagramPosts = async () => {
       return []
   }
 };
+
+function loadBestVoice(): Promise<SpeechSynthesisVoice | null> {
+  return new Promise(resolve => {
+    const synth = window.speechSynthesis;
+
+    function selectVoice() {
+      const voices = synth.getVoices();
+
+      // Priority 1: Google US English
+      const googleUS = voices.find(v => v.name === 'Google US English');
+      if (googleUS) return resolve(googleUS);
+
+      // Priority 2: Other Google voices
+      const googleAlt = voices.find(v => v.name.includes('Google'));
+      if (googleAlt) return resolve(googleAlt);
+
+      // Priority 3: Microsoft voices (Edge/Windows)
+      const microsoft = voices.find(v =>
+        ['Microsoft Zira', 'Microsoft David', 'Microsoft Mark'].includes(v.name)
+      );
+      if (microsoft) return resolve(microsoft);
+
+      // Priority 4: Any English voice
+      const englishVoice = voices.find(v => v.lang.startsWith('en'));
+      resolve(englishVoice || null);
+    }
+
+    if (synth.getVoices().length) {
+      selectVoice();
+    } else {
+      synth.onvoiceschanged = selectVoice;
+    }
+  });
+}
+
+export const speaking_Func = async (text: string,onEnd: (endF:string) => void) => {
+  const voice = await loadBestVoice();
+  const utterance = new SpeechSynthesisUtterance(text);
+
+  if (voice) {
+    utterance.voice = voice;
+    utterance.pitch = 1.1; // Slightly expressive
+    utterance.rate = 0.95; // Natural pacing
+    utterance.onend = () =>{onEnd('ended')};
+  } else {
+    console.warn('No suitable voice found.');
+  }
+
+  speechSynthesis.speak(utterance);
+}

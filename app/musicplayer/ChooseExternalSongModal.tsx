@@ -32,6 +32,7 @@ interface Song {
   dance: string | null;
   collectionName: string;
   id: string | null;
+  introduction?: string;
 }
 
 type Props = {

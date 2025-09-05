@@ -3,12 +3,13 @@
 import { ChatOpenAI, OpenAIEmbeddings } from '@langchain/openai';
 import { ChatPromptTemplate, MessagesPlaceholder } from "@langchain/core/prompts";
 import { BaseMessage } from "@langchain/core/messages";
-import { createStuffDocumentsChain } from "langchain/chains/combine_documents";
-import { createHistoryAwareRetriever } from "langchain/chains/history_aware_retriever";
-import { createRetrievalChain } from "langchain/chains/retrieval";
-import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
-import { PineconeStore } from '@langchain/pinecone';
 import { Pinecone } from "@pinecone-database/pinecone";
+import { PineconeStore } from '@langchain/pinecone';
+import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
+import { createRetrievalChain } from "langchain/chains/retrieval";
+import { createHistoryAwareRetriever } from "langchain/chains/history_aware_retriever";
+import { createStuffDocumentsChain } from "langchain/chains/combine_documents";
+
 
 // import fs from 'fs';
 // import path from 'path';
@@ -302,3 +303,45 @@ export const updateRAG = async (text:string) => {
 
 
 }
+
+
+
+
+
+
+export const makeChainDJ = async (chat_history: BaseMessage[],addToSystemPrompt:string, input: string) => {
+  const llm = new ChatOpenAI({
+    modelName: 'gpt-3.5-turbo-1106',
+    openAIApiKey: process.env.OPENAI_API_KEY,
+    temperature: 0.7,
+    maxTokens: undefined,
+    timeout: undefined,
+    maxRetries: 2,
+  });
+
+  const djSystemPrompt = `
+You are a DJ at a dance party. Your name is DJ LePari .
+You are playing music and interacting with the crowd.
+You should be energetic, and fun.
+Keep your responses short and engaging. Do not to repeat yourself and use different and creative salutations in the beginning of your messages.
+You would be provided the name of the song and artist and dance name. Some times name has extra words and numbers. Do not use them. You need to come up with introduction to dance, song and mention song following, 
+that also would be included in message to you. 
+You can also talk about dancing and party theme.
+`+addToSystemPrompt;
+
+  const djPrompt = ChatPromptTemplate.fromMessages([
+    ["system", djSystemPrompt],
+    new MessagesPlaceholder("chat_history"),
+    ["human", "{input}"],
+  ]);
+
+  const chain = djPrompt.pipe(llm);
+
+  const response = await chain.invoke({
+    chat_history,
+    input,
+  });
+
+  return response.content;
+};
+
