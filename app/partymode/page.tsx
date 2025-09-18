@@ -24,6 +24,7 @@ import AlertMenu from '@/components/alertMenu';
 import ChoosePicture from '@/components/ChoosePicture';
 import ImgFromDb from '@/components/ImgFromDb';  
 import PageTableSettings from './PageTableSettings';
+import { getImagesList } from './actions';
 
 type Props = {
   // Add any props if needed
@@ -272,6 +273,8 @@ const page: React.FC<Props> = () => {
     }[];
     setCompsArr(arr);
     fetchConfig();
+    const list1 = await getImagesList();
+    console.log("list1", list1);
   }
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
@@ -786,7 +789,7 @@ const page: React.FC<Props> = () => {
                     <select value={tableChoice} onChange={(e)=>{handleChange(parseInt(e.target.value),'tableChoice')}} className="w-60 bg-white rounded-lg border border-[#776548] text-[#444] text-left">
                         {tablePages && tablePages.map((option, i)=>(<option value={i}>{option.name}</option>))}
                       </select> 
-                    <PageTableSettings tablePages={tablePages} onTablePageChange={(newValue)=>{ handleChange(newValue, 'tablePages')}}/>
+                    <PageTableSettings tablePages={tablePages} tableChoice={tableChoice} onTablePageChange={(newValue)=>{ handleChange(newValue, 'tablePages')}}/>
                      
                     <div className="flex flex-row mb-2.5 mt-2.5">
                       <input

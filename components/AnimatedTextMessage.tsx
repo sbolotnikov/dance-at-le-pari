@@ -590,7 +590,24 @@ export default function AnimatedTextMessage({
   "bigGap": 30,
   "smallGap": 30,
   "width": 52
-}
+},
+{ 
+  letter: "-",
+  path: "d='M11 10.372C11.112 10.092 11.3173 9.868 11.616 9.7C11.9333 9.51333 12.3253 9.37333 12.792 9.28C13.2587 9.168 13.7907 9.09333 14.388 9.056C14.9853 9.01867 15.62 9 16.292 9C16.796 9 17.2813 9.00933 17.748 9.028C18.2147 9.04667 18.6533 9.07467 19.064 9.112C19.4933 9.13067 19.8667 9.15867 20.184 9.196C20.52 9.21467 20.7907 9.23333 20.996 9.252C20.268 9.71867 19.5773 9.97067 18.924 10.008C18.2893 10.0453 17.6453 10.064 16.992 10.064C16.488 10.064 15.984 10.064 15.48 10.064C14.9947 10.064 14.556 10.064 14.164 10.064C13.8467 10.064 13.52 10.0827 13.184 10.12C12.848 10.1387 12.5027 10.1667 12.148 10.204C11.7933 10.2413 11.4107 10.2973 11 10.372Z'",
+  strokeDasharray: 60,
+  bigGap: 30,
+  smallGap: 30,
+  width: 50
+},
+{
+  letter: "+",
+  path: "d='M25-0L25-30M10-15L40-15'",
+  strokeDasharray: 160,
+  bigGap: 30,
+  smallGap: 30,
+  width: 50
+},
+
   ]},
   { 
     name:'DancingScript',
@@ -1155,6 +1172,22 @@ export default function AnimatedTextMessage({
   strokeDasharray: 239,
   bigGap: 22,
   smallGap: 22,
+  width: 50
+},
+{
+  letter: "-",
+  path: "d='M0-15L50-15'",
+  strokeDasharray: 150,
+  bigGap: 30,
+  smallGap: 30,
+  width: 50
+},
+{
+  letter: "+",
+  path: "d='M25-0L25-30M10-15L40-15'",
+  strokeDasharray: 160,
+  bigGap: 30,
+  smallGap: 30,
   width: 50
 }
 
@@ -1723,7 +1756,23 @@ export default function AnimatedTextMessage({
       "bigGap": 20,
       "smallGap": 20,
       "width": 36
-  }
+  },
+  {
+  letter: "-",
+  path: "d='M0-15L50-15'",
+  strokeDasharray: 150,
+  bigGap: 30,
+  smallGap: 30,
+  width: 50
+},
+{
+  letter: "+",
+  path: "d='M25-0L25-30M10-15L40-15'",
+  strokeDasharray: 160,
+  bigGap: 30,
+  smallGap: 30,
+  width: 50
+}
   ]}
   ]
 

@@ -17,8 +17,8 @@ import ChooseExternalSongModal from './ChooseExternalSongModal';
 import LoadingScreen from '@/components/LoadingScreen';
 import ChoosePlaylistsModal from './ChoosePlaylistsModal';
 import DraggableList from '@/components/DraggableList';
-import { makeChainDJ } from '@/utils/makechain';
-import { BaseMessage } from '@langchain/core/messages';
+
+import { generateIntroduction, speak } from './actions';
 
 interface MusicPlayerProps {
   rateSet: number;
@@ -765,7 +765,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
                               setCurrentIndex(i);
                               setCurrentDance(item.dance);
                               setCurrentRate(
-                                item.rate !== undefined ? item.rate : 1
+                                item.rate !== null ? item.rate : 1
                               );
                               setRevealSaveModal(true);
                             }}
@@ -925,7 +925,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
 interface Song {
   url: string;
   name: string;
-  rate: number | undefined;
+  rate: number | null;
   dance: string | null;
   id: string | null;
   introduction?: string;
@@ -1238,7 +1238,7 @@ const page: FC<pageProps> = ({}) => {
     {
       url: string;
       name: string;
-      rate: number | undefined;
+      rate: number | null;
       dance: string | null;
       collectionName: string;
       id: string | null;
@@ -1248,7 +1248,7 @@ const page: FC<pageProps> = ({}) => {
     {
       url: string;
       name: string;
-      rate: number | undefined;
+      rate: number | null;
       dance: string | null;
       collectionName: string;
       id: string | null;
@@ -1258,7 +1258,7 @@ const page: FC<pageProps> = ({}) => {
     {
       url: string;
       name: string;
-      rate: number | undefined;
+      rate: number | null;
       dance: string | null;
       collectionName: string;
       id: string | null;
@@ -1299,7 +1299,7 @@ const page: FC<pageProps> = ({}) => {
         ({ ...doc.data(), id: doc.id } as {
           url: string;
           name: string;
-          rate: number | undefined;
+          rate: number | null;
           dance: string | null;
           collectionName: string;
           id: string | null;
@@ -1354,7 +1354,7 @@ const page: FC<pageProps> = ({}) => {
               },
             ]);
             setRate(
-              songsArr[randomIndex].rate !== undefined
+              songsArr[randomIndex].rate !== null
                 ? songsArr[randomIndex].rate
                 : 1
             );
@@ -1384,113 +1384,163 @@ const page: FC<pageProps> = ({}) => {
     }
   }, [autoPlayMode]);
   useEffect(() => {
-    const fetchSongsAll = async () => {
-      const selectElement = document.getElementById(
-        'collectionSelect1'
-      ) as HTMLSelectElement;
-      const selectedValues = Array.from(selectElement.selectedOptions).map(
-        (option) => option.value
-      );
-      let songsChoosenArr = songsAll.filter((item) =>
-        selectedValues.includes(item.collectionName)
-      );
-      let playlist1: Song[] = [];
-      let introArray: BaseMessage[] = [];
-      for (
-        let autoPlayIndex1 = 0;
-        autoPlayIndex1 < autoPlayDances.length;
-        autoPlayIndex1++
-      ) {
-        let songsArr = songsChoosenArr.filter(
-          (song) => song.dance == autoPlayDances[autoPlayIndex1]
-        );
-        let randomIndex = Math.floor(Math.random() * songsArr.length);
-
-        const response = await fetch(
-          `/api/music2play?file_id=${songsArr[randomIndex].url}`
-        );
-        const data = await response.json();
-        if (autoDJMode === true) {
-          const intro1 = await makeChainDJ(
-            introArray,
-            'Party theme:' + parties.find((p) => p.id === choosenParty)?.name ||
-              'no party theme',
-            'Dance: ' +
-              songsArr[randomIndex].dance +
-              ' - ' +
-              songsArr[randomIndex].name
-          );
-
-          // if (typeof intro1 === 'object' && intro1 !== null && 'content' in intro1) {
-          introArray = [
-            ...introArray,
-            [
-              'human',
-              'Dance: ' +
-                songsArr[randomIndex].dance +
-                ' - ' +
-                songsArr[randomIndex].name,
-            ] as unknown as BaseMessage,
-            ['system', intro1] as unknown as BaseMessage,
-          ];
-          // }
-          playlist1 = [
-            ...playlist1,
-            {
-              url: data.fileUrl,
-              name: songsArr[randomIndex].name,
-              rate: songsArr[randomIndex].rate,
-              dance: songsArr[randomIndex].dance,
-              id: songsArr[randomIndex].id,
-              introduction: Array.isArray(intro1)
-                ? intro1
-                    .map((msg: any) =>
-                      typeof msg === 'string'
-                        ? msg
-                        : msg && typeof msg === 'object' && 'content' in msg
-                        ? (msg as { content?: string }).content ?? ''
-                        : ''
-                    )
-                    .join(' ')
-                : typeof intro1 === 'string'
-                ? intro1
-                : intro1 && typeof intro1 === 'object' && 'content' in intro1
-                ? (intro1 as { content?: string }).content ?? ''
-                : '',
-            },
-          ];
-        } else {
-          playlist1 = [
-            ...playlist1,
-            {
-              url: data.fileUrl,
-              name: songsArr[randomIndex].name,
-              rate: songsArr[randomIndex].rate,
-              dance: songsArr[randomIndex].dance,
-              id: songsArr[randomIndex].id,
-            },
-          ];
-        }
-        songsChoosenArr = songsChoosenArr.filter(
-          (song) => song.id !== songsArr[randomIndex].id
-        );
-        setPlaylist(playlist1);
-      }
-    };
     if (autoPlayList) {
+      const fetchSongsAll = async () => {
+        const selectElement = document.getElementById(
+          'collectionSelect1'
+        ) as HTMLSelectElement;
+        const selectedValues = Array.from(selectElement.selectedOptions).map(
+          (option) => option.value
+        );
+        let songsChoosenArr = songsAll.filter((item) =>
+          selectedValues.includes(item.collectionName)
+        );
+        let playlist1: Song[] = [];
+        
+        for (
+          let autoPlayIndex1 = 0;
+          autoPlayIndex1 < autoPlayDances.length;
+          autoPlayIndex1++
+        ) {
+          let songsArr = songsChoosenArr.filter(
+            (song) => song.dance == autoPlayDances[autoPlayIndex1]
+          );
+          if (songsArr.length === 0) {
+            continue;
+          }
+          let randomIndex = Math.floor(Math.random() * songsArr.length);
+
+          const response = await fetch(
+            `/api/music2play?file_id=${songsArr[randomIndex].url}`
+          );
+          const data = await response.json();
+          // if (autoDJMode === true) {
+          //   const intro1 = await makeChainDJ(
+          //     introArray,
+          //     'Party theme:' + parties.find((p) => p.id === choosenParty)?.name ||
+          //       'no party theme',
+          //     'Dance: ' +
+          //       songsArr[randomIndex].dance +
+          //       ' - ' +
+          //       songsArr[randomIndex].name
+          //   );
+   
+          //   introArray = [
+          //     ...introArray,
+          //     [
+          //       'human',
+          //       'Dance: ' +
+          //         songsArr[randomIndex].dance +
+          //         ' - ' +
+          //         songsArr[randomIndex].name,
+          //     ] as unknown as BaseMessage,
+          //     ['system', intro1] as unknown as BaseMessage,
+          //   ];
+          //   // }
+          //   playlist1 = [
+          //     ...playlist1,
+          //     {
+          //       url: data.fileUrl,
+          //       name: songsArr[randomIndex].name,
+          //       rate: songsArr[randomIndex].rate,
+          //       dance: songsArr[randomIndex].dance,
+          //       id: songsArr[randomIndex].id,
+          //       introduction: Array.isArray(intro1)
+          //         ? intro1
+          //             .map((msg: any) =>
+          //               typeof msg === 'string'
+          //                 ? msg
+          //                 : msg && typeof msg === 'object' && 'content' in msg
+          //                 ? (msg as { content?: string }).content ?? ''
+          //                 : ''
+          //             )
+          //             .join(' ')
+          //         : typeof intro1 === 'string'
+          //         ? intro1
+          //         : intro1 && typeof intro1 === 'object' && 'content' in intro1
+          //         ? (intro1 as { content?: string }).content ?? ''
+          //         : '',
+          //     },
+          //   ];
+          // } else {
+            playlist1 = [
+              ...playlist1,
+              {
+                url: data.fileUrl,
+                name: songsArr[randomIndex].name,
+                rate: songsArr[randomIndex].rate,
+                dance: songsArr[randomIndex].dance,
+                id: songsArr[randomIndex].id,
+              },
+            ];
+          songsChoosenArr = songsChoosenArr.filter(
+            (song) => song.id !== songsArr[randomIndex].id
+          );
+          setPlaylist(playlist1);
+        } 
+      };
       fetchSongsAll();
+      setAutoPlayList(false);
     }
-  }, [autoPlayList]);
+  }, [autoPlayList, songsAll, autoPlayDances, autoDJMode, parties, choosenParty]);
+
+
+async function playText(text: string, index?: number) {
+       const base64Audio = await speak(text);
+       const byteCharacters = atob(base64Audio);
+       const byteNumbers = new Array(byteCharacters.length);
+       for (let i = 0; i < byteCharacters.length; i++) {
+         byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      const audioBlob = new Blob([byteArray], { type: "audio/mpeg" });
+      const audioUrl = URL.createObjectURL(audioBlob);
+
+      
+       setPlaylist([...playlist,{url: audioUrl, name: 'Welcome Message', rate: 1, dance: 'Welcome',id: 'welcome'}]);
+      //  const audio = new Audio(audioUrl);
+      //  audio.play();
+}
+
+  useEffect(() => {
+     
+    if (autoDJMode === true && playlist.length == 0) {
+
+
+
+
+
+
+
+      playText('Welcome to the Dance at Le Pari! Are you ready to dance??')
+      
+    }
+    if (autoDJMode === true && playlist.length > 0) {
+      generateIntroduction(  
+        playlist.map((song) => ({
+          dance: song.dance!,
+          name: song.name})),
+        parties.find((p) => p.id === choosenParty)?.name ||
+        null,
+      ).then((res) => {
+        let playlist1 = [...playlist];
+        res.forEach((intro, index) => {
+          playText(intro,index )
+        });
+        console.log('Introductions generated:', res);
+      })
+    }
+  },[autoDJMode])
   const handleSongChange = (index: number) => {
     setCurrentSongIndex(index);
-    setRate(playlist[index].rate !== undefined ? playlist[index].rate : 1);
+    setRate(playlist[index].rate !== null ? playlist[index].rate : 1);
   };
   useEffect(() => {
     console.log(currentSongIndex, 'in useeffect', playlist);
     if (currentSongIndex >= 0 && playlist.length > 0 && choosenParty != '') {
       console.log(playlist[currentSongIndex].dance);
       setRate(
-        playlist[currentSongIndex].rate !== undefined
+        playlist[currentSongIndex].rate !== null
           ? playlist[currentSongIndex].rate
           : 1
       );
@@ -1533,7 +1583,7 @@ const page: FC<pageProps> = ({}) => {
               },
             ]);
             setRate(
-              songsArr[randomIndex].rate !== undefined
+              songsArr[randomIndex].rate !== null
                 ? songsArr[randomIndex].rate
                 : 1
             );
@@ -1566,7 +1616,7 @@ const page: FC<pageProps> = ({}) => {
             }
             sleep(1200).then(() => {
               setRate(
-                songsArr[randomIndex].rate !== undefined
+                songsArr[randomIndex].rate !== null
                   ? songsArr[randomIndex].rate + 0.0001
                   : 1
               );
@@ -1578,7 +1628,7 @@ const page: FC<pageProps> = ({}) => {
         setRate(playlist[currentSongIndex + 1].rate ?? 1);
         sleep(1200).then(() => {
           setRate(
-            playlist[currentSongIndex + 1].rate !== undefined
+                        playlist[currentSongIndex + 1].rate !== null
               ? playlist[currentSongIndex + 1].rate! + 0.0001
               : 1
           );
@@ -1606,9 +1656,7 @@ const page: FC<pageProps> = ({}) => {
       } else {
         setRate(playlist[0].rate ?? 1);
         sleep(1200).then(() => {
-          setRate(
-            playlist[0].rate !== undefined ? playlist[0].rate! + 0.0001 : 1
-          );
+          setRate(playlist[0].rate !== null ? playlist[0].rate! + 0.0001 : 1);
         });
         console.log(
           'next song INTRO',
@@ -1692,10 +1740,19 @@ const page: FC<pageProps> = ({}) => {
           vis={isChooseSongWebModal}
           role={session?.user.role}
           collectionsArray={collectionsArray}
-          songs={songsAll}
+          songs={songsAll.map(({ rate, ...rest }) => ({
+            ...rest,
+            rate: rate === null ? undefined : rate,
+          }))}
           onClose={() => setIsChooseSongWebModal(false)}
-          onPlay={(song: Song) => {
-            setPlaylist([...playlist, song]);
+          onPlay={(song) => {
+            setPlaylist([
+              ...playlist,
+              {
+                ...song,
+                rate: song.rate === undefined ? null : song.rate,
+              },
+            ]);
           }}
           onReturn={(songs) => {
             console.log(songs);
@@ -1761,7 +1818,7 @@ const page: FC<pageProps> = ({}) => {
             {playlist.length > 0 && currentSongIndex > -1 && (
               <MusicPlayer
                 rateSet={
-                  playlist[currentSongIndex].rate !== undefined
+                  playlist[currentSongIndex].rate !== null
                     ? playlist[currentSongIndex].rate
                     : 1
                 }

@@ -309,7 +309,15 @@ export const updateRAG = async (text:string) => {
 
 
 
+const cache = new Map<string, any>();
+
 export const makeChainDJ = async (chat_history: BaseMessage[],addToSystemPrompt:string, input: string) => {
+  const cacheKey = JSON.stringify({ chat_history, addToSystemPrompt, input });
+
+  if (cache.has(cacheKey)) {
+    return cache.get(cacheKey);
+  }
+
   const llm = new ChatOpenAI({
     modelName: 'gpt-3.5-turbo-1106',
     openAIApiKey: process.env.OPENAI_API_KEY,
@@ -322,8 +330,9 @@ export const makeChainDJ = async (chat_history: BaseMessage[],addToSystemPrompt:
   const djSystemPrompt = `
 You are a DJ at a dance party. Your name is DJ LePari .
 You are playing music and interacting with the crowd.
-You should be energetic, and fun.
-Keep your responses short and engaging. Do not to repeat yourself and use different and creative salutations in the beginning of your messages.
+You should be energetic, and fun. Your first message should be an introduction of yourself and welcome message to the party. 
+If you know theme of the party, mention it, also you should refer to party theme thru out all party messages, but in creative and engaging ways. Do not repeate theme name often. You can mention the venue Dance At Le Pari Dance Studio in interesting funny not repeatitive ways. Use play of words.
+Keep your responses short and engaging. Do not to repeat yourself and use different and creative ways to vary the beginning of your messages. Check the chat history to avoid repeating yourself.
 You would be provided the name of the song and artist and dance name. Some times name has extra words and numbers. Do not use them. You need to come up with introduction to dance, song and mention song following, 
 that also would be included in message to you. 
 You can also talk about dancing and party theme.
@@ -341,6 +350,9 @@ You can also talk about dancing and party theme.
     chat_history,
     input,
   });
+
+  cache.set(cacheKey, response.content);
+
 
   return response.content;
 };

@@ -35,13 +35,22 @@ const VideoPlayingComponent: React.FC<VideoPlayingComponentProps> = ({
 
   return (
     <div className="w-full h-screen flex justify-start items-center relative">
-      <iframe
+      {videoUri.length>0 && videoUri.includes("https:")? <iframe
         className="w-full h-full"
         src={videoUri}
-        allow="autoplay; fullscreen"
+        allow="autoplay;fullscreen;"
         frameBorder="0"
         allowFullScreen
-      ></iframe>
+      ></iframe>: <video
+      src={videoUri}
+      autoPlay
+      muted
+      loop
+      className="w-full h-full object-cover"
+    >
+      <source src={videoUri} type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>}   
       <div className="absolute inset-0" style={{ backgroundImage:`url(${showBackdrop?`/images/backdrop.png`:""})`, backgroundPosition: 'center', backgroundSize: 'cover'}}></div>
       <div
         ref={overlayRef}
