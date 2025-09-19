@@ -9,6 +9,8 @@ interface DraggableListProps {
   isTouching?:(isTouching:boolean)=>void;
   containerClassName?: string;
   itemHeight?: number;
+  currentIndex?: number;
+  onItemClick?: (index: number) => void;
   autoScrollSpeed?: number;
 }
 
@@ -17,6 +19,8 @@ const DraggableList: React.FC<DraggableListProps> = ({
   addItems,
   onListChange,
   isTouching,
+  currentIndex,
+  onItemClick,
   containerClassName = '',
   itemHeight = 48,
   autoScrollSpeed = 15
@@ -273,9 +277,11 @@ const DraggableList: React.FC<DraggableListProps> = ({
             transform: touchDragging && dragging === index ? 'scale(1.02)' : 'scale(1)'
           }}
         >
-          <div className='drag-handle' style={{ marginRight: '10px', cursor: 'grab' }}>
+          <div className='drag-handle w-10' style={{ marginRight: '10px', cursor: 'grab' }}>
             ≡ {index+1}.
+            {currentIndex!==undefined && <input type="checkbox" checked={currentIndex === index} readOnly className="bg-transparent border-0 m-1 focus:outline-none" onClick={() => onItemClick && onItemClick(index)} />}
           </div>
+          
           <div className="item-content" style={{ flexGrow: 1 }}>
             {item}
           </div>

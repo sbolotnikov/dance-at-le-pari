@@ -27,14 +27,15 @@ export async function generateIntroduction(
     autoPlayIndex1 < playlist.length;
     autoPlayIndex1++
   ) {
-    
+      if (playlist[autoPlayIndex1].dance!=="" && playlist[autoPlayIndex1].name!=="")
+      {
       const intro1 = await makeChainDJ(
         introArray,
         'Party theme:' + (choosenParty ? choosenParty : 'no party theme'),
         'Dance: ' +
           playlist[autoPlayIndex1].dance +
           ' - ' +
-          playlist[autoPlayIndex1].name
+          playlist[autoPlayIndex1].name, (autoPlayIndex1 === playlist.length - 1)? true:false
       );
 
       introArray = [
@@ -49,7 +50,7 @@ export async function generateIntroduction(
         ['system', intro1] as unknown as BaseMessage,
       ];
       introductionArray = [...introductionArray, intro1];
-       
+      }else introductionArray = [...introductionArray, ""]; 
   
   }
   return introductionArray;

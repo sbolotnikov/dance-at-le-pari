@@ -311,7 +311,7 @@ export const updateRAG = async (text:string) => {
 
 const cache = new Map<string, any>();
 
-export const makeChainDJ = async (chat_history: BaseMessage[],addToSystemPrompt:string, input: string) => {
+export const makeChainDJ = async (chat_history: BaseMessage[],addToSystemPrompt:string, input: string, lastPrompt:boolean) => {
   const cacheKey = JSON.stringify({ chat_history, addToSystemPrompt, input });
 
   if (cache.has(cacheKey)) {
@@ -337,18 +337,18 @@ You would be provided the name of the song and artist and dance name. Some times
 that also would be included in message to you. 
 You can also talk about dancing and party theme.
 `+addToSystemPrompt;
-
+  const inputPrompt = input+(lastPrompt?"Last dance. greet people wish them goodnight":"");
   const djPrompt = ChatPromptTemplate.fromMessages([
     ["system", djSystemPrompt],
     new MessagesPlaceholder("chat_history"),
-    ["human", "{input}"],
+    ["human", "{inputPrompt}"],
   ]);
 
   const chain = djPrompt.pipe(llm);
 
   const response = await chain.invoke({
     chat_history,
-    input,
+    inputPrompt,
   });
 
   cache.set(cacheKey, response.content);

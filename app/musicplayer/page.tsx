@@ -953,97 +953,6 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
   onReturn,
 }) => {
   const [dragging, setDragging] = useState(false);
-  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
-  const [ghostPosition, setGhostPosition] = useState({ x: 0, y: 0 });
-  const [placeholderIndex, setPlaceholderIndex] = useState<number | null>(null);
-  const listRef1 = useRef<HTMLUListElement>(null);
-  const ghostRef = useRef<HTMLDivElement>(null);
-  const topMargin = 20;
-  const itemHeight = 56;
-
-  const getClientPos = (
-    e: React.TouchEvent | React.MouseEvent | TouchEvent | MouseEvent
-  ) => {
-    if ('touches' in e) {
-      return { x: e.touches[0].clientX, y: e.touches[0].clientY };
-    }
-    return { x: e.clientX, y: e.clientY };
-  };
-
-  const onDragStart = (
-    e: React.TouchEvent | React.MouseEvent,
-    index: number
-  ) => {
-    setDragging(true);
-    setDraggedIndex(index);
-    setPlaceholderIndex(index);
-
-    const { x, y } = getClientPos(e);
-    setGhostPosition({ x, y });
-
-    if (ghostRef.current) {
-      ghostRef.current.innerText = playlist[index].name;
-    }
-  };
-  useEffect(() => {
-    window.addEventListener('beforeunload', handleOnBeforeUnload, {
-      capture: true,
-    });
-  }, []);
-  const onDragMove = (
-    e: React.TouchEvent | React.MouseEvent | TouchEvent | MouseEvent
-  ) => {
-    if (!dragging || draggedIndex === null || !listRef1.current) return;
-
-    const { x, y } = getClientPos(e);
-    setGhostPosition({ x, y });
-
-    const listRect = listRef1.current.getBoundingClientRect();
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    const relativeY = y + scrollTop - listRect.top;
-    console.log('coordinateY =', relativeY);
-
-    // Assuming each item is 48px high
-    let newIndex = Math.floor((relativeY - topMargin) / itemHeight);
-    newIndex = Math.max(0, Math.min(newIndex, playlist.length - 1));
-
-    setPlaceholderIndex(newIndex);
-  };
-
-  const onDragEnd = () => {
-    if (
-      draggedIndex !== null &&
-      placeholderIndex !== null &&
-      draggedIndex !== placeholderIndex
-    ) {
-      const newItems = [...playlist];
-      const [removed] = newItems.splice(draggedIndex, 1);
-      newItems.splice(placeholderIndex, 0, removed);
-      onUpdate(newItems);
-    }
-    setDragging(false);
-    setDraggedIndex(null);
-    setPlaceholderIndex(null);
-  };
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => onDragMove(e);
-    const handleTouchMove = (e: TouchEvent) => onDragMove(e);
-
-    if (dragging) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', onDragEnd);
-      document.addEventListener('touchmove', handleTouchMove);
-      document.addEventListener('touchend', onDragEnd);
-    }
-
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', onDragEnd);
-      document.removeEventListener('touchmove', handleTouchMove);
-      document.removeEventListener('touchend', onDragEnd);
-    };
-  }, [dragging, draggedIndex, placeholderIndex, playlist]);
 
   return (
     <AnimateModalLayout
@@ -1102,10 +1011,12 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
               onUpdate(newPlaylist);
             }}
             isTouching={(isTouching: boolean) => setDragging(isTouching)}
+            currentIndex={currentSongIndex}
+            onItemClick={(index: number) => onSongChange(index)}
             containerClassName={
               'h-[350px]  w-full border border-lightMainColor dark:border-darkMainColor p-1 rounded-lg my-1 overflow-hidden'
             }
-            itemHeight={48}
+            itemHeight={56}
             autoScrollSpeed={15}
           />
 
@@ -1207,7 +1118,7 @@ interface pageProps {}
 const page: FC<pageProps> = ({}) => {
   const [musicFile, setMusicFile] = useState({ url: '', name: '' });
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
-  const [songLength, setSongLength] = useState(600000);
+  const [songLength, setSongLength] = useState(150000);
   const [delayLength, setDelayLength] = useState(0);
   const [fadeTime, setFadeTime] = useState(5000);
   const [playlist, setPlaylist] = useState<Song[]>([]);
@@ -1215,6 +1126,7 @@ const page: FC<pageProps> = ({}) => {
   const [songPosition, setSongPosition] = useState(0);
   const [addToDBSong, setAddToDBSong] = useState<Song | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [commentFrequency, setCommentFrequency] = useState(3);
   const [isPlaylistOpen, setIsPlaylistOpen] = useState(false);
   const [isChooseMusicOpen, setIsChooseMusicOpen] = useState(false);
   const [isChooseSongWebModal, setIsChooseSongWebModal] = useState(false);
@@ -1396,7 +1308,7 @@ const page: FC<pageProps> = ({}) => {
           selectedValues.includes(item.collectionName)
         );
         let playlist1: Song[] = [];
-        
+
         for (
           let autoPlayIndex1 = 0;
           autoPlayIndex1 < autoPlayDances.length;
@@ -1414,123 +1326,59 @@ const page: FC<pageProps> = ({}) => {
             `/api/music2play?file_id=${songsArr[randomIndex].url}`
           );
           const data = await response.json();
-          // if (autoDJMode === true) {
-          //   const intro1 = await makeChainDJ(
-          //     introArray,
-          //     'Party theme:' + parties.find((p) => p.id === choosenParty)?.name ||
-          //       'no party theme',
-          //     'Dance: ' +
-          //       songsArr[randomIndex].dance +
-          //       ' - ' +
-          //       songsArr[randomIndex].name
-          //   );
-   
-          //   introArray = [
-          //     ...introArray,
-          //     [
-          //       'human',
-          //       'Dance: ' +
-          //         songsArr[randomIndex].dance +
-          //         ' - ' +
-          //         songsArr[randomIndex].name,
-          //     ] as unknown as BaseMessage,
-          //     ['system', intro1] as unknown as BaseMessage,
-          //   ];
-          //   // }
-          //   playlist1 = [
-          //     ...playlist1,
-          //     {
-          //       url: data.fileUrl,
-          //       name: songsArr[randomIndex].name,
-          //       rate: songsArr[randomIndex].rate,
-          //       dance: songsArr[randomIndex].dance,
-          //       id: songsArr[randomIndex].id,
-          //       introduction: Array.isArray(intro1)
-          //         ? intro1
-          //             .map((msg: any) =>
-          //               typeof msg === 'string'
-          //                 ? msg
-          //                 : msg && typeof msg === 'object' && 'content' in msg
-          //                 ? (msg as { content?: string }).content ?? ''
-          //                 : ''
-          //             )
-          //             .join(' ')
-          //         : typeof intro1 === 'string'
-          //         ? intro1
-          //         : intro1 && typeof intro1 === 'object' && 'content' in intro1
-          //         ? (intro1 as { content?: string }).content ?? ''
-          //         : '',
-          //     },
-          //   ];
-          // } else {
-            playlist1 = [
-              ...playlist1,
-              {
-                url: data.fileUrl,
-                name: songsArr[randomIndex].name,
-                rate: songsArr[randomIndex].rate,
-                dance: songsArr[randomIndex].dance,
-                id: songsArr[randomIndex].id,
-              },
-            ];
+          
+          playlist1 = [
+            ...playlist1,
+            {
+              url: data.fileUrl,
+              name: songsArr[randomIndex].name,
+              rate: songsArr[randomIndex].rate,
+              dance: songsArr[randomIndex].dance,
+              id: songsArr[randomIndex].id,
+            },
+          ];
           songsChoosenArr = songsChoosenArr.filter(
             (song) => song.id !== songsArr[randomIndex].id
           );
           setPlaylist(playlist1);
-        } 
+        }
       };
       fetchSongsAll();
       setAutoPlayList(false);
     }
-  }, [autoPlayList, songsAll, autoPlayDances, autoDJMode, parties, choosenParty]);
+  }, [
+    autoPlayList,
+    songsAll,
+    autoPlayDances,
+    parties,
+    choosenParty,
+  ]);
 
+  async function playText(text: string, index?: number) {
+    if (text.trim() === '') return;
+    const base64Audio = await speak(text);
+    const byteCharacters = atob(base64Audio);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const audioBlob = new Blob([byteArray], { type: 'audio/mpeg' });
+    const audioUrl = await fileToBase64(audioBlob);
 
-async function playText(text: string, index?: number) {
-       const base64Audio = await speak(text);
-       const byteCharacters = atob(base64Audio);
-       const byteNumbers = new Array(byteCharacters.length);
-       for (let i = 0; i < byteCharacters.length; i++) {
-         byteNumbers[i] = byteCharacters.charCodeAt(i);
+    let playlist1 = [...playlist];
+    if (index !== undefined) {
+      playlist1[index].introduction = audioUrl;
+      setPlaylist(playlist1);
+      if (index === playlist.length - 1) {
+        // Last introduction
+        setLoading(false);
+        alert('All introductions added to the playlist');
       }
-      const byteArray = new Uint8Array(byteNumbers);
-      const audioBlob = new Blob([byteArray], { type: "audio/mpeg" });
-      const audioUrl = URL.createObjectURL(audioBlob);
-
-      
-       setPlaylist([...playlist,{url: audioUrl, name: 'Welcome Message', rate: 1, dance: 'Welcome',id: 'welcome'}]);
-      //  const audio = new Audio(audioUrl);
-      //  audio.play();
-}
-
-  useEffect(() => {
-     
-    if (autoDJMode === true && playlist.length == 0) {
-
-
-
-
-
-
-
-      playText('Welcome to the Dance at Le Pari! Are you ready to dance??')
-      
     }
-    if (autoDJMode === true && playlist.length > 0) {
-      generateIntroduction(  
-        playlist.map((song) => ({
-          dance: song.dance!,
-          name: song.name})),
-        parties.find((p) => p.id === choosenParty)?.name ||
-        null,
-      ).then((res) => {
-        let playlist1 = [...playlist];
-        res.forEach((intro, index) => {
-          playText(intro,index )
-        });
-        console.log('Introductions generated:', res);
-      })
-    }
-  },[autoDJMode])
+  }
+
+  
   const handleSongChange = (index: number) => {
     setCurrentSongIndex(index);
     setRate(playlist[index].rate !== null ? playlist[index].rate : 1);
@@ -1628,47 +1476,54 @@ async function playText(text: string, index?: number) {
         setRate(playlist[currentSongIndex + 1].rate ?? 1);
         sleep(1200).then(() => {
           setRate(
-                        playlist[currentSongIndex + 1].rate !== null
+            playlist[currentSongIndex + 1].rate !== null
               ? playlist[currentSongIndex + 1].rate! + 0.0001
               : 1
           );
         });
 
-        /*Add Talking DJ */
-
-        console.log(
-          'next song INTRO',
-          playlist[currentSongIndex + 1].introduction
-            ? playlist[currentSongIndex + 1].introduction
-            : 'No introduction available'
-        );
-        if (autoDJMode === true) {
-          if (playlist[currentSongIndex + 1].introduction) {
-            const introMessage = playlist[currentSongIndex + 1].introduction!;
-
-            speaking_Func(introMessage, (endF) => {
-              endF === 'ended'
-                ? setCurrentSongIndex(currentSongIndex + 1)
-                : null;
-            });
+        if (
+          playlist[currentSongIndex + 1].introduction !== undefined &&
+          playlist[currentSongIndex + 1].introduction?.trim() !== '' && autoDJMode
+        ) {
+          const introMessage = playlist[currentSongIndex + 1].introduction!;
+          if (choosenParty != '') {
+            updateDoc(doc(db, 'parties', choosenParty), {
+              message: 'DJ Lepari Message',
+              message2: ``,
+            }).then((res) => console.log(res));
           }
+
+          const audio = new Audio(introMessage);
+          audio.play();
+          audio.onended = () => {
+            setCurrentSongIndex(currentSongIndex + 1);
+          };
         } else setCurrentSongIndex(currentSongIndex + 1);
       } else {
         setRate(playlist[0].rate ?? 1);
         sleep(1200).then(() => {
           setRate(playlist[0].rate !== null ? playlist[0].rate! + 0.0001 : 1);
         });
-        console.log(
-          'next song INTRO',
-          playlist[0].introduction
-            ? playlist[0].introduction
-            : 'No introduction available'
-        );
-        if (autoDJMode === true) {
+
+        if (
+          playlist[0].introduction !== undefined &&
+          playlist[0].introduction?.trim() !== ''
+        ) {
           const introMessage = playlist[0].introduction!;
-          speaking_Func(introMessage, (endF) => {
-            endF === 'ended' ? setCurrentSongIndex(0) : null;
-          });
+
+          if (choosenParty != '') {
+            updateDoc(doc(db, 'parties', choosenParty), {
+              message: 'DJ Lepari Message',
+              message2: ``,
+            }).then((res) => console.log(res));
+          }
+
+          const audio = new Audio(introMessage);
+          audio.play();
+          audio.onended = () => {
+            setCurrentSongIndex(0);
+          };
         } else setCurrentSongIndex(0);
       }
     }
@@ -1963,7 +1818,7 @@ async function playText(text: string, index?: number) {
                   />
                   <span className="text-center">Autoplay Mode</span>
                 </div>
-                <div className="flex flex-col items-center justify-center">
+                <div className="flex flex-col items-center justify-center mx-2">
                   <PlayerButtons
                     icon={'CreatePlaylist'}
                     color="#504deb"
@@ -1974,17 +1829,74 @@ async function playText(text: string, index?: number) {
                   <span className="text-center">Make Playlist</span>
                 </div>
                 <div className="flex flex-col items-center justify-center mx-2">
+                  <PlayerButtons
+                    icon={'DigitalDJ'}
+                    color="#504deb"
+                    color2="#FFFFFF"
+                    size={50}
+                    onButtonPress={() => {
+                      if (playlist.length > 0) {
+                        setLoading(true);
+                        generateIntroduction(
+                          playlist.map((song, index) => ({
+                            dance:
+                              index % commentFrequency === 0 ||
+                              index == playlist.length - 1
+                                ? song.dance!
+                                : '',
+                            name:
+                              index % commentFrequency === 0 ||
+                              index == playlist.length - 1
+                                ? song.name
+                                : '',
+                          })),
+                          parties.find((p) => p.id === choosenParty)?.name ||
+                            null
+                        ).then((res) => {
+                          let playlist1 = [...playlist];
+                          res.forEach(async (intro, index) => {
+                            await playText(intro, index);
+                          });
+                          console.log('Introductions generated:', res);
+                        });
+                      }
+                    }}
+                  />
+                  <span className="text-center">Add Digital DJ</span>
+                </div>
+              </div>
+            )}
+            {session?.user.role == 'Admin' && (
+              <div className="w-full flex flex-row justify-between items-center mt-2">
+                <div className="flex flex-col items-center justify-center mx-2">
                   <input
                     type="checkbox"
                     placeholder="Enter DJ Name"
                     className="p-2 border border-lightMainColor dark:border-darkMainColor rounded-md"
                     checked={autoDJMode}
                     onChange={(e) => {
-                      setAutoDJMode(e.target.checked);
+                      setAutoDJMode(!autoDJMode);
                     }}
                   />
                   <span className="text-center w-20">Add DJ to playlist</span>
                 </div>
+
+                <span className="min-w-fit">DJ comment every</span>
+                <input
+                  type="number"
+                  className="w-16 p-1 border border-lightMainColor dark:border-darkMainColor rounded-md text-center"
+                  placeholder="5"
+                  min={1}
+                  max={10}
+                  value={commentFrequency}
+                  onChange={(e) => {
+                    let val = parseInt(e.target.value);
+                    if (isNaN(val) || val < 1) val = 1;
+                    if (val > 10) val = 10;
+                    setCommentFrequency(val);
+                  }}
+                />
+                <span className="text-center">song</span>
               </div>
             )}
             {session?.user.role == 'Admin' && (
@@ -2018,18 +1930,6 @@ async function playText(text: string, index?: number) {
                 >
                   <ShowIcon icon={'Edit'} stroke={'0.5'} />
                 </button>
-              </div>
-              // )}
-            )}
-            {session?.user.role == 'Admin' && (
-              <div className="w-full flex flex-row justify-between items-center mt-2">
-                <span className="min-w-fit">DJ comment every</span>
-                <input
-                  type="number"
-                  className="w-16 p-1 border border-lightMainColor dark:border-darkMainColor rounded-md text-center"
-                  placeholder="5"
-                />
-                <span className="text-center">song</span>
               </div>
               // )}
             )}
