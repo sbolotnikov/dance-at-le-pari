@@ -22,9 +22,10 @@ import { useSession } from 'next-auth/react';
 import ChoosePartyModal from '@/components/ChoosePartyModal';
 import AlertMenu from '@/components/alertMenu';
 import ChoosePicture from '@/components/ChoosePicture';
-import ImgFromDb from '@/components/ImgFromDb';  
+import ImgFromDb from '@/components/ImgFromDb';
 import PageTableSettings from './PageTableSettings';
 import { getImagesList } from './actions';
+import CoveredInput from '@/components/CoveredInput';
 
 type Props = {
   // Add any props if needed
@@ -119,7 +120,7 @@ const page: React.FC<Props> = () => {
     compChoice,
     showBackdrop,
     setCompID,
-  } = usePartySettings(); 
+  } = usePartySettings();
   const [competition, setCompetition] = useState('T9FLgtEDmxQFYFTnfrvO');
   const { heat } = useComp(competition);
   useEffect(() => {
@@ -144,7 +145,7 @@ const page: React.FC<Props> = () => {
     'lightning',
     'hydrangea',
     'fred',
-    'christmasBall'
+    'christmasBall',
   ];
   const reverseColor = (str: string) => {
     console.log(str);
@@ -194,7 +195,17 @@ const page: React.FC<Props> = () => {
   // };
 
   const handleChange = (
-    text: number | string | boolean | object | { name: string; tableRows: string[]; rowsPictures: string[] | undefined; rowsChecked: boolean[] }[],
+    text:
+      | number
+      | string
+      | boolean
+      | object
+      | {
+          name: string;
+          tableRows: string[];
+          rowsPictures: string[] | undefined;
+          rowsChecked: boolean[];
+        }[],
     eventName: string
   ) => {
     if (session?.user.role == 'Admin')
@@ -217,7 +228,6 @@ const page: React.FC<Props> = () => {
     );
   };
   useEffect(() => {
-  
     getCompsArray();
   }, []);
   const onReturnAlert = async (decision1: string) => {
@@ -243,26 +253,23 @@ const page: React.FC<Props> = () => {
       }
     }
   };
-  const fetchConfig =  () => {
-    fetch('/api/admin/get_env',{
+  const fetchConfig = () => {
+    fetch('/api/admin/get_env', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({})
-    }).then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-    });
+      body: JSON.stringify({}),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+      });
     // const { firebaseConfig, firebaseConfig2 } = await res.json();
 
     // console.log(firebaseConfig, firebaseConfig2);
   };
 
-  
-
-
- 
   async function getCompsArray() {
     const q = await getDocs(collection(db2, 'competitions'));
     let arr1 = q.docs.map((doc) => doc.data());
@@ -274,7 +281,7 @@ const page: React.FC<Props> = () => {
     setCompsArr(arr);
     fetchConfig();
     const list1 = await getImagesList();
-    console.log("list1", list1);
+    console.log('list1', list1);
   }
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center justify-center">
@@ -374,11 +381,11 @@ const page: React.FC<Props> = () => {
       {modal1Visible && (
         <ChooseMessageModal
           savedMessages={savedMessages}
-          message={editFirstMessage?message:message2}
+          message={editFirstMessage ? message : message2}
           addPrefix={!editFirstMessage}
           onChange={(text) => {
             console.log(text);
-            handleChange(text, editFirstMessage?'message':'message2');
+            handleChange(text, editFirstMessage ? 'message' : 'message2');
             setModal1Visible(false);
           }}
           onMessageArrayChange={(array) => {
@@ -435,7 +442,13 @@ const page: React.FC<Props> = () => {
                       </div>
                     )}
                   </button>
-                  <h2 className="w-full text-center text-2xl">{name}</h2>
+                  <CoveredInput
+                    value={name}
+                    onSubmit={(text: string) => handleChange(text, 'name')}
+                    buttonClassName='btnFancy h-9 flex items-center'
+                    inputClassName='h-9 w-3/4 bg-white rounded-lg border outline-none border-[#776548] text-[#444] text-left'
+                    displayClassName="w-full flex justify-center items-center text-center text-2xl cursor-pointer"
+                  />
                   <div className="w-full flex flex-row justify-center items-center">
                     <div className="flex flex-col justify-center items-center">
                       {mode && (
@@ -460,11 +473,11 @@ const page: React.FC<Props> = () => {
                       )}
                       <p className="text-center w-20">Choose mode</p>
                     </div>
-                    <div className="flex flex-col justify-center items-center">
+                    <div className="flex flex-col justify-center items-center ">
                       {fontSize && (
                         <CountBox
                           startValue={fontSize}
-                          setWidth={10}
+                          setWidth={12}
                           name={'fontSize'}
                           onChange={(num) => {
                             console.log(num);
@@ -497,18 +510,18 @@ const page: React.FC<Props> = () => {
                     <div className="flex flex-col justify-center items-center">
                       <div className="h-8 w-8 rounded-full overflow-hidden border-none relative">
                         {/* {colorBG && ( */}
-                          <input
-                            className=" outline-none h-10 w-10  absolute -top-1 -left-1  border-none "
-                            name="color"
-                            id="color"
-                            type="color"
-                            value={colorBG!==undefined?colorBG:"black"}
-                            onChange={async (e) => {
-                              console.log(e.target.value);
+                        <input
+                          className=" outline-none h-10 w-10  absolute -top-1 -left-1  border-none "
+                          name="color"
+                          id="color"
+                          type="color"
+                          value={colorBG !== undefined ? colorBG : 'black'}
+                          onChange={async (e) => {
+                            console.log(e.target.value);
 
-                              handleChange(e.target.value, 'colorBG');
-                            }}
-                          />
+                            handleChange(e.target.value, 'colorBG');
+                          }}
+                        />
                         {/* )} */}
                       </div>
                       <p className="text-center w-8">Color BG</p>
@@ -702,25 +715,26 @@ const page: React.FC<Props> = () => {
                       <p className="text-center text-sm italic">Start Show</p>
                     </button>
                   </div>
-                  <div className="w-full flex flex-col justify-center items-center"> 
-                      <div className="w-full flex flex-col justify-center items-center">
-                        <select
-                          value={fontName}
-                          onChange={(e) => handleChange(e.target.value, 'fontName')}
-                          className="w-60 h-9 mt-2 bg-white rounded-lg border border-[#776548] text-[#444] text-left"
-                        >
-                          {['Lato', 'DancingScript', 'ChopinScript'].map(
-                            (option) => (
-                              <option key={option} value={option}>
-                                {option}
-                              </option>
-                            )
-                          )}
-                        </select>
+                  <div className="w-full flex flex-col justify-center items-center">
+                    <div className="w-full flex flex-col justify-center items-center">
+                      <select
+                        value={fontName}
+                        onChange={(e) =>
+                          handleChange(e.target.value, 'fontName')
+                        }
+                        className="w-60 h-9 mt-2 bg-white rounded-lg border border-[#776548] text-[#444] text-left"
+                      >
+                        {['Lato', 'DancingScript', 'ChopinScript'].map(
+                          (option) => (
+                            <option key={option} value={option}>
+                              {option}
+                            </option>
+                          )
+                        )}
+                      </select>
 
-                        <p className="text-center w-60">Choose message font</p>
-                       
-                    </div> 
+                      <p className="text-center w-60">Choose message font</p>
+                    </div>
                     <button
                       className="btnFancy cursor-pointer"
                       onClick={(e) => {
@@ -741,10 +755,11 @@ const page: React.FC<Props> = () => {
                       }}
                     >
                       <p className="w-full text-center">{message2}</p>
-                      <p className="text-center italic">Choose second message</p>
+                      <p className="text-center italic">
+                        Choose second message
+                      </p>
                     </button>
                     <div className="w-full flex flex-col justify-center items-center">
-                      
                       <div className="flex flex-col justify-center items-center">
                         {fontSize2 && (
                           <CountBox
@@ -784,13 +799,27 @@ const page: React.FC<Props> = () => {
                         className="self-center"
                       />
                       <p className="ml-2">Show Table</p>
-                       
                     </div>
-                    <select value={tableChoice} onChange={(e)=>{handleChange(parseInt(e.target.value),'tableChoice')}} className="w-60 bg-white rounded-lg border border-[#776548] text-[#444] text-left">
-                        {tablePages && tablePages.map((option, i)=>(<option value={i}>{option.name}</option>))}
-                      </select> 
-                    <PageTableSettings tablePages={tablePages} tableChoice={tableChoice} onTablePageChange={(newValue)=>{ handleChange(newValue, 'tablePages')}}/>
-                     
+                    <select
+                      value={tableChoice}
+                      onChange={(e) => {
+                        handleChange(parseInt(e.target.value), 'tableChoice');
+                      }}
+                      className="w-60 bg-white rounded-lg border border-[#776548] text-[#444] text-left"
+                    >
+                      {tablePages &&
+                        tablePages.map((option, i) => (
+                          <option value={i}>{option.name}</option>
+                        ))}
+                    </select>
+                    <PageTableSettings
+                      tablePages={tablePages}
+                      tableChoice={tableChoice}
+                      onTablePageChange={(newValue) => {
+                        handleChange(newValue, 'tablePages');
+                      }}
+                    />
+
                     <div className="flex flex-row mb-2.5 mt-2.5">
                       <input
                         type="checkbox"
@@ -857,13 +886,16 @@ const page: React.FC<Props> = () => {
                             }
                             className="w-28 h-9 bg-white rounded-lg border border-[#776548] text-[#444] text-left"
                           >
-                            {['No frame', 'Fire frame', 'Running frame','Glow frame'].map(
-                              (option) => (
-                                <option key={option} value={option}>
-                                  {option}
-                                </option>
-                              )
-                            )}
+                            {[
+                              'No frame',
+                              'Fire frame',
+                              'Running frame',
+                              'Glow frame',
+                            ].map((option) => (
+                              <option key={option} value={option}>
+                                {option}
+                              </option>
+                            ))}
                           </select>
                         )}
                         <p className="text-center w-20">Choose frame</p>
