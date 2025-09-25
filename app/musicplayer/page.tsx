@@ -17,7 +17,7 @@ import ChooseExternalSongModal from './ChooseExternalSongModal';
 import LoadingScreen from '@/components/LoadingScreen';
 import ChoosePlaylistsModal from './ChoosePlaylistsModal';
 import DraggableList from '@/components/DraggableList';
-
+import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { generateIntroduction, speak } from './actions';
 
 interface MusicPlayerProps {
@@ -944,13 +944,12 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
     </AnimateModalLayout>
   );
 };
-import { FFmpeg } from '@ffmpeg/ffmpeg';
-const ffmpeg = new FFmpeg();
 
 const mergeMP3Files = async (
   playlist: { url: string; rate: number }[],
   length: number
 ) => {
+  const ffmpeg = new FFmpeg();
   // if (!isLoaded) {
   await ffmpeg.load();
   //   setIsLoaded(true);
