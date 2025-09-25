@@ -947,7 +947,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 const ffmpeg = new FFmpeg();
 
-export const mergeMP3Files = async (
+const mergeMP3Files = async (
   playlist: { url: string; rate: number }[],
   length: number
 ) => {

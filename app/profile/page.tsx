@@ -233,6 +233,7 @@ const page: FC<pageProps> = () => {
       {revealInvoices && (
         <InvoiceModal
           onReturn={() => setRevealInvoices(false)}
+          studentId={session?.user.id!}
           styling={alertStyle}
         />
       )}
