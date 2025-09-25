@@ -13,6 +13,7 @@ import { PageWrapper } from '@/components/page-wrapper';
 import Link from 'next/link';
 import LoadingScreen from '@/components/LoadingScreen';
 import { useDimensions } from '@/hooks/useDimensions';
+import { InvoiceModal } from '@/components/InvoiceModal';
 
 interface pageProps {}
 
@@ -39,6 +40,7 @@ const page: FC<pageProps> = () => {
   });
   const [loading, setLoading] = useState(false);
   const [revealCloud, setRevealCloud] = useState(false);
+  const [revealInvoices, setRevealInvoices] = useState(false);
   const router = useRouter();
   // const [scrolling, setScrolling] = useState(true);
   // const windowSize = useDimensions();
@@ -228,6 +230,12 @@ const page: FC<pageProps> = () => {
           extraSize={session?.user.role == 'Admin' ? true : false}
         />
       )}
+      {revealInvoices && (
+        <InvoiceModal
+          onReturn={() => setRevealInvoices(false)}
+          styling={alertStyle}
+        />
+      )}
       {loading && <LoadingScreen />}
       <div className="blurFilter shadow-2xl w-[90%]  max-w-[450px] md:w-full h-[85svh]  bg-lightMainBG/70 dark:bg-darkMainBG/70 border-0 rounded-md  p-2 md:mb-3">
         <div
@@ -301,7 +309,13 @@ const page: FC<pageProps> = () => {
               <Link href={'/purchases'}>
                 <button className="btnFancy w-[90%]">Purchases</button>
               </Link>
-
+              {session?.user.role === 'Student' && (
+               <button className="btnFancy w-[90%]" onClick={(e) => { 
+                e.preventDefault(); 
+                setRevealInvoices(true);
+                // Handle Invoices button click
+              }}>Invoices</button>
+              )}
               <label className="flex flex-col items-center p-1 rounded-t-md bottom-0">
                 Your Name:
                 <input

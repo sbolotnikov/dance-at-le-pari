@@ -181,11 +181,15 @@ useEffect(() => {
 
 
                 <DraggableList
-            initialItems={playlist.map((item) => item)}
-            addItems={playlist.map((item) => item)}
+            initialItems={playlist.map((item) => item)} 
             onListChange={(newItems: string[]) => {
               console.log('newItems', newItems);
               setPlaylist(newItems)        
+            }}
+             onDeleteItem={(index: number) => {
+              const newPlaylist = [...playlist];
+              newPlaylist.splice(index, 1);
+              setPlaylist(newPlaylist);
             }}
             isTouching={(isTouching:boolean) => setDragging(isTouching)}
             containerClassName={'h-[350px]  w-full border border-lightMainColor dark:border-darkMainColor p-1 rounded-lg my-1 overflow-hidden'}

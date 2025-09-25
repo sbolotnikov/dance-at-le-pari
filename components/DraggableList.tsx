@@ -3,23 +3,23 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import ShowIcon from './svg/showIcon';
 
 interface DraggableListProps {
-  initialItems: string[];
-  addItems: string[];
+  initialItems: string[]; 
   onListChange?: (items: string[]) => void;
   isTouching?:(isTouching:boolean)=>void;
   containerClassName?: string;
   itemHeight?: number;
   currentIndex?: number;
+  onDeleteItem?: (index: number) => void;
   onItemClick?: (index: number) => void;
   autoScrollSpeed?: number;
 }
 
 const DraggableList: React.FC<DraggableListProps> = ({
-  initialItems,
-  addItems,
+  initialItems, 
   onListChange,
   isTouching,
   currentIndex,
+  onDeleteItem,
   onItemClick,
   containerClassName = '',
   itemHeight = 48,
@@ -41,17 +41,10 @@ const DraggableList: React.FC<DraggableListProps> = ({
   
   // Notify parent component about list changes
   useEffect(() => {
-    if ((onListChange)&&(items.length<addItems.length))
-      {
-        setItems(addItems);
-        onListChange(addItems)
-      } else {
-      if (onListChange) {
-        onListChange(items);
-      }
-      
+    if (initialItems) {
+      setItems(initialItems);
     }
-  }, [items,addItems, onListChange]);
+  }, [initialItems]);
 
   const updateList = useCallback((dragIndex: number, hoverIndex: number) => {
     if (dragIndex === hoverIndex) return;
@@ -267,7 +260,7 @@ const DraggableList: React.FC<DraggableListProps> = ({
             margin: '4px 0',
             border: `1px solid ${dragging === index ? '#ed0808' : 'white'}`,
             borderRadius: '4px',
-            cursor: 'grab',
+            cursor: `${dragging === index ? 'grabbing' : 'grab'}`,
             height: `${itemHeight}px`,
             display: 'flex',
             alignItems: 'center',
@@ -279,7 +272,7 @@ const DraggableList: React.FC<DraggableListProps> = ({
         >
           <div className='drag-handle w-10' style={{ marginRight: '10px', cursor: 'grab' }}>
             ≡ {index+1}.
-            {currentIndex!==undefined && <input type="checkbox" checked={currentIndex === index} readOnly className="bg-transparent border-0 m-1 focus:outline-none" onClick={() => onItemClick && onItemClick(index)} />}
+            {currentIndex!==undefined && <input type="checkbox" checked={currentIndex === index} readOnly className="bg-transparent border-0 m-1 cursor-pointer focus:outline-none" onClick={(e) => { e.stopPropagation(); onItemClick && onItemClick(index); }} />}
           </div>
           
           <div className="item-content" style={{ flexGrow: 1 }}>
@@ -287,11 +280,8 @@ const DraggableList: React.FC<DraggableListProps> = ({
           </div>
           <button
                                 onClick={() => {
-                                  let newList = items.filter(
-                                    (item2, j) => j !== index
-                                  );
-                                  setItems(newList);
-                                  onListChange && onListChange(newList);
+                                   
+                                  onDeleteItem && onDeleteItem(index);
                                 }}
                                 className="  fill-alertcolor  stroke-alertcolor  rounded-md border-alertcolor  w-8 h-8 mt-2 hover:scale-110 transition-all duration-150 ease-in-out"
                               >

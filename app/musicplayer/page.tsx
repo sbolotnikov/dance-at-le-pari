@@ -78,14 +78,14 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
   const windowSize = useDimensions();
   useEffect(() => {
     if (audioRef.current) {
-      audioRef.current.playbackRate = rate;
+      if (rateSet && rateSet > 0) audioRef.current.playbackRate = rate;
       console.log('rate set:', rate);
     }
   }, [rate]);
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.src = music;
-      audioRef.current.playbackRate = rateSet;
+      if (rateSet && rateSet > 0) audioRef.current.playbackRate = rateSet;
       audioRef.current.load();
       console.log('rateSet set:', rateSet);
       setLoaded(true);
@@ -537,6 +537,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
   const [dragging, setDragging] = useState(false);
   const [revealSaveModal, setRevealSaveModal] = useState(false);
   const [songToSave, setSongToSave] = useState('');
+  const [songIntroduction, setSongIntroduction] = useState('');
   const [songName, setSongName] = useState('');
   const [currentIndex, setCurrentIndex] = useState(-1);
   const [currentDance, setCurrentDance] = useState<string | null>(null);
@@ -680,6 +681,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
       <ListenSaveMp3Modal
         visibility={revealSaveModal}
         audioBlob={songToSave}
+        introduction={songIntroduction}
         fileName={songName}
         rateOrigin={currentRate}
         currentDance={currentDance}
@@ -687,6 +689,23 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
           let songArr = songDB;
           songArr[currentIndex].rate = rate;
           setSongDB(songArr);
+        }}
+        onSongChange={(songBlob) => {
+          let songArr = songDB;
+          songArr[currentIndex].url = songBlob;
+          setSongDB(songArr);
+        }}
+        onNameChange={(name) => {
+          let songArr = songDB;
+          songArr[currentIndex].name = name;
+          setSongDB(songArr);
+          setSongName(name);
+        }}
+        onIntroductionChange={(intro) => {
+          let songArr = songDB;
+          songArr[currentIndex].introduction = intro;
+          setSongDB(songArr);
+
         }}
         onDance={(dance) => {
           let songArr = songDB;
@@ -761,6 +780,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
                             size={32}
                             onButtonPress={() => {
                               setSongToSave(item.url);
+                              if (item.introduction !== undefined && item.introduction !== '') setSongIntroduction(item.introduction);
                               setSongName(item.name);
                               setCurrentIndex(i);
                               setCurrentDance(item.dance);
@@ -914,6 +934,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
                 />
                 {'Add to Current Playlist'}
               </div>
+
             </div>
           </div>
         </div>
@@ -953,7 +974,10 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
   onReturn,
 }) => {
   const [dragging, setDragging] = useState(false);
-
+  const [itemsList, setItemsList] = useState([] as string[]);
+  useEffect(() => {
+    setItemsList(playlist.map((item) => item.name));
+  }, [playlist]);
   return (
     <AnimateModalLayout
       visibility={isVisible}
@@ -996,8 +1020,7 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
           </div>
 
           <DraggableList
-            initialItems={playlist.map((item) => item.name)}
-            addItems={playlist.map((item) => item.name)}
+            initialItems={itemsList} 
             onListChange={(newItems: string[]) => {
               // console.log('newItems', newItems);
               // Map back to Song objects based on id or name
@@ -1009,6 +1032,12 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
                 )
                 .filter((song): song is Song => !!song);
               onUpdate(newPlaylist);
+            }}
+            onDeleteItem={(index: number) => {
+              // const newPlaylist = [...playlist];
+              // newPlaylist.splice(index, 1);
+              console.log('delete index: ', index); 
+              onRemoveSong(index);
             }}
             isTouching={(isTouching: boolean) => setDragging(isTouching)}
             currentIndex={currentSongIndex}
@@ -1852,12 +1881,20 @@ const page: FC<pageProps> = ({}) => {
                           })),
                           parties.find((p) => p.id === choosenParty)?.name ||
                             null
-                        ).then((res) => {
-                          let playlist1 = [...playlist];
-                          res.forEach(async (intro, index) => {
-                            await playText(intro, index);
-                          });
-                          console.log('Introductions generated:', res);
+                        ).then(async (res) => {
+                          // let playlist1 = [...playlist];
+                          for (let i = 0; i < res.length; i++) {
+                            await playText(res[i], i);
+                          }
+                          // res.forEach(async (intro, index) => {
+                          //   await playText(intro, index);
+                          // });
+                          const textIntros = res.map((intro, index) => `${index + 1}. ${intro}`);
+                          
+                          console.log('Introductions generated:', textIntros);
+                        }).catch((error) => {
+                          setLoading(false);
+                          console.error('Error generating introductions:', error);
                         });
                       }
                     }}
@@ -1870,15 +1907,14 @@ const page: FC<pageProps> = ({}) => {
               <div className="w-full flex flex-row justify-between items-center mt-2">
                 <div className="flex flex-col items-center justify-center mx-2">
                   <input
-                    type="checkbox"
-                    placeholder="Enter DJ Name"
+                    type="checkbox" 
                     className="p-2 border border-lightMainColor dark:border-darkMainColor rounded-md"
                     checked={autoDJMode}
                     onChange={(e) => {
                       setAutoDJMode(!autoDJMode);
                     }}
                   />
-                  <span className="text-center w-20">Add DJ to playlist</span>
+                  <span className="text-center w-20">Use DJ comments</span>
                 </div>
 
                 <span className="min-w-fit">DJ comment every</span>
