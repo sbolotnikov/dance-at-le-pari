@@ -74,8 +74,7 @@ const page: FC<pageProps> = ({}) => {
             )}
           /> */}
           <DraggableList
-            initialItems={items.map((item) => item.name)}
-            addItems={items.map((item) => item.name)}
+            initialItems={items.map((item) => item.name)} 
             onListChange={(newItems: string[]) => {
               setItems(
                 newItems.map((item, index) => ({

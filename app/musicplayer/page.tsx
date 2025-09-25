@@ -705,7 +705,6 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
           let songArr = songDB;
           songArr[currentIndex].introduction = intro;
           setSongDB(songArr);
-
         }}
         onDance={(dance) => {
           let songArr = songDB;
@@ -780,7 +779,11 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
                             size={32}
                             onButtonPress={() => {
                               setSongToSave(item.url);
-                              if (item.introduction !== undefined && item.introduction !== '') setSongIntroduction(item.introduction);
+                              if (
+                                item.introduction !== undefined &&
+                                item.introduction !== ''
+                              )
+                                setSongIntroduction(item.introduction);
                               setSongName(item.name);
                               setCurrentIndex(i);
                               setCurrentDance(item.dance);
@@ -934,7 +937,6 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
                 />
                 {'Add to Current Playlist'}
               </div>
-
             </div>
           </div>
         </div>
@@ -942,7 +944,82 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
     </AnimateModalLayout>
   );
 };
+import { FFmpeg } from '@ffmpeg/ffmpeg';
+const ffmpeg = new FFmpeg();
 
+export const mergeMP3Files = async (
+  playlist: { url: string; rate: number }[],
+  length: number
+) => {
+  // if (!isLoaded) {
+  await ffmpeg.load();
+  //   setIsLoaded(true);
+  // }
+
+  const outputFiles = [];
+
+  for (let i = 0; i < playlist.length; i++) {
+    const { url, rate } = playlist[i];
+    const inputFileName = `input${i}.mp3`;
+    const outputFileName = `output${i}.mp3`;
+    // Convert base64 or URL string to Uint8Array
+    let uint8Arr: Uint8Array;
+    if (url.startsWith('data:')) {
+      // base64 data URL
+      const base64 = url.split(',')[1];
+      const binary = atob(base64);
+      const bytes = new Uint8Array(binary.length);
+      for (let j = 0; j < binary.length; j++) {
+        bytes[j] = binary.charCodeAt(j);
+      }
+      uint8Arr = bytes;
+    } else {
+      // fetch the file from URL
+      const response = await fetch(url);
+      const arrayBuffer = await response.arrayBuffer();
+      uint8Arr = new Uint8Array(arrayBuffer);
+    }
+    await ffmpeg.writeFile(inputFileName, uint8Arr);
+    console.log(
+      `Processing file ${i + 1}/${playlist.length} with rate ${rate}`
+    );
+
+    // Assuming `length` is in seconds
+    await ffmpeg.exec([
+      '-i', inputFileName,
+      '-t', length.toString(),
+      '-acodec', 'libmp3lame',
+      outputFileName,
+    ]);
+    outputFiles.push(outputFileName);
+  }
+      // '-t',length.toString(),
+  const mergedFileName = 'merged.mp3';
+  await ffmpeg.exec([
+    '-i',
+    `concat:${outputFiles.join('|')}`,
+    '-acodec',
+    'copy',
+    mergedFileName,
+  ]);
+console.log('Merging ');
+  const mergedFile = await ffmpeg.readFile(mergedFileName);
+  console.log('Merging completed');
+  const mergedBlob = new Blob([mergedFile], { type: 'audio/mp3' });
+  const downloadUrl = URL.createObjectURL(mergedBlob);
+  const a = document.createElement('a');
+  a.href = downloadUrl;
+  a.download = 'merged.mp3';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(downloadUrl);
+  
+  // Convert mergedFile to a Blob or a URL
+  // const mergedBlob = new Blob([mergedFile instanceof Uint8Array ? mergedFile : new Uint8Array(mergedFile as any)], { type: 'audio/mp3' });
+  // const downloadUrl = URL.createObjectURL(mergedBlob);
+  // return downloadUrl;
+};
 interface Song {
   url: string;
   name: string;
@@ -954,6 +1031,7 @@ interface Song {
 
 interface PlaylistManagerProps {
   playlist: Song[];
+  songLength: number;
   currentSongIndex: number;
   isVisible: boolean;
   onSongChange: (index: number) => void;
@@ -965,6 +1043,7 @@ interface PlaylistManagerProps {
 
 const PlaylistManager: React.FC<PlaylistManagerProps> = ({
   playlist,
+  songLength,
   currentSongIndex,
   isVisible,
   onSongChange,
@@ -1017,10 +1096,33 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
               />
               {'Save Playlist'}
             </div>
+            <div className=" flex flex-col items-center justify-center m-1.5">
+              <PlayerButtons
+                icon={'Save'}
+                color="#504deb"
+                color2="#FFFFFF"
+                size={50}
+                onButtonPress={async () => {
+                  if (playlist.length === 0) {
+                    alert('Playlist is empty');
+                    return;
+                  } else {
+                     await mergeMP3Files(
+                      playlist.map((song) => ({
+                        url: song.url,
+                        rate: song.rate !== null ? song.rate : 1,
+                      })),
+                      songLength
+                    ); 
+                  }
+                }}
+              />
+              {'Save as MP3s'}
+            </div>
           </div>
 
           <DraggableList
-            initialItems={itemsList} 
+            initialItems={itemsList}
             onListChange={(newItems: string[]) => {
               // console.log('newItems', newItems);
               // Map back to Song objects based on id or name
@@ -1036,7 +1138,7 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
             onDeleteItem={(index: number) => {
               // const newPlaylist = [...playlist];
               // newPlaylist.splice(index, 1);
-              console.log('delete index: ', index); 
+              console.log('delete index: ', index);
               onRemoveSong(index);
             }}
             isTouching={(isTouching: boolean) => setDragging(isTouching)}
@@ -1355,7 +1457,7 @@ const page: FC<pageProps> = ({}) => {
             `/api/music2play?file_id=${songsArr[randomIndex].url}`
           );
           const data = await response.json();
-          
+
           playlist1 = [
             ...playlist1,
             {
@@ -1375,13 +1477,7 @@ const page: FC<pageProps> = ({}) => {
       fetchSongsAll();
       setAutoPlayList(false);
     }
-  }, [
-    autoPlayList,
-    songsAll,
-    autoPlayDances,
-    parties,
-    choosenParty,
-  ]);
+  }, [autoPlayList, songsAll, autoPlayDances, parties, choosenParty]);
 
   async function playText(text: string, index?: number) {
     if (text.trim() === '') return;
@@ -1407,7 +1503,6 @@ const page: FC<pageProps> = ({}) => {
     }
   }
 
-  
   const handleSongChange = (index: number) => {
     setCurrentSongIndex(index);
     setRate(playlist[index].rate !== null ? playlist[index].rate : 1);
@@ -1513,7 +1608,8 @@ const page: FC<pageProps> = ({}) => {
 
         if (
           playlist[currentSongIndex + 1].introduction !== undefined &&
-          playlist[currentSongIndex + 1].introduction?.trim() !== '' && autoDJMode
+          playlist[currentSongIndex + 1].introduction?.trim() !== '' &&
+          autoDJMode
         ) {
           const introMessage = playlist[currentSongIndex + 1].introduction!;
           if (choosenParty != '') {
@@ -1668,6 +1764,7 @@ const page: FC<pageProps> = ({}) => {
       {isPlaylistOpen && (
         <PlaylistManager
           playlist={playlist}
+          songLength={songLength}
           currentSongIndex={currentSongIndex}
           onUpdate={(newPlaylist) => setPlaylist(newPlaylist)}
           isVisible={isPlaylistOpen}
@@ -1881,21 +1978,28 @@ const page: FC<pageProps> = ({}) => {
                           })),
                           parties.find((p) => p.id === choosenParty)?.name ||
                             null
-                        ).then(async (res) => {
-                          // let playlist1 = [...playlist];
-                          for (let i = 0; i < res.length; i++) {
-                            await playText(res[i], i);
-                          }
-                          // res.forEach(async (intro, index) => {
-                          //   await playText(intro, index);
-                          // });
-                          const textIntros = res.map((intro, index) => `${index + 1}. ${intro}`);
-                          
-                          console.log('Introductions generated:', textIntros);
-                        }).catch((error) => {
-                          setLoading(false);
-                          console.error('Error generating introductions:', error);
-                        });
+                        )
+                          .then(async (res) => {
+                            // let playlist1 = [...playlist];
+                            for (let i = 0; i < res.length; i++) {
+                              await playText(res[i], i);
+                            }
+                            // res.forEach(async (intro, index) => {
+                            //   await playText(intro, index);
+                            // });
+                            const textIntros = res.map(
+                              (intro, index) => `${index + 1}. ${intro}`
+                            );
+
+                            console.log('Introductions generated:', textIntros);
+                          })
+                          .catch((error) => {
+                            setLoading(false);
+                            console.error(
+                              'Error generating introductions:',
+                              error
+                            );
+                          });
                       }
                     }}
                   />
@@ -1907,7 +2011,7 @@ const page: FC<pageProps> = ({}) => {
               <div className="w-full flex flex-row justify-between items-center mt-2">
                 <div className="flex flex-col items-center justify-center mx-2">
                   <input
-                    type="checkbox" 
+                    type="checkbox"
                     className="p-2 border border-lightMainColor dark:border-darkMainColor rounded-md"
                     checked={autoDJMode}
                     onChange={(e) => {

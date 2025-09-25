@@ -6,11 +6,7 @@ import { CartesiaClient } from "@cartesia/cartesia-js";
 
 import { ChatOpenAI } from '@langchain/openai';
 import { ChatPromptTemplate, MessagesPlaceholder } from "@langchain/core/prompts";
-
-
-
-
-
+ 
 
 import process from "node:process";
 
@@ -147,3 +143,8 @@ Remember to keep it fun, light-hearted, and engaging for all attendees.
 
   return response.content;
 };
+
+
+
+ 
+

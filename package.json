@@ -1,12 +1,10 @@
 {
   "scripts": {
-    
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate",
     "dev": "next dev -H 0.0.0.0"
-
   },
   "name": "dance-at-le-pari-dance-studio",
   "version": "1.1.0",
@@ -19,6 +17,8 @@
   },
   "dependencies": {
     "@cartesia/cartesia-js": "^2.2.5",
+    "@ffmpeg/ffmpeg": "^0.12.15",
+    "@ffmpeg/util": "^0.12.2",
     "@hookform/resolvers": "^5.1.1",
     "@langchain/core": "^0.3.5",
     "@langchain/openai": "^0.3.4",
