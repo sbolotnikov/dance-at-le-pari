@@ -26,7 +26,7 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     console.log('Incoming POST request body:', body);
-    const { customerId, installments, sessions, discount, managerId } = body;
+    const { customerId, installments, sessions, discount, managerId, packageType, effectiveDate } = body;
 
     const newInvoice = await prisma.invoice.create({
       data: {
@@ -39,6 +39,8 @@ export async function POST(req: Request) {
           create: sessions.map((s: any) => ({ ...s, sessionType: s.sessionType.charAt(0).toUpperCase() + s.sessionType.slice(1) }))
         },
         discount,
+        packageType,
+        effectiveDate
       },
     });
 

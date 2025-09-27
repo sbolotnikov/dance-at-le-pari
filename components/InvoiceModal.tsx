@@ -285,10 +285,10 @@ export const InvoiceModal = ({ onReturn, studentId, styling }: Props) => {
                       className="btnFancy mb-2"
                       onClick={() => setIsMultiInvoiceView(true)}
                     >
-                      Back to Invoices
+                      Back to Invoices List
                     </button>
                     <h2 className="w-full p-2 text-xl font-bold text-center">
-                      Installments
+                      Payments
                     </h2>
                     <div className="overflow-auto">
                       <table className="min-w-full bg-lightMainBG dark:bg-darkMainBG">

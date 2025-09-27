@@ -21,6 +21,7 @@ const SessionForm = ({ className }: { className?: string }) => {
           key={item.id}
           className="grid grid-cols-1 md:grid-cols-5 gap-4  justify-center items-center"
         >
+
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Session Type
@@ -101,8 +102,8 @@ const SessionForm = ({ className }: { className?: string }) => {
       <button
         type="button"
         onClick={() =>
-          append({
-            sessionType: 'private',
+          append({ 
+            sessionType: 'Private',
             price: 0,
             discount: 0,
             numberOfSessions: 1,

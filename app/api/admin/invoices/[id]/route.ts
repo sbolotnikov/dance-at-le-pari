@@ -31,7 +31,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
 
   try {
     const body = await req.json();
-    const { customerId, installments, sessions, discount } = body;
+    const { customerId, installments, sessions, discount, effectiveDate, packageType } = body;
 
     const updatedInvoice = await prisma.invoice.update({
       where: { id: params.id },
@@ -46,6 +46,8 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
           create: sessions.map((s: any) => ({ ...s, sessionType: s.sessionType.charAt(0).toUpperCase() + s.sessionType.slice(1) }))
         },
         discount,
+        effectiveDate: new Date(effectiveDate),
+        packageType
       },
     });
 

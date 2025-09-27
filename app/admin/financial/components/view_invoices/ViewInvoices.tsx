@@ -21,14 +21,7 @@ const ViewInvoices: FC<ViewInvoicesProps> = ({ onAlert, delInvoice }) => {
 
   useEffect(() => {
     if (delInvoice.length > 0) {
-
-const match = delInvoice.match(/#(.*?)!/);
-
-if (match && match[1]) {
-   handleDelete(match[1]);
-} else {
-  console.log("No match found.");
-}
+      handleDelete(delInvoice);
     }
   }, [delInvoice]);
   useEffect(() => {

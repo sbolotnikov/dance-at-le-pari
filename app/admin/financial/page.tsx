@@ -28,7 +28,7 @@ const page: FC<pageProps> = ({}) => {
     });
     const onReturnAlert = (decision1: string, inputValue: string | null) => {
       setRevealAlert(false);
-      if (decision1 === 'Confirm') setDelInvoice(alertStyle.text);
+      if (decision1 === 'Confirm') setDelInvoice(alertStyle.text.split('#')[1].slice(0,-1));
       // location.reload();
     };
 

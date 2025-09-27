@@ -15,9 +15,23 @@ const InstallmentForm = ({ className }: { className?: string }) => {
 
   return (
     <div className={className}>
-      <h2 className="text-xl font-bold mb-2">Installments</h2>
+      <h2 className="text-xl font-bold mb-2">Payments</h2>
       {fields.map((item, index) => (
         <div key={item.id} className="flex items-center space-x-4 mb-2 text-lightMainColor dark:text-darkMainColor">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Payment Method Type
+            </label>
+            <select
+              {...register(`installments.${index}.paymentMethod`)}
+              className="border rounded p-1 w-full dark:bg-darkMainBG"
+            >
+              <option value="Cash">Cash</option>
+              <option value="Check">Check</option>
+              <option value="Zelle">Zelle</option>
+              <option value="Credit Card">Credit Card</option>
+            </select>
+          </div>
           <div className="flex-1">
             <label className="block text-sm font-medium ">
               Date
@@ -70,7 +84,7 @@ const InstallmentForm = ({ className }: { className?: string }) => {
       ))}
       <button
         type="button"
-        onClick={() => append({ date: new Date(), amount: 0, isPaid: false })}
+        onClick={() => append({  paymentMethod: 'Cash', date: new Date(), amount: 0, isPaid: false })}
         className="btnFancy px-4 py-2 rounded flex items-center  h-12 w-52 md:h-14 md:w-60 cursor-pointer relative "
       >
           <ShowIcon icon={'Plus'} stroke={'2'} />

@@ -255,6 +255,8 @@ model Invoice {
   expirationDate DateTime?
   sessions       InvoiceSession[]
   discount       Float?
+  packageType    String
+  effectiveDate  DateTime
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
   // Mongoose virtual 'invoiceTotal' was here.
@@ -268,6 +270,7 @@ model Invoice {
 model Installment {
   id        String   @id @default(cuid()) @map("_id")
   date      DateTime
+  paymentMethod  String
   amount    Float
   isPaid    Boolean
   invoice   Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)

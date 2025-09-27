@@ -1,26 +1,23 @@
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 
+interface Session {
+  price: number;
+  discount: number;
+  numberOfSessions: number;
+}
+
 const InvoicePreview = () => {
   const { watch } = useFormContext();
-  const watchSessions = watch("sessions");
-  const watchDiscount = watch("discount");
+  const sessions = watch("sessions") as Session[] || [];
+  const discount = watch("discount") as number || 0;
 
   const calculateTotal = () => {
-    interface Session {
-      price: number;
-      discount: number;
-      numberOfSessions: number;
-    }
-
-    const watchSessions: Session[] = watch("sessions") || [];
-    const watchDiscount: number = watch("discount");
-
-    let sessionTotal: number = watchSessions.reduce((acc: number, session: Session | undefined) => {
+    const sessionTotal = sessions.reduce((acc, session) => {
       if (!session) return acc;
       return acc + (session.price * (100 - session.discount) / 100 * session.numberOfSessions);
     }, 0);
-    return (sessionTotal * (100 - watchDiscount) / 100).toFixed(2);
+    return (sessionTotal * (100 - discount) / 100).toFixed(2);
   };
 
   return (
