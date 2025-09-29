@@ -1,10 +1,11 @@
  
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import ShowIcon from './svg/showIcon';
+import { on } from 'events';
 
 interface DraggableListProps {
   initialItems: string[]; 
-  onListChange?: (items: string[]) => void;
+  onItemMove?: (dragIndex: number, hoverIndex: number) => void;
   isTouching?:(isTouching:boolean)=>void;
   containerClassName?: string;
   itemHeight?: number;
@@ -16,7 +17,7 @@ interface DraggableListProps {
 
 const DraggableList: React.FC<DraggableListProps> = ({
   initialItems, 
-  onListChange,
+  onItemMove,
   isTouching,
   currentIndex,
   onDeleteItem,
@@ -48,18 +49,8 @@ const DraggableList: React.FC<DraggableListProps> = ({
 
   const updateList = useCallback((dragIndex: number, hoverIndex: number) => {
     if (dragIndex === hoverIndex) return;
-    
-    setItems(prev => {
-      const newItems = [...prev];
-      const draggedItem = newItems[dragIndex];
-      
-      // Remove the dragged item
-      newItems.splice(dragIndex, 1);
-      // Insert at the new position
-      newItems.splice(hoverIndex, 0, draggedItem);
-      
-      return newItems;
-    });
+    onItemMove && onItemMove(dragIndex, hoverIndex);
+
   }, []);
   
   const handleDragStart = (index: number, e: React.DragEvent<HTMLLIElement>) => {
@@ -225,7 +216,13 @@ const DraggableList: React.FC<DraggableListProps> = ({
       }
     };
   }, []);
-  
+  // useEffect(() => {
+  //   if (onListChange) {
+  //     if (items.length > 0) {
+  //       onListChange(items);
+  //     }
+  //   }
+  // }, [items, onListChange]);
   return (
     <div className={`${containerClassName} relative`}>
     <ul

@@ -38,6 +38,21 @@ export type TBannerEvent  = {
   image: string;
   eventtype: string;
 };
+
+export type AudioFile = {
+  id: string;
+  name: string;
+  duration: number;
+  audioBuffer: AudioBuffer;
+  blob?: Blob; // Optional: if you want to keep track of the original blob
+}
+
+export type AudioSettings ={
+  speed: number;
+}
+
+export type AudioFileWithSettings = AudioFile & AudioSettings;
+
 type ContactType={
   id: number,
   name: string | null,

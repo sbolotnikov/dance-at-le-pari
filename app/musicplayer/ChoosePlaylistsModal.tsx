@@ -182,10 +182,25 @@ useEffect(() => {
 
                 <DraggableList
             initialItems={playlist.map((item) => item)} 
-            onListChange={(newItems: string[]) => {
-              console.log('newItems', newItems);
-              setPlaylist(newItems)        
-            }}
+            // onListChange={(newItems: string[]) => {
+            //   console.log('newItems', newItems);
+            //   setPlaylist(newItems)        
+            // }}
+            onItemMove={ (dragIndex, hoverIndex) => {
+                    setPlaylist(prev => {
+                      const newItems = [...prev];
+                      const draggedItem = newItems[dragIndex];
+                      
+                      // Remove the dragged item
+                      newItems.splice(dragIndex, 1);
+                      // Insert at the new position
+                      newItems.splice(hoverIndex, 0, draggedItem);
+                      
+                      return newItems;
+                    });
+                     
+              }
+            }
              onDeleteItem={(index: number) => {
               const newPlaylist = [...playlist];
               newPlaylist.splice(index, 1);

@@ -19,6 +19,8 @@ import ChoosePlaylistsModal from './ChoosePlaylistsModal';
 import DraggableList from '@/components/DraggableList';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { generateIntroduction, speak } from './actions';
+import { AudioFileWithSettings } from '@/types/screen-settings';
+import { processAndStitchAudio } from './LocalActions';
 
 interface MusicPlayerProps {
   rateSet: number;
@@ -945,80 +947,6 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
   );
 };
 
-const mergeMP3Files = async (
-  playlist: { url: string; rate: number }[],
-  length: number
-) => {
-  const ffmpeg = new FFmpeg();
-  // if (!isLoaded) {
-  await ffmpeg.load();
-  //   setIsLoaded(true);
-  // }
-
-  const outputFiles = [];
-
-  for (let i = 0; i < playlist.length; i++) {
-    const { url, rate } = playlist[i];
-    const inputFileName = `input${i}.mp3`;
-    const outputFileName = `output${i}.mp3`;
-    // Convert base64 or URL string to Uint8Array
-    let uint8Arr: Uint8Array;
-    if (url.startsWith('data:')) {
-      // base64 data URL
-      const base64 = url.split(',')[1];
-      const binary = atob(base64);
-      const bytes = new Uint8Array(binary.length);
-      for (let j = 0; j < binary.length; j++) {
-        bytes[j] = binary.charCodeAt(j);
-      }
-      uint8Arr = bytes;
-    } else {
-      // fetch the file from URL
-      const response = await fetch(url);
-      const arrayBuffer = await response.arrayBuffer();
-      uint8Arr = new Uint8Array(arrayBuffer);
-    }
-    await ffmpeg.writeFile(inputFileName, uint8Arr);
-    console.log(
-      `Processing file ${i + 1}/${playlist.length} with rate ${rate}`
-    );
-
-    // Assuming `length` is in seconds
-    await ffmpeg.exec([
-      '-i', inputFileName,
-      '-t', length.toString(),
-      '-acodec', 'libmp3lame',
-      outputFileName,
-    ]);
-    outputFiles.push(outputFileName);
-  }
-      // '-t',length.toString(),
-  const mergedFileName = 'merged.mp3';
-  await ffmpeg.exec([
-    '-i',
-    `concat:${outputFiles.join('|')}`,
-    '-acodec',
-    'copy',
-    mergedFileName,
-  ]);
-console.log('Merging ');
-  const mergedFile = await ffmpeg.readFile(mergedFileName);
-  console.log('Merging completed');
-  const mergedBlob = new Blob([mergedFile], { type: 'audio/mp3' });
-  const downloadUrl = URL.createObjectURL(mergedBlob);
-  const a = document.createElement('a');
-  a.href = downloadUrl;
-  a.download = 'merged.mp3';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(downloadUrl);
-  
-  // Convert mergedFile to a Blob or a URL
-  // const mergedBlob = new Blob([mergedFile instanceof Uint8Array ? mergedFile : new Uint8Array(mergedFile as any)], { type: 'audio/mp3' });
-  // const downloadUrl = URL.createObjectURL(mergedBlob);
-  // return downloadUrl;
-};
 interface Song {
   url: string;
   name: string;
@@ -1031,6 +959,8 @@ interface Song {
 interface PlaylistManagerProps {
   playlist: Song[];
   songLength: number;
+  fadeTime: number;
+  delayLength: number;
   currentSongIndex: number;
   isVisible: boolean;
   onSongChange: (index: number) => void;
@@ -1043,6 +973,8 @@ interface PlaylistManagerProps {
 const PlaylistManager: React.FC<PlaylistManagerProps> = ({
   playlist,
   songLength,
+  fadeTime,
+  delayLength,
   currentSongIndex,
   isVisible,
   onSongChange,
@@ -1052,10 +984,54 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
   onReturn,
 }) => {
   const [dragging, setDragging] = useState(false);
-  const [itemsList, setItemsList] = useState([] as string[]);
-  useEffect(() => {
-    setItemsList(playlist.map((item) => item.name));
+  const [itemsList, setItemsList] = useState([] as string[]); 
+  const [progress, setProgress] = useState<number>(0);
+
+  const audioContext = new AudioContext();
+
+  const [filesWithSettings, setFilesWithSettings] = useState<
+    AudioFileWithSettings[]
+  >([]);
+
+  const loadAudioBufferFromUrl = async (
+    url: string,
+    audioContext: AudioContext
+  ): Promise<AudioBuffer> => {
+    const response = await fetch(url);
+    const arrayBuffer = await response.arrayBuffer();
+    return await audioContext.decodeAudioData(arrayBuffer);
+  };
+
+  useEffect(() => { 
+    
+    let isMounted = true;
+    async function fetchFilesWithSettings() {
+      const result: AudioFileWithSettings[] = await Promise.all(
+        playlist.map(async (item, index) => {
+          const buffer = await loadAudioBufferFromUrl(item.url, audioContext);
+          return {
+            id: `track-${index}`,
+            name: `Track ${index + 1}`,
+            duration: buffer.duration,
+            audioBuffer: buffer,
+            speed: item.rate !== null ? item.rate : 1,
+          };
+        })
+      );
+      console.log('set files' + result);
+      if (isMounted) setFilesWithSettings(result);
+    }
+    if (playlist.length > 0) {
+      setItemsList(playlist.map((item, index) => item.name || `Track ${index + 1}`));
+      setFilesWithSettings([]);
+      setProgress(0);
+      fetchFilesWithSettings();
+    }
+    return () => {
+      isMounted = false;
+    };
   }, [playlist]);
+
   return (
     <AnimateModalLayout
       visibility={isVisible}
@@ -1095,7 +1071,7 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
               />
               {'Save Playlist'}
             </div>
-            <div className=" flex flex-col items-center justify-center m-1.5">
+            {(filesWithSettings.length === playlist.length)&&<div className=" flex flex-col items-center justify-center m-1.5" >
               <PlayerButtons
                 icon={'Save'}
                 color="#504deb"
@@ -1106,34 +1082,53 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
                     alert('Playlist is empty');
                     return;
                   } else {
-                     await mergeMP3Files(
-                      playlist.map((song) => ({
-                        url: song.url,
-                        rate: song.rate !== null ? song.rate : 1,
-                      })),
-                      songLength
-                    ); 
+                    processAndStitchAudio(
+                      filesWithSettings,
+                      songLength/1000,
+                      fadeTime/1000,
+                      delayLength/1000,
+                      (progress) => {
+                        setProgress(progress);
+                        // console.log(`Progress: ${progress.toFixed(2)}%`);
+                      }
+                    ).then((downloadUrl) => {
+                      setProgress(0);
+                      const a = document.createElement('a');
+                      a.href = downloadUrl;
+                      a.download = 'stitched_playlist.mp3';
+                      document.body.appendChild(a);
+                      a.click();
+                      document.body.removeChild(a);
+                    });
                   }
                 }}
               />
               {'Save as MP3s'}
-            </div>
+            </div>}
           </div>
 
           <DraggableList
             initialItems={itemsList}
-            onListChange={(newItems: string[]) => {
-              // console.log('newItems', newItems);
-              // Map back to Song objects based on id or name
-              const newPlaylist = newItems
-                .map((idOrName) =>
-                  playlist.find(
-                    (song) => song.id === idOrName || song.name === idOrName
-                  )
-                )
-                .filter((song): song is Song => !!song);
-              onUpdate(newPlaylist);
-            }}
+            onItemMove={ (dragIndex, hoverIndex) => {
+                    // setItemsList(prev => {
+                    //   const newItems = [...prev];
+                    //   const draggedItem = newItems[dragIndex];
+                      
+                    //   // Remove the dragged item
+                    //   newItems.splice(dragIndex, 1);
+                    //   // Insert at the new position
+                    //   newItems.splice(hoverIndex, 0, draggedItem);
+                      
+                    //   return newItems;
+                    // });
+                    const newPlaylist = [...playlist];
+                    const itemToMove = newPlaylist[dragIndex];
+                    newPlaylist.splice(dragIndex, 1);
+                    newPlaylist.splice(hoverIndex, 0, itemToMove);
+                    onUpdate(newPlaylist);
+              }
+            }
+             
             onDeleteItem={(index: number) => {
               // const newPlaylist = [...playlist];
               // newPlaylist.splice(index, 1);
@@ -1149,107 +1144,33 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
             itemHeight={56}
             autoScrollSpeed={15}
           />
-
-          {/* <ul className="space-y-2" ref={listRef1}>
-            {playlist.map((song, index) => (
-              <React.Fragment key={song.name}>
-                {index === placeholderIndex &&
-                  draggedIndex !== null &&
-                  draggedIndex !== index && (
-                    <li className="h-12 bg-blue-100 border-2 border-blue-300 border-dashed"></li>
-                  )}
-                <li
-                  key={index}
-                  className={`h-12  flex flex-col justify-between items-center p-1 rounded ${
-                    index === draggedIndex ? 'hidden' : ''
-                  }`}
-                  style={{ userSelect: 'none' }}
-                >
-                  <div
-                    className={`flex flex-grow items-start justify-between cursor-pointer  w-full  ${
-                      index === currentSongIndex
-                        ? 'bg-blue-100 dark:bg-blue-900'
-                        : ''
-                    }`}
-                  >
-                    <PlayerButtons
-                      icon="Play"
-                      color="#504deb"
-                      color2="#FFFFFF"
-                      size={24}
-                      onButtonPress={() => onSongChange(index)}
-                    />
-                    <span
-                      className="w-[297px] flex flex-row justify-start items-start h-auto text-sm leading-3"
-                      onMouseDown={(e) => onDragStart(e, index)}
-                      onTouchStart={(e) => onDragStart(e, index)}
-                    >
-                      <span>{index + 1}. </span>
-                      <span className="rounded-md text-white bg-[#504deb] mx-1 mb-1 p-1">
-                        {song.dance}
-                      </span>
-                      <span className=" h-auto text-ellipsis overflow-hidden">
-                        {song.name}
-                      </span>
-                    </span>
-
-                    <PlayerButtons
-                      icon="Remove"
-                      color="#504deb"
-                      color2="#FFFFFF"
-                      size={24}
-                      onButtonPress={() => {
-                        console.log('remove index: ', index);
-                        onRemoveSong(index);
-                      }}
-                    />
-                  </div>
-                </li>
-              </React.Fragment>
-            ))}
-            {placeholderIndex === playlist.length && (
-              <li className="h-12 bg-blue-100 border-2 border-blue-300 border-dashed"></li>
-            )}
-          </ul> */}
-          {/* {dragging && draggedIndex !== null && placeholderIndex !== null && (
-            <div
-              ref={ghostRef}
-              className="fixed px-4 py-2 bg-white shadow-lg rounded opacity-80 pointer-events-none"
-              style={{
-                left: `${5}px`,
-                top: `${topMargin + (placeholderIndex! + 1) * itemHeight}px`,
-                width: listRef1.current
-                  ? `${listRef1.current.offsetWidth - 32}px`
-                  : 'auto',
-              }}
-            >
+          {progress>0 &&<div className="mt-6 max-w-md mx-auto">
+            <div className="w-full bg-gray-700 rounded-full h-4 relative overflow-hidden">
               <div
-                className={`flex flex-grow justify-between cursor-pointer w-full   bg-blue-100 dark:bg-blue-900`}
-                style={{ userSelect: 'none' }}
-              >
-                <span style={{ userSelect: 'none' }}>{draggedIndex + 1}. </span>
-                <span style={{ userSelect: 'none' }}>
-                  <span className="rounded-md text-white bg-[#504deb] m-1 p-1 ">
-                    {playlist[draggedIndex].dance}
-                  </span>
-                  {' ' + playlist[draggedIndex].name}
-                </span>
-              </div>
+                className="bg-gradient-to-r from-purple-500 to-pink-500 h-4 rounded-full transition-all duration-300 ease-linear"
+                style={{ width: `${progress}%` }}
+              ></div>
+              <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">
+                {Math.round(progress)}%
+              </span>
             </div>
-          )} */}
+            <p className="text-center text-sm text-gray-400 mt-2">
+              Encoding your masterpiece...
+            </p>
+          </div>}
+
         </div>
       </div>
     </AnimateModalLayout>
   );
 };
+ 
 
-interface pageProps {}
-
-const page: FC<pageProps> = ({}) => {
+const page: React.FC = () => {
   const [musicFile, setMusicFile] = useState({ url: '', name: '' });
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [songLength, setSongLength] = useState(150000);
-  const [delayLength, setDelayLength] = useState(0);
+  const [delayLength, setDelayLength] = useState(1000);
   const [fadeTime, setFadeTime] = useState(5000);
   const [playlist, setPlaylist] = useState<Song[]>([]);
   const [rate, setRate] = useState(1);
@@ -1314,14 +1235,14 @@ const page: FC<pageProps> = ({}) => {
     let arr = arr1.map((x, i) => ({ name: x.name, id: arr2[i] }));
     arr.sort((a, b) => a.name.localeCompare(b.name));
     arr = [{ name: 'None', id: '' }, ...arr];
-    console.log(arr);
+    
     setParties(arr);
     setChoosenParty(arr[0].id);
   }
   async function getPlaylistsArray() {
     const q = await getDocs(collection(db, 'playlists'));
     let arr1 = q.docs.map((doc) => doc.data());
-    console.log(arr1);
+     
     let arr2 = q.docs.map((doc) => doc.id);
     let arr = arr1.map((x, i) => ({
       name: x.name,
@@ -1330,7 +1251,7 @@ const page: FC<pageProps> = ({}) => {
     }));
     arr.sort((a, b) => a.name.localeCompare(b.name));
     arr = [{ name: 'New', id: '', listArray: [] }, ...arr];
-    console.log(arr);
+    
     setPlaylists(arr);
     setChoosenPlaylist(arr[0].id);
   }
@@ -1764,8 +1685,10 @@ const page: FC<pageProps> = ({}) => {
         <PlaylistManager
           playlist={playlist}
           songLength={songLength}
+          fadeTime={fadeTime}
+          delayLength={delayLength}
           currentSongIndex={currentSongIndex}
-          onUpdate={(newPlaylist) => setPlaylist(newPlaylist)}
+          onUpdate={(newPlaylist) =>{console.log(newPlaylist); setPlaylist([...newPlaylist])}}
           isVisible={isPlaylistOpen}
           onSongChange={handleSongChange}
           onAddSong={(song) => setPlaylist([...playlist, song])}
