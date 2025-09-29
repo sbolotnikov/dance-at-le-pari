@@ -75,14 +75,8 @@ const page: FC<pageProps> = ({}) => {
           /> */}
           <DraggableList
             initialItems={items.map((item) => item.name)} 
-            onListChange={(newItems: string[]) => {
-              setItems(
-                newItems.map((item, index) => ({
-                  id: index.toString(),
-                  name: item,
-                }))
-              );
-            }}
+            
+            
             containerClassName={'h-[660px]  w-full '}
             itemHeight={48}
             autoScrollSpeed={15}
