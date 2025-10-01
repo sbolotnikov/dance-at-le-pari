@@ -7,6 +7,7 @@ interface Invoice {
   studentName: string;
   date: string;
   total: number;
+  effectiveDate: string;
 }
 
 interface ViewInvoicesProps {
@@ -49,6 +50,7 @@ const ViewInvoices: FC<ViewInvoicesProps> = ({ onAlert, delInvoice }) => {
               id: invoice.id,
               studentName: invoice.customer?.name || 'N/A',
               date: new Date(invoice.createdAt).toLocaleDateString(),
+              effectiveDate: new Date(invoice.effectiveDate).toLocaleDateString(),
               total: totalAmount,
             };
           });
@@ -116,7 +118,10 @@ const ViewInvoices: FC<ViewInvoicesProps> = ({ onAlert, delInvoice }) => {
                   Student Name
                 </th>
                 <th className="py-2 px-4 border-b border-lightMainColor dark:border-darkMainColor text-lightMainColor dark:text-darkMainColor text-left">
-                  Date
+                  Date Created
+                </th>
+                <th className="py-2 px-4 border-b border-lightMainColor dark:border-darkMainColor text-lightMainColor dark:text-darkMainColor text-left">
+                  Effective Date
                 </th>
                 <th className="py-2 px-4 border-b border-lightMainColor dark:border-darkMainColor text-lightMainColor dark:text-darkMainColor text-left">
                   Total
@@ -137,6 +142,9 @@ const ViewInvoices: FC<ViewInvoicesProps> = ({ onAlert, delInvoice }) => {
                   </td>
                   <td className="py-2 px-4 border-b border-lightMainColor dark:border-darkMainColor text-lightMainColor dark:text-darkMainColor text-left">
                     {invoice.date}
+                  </td>
+                  <td className="py-2 px-4 border-b border-lightMainColor dark:border-darkMainColor text-lightMainColor dark:text-darkMainColor text-left">
+                    {invoice.effectiveDate}
                   </td>
                   <td className="py-2 px-4 border-b border-lightMainColor dark:border-darkMainColor text-lightMainColor dark:text-darkMainColor text-left">
                     ${(invoice.total || 0).toFixed(2)}

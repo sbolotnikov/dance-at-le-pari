@@ -23,11 +23,11 @@ const invoiceSchema = z.object({
         if (typeof arg == 'string' || arg instanceof Date) return new Date(arg);
       }, z.date()),
       paymentMethod: z
-              .string()
-              .refine(
-                (val) => ['Cash', 'Check', 'Zelle', 'Credit Card'].includes(val),
-                { message: 'Invalid payment method' }
-              ),
+        .string()
+        .refine(
+          (val) => ['Cash', 'Check', 'Zelle', 'Credit Card'].includes(val),
+          { message: 'Invalid payment method' }
+        ),
       amount: z.number().positive('Amount must be a positive number'),
       isPaid: z.boolean(),
     })
@@ -45,11 +45,11 @@ const invoiceSchema = z.object({
         .positive('Number of sessions must be a positive number'),
     })
   ),
-   effectiveDate: z.preprocess((arg) => {
-      if (typeof arg == 'string' || arg instanceof Date) return new Date(arg);
-    }, z.date()),
-    discount: z.number().min(0).max(100, 'Discount must be between 0 and 100'),
-    packageType: z.string(),
+  effectiveDate: z.preprocess((arg) => {
+    if (typeof arg == 'string' || arg instanceof Date) return new Date(arg);
+  }, z.date()),
+  discount: z.number().min(0).max(100, 'Discount must be between 0 and 100'),
+  packageType: z.string(),
 });
 
 const EditInvoicePage: FC = () => {
@@ -60,7 +60,7 @@ const EditInvoicePage: FC = () => {
   const methods = useForm({
     resolver: zodResolver(invoiceSchema),
   });
- useEffect(() => {
+  useEffect(() => {
     windowSize.width! > 768 && windowSize.height! > 768
       ? (document.getElementById('icon')!.style.display = 'block')
       : (document.getElementById('icon')!.style.display = 'none');
@@ -75,11 +75,12 @@ const EditInvoicePage: FC = () => {
           // Format dates for installment forms
           const formattedInvoiceData = {
             ...invoiceData,
-            effectiveDate: new Date(invoiceData.effectiveDate).toISOString().split('T')[0], // YYYY-MM-DD
+            effectiveDate: new Date(invoiceData.effectiveDate)
+              .toISOString()
+              .split('T')[0], // YYYY-MM-DD
             installments: invoiceData.installments.map((inst: any) => ({
               ...inst,
               date: new Date(inst.date).toISOString().split('T')[0], // YYYY-MM-DD
-              
             })),
           };
           methods.reset(formattedInvoiceData);
@@ -150,6 +151,12 @@ const EditInvoicePage: FC = () => {
                 >
                   View Invoices
                 </button>
+                <button
+                  className={`px-4 py-2 text-lg font-medium text-gray-500 dark:text-gray-400'}`}
+                  onClick={() => router.push('/admin/financial?tab=lessons')}
+                >
+                  Lessons Left
+                </button>
                 <div
                   className={`px-4 py-2 text-lg font-medium border-b-2 border-blue-500 text-blue-500`}
                 >
@@ -176,7 +183,7 @@ const EditInvoicePage: FC = () => {
                 <p>
                   Last Updated:{' '}
                   {new Date(invoiceDetails.updatedAt).toLocaleString()}
-                </p> 
+                </p>
               </div>
             )}
             {/* <div className="w-full text-center mb-4 flex justify-center space-x-4">
@@ -186,32 +193,36 @@ const EditInvoicePage: FC = () => {
               <div className="container mx-auto p-2">
                 <form onSubmit={methods.handleSubmit(onSubmit)}>
                   <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Package Type
-            </label>
-            <select
-              {...methods.register(`packageType`)}
-              className="border rounded p-1 w-full dark:bg-darkMainBG"
-            >
-              <option value="1package">1 package</option>
-              <option value="10package">10 packages</option>
-              <option value="25package">25 packages</option>
-              <option value="other">other</option>
-            </select>
-          </div>
-          <div className="flex-1">
-            <label className="block text-sm font-medium ">Effective Date</label>
-            <input
-              type="date"
-              {...methods.register(`effectiveDate`, { valueAsDate: true })}
-              className="border rounded p-1 w-full dark:bg-darkMainBG"
-            />
-            {/* {errors.effectiveDate && (
+                    <label className="block text-sm font-medium text-gray-700">
+                      Package Type
+                    </label>
+                    <select
+                      {...methods.register(`packageType`)}
+                      className="border rounded p-1 w-full dark:bg-darkMainBG"
+                    >
+                      <option value="1package">1 package</option>
+                      <option value="10package">10 packages</option>
+                      <option value="25package">25 packages</option>
+                      <option value="other">other</option>
+                    </select>
+                  </div>
+                  <div className="flex-1">
+                    <label className="block text-sm font-medium ">
+                      Effective Date
+                    </label>
+                    <input
+                      type="date"
+                      {...methods.register(`effectiveDate`, {
+                        valueAsDate: true,
+                      })}
+                      className="border rounded p-1 w-full dark:bg-darkMainBG"
+                    />
+                    {/* {errors.effectiveDate && (
               <p className="text-red-500 text-xs mt-1">
                 {errors.effectiveDate.message as string}
               </p>
             )} */}
-          </div>
+                  </div>
                   <SessionForm />
                   <InstallmentForm />
                   <div className="flex justify-end">
