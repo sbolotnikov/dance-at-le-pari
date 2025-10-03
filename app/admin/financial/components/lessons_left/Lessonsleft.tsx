@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { is } from 'zod/v4/locales';
 
 type Props = {};
 
@@ -18,6 +19,7 @@ interface Invoice {
 export const Lessonsleft = (props: Props) => {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [isLessonsCustomersLoaded, setIsLessonsCustomersLoaded] = useState(false);
   const [loading, setLoading] = useState(true);
   const [tableValues, setTableValues] = useState<
     {
@@ -31,7 +33,7 @@ export const Lessonsleft = (props: Props) => {
     }[]
   >([]);
   const [lessonsTaught, setLessonsTaught] = useState<
-    { id: number; date: string; length: number; studentid: string }[]
+    { id: number; date: string; length: number; studentid: string, teachersName: string }[]
   >([]);
   const lessonLength = 45; // in minutes
   useEffect(() => {
@@ -52,9 +54,8 @@ export const Lessonsleft = (props: Props) => {
               date: lesson.date,
               length: lesson.length / lessonLength,
               studentid: lesson.studentid[0].toString(),
+              teachersName:  lesson.teachersid[0]
             }));
-          // Process lessonsData as needed
-          console.log('Fetched lessons data:', lessonsArray);
           setLessonsTaught(lessonsArray);
         }
       } catch (error) {
@@ -108,12 +109,53 @@ export const Lessonsleft = (props: Props) => {
         console.error('Error fetching invoices:', error);
       }
     };
-    fetchInvoices().then(() => {
-      fetchLessons().then(() => {
-        setLoading(false);
+      const fetchCustomers = async () => {
+        try {
+          const response = await fetch('/api/admin/get_teachers', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          });
+          if (response.ok) {
+            const data = await response.json();
+            const customersData = data.map((item: any) => ({
+              _id: item.id,
+              name: item.name ? item.name : 'Unknown',
+              email: item.email
+            })).sort((a: Customer, b: Customer) => a.name.localeCompare(b.name));
+            setCustomers(customersData);
+          }
+        } catch (error) {
+          console.error('Error fetching customers:', error);
+        }
+      };
+    fetchCustomers().then(() => {
+      fetchInvoices().then(() => {
+        fetchLessons().then(() => {
+          setLoading(false);
+          
+        });
       });
     });
   }, []);
+      useEffect(() => {
+        if ((customers.length > 0)&&(lessonsTaught.length > 0)) setIsLessonsCustomersLoaded(true);
+    }, [customers, lessonsTaught]);
+    useEffect(() => {
+       let localLessonsTaught
+       if (isLessonsCustomersLoaded) {
+         localLessonsTaught = lessonsTaught.map(lesson => {
+           const customer = customers.find(cust => parseInt(cust._id.toString(), 10) === parseInt(lesson.teachersName, 10));
+           return {
+             ...lesson,
+             teachersName: customer?.name || 'Unknown',
+           };
+         });
+         console.log("Mapped Lessons Taught:", localLessonsTaught);
+         setLessonsTaught(localLessonsTaught);
+       }
+    },[isLessonsCustomersLoaded]);
   useEffect(() => {
     // This effect runs when lessonsTaught changes
     if (lessonsTaught.length === 0 || invoices.length === 0) return;
@@ -169,6 +211,7 @@ export const Lessonsleft = (props: Props) => {
         lessonsLeft: student.totalLessons - lessonsDone
       });
     });
+
     setTableValues(tableValuesLocal);
   }, [lessonsTaught, invoices]);
   return (

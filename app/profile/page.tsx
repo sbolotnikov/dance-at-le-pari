@@ -245,7 +245,7 @@ const page: FC<pageProps> = () => {
         >
           <div
             id="containedDiv"
-            className={`absolute top-0 left-0 flex flex-col w-full p-1 justify-center items-center `}
+            className={`absolute top-0 left-0 flex flex-col w-full p-1 justify-center items-center mb-32`}
           >
             <h2
               className="text-center w-[80%] font-semibold md:text-4xl uppercase relative"
