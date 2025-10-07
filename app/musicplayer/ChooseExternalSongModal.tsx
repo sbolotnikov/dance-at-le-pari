@@ -66,6 +66,8 @@ const ChooseExternalSongModal: React.FC<Props> = ({
   const [collectionName, setCollectionName] = useState('');
   const [dance, setDance] = useState<string | null>(null);
   const [rate, setRate] = useState(1); 
+  const [searchPar, setSearchPar] = useState('');
+  const [songsFiltered, setSongsFiltered] = useState<Song[]>(songs);
   const songsCollection = collection(db, 'songs');
   // useEffect(() => {
   //   const fetchSongs = async () => {
@@ -80,6 +82,19 @@ const ChooseExternalSongModal: React.FC<Props> = ({
   //   };
   //   fetchSongs();
   // }, []); 
+    useEffect(() => {
+    if (searchPar === '' || searchPar.trim() === '') {
+      setSongsFiltered([...displaySngs]);
+      return;
+    }
+    if (displaySngs.length === 0) return;
+    let searchRes = displaySngs.filter(
+      (song) =>
+        song.name!.toLowerCase().includes(searchPar.toLowerCase()) ||
+        song.dance!.toLowerCase().includes(searchPar.toLowerCase()) 
+    );
+    setSongsFiltered([...searchRes]);
+  }, [searchPar, displaySngs]);
   useEffect(() => {
     if (role !== 'Admin') {
       setDisplaySngs(songs.filter((item) => item.collectionName === 'Default'));
@@ -204,8 +219,23 @@ const ChooseExternalSongModal: React.FC<Props> = ({
                 id="containedDiv"
                 className={`absolute top-0 left-0 flex flex-col w-full p-1 justify-center items-center`}
               >
-                <h2 className="text-xl font-bold mb-4">Available songs</h2>
-
+                <h2 className="text-xl font-bold">Available songs</h2>
+                <div className="flex flex-col justify-center items-center  w-1/2 md:w-1/4">
+                  {/* <div className=" w-full flex justify-end items-center"> */}
+                  <input
+                    type="text"
+                    id="inputField"
+                    className="w-full rounded-md   dark:bg-lightMainColor "
+                    onChange={(e) => {
+                      e.preventDefault();
+                      setSearchPar(e.target.value);
+                    }}
+                  />
+                  {/* </div> */}
+                  <p className=" tracking-widest mt-1  rounded-md text-center text-lightMainColor dark:text-darkMainColor text-[6px] md:text-base dark:bg-darkMainBG   ">
+                    Search (records: {songsFiltered.length})
+                  </p>
+                </div>
                 {role === 'Admin' && (
                     <select
                       className="w-full p-2 border border-gray-300 rounded mb-2"
@@ -232,7 +262,7 @@ const ChooseExternalSongModal: React.FC<Props> = ({
 
                 <div className="w-full h-64 md:h-[28.5rem] border border-black p-1 rounded-md overflow-x-auto mb-4">
                   <div className="flex flex-col flex-wrap items-center justify-start">
-                    {displaySngs
+                    {songsFiltered
                       .sort((a, b) =>
                         a.name > b.name ? 1 : b.name > a.name ? -1 : 0
                       )
