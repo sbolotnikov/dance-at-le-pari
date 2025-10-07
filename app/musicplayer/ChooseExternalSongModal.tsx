@@ -104,7 +104,7 @@ const ChooseExternalSongModal: React.FC<Props> = ({
   const handleDeleteSong = async (index: number) => {
     onLoad(true);
     const newSongs = [...displaySngs];
-    await deleteDoc(doc(db, 'songs', displaySngs[index].id!));
+    await deleteDoc(doc(db, 'songs', songsFiltered[index].id!));
     newSongs.splice(index, 1);
     setDisplaySngs(newSongs);
     onLoad(false);
@@ -311,14 +311,14 @@ const ChooseExternalSongModal: React.FC<Props> = ({
                           {role == 'Admin' && (
                             <button
                               onClick={() => {
-                                console.log(displaySngs[i]);
+                                console.log(item);
                                 const songLinkElement = document.getElementById(
                                   'songLink'
                                 ) as HTMLInputElement | null;
                                 if (songLinkElement) {
                                   songLinkElement.value =
                                     'https://drive.google.com/file/d/' +
-                                    displaySngs[i].url +
+                                    item.url +
                                     '/view?usp=sharing';
                                 }
                                 const danceSelectElement =
@@ -326,18 +326,17 @@ const ChooseExternalSongModal: React.FC<Props> = ({
                                     'danceSelect'
                                   ) as HTMLSelectElement | null;
                                 if (danceSelectElement) {
-                                  danceSelectElement.value = displaySngs[i]
-                                    .dance
-                                    ? displaySngs[i].dance
+                                  danceSelectElement.value = item.dance
+                                    ? item.dance
                                     : '';
                                 }
-                                setSongName(displaySngs[i].name);
-                                setDance(displaySngs[i].dance);
-                                setLink1(displaySngs[i].url);
-                                setCollectionName(displaySngs[i].collectionName);
+                                setSongName(item.name);
+                                setDance(item.dance);
+                                setLink1(item.url);
+                                setCollectionName(item.collectionName);
                                 setRate(
-                                  displaySngs[i].rate !== undefined
-                                    ? displaySngs[i].rate
+                                  item.rate !== undefined
+                                    ? item.rate
                                     : 1
                                 );
                               }}
