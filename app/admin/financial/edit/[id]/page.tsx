@@ -157,6 +157,12 @@ const EditInvoicePage: FC = () => {
                 >
                   Lessons Left
                 </button>
+                <button
+                  className={`px-4 py-2 text-lg font-medium text-gray-500 dark:text-gray-400'}`}
+                  onClick={() => router.push('/admin/financial?tab=payments')}
+                >
+                  Payments Due
+                </button>
                 <div
                   className={`px-4 py-2 text-lg font-medium border-b-2 border-blue-500 text-blue-500`}
                 >

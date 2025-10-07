@@ -4,6 +4,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import CreateInvoice from './create_invoice/CreateInvoice';
 import ViewInvoices from './view_invoices/ViewInvoices';
 import {Lessonsleft} from './lessons_left/Lessonsleft';
+import { PaymentsDue } from './payments_due/PaymentsDue';
 
 interface FinancialTabsProps {
   onAlert: (invoiceNum: string) => void;
@@ -41,14 +42,18 @@ const FinancialTabs: FC<FinancialTabsProps> = ({ delInvoice,onAlert}) => {
         >
           Lessons Left
         </button>
+        <button
+          className={`px-4 py-2 text-lg font-medium ${activeTab === 'payments' ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-500 dark:text-gray-400'}`}
+          onClick={() => handleTabClick('payments')}
+        >
+          Payments Due
+        </button>
       </div>
       <div className="p-4">
         {activeTab === 'create' && <CreateInvoice />}
         {activeTab === 'lessons' && <Lessonsleft />}
-        {activeTab === 'view' && <ViewInvoices delInvoice={delInvoice} onAlert={(invoiceNum)=>{
-                        onAlert(invoiceNum);
-                       
-        }}/>}
+        {activeTab === 'payments' && <PaymentsDue onAlert={(invoiceNum)=>{ onAlert(invoiceNum); }}/>}
+        {activeTab === 'view' && <ViewInvoices delInvoice={delInvoice} onAlert={(invoiceNum)=>{ onAlert(invoiceNum); }}/>}
       </div>
     </div>
   );
