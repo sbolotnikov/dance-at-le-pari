@@ -1107,7 +1107,7 @@ const page: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [autoPlayIndex, setAutoPlayIndex] = useState(0);
   const [progress, setProgress] = useState<number>(0);
-  const audioContext = new AudioContext();
+  
 
   const loadAudioBufferFromUrl = async (
     url: string,
@@ -1811,6 +1811,7 @@ const page: React.FC = () => {
                           alert('Playlist is empty');
                           return;
                         } else {
+                          const audioContext = new AudioContext();
                           const result: AudioFileWithSettings[] =
                             await Promise.all(
                               playlist.map(async (item, index) => {
