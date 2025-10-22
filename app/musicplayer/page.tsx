@@ -308,7 +308,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     <AnimateModalLayout
       visibility={isOpen}
       onReturn={() => {
-        onClose();
+        sleep(1200).then(() => onClose());
       }}
     >
       <div className="blurFilter border-0 rounded-md p-2 shadow-2xl w-[90%] max-w-[450px] max-h-[85%] overflow-y-auto md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70">
@@ -984,52 +984,13 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
   onReturn,
 }) => {
   const [dragging, setDragging] = useState(false);
-  const [itemsList, setItemsList] = useState([] as string[]); 
-  const [progress, setProgress] = useState<number>(0);
-
-  const audioContext = new AudioContext();
-
-  const [filesWithSettings, setFilesWithSettings] = useState<
-    AudioFileWithSettings[]
-  >([]);
-
-  const loadAudioBufferFromUrl = async (
-    url: string,
-    audioContext: AudioContext
-  ): Promise<AudioBuffer> => {
-    const response = await fetch(url);
-    const arrayBuffer = await response.arrayBuffer();
-    return await audioContext.decodeAudioData(arrayBuffer);
-  };
-
-  useEffect(() => { 
-    
-    let isMounted = true;
-    async function fetchFilesWithSettings() {
-      const result: AudioFileWithSettings[] = await Promise.all(
-        playlist.map(async (item, index) => {
-          const buffer = await loadAudioBufferFromUrl(item.url, audioContext);
-          return {
-            id: `track-${index}`,
-            name: `Track ${index + 1}`,
-            duration: buffer.duration,
-            audioBuffer: buffer,
-            speed: item.rate !== null ? item.rate : 1,
-          };
-        })
-      );
-      console.log('set files' + result);
-      if (isMounted) setFilesWithSettings(result);
-    }
+  const [itemsList, setItemsList] = useState([] as string[]);
+  useEffect(() => {
     if (playlist.length > 0) {
-      setItemsList(playlist.map((item, index) => item.name || `Track ${index + 1}`));
-      setFilesWithSettings([]);
-      setProgress(0);
-      fetchFilesWithSettings();
+      setItemsList(
+        playlist.map((item, index) => item.name || `Track ${index + 1}`)
+      );
     }
-    return () => {
-      isMounted = false;
-    };
   }, [playlist]);
 
   return (
@@ -1071,64 +1032,28 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
               />
               {'Save Playlist'}
             </div>
-            {(filesWithSettings.length === playlist.length)&&<div className=" flex flex-col items-center justify-center m-1.5" >
-              <PlayerButtons
-                icon={'Save'}
-                color="#504deb"
-                color2="#FFFFFF"
-                size={50}
-                onButtonPress={async () => {
-                  if (playlist.length === 0) {
-                    alert('Playlist is empty');
-                    return;
-                  } else {
-                    processAndStitchAudio(
-                      filesWithSettings,
-                      songLength/1000,
-                      fadeTime/1000,
-                      delayLength/1000,
-                      (progress) => {
-                        setProgress(progress);
-                        // console.log(`Progress: ${progress.toFixed(2)}%`);
-                      }
-                    ).then((downloadUrl) => {
-                      setProgress(0);
-                      const a = document.createElement('a');
-                      a.href = downloadUrl;
-                      a.download = 'stitched_playlist.mp3';
-                      document.body.appendChild(a);
-                      a.click();
-                      document.body.removeChild(a);
-                    });
-                  }
-                }}
-              />
-              {'Save as MP3s'}
-            </div>}
           </div>
 
           <DraggableList
             initialItems={itemsList}
-            onItemMove={ (dragIndex, hoverIndex) => {
-                    // setItemsList(prev => {
-                    //   const newItems = [...prev];
-                    //   const draggedItem = newItems[dragIndex];
-                      
-                    //   // Remove the dragged item
-                    //   newItems.splice(dragIndex, 1);
-                    //   // Insert at the new position
-                    //   newItems.splice(hoverIndex, 0, draggedItem);
-                      
-                    //   return newItems;
-                    // });
-                    const newPlaylist = [...playlist];
-                    const itemToMove = newPlaylist[dragIndex];
-                    newPlaylist.splice(dragIndex, 1);
-                    newPlaylist.splice(hoverIndex, 0, itemToMove);
-                    onUpdate(newPlaylist);
-              }
-            }
-             
+            onItemMove={(dragIndex, hoverIndex) => {
+              // setItemsList(prev => {
+              //   const newItems = [...prev];
+              //   const draggedItem = newItems[dragIndex];
+
+              //   // Remove the dragged item
+              //   newItems.splice(dragIndex, 1);
+              //   // Insert at the new position
+              //   newItems.splice(hoverIndex, 0, draggedItem);
+
+              //   return newItems;
+              // });
+              const newPlaylist = [...playlist];
+              const itemToMove = newPlaylist[dragIndex];
+              newPlaylist.splice(dragIndex, 1);
+              newPlaylist.splice(hoverIndex, 0, itemToMove);
+              onUpdate(newPlaylist);
+            }}
             onDeleteItem={(index: number) => {
               // const newPlaylist = [...playlist];
               // newPlaylist.splice(index, 1);
@@ -1144,27 +1069,11 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
             itemHeight={56}
             autoScrollSpeed={15}
           />
-          {progress>0 &&<div className="mt-6 max-w-md mx-auto">
-            <div className="w-full bg-gray-700 rounded-full h-4 relative overflow-hidden">
-              <div
-                className="bg-gradient-to-r from-purple-500 to-pink-500 h-4 rounded-full transition-all duration-300 ease-linear"
-                style={{ width: `${progress}%` }}
-              ></div>
-              <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">
-                {Math.round(progress)}%
-              </span>
-            </div>
-            <p className="text-center text-sm text-gray-400 mt-2">
-              Encoding your masterpiece...
-            </p>
-          </div>}
-
         </div>
       </div>
     </AnimateModalLayout>
   );
 };
- 
 
 const page: React.FC = () => {
   const [musicFile, setMusicFile] = useState({ url: '', name: '' });
@@ -1197,6 +1106,18 @@ const page: React.FC = () => {
   const [autoPlayDances, setAutoPlayDances] = useState<string[]>(['Waltz']);
   const [loading, setLoading] = useState(false);
   const [autoPlayIndex, setAutoPlayIndex] = useState(0);
+  const [progress, setProgress] = useState<number>(0);
+  const audioContext = new AudioContext();
+
+  const loadAudioBufferFromUrl = async (
+    url: string,
+    audioContext: AudioContext
+  ): Promise<AudioBuffer> => {
+    const response = await fetch(url);
+    const arrayBuffer = await response.arrayBuffer();
+    return await audioContext.decodeAudioData(arrayBuffer);
+  };
+ 
   const [webSongs, setWebSongs] = useState<
     {
       url: string;
@@ -1235,14 +1156,14 @@ const page: React.FC = () => {
     let arr = arr1.map((x, i) => ({ name: x.name, id: arr2[i] }));
     arr.sort((a, b) => a.name.localeCompare(b.name));
     arr = [{ name: 'None', id: '' }, ...arr];
-    
+
     setParties(arr);
     setChoosenParty(arr[0].id);
   }
   async function getPlaylistsArray() {
     const q = await getDocs(collection(db, 'playlists'));
     let arr1 = q.docs.map((doc) => doc.data());
-     
+
     let arr2 = q.docs.map((doc) => doc.id);
     let arr = arr1.map((x, i) => ({
       name: x.name,
@@ -1251,7 +1172,7 @@ const page: React.FC = () => {
     }));
     arr.sort((a, b) => a.name.localeCompare(b.name));
     arr = [{ name: 'New', id: '', listArray: [] }, ...arr];
-    
+
     setPlaylists(arr);
     setChoosenPlaylist(arr[0].id);
   }
@@ -1630,7 +1551,7 @@ const page: React.FC = () => {
           choosenPlaylist={
             playlists.filter((playlist) => playlist.id == choosenPlaylist)[0]
           }
-          onClose={() => setIsChoosePlaylistsModal(false)}
+          onClose={() => sleep(1200).then(() => setIsChoosePlaylistsModal(false))}
           onLoad={(a) => setLoading(a)}
         />
       )}
@@ -1678,7 +1599,7 @@ const page: React.FC = () => {
               setCurrentSongIndex(0);
             }
           }}
-          onClose={() => setIsAddToDBOpen(false)}
+          onClose={() => sleep(1200).then(() => setIsAddToDBOpen(false))}
         />
       )}
       {isPlaylistOpen && (
@@ -1688,12 +1609,15 @@ const page: React.FC = () => {
           fadeTime={fadeTime}
           delayLength={delayLength}
           currentSongIndex={currentSongIndex}
-          onUpdate={(newPlaylist) =>{console.log(newPlaylist); setPlaylist([...newPlaylist])}}
+          onUpdate={(newPlaylist) => {
+            console.log(newPlaylist);
+            setPlaylist([...newPlaylist]);
+          }}
           isVisible={isPlaylistOpen}
           onSongChange={handleSongChange}
           onAddSong={(song) => setPlaylist([...playlist, song])}
           onRemoveSong={handleRemoveSong}
-          onReturn={() => setIsPlaylistOpen(false)}
+          onReturn={() => sleep(1200).then(() => setIsPlaylistOpen(false))}
         />
       )}
       {loading && <LoadingScreen />}
@@ -1876,6 +1800,57 @@ const page: React.FC = () => {
                   />
                   <span className="text-center">Make Playlist</span>
                 </div>
+                  <div className=" flex flex-col items-center justify-center m-1.5">
+                    <PlayerButtons
+                      icon={'Save'}
+                      color="#504deb"
+                      color2="#FFFFFF"
+                      size={50}
+                      onButtonPress={async () => {
+                        if (playlist.length === 0) {
+                          alert('Playlist is empty');
+                          return;
+                        } else {
+                          const result: AudioFileWithSettings[] =
+                            await Promise.all(
+                              playlist.map(async (item, index) => {
+                                const buffer = await loadAudioBufferFromUrl(
+                                  item.url,
+                                  audioContext
+                                );
+                                return {
+                                  id: `track-${index}`,
+                                  name: `Track ${index + 1}`,
+                                  duration: buffer.duration,
+                                  audioBuffer: buffer,
+                                  speed: item.rate !== null ? item.rate : 1,
+                                };
+                              })
+                            );
+
+                          processAndStitchAudio(
+                            result,
+                            songLength / 1000,
+                            fadeTime / 1000,
+                            delayLength / 1000,
+                            (progress) => {
+                              setProgress(progress);
+                              // console.log(`Progress: ${progress.toFixed(2)}%`);
+                            }
+                          ).then((downloadUrl) => {
+                            setProgress(0);
+                            const a = document.createElement('a');
+                            a.href = downloadUrl;
+                            a.download = 'stitched_playlist.mp3';
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                          });
+                        }
+                      }}
+                    />
+                    {'Save as MP3s'}
+                  </div>
                 <div className="flex flex-col items-center justify-center mx-2">
                   <PlayerButtons
                     icon={'DigitalDJ'}
@@ -1994,6 +1969,22 @@ const page: React.FC = () => {
                 </button>
               </div>
               // )}
+            )}
+            {progress > 0 && (
+              <div className="mt-6 max-w-md mx-auto">
+                <div className="w-full bg-gray-700 rounded-full h-4 relative overflow-hidden">
+                  <div
+                    className="bg-gradient-to-r from-purple-500 to-pink-500 h-4 rounded-full transition-all duration-300 ease-linear"
+                    style={{ width: `${progress}%` }}
+                  ></div>
+                  <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">
+                    {Math.round(progress)}%
+                  </span>
+                </div>
+                <p className="text-center text-sm text-gray-400 mt-2">
+                  Encoding your masterpiece...
+                </p>
+              </div>
             )}
           </div>
         </div>

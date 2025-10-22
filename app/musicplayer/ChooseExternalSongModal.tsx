@@ -172,239 +172,238 @@ const ChooseExternalSongModal: React.FC<Props> = ({
     );
   };
 
-  if (!vis) return null;
+if (!vis) return null;
 
-  return (
-    <AnimatePresence>
-      {isVisible && (
-        <motion.div
-          initial={{ opacity: 0, x: -600 }}
-          transition={{
-            ease: 'easeOut',
-            duration: 1,
-            times: [0, 0.2, 0.5, 0.8, 1],
-          }}
-          animate={{
-            opacity: [0, 1, 1, 1, 1],
-            rotateX: ['90deg', '89deg', '89deg', '0deg', '0deg'],
-            x: ['-100vw', '0vw', '0vw', '0vw', '0vw'],
-          }}
-          exit={{
-            opacity: [1, 1, 1, 1, 0],
-            rotateX: ['0deg', '0deg', '89deg', '89deg', '90deg'],
-            x: ['0vw', '0vw', '0vw', '0vw', '-100vw'],
-          }}
-          className="blurFilter animatePageMainDiv w-[100vw] h-[100svh] absolute flex flex-col justify-center items-center bg-slate-500/70 left-0 z-[1001]"
+return  (
+  <AnimatePresence>
+    <motion.div
+      initial={{ opacity: 0, x: -600 }}
+      transition={{
+        ease: 'easeOut',
+        duration: 1,
+        times: [0, 0.2, 0.5, 0.8, 1],
+      }}
+      animate={{
+        opacity: [0, 1, 1, 1, 1],
+        rotateX: ['90deg', '89deg', '89deg', '0deg', '0deg'],
+        x: ['-100vw', '0vw', '0vw', '0vw', '0vw'],
+      }}
+      exit={{
+        opacity: [1, 1, 1, 1, 0],
+        rotateX: ['0deg', '0deg', '89deg', '89deg', '90deg'],
+        x: ['0vw', '0vw', '0vw', '0vw', '-100vw'],
+      }}
+      className="blurFilter animatePageMainDiv w-[100vw] h-[100svh] absolute flex flex-col justify-center items-center bg-slate-500/70 left-0 z-[1001]"
+    >
+      <div
+        className={`blurFilter border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-[1170px]  flex justify-center items-center flex-col   md:w-[80svw] bg-lightMainBG dark:bg-darkMainBG h-[73svh] md:h-[85svh]
+      }`}
+      >
+        <div
+          id="wrapperDiv"
+          className="w-full h-full relative  p-1  overflow-y-auto border border-lightMainColor dark:border-darkMainColor rounded-md flex flex-col justify-center items-center"
         >
-          <div
-            className={`blurFilter border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-[1170px]  flex justify-center items-center flex-col   md:w-[80svw] bg-lightMainBG dark:bg-darkMainBG h-[73svh] md:h-[85svh]
-        }`}
+          <button
+            className={` flex flex-col justify-center items-center origin-center cursor-pointer z-10 hover:scale-125 absolute top-3 right-3`}
+            onClick={() => {
+              setIsVisible(false);
+              sleep(1200).then(() => onClose());
+            }}
           >
-            <div
-              id="wrapperDiv"
-              className="w-full h-full relative  p-1  overflow-y-auto border border-lightMainColor dark:border-darkMainColor rounded-md flex flex-col justify-center items-center"
-            >
-              <button
-                className={` flex flex-col justify-center items-center origin-center cursor-pointer z-10 hover:scale-125 absolute top-3 right-3`}
-                onClick={() => {
-                  setIsVisible(false);
-                  sleep(1200).then(() => onClose());
+            <div className=" h-8 w-8  fill-lightMainColor stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor">
+              <ShowIcon icon={'Close'} stroke={'2'} />
+            </div>
+          </button>
+          <div
+            id="containedDiv"
+            className={`absolute top-0 left-0 flex flex-col w-full p-1 justify-center items-center`}
+          >
+            <h2 className="text-xl font-bold">Available songs</h2>
+            <div className="flex flex-col justify-center items-center  w-1/2 md:w-1/4">
+              {/* <div className=" w-full flex justify-end items-center"> */}
+              <input
+                type="text"
+                id="inputField"
+                className="w-full rounded-md   dark:bg-lightMainColor "
+                onChange={(e) => {
+                  e.preventDefault();
+                  setSearchPar(e.target.value);
+                }}
+              />
+              {/* </div> */}
+              <p className=" tracking-widest mt-1  rounded-md text-center text-lightMainColor dark:text-darkMainColor text-[6px] md:text-base dark:bg-darkMainBG   ">
+                Search (records: {songsFiltered.length})
+              </p>
+            </div>
+            {role === 'Admin' && (
+              <select
+                className="w-full p-2 border border-gray-300 rounded mb-2"
+                multiple
+                id="collectionSelect"
+                onChange={(e) => {
+                  e.preventDefault();
+                  const selectElement = document.getElementById(
+                    'collectionSelect'
+                  ) as HTMLSelectElement;
+                  const selectedValues = Array.from(
+                    selectElement.selectedOptions
+                  ).map((option) => option.value);
+                  console.log(selectedValues);
+                  setDisplaySngs(
+                    songs.filter((item) =>
+                      selectedValues.includes(item.collectionName)
+                    )
+                  );
                 }}
               >
-                <div className=" h-8 w-8  fill-lightMainColor stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor">
-                  <ShowIcon icon={'Close'} stroke={'2'} />
-                </div>
-              </button>
-              <div
-                id="containedDiv"
-                className={`absolute top-0 left-0 flex flex-col w-full p-1 justify-center items-center`}
-              >
-                <h2 className="text-xl font-bold">Available songs</h2>
-                <div className="flex flex-col justify-center items-center  w-1/2 md:w-1/4">
-                  {/* <div className=" w-full flex justify-end items-center"> */}
-                  <input
-                    type="text"
-                    id="inputField"
-                    className="w-full rounded-md   dark:bg-lightMainColor "
-                    onChange={(e) => {
-                      e.preventDefault();
-                      setSearchPar(e.target.value);
-                    }}
-                  />
-                  {/* </div> */}
-                  <p className=" tracking-widest mt-1  rounded-md text-center text-lightMainColor dark:text-darkMainColor text-[6px] md:text-base dark:bg-darkMainBG   ">
-                    Search (records: {songsFiltered.length})
-                  </p>
-                </div>
-                {role === 'Admin' && (
-                    <select
-                      className="w-full p-2 border border-gray-300 rounded mb-2"
-                      multiple
-                      id="collectionSelect"
-                      onChange={(e) =>{
-                         e.preventDefault();
-                         const selectElement = document.getElementById("collectionSelect") as HTMLSelectElement;
-                         const selectedValues = Array.from(selectElement.selectedOptions).map(option => option.value);
-                         console.log(selectedValues); 
-                         setDisplaySngs(songs.filter((item)=>selectedValues.includes(item.collectionName)));
+                {collectionsArray &&
+                  collectionsArray.map((item, index) => {
+                    return (
+                      <option key={'opt' + index} value={item}>
+                        {item}
+                      </option>
+                    );
+                  })}
+              </select>
+            )}
+
+            <div className="w-full h-64 md:h-[28.5rem] border border-black p-1 rounded-md overflow-x-auto mb-4">
+              <div className="flex flex-col flex-wrap items-center justify-start">
+                {songsFiltered
+                  .sort((a, b) =>
+                    a.name > b.name ? 1 : b.name > a.name ? -1 : 0
+                  )
+                  .map((item, i) => (
+                    <div
+                      key={`songsavailable${i}`}
+                      className="relative m-1 w-full flex justify-start items-center"
+                    >
+                      <div
+                        onClick={(e) => {
+                          e.preventDefault();
+                          fetch(`/api/music2play?file_id=${item.url}`).then(
+                            (response) =>
+                              response.json().then((data) => {
+                                console.log(data);
+                                onPlay({
+                                  name: item.name,
+                                  url: data.fileUrl,
+                                  dance: item.dance,
+                                  id: item.id,
+                                  rate: item.rate,
+                                });
+                                setSongLink(data.fileUrl);
+                              })
+                          );
                         }}
-                    >
-                      {collectionsArray &&
-                        collectionsArray.map((item, index) => {
-                            return (
-                              <option key={'opt' + index} value={item}>
-                                {item}
-                              </option>
-                            );
-                          })}
-                    </select>
-                  )}
-
-                <div className="w-full h-64 md:h-[28.5rem] border border-black p-1 rounded-md overflow-x-auto mb-4">
-                  <div className="flex flex-col flex-wrap items-center justify-start">
-                    {songsFiltered
-                      .sort((a, b) =>
-                        a.name > b.name ? 1 : b.name > a.name ? -1 : 0
-                      )
-                      .map((item, i) => (
-                        <div
-                          key={`songsavailable${i}`}
-                          className="relative m-1 w-full flex justify-start items-center"
+                      >
+                        <PlayerButtons
+                          icon={'File'}
+                          color="#504deb"
+                          color2="#FFFFFF"
+                          size={50}
+                          onButtonPress={() => {
+                            console.log('Choosen song', item);
+                          }}
+                        />
+                      </div>
+                      {role == 'Admin' && (
+                        <button
+                          onClick={() => handleDeleteSong(i)}
+                          className="absolute top-0 right-0 fill-alertcolor  stroke-alertcolor  rounded-md border-alertcolor  w-8 h-8"
                         >
-                          <div
-                            onClick={(e) => {
-                              e.preventDefault();
-                              fetch(`/api/music2play?file_id=${item.url}`).then(
-                                (response) =>
-                                  response.json().then((data) => {
-                                    console.log(data);
-                                    onPlay({
-                                      name: item.name,
-                                      url: data.fileUrl,
-                                      dance: item.dance,
-                                      id: item.id,
-                                      rate: item.rate,
-                                    });
-                                    setSongLink(data.fileUrl);
-                                  })
-                              );
-                            }}
-                          >
-                            <PlayerButtons
-                              icon={'File'}
-                              color="#504deb"
-                              color2="#FFFFFF"
-                              size={50}
-                              onButtonPress={() => {
-                                console.log('Choosen song', item);
-                              }}
-                            />
-                          </div>
-                          {role == 'Admin' && (
-                            <button
-                              onClick={() => handleDeleteSong(i)}
-                              className="absolute top-0 right-0 fill-alertcolor  stroke-alertcolor  rounded-md border-alertcolor  w-8 h-8"
-                            >
-                              <ShowIcon icon={'Close'} stroke={'2'} />
-                            </button>
-                          )}
-                          {role == 'Admin' && (
-                            <button
-                              onClick={() => {
-                                console.log(item);
-                                const songLinkElement = document.getElementById(
-                                  'songLink'
-                                ) as HTMLInputElement | null;
-                                if (songLinkElement) {
-                                  songLinkElement.value =
-                                    'https://drive.google.com/file/d/' +
-                                    item.url +
-                                    '/view?usp=sharing';
-                                }
-                                const danceSelectElement =
-                                  document.getElementById(
-                                    'danceSelect'
-                                  ) as HTMLSelectElement | null;
-                                if (danceSelectElement) {
-                                  danceSelectElement.value = item.dance
-                                    ? item.dance
-                                    : '';
-                                }
-                                setSongName(item.name);
-                                setDance(item.dance);
-                                setLink1(item.url);
-                                setCollectionName(item.collectionName);
-                                setRate(
-                                  item.rate !== undefined
-                                    ? item.rate
-                                    : 1
-                                );
-                              }}
-                              className="absolute top-0 right-9 fill-editcolor  stroke-editcolor  rounded-md border-editcolor  w-8 h-8"
-                            >
-                              <ShowIcon icon={'Edit'} stroke={'0.5'} />
-                            </button>
-                          )}
-                          <p className="mt-1 text-center truncate">
-                            {item.name}
-                          </p>
-                        </div>
-                      ))}
-                  </div>
-                </div>
+                          <ShowIcon icon={'Close'} stroke={'2'} />
+                        </button>
+                      )}
+                      {role == 'Admin' && (
+                        <button
+                          onClick={() => {
+                            console.log(item);
+                            const songLinkElement = document.getElementById(
+                              'songLink'
+                            ) as HTMLInputElement | null;
+                            if (songLinkElement) {
+                              songLinkElement.value =
+                                'https://drive.google.com/file/d/' +
+                                item.url +
+                                '/view?usp=sharing';
+                            }
+                            const danceSelectElement = document.getElementById(
+                              'danceSelect'
+                            ) as HTMLSelectElement | null;
+                            if (danceSelectElement) {
+                              danceSelectElement.value = item.dance
+                                ? item.dance
+                                : '';
+                            }
+                            setSongName(item.name);
+                            setDance(item.dance);
+                            setLink1(item.url);
+                            setCollectionName(item.collectionName);
+                            setRate(item.rate !== undefined ? item.rate : 1);
+                          }}
+                          className="absolute top-0 right-9 fill-editcolor  stroke-editcolor  rounded-md border-editcolor  w-8 h-8"
+                        >
+                          <ShowIcon icon={'Edit'} stroke={'0.5'} />
+                        </button>
+                      )}
+                      <p className="mt-1 text-center truncate">{item.name}</p>
+                    </div>
+                  ))}
+              </div>
+            </div>
 
-                {role==='Admin' &&<div className="w-full flex flex-col items-center mb-4">
- 
+            {role === 'Admin' && (
+              <div className="w-full flex flex-col items-center mb-4">
+                <input
+                  type="text"
+                  placeholder="Enter song link"
+                  id="songLink"
+                  onChange={(e) => {
+                    e.preventDefault();
+                    setLink1(
+                      e.target.value.split('/file/d/')[1]?.split('/')[0]
+                    );
+                    handleSongLinkChange(e.target.value);
+                  }}
+                  className="w-full p-2 border border-gray-300 rounded mb-2"
+                />
 
-                  <input
-                    type="text"
-                    placeholder="Enter song link"
-                    id="songLink"
-                    onChange={(e) => {
-                      e.preventDefault();
-                      setLink1(
-                        e.target.value.split('/file/d/')[1]?.split('/')[0]
-                      );
-                      handleSongLinkChange(e.target.value);
-                    }}
+                <input
+                  type="text"
+                  placeholder="Enter song name"
+                  value={songName}
+                  onChange={(e) => setSongName(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded mb-2"
+                />
+                <input
+                  type="text"
+                  placeholder="Enter collection name"
+                  value={collectionName}
+                  onChange={(e) => setCollectionName(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded mb-2"
+                />
+                {dance !== undefined && (
+                  <select
                     className="w-full p-2 border border-gray-300 rounded mb-2"
-                  />
+                    id="danceSelect"
+                    onChange={(e) => setDance(e.target.value)}
+                  >
+                    {savedDances &&
+                      savedDances
+                        .sort((a, b) => a.localeCompare(b))
+                        .map((item, index) => {
+                          return (
+                            <option key={'opt' + index} value={item}>
+                              {item}
+                            </option>
+                          );
+                        })}
+                  </select>
+                )}
 
-                  <input
-                    type="text"
-                    placeholder="Enter song name"
-                    value={songName}
-                    onChange={(e) => setSongName(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded mb-2"
-                  />
-                 <input
-                    type="text"
-                    placeholder="Enter collection name"
-                    value={collectionName}
-                    onChange={(e) => setCollectionName(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded mb-2"
-                  />
-                  {dance !== undefined && (
-                    <select
-                      className="w-full p-2 border border-gray-300 rounded mb-2"
-                      id="danceSelect"
-                      onChange={(e) => setDance(e.target.value)}
-                    >
-                      {savedDances &&
-                        savedDances
-                          .sort((a, b) => a.localeCompare(b))
-                          .map((item, index) => {
-                            return (
-                              <option key={'opt' + index} value={item}>
-                                {item}
-                              </option>
-                            );
-                          })}
-                    </select>
-                  )}
-                  
-                  <div className='w-full flex flex-row justify-between items-center'>
-                  <div className='m-2'>
+                <div className="w-full flex flex-row justify-between items-center">
+                  <div className="m-2">
                     <label className="block mb-2">Playback Speed</label>
                     <Slider
                       min={0.5}
@@ -425,42 +424,44 @@ const ChooseExternalSongModal: React.FC<Props> = ({
                         setRate(e.target.valueAsNumber);
                       }}
                     />
-                    
                   </div>
                   <button
-                  onClick={() =>
-                    handleSongAdd({
-                      name: songName,
-                      url: link1,
-                      dance: dance ? dance : '',
-                      collectionName,
-                      rate,
-                    })
-                  }
-                  className="w-[70%] bg-purple-800 text-white p-2 rounded hover:bg-purple-700 transition-colors m-2">Add Song to Database</button>
-
+                    onClick={() =>
+                      handleSongAdd({
+                        name: songName,
+                        url: link1,
+                        dance: dance ? dance : '',
+                        collectionName,
+                        rate,
+                      })
+                    }
+                    className="w-[70%] bg-purple-800 text-white p-2 rounded hover:bg-purple-700 transition-colors m-2"
+                  >
+                    Add Song to Database
+                  </button>
                 </div>
-                </div>}
-                
-                {/* <button
-                  onClick={() => handleUpdateAll()}
-                  className="w-full bg-purple-800 text-white p-2 rounded hover:bg-purple-700 transition-colors mb-2"
-                >
-                  Save Changes
-                </button> */}
-                {/* <button
-                  onClick={() => handleSubmit('Close')}
-                  className="w-full bg-blue-800 text-white p-2 rounded hover:bg-blue-700 transition-colors"
-                >
-                  Close
-                </button> */}
               </div>
-            </div>
+            )}
+
+            {/* <button
+              onClick={() => handleUpdateAll()}
+              className="w-full bg-purple-800 text-white p-2 rounded hover:bg-purple-700 transition-colors mb-2"
+            >
+              Save Changes
+            </button> */}
+            {/* <button
+              onClick={() => handleSubmit('Close')}
+              className="w-full bg-blue-800 text-white p-2 rounded hover:bg-blue-700 transition-colors"
+            >
+              Close
+            </button> */}
           </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
+        </div>
+      </div>
+    </motion.div>
+  </AnimatePresence>
+)
+
 };
 
 export default ChooseExternalSongModal;
