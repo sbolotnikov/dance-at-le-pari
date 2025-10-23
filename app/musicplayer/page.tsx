@@ -22,6 +22,7 @@ import { generateIntroduction, speak } from './actions';
 import { AudioFileWithSettings } from '@/types/screen-settings';
 import { processAndStitchAudio } from './LocalActions';
 import AnimateModalLayoutNew from '@/components/AnimatedModalLayoutNew';
+import PlaylistModal from './PlaylistModal';
 
 interface MusicPlayerProps {
   rateSet: number;
@@ -315,101 +316,101 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     >
       <div className="w-full flex flex-col justify-center items-center mx-auto p-4">
         <h2 className="text-2xl font-bold">Settings</h2>
-     
-          <div className="w-full">
-            <label className="block mb-2">Song Length</label>
-            <Slider
-              min={1000}
-              max={600000}
-              step={1000}
-              value={songLength}
-              onChange={(newValue) => setSongLength(newValue)}
-              thumbColor="#4a5568"
-            />
-            <span>{`${Math.floor(songLength / 60000)}m ${Math.floor(
-              (songLength % 60000) / 1000
-            )}s`}</span>
-            <input
-              type="number"
-              className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG border border-lightMainColor dark:border-darkMainColor"
-              min={1}
-              max={600}
-              value={songLength / 1000}
-              onChange={(e) => {
-                setSongLength(e.target.valueAsNumber * 1000);
-              }}
-            />
-          </div>
-          <div  className="w-full">
-            <label className="block mb-2">Playback Speed</label>
-            <Slider
-              min={0.5}
-              max={2}
-              step={0.01}
-              value={rate}
-              onChange={(newValue) => setRate(newValue)}
-              thumbColor="#4a5568"
-            />
-            <span>{`${(rate * 100).toFixed(0)}%`}</span>
-            <input
-              type="number"
-              className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG border border-lightMainColor dark:border-darkMainColor"
-              min={0.5}
-              max={2}
-              value={rate}
-              onChange={(e) => {
-                setRate(e.target.valueAsNumber);
-              }}
-            />
-          </div>
-          <div  className="w-full">
-            <label className="block mb-2">Delay in seconds</label>
-            <Slider
-              min={1000}
-              max={60000}
-              step={1000}
-              value={delayLength}
-              onChange={(newValue) => setDelayLength(newValue)}
-              thumbColor="#4a5568"
-            />
-            <span>{`${Math.floor(delayLength / 60000)}m ${Math.floor(
-              (delayLength % 60000) / 1000
-            )}s`}</span>
-            <input
-              type="number"
-              className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG border border-lightMainColor dark:border-darkMainColor"
-              min={1}
-              max={60}
-              value={delayLength / 1000}
-              onChange={(e) => {
-                setDelayLength(e.target.valueAsNumber * 1000);
-              }}
-            />
-          </div>
-          <div  className="w-full">
-            <label className="block mb-2">Fade out in seconds</label>
-            <Slider
-              min={0}
-              max={60000}
-              step={1000}
-              value={fadeLength}
-              onChange={(newValue) => setFadeLength(newValue)}
-              thumbColor="#4a5568"
-            />
-            <span>{`${Math.floor(fadeLength / 60000)}m ${Math.floor(
-              (fadeLength % 60000) / 1000
-            )}s`}</span>
-            <input
-              type="number"
-              className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG border border-lightMainColor dark:border-darkMainColor"
-              min={1}
-              max={60}
-              value={fadeLength / 1000}
-              onChange={(e) => {
-                setFadeLength(e.target.valueAsNumber * 1000);
-              }}
-            />
-          </div> 
+
+        <div className="w-full">
+          <label className="block mb-2">Song Length</label>
+          <Slider
+            min={1000}
+            max={600000}
+            step={1000}
+            value={songLength}
+            onChange={(newValue) => setSongLength(newValue)}
+            thumbColor="#4a5568"
+          />
+          <span>{`${Math.floor(songLength / 60000)}m ${Math.floor(
+            (songLength % 60000) / 1000
+          )}s`}</span>
+          <input
+            type="number"
+            className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG border border-lightMainColor dark:border-darkMainColor"
+            min={1}
+            max={600}
+            value={songLength / 1000}
+            onChange={(e) => {
+              setSongLength(e.target.valueAsNumber * 1000);
+            }}
+          />
+        </div>
+        <div className="w-full">
+          <label className="block mb-2">Playback Speed</label>
+          <Slider
+            min={0.5}
+            max={2}
+            step={0.01}
+            value={rate}
+            onChange={(newValue) => setRate(newValue)}
+            thumbColor="#4a5568"
+          />
+          <span>{`${(rate * 100).toFixed(0)}%`}</span>
+          <input
+            type="number"
+            className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG border border-lightMainColor dark:border-darkMainColor"
+            min={0.5}
+            max={2}
+            value={rate}
+            onChange={(e) => {
+              setRate(e.target.valueAsNumber);
+            }}
+          />
+        </div>
+        <div className="w-full">
+          <label className="block mb-2">Delay in seconds</label>
+          <Slider
+            min={1000}
+            max={60000}
+            step={1000}
+            value={delayLength}
+            onChange={(newValue) => setDelayLength(newValue)}
+            thumbColor="#4a5568"
+          />
+          <span>{`${Math.floor(delayLength / 60000)}m ${Math.floor(
+            (delayLength % 60000) / 1000
+          )}s`}</span>
+          <input
+            type="number"
+            className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG border border-lightMainColor dark:border-darkMainColor"
+            min={1}
+            max={60}
+            value={delayLength / 1000}
+            onChange={(e) => {
+              setDelayLength(e.target.valueAsNumber * 1000);
+            }}
+          />
+        </div>
+        <div className="w-full">
+          <label className="block mb-2">Fade out in seconds</label>
+          <Slider
+            min={0}
+            max={60000}
+            step={1000}
+            value={fadeLength}
+            onChange={(newValue) => setFadeLength(newValue)}
+            thumbColor="#4a5568"
+          />
+          <span>{`${Math.floor(fadeLength / 60000)}m ${Math.floor(
+            (fadeLength % 60000) / 1000
+          )}s`}</span>
+          <input
+            type="number"
+            className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG border border-lightMainColor dark:border-darkMainColor"
+            min={1}
+            max={60}
+            value={fadeLength / 1000}
+            onChange={(e) => {
+              setFadeLength(e.target.valueAsNumber * 1000);
+            }}
+          />
+        </div>
       </div>
     </AnimateModalLayoutNew>
   );
@@ -605,7 +606,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
   return (
     <AnimateModalLayoutNew
       visibility={isOpen}
-      containerClassName='blurFilter border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-[1170px]  flex justify-center items-center flex-col   md:w-[80svw] bg-lightMainBG dark:bg-darkMainBG h-[70svh] md:h-[85svh]'
+      containerClassName="blurFilter border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-[1170px]  flex justify-center items-center flex-col   md:w-[80svw] bg-lightMainBG dark:bg-darkMainBG h-[70svh] md:h-[85svh]"
       onReturn={() => {
         window.removeEventListener('beforeunload', handleOnBeforeUnload, {
           capture: true,
@@ -669,211 +670,207 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
             id="containedDiv"
             className={`absolute top-0 left-0 flex flex-col w-full p-1 justify-center items-center`}
           > */}
-            <h2 className="text-xl font-bold mb-4">Songs in Local playlist</h2>
+      <h2 className="text-xl font-bold mb-4">Songs in Local playlist</h2>
 
-            <div
-              className={`w-full h-[350px] border border-black p-1 rounded-md ${
-                draggedIndex !== null ? 'overflow-hidden' : 'overflow-x-auto'
-              } mb-4 `}
-            >
-              <div className="flex flex-col flex-wrap items-center justify-start relative">
-                <ul
-                  ref={listRef}
-                  className="w-full mx-auto mt-8 bg-lightMainBG dark:bg-darkMainBG rounded-lg shadow-md  relative"
-                >
-                  {songDB.map((item, i) => (
-                    <React.Fragment key={item.name}>
-                      {i === placeholderIndex &&
-                        draggedIndex !== null &&
-                        draggedIndex !== i && (
-                          <li className="h-12 bg-blue-100 border-2 border-blue-300 border-dashed"></li>
-                        )}
-                      <li
-                        className={`px-4 flex items-center justify-between relative h-fit min-h-[2.5rem] border-b last:border-b-0 cursor-move hover:bg-gray-50 transition-colors duration-150 ease-in-out 
-                          ${i === draggedIndex ? 'hidden' : ''}`}
-                        style={{ userSelect: 'none' }}
-                      >
-                        <p
-                          className=" text-left w-full "
-                          style={{ userSelect: 'none' }}
-                          onMouseDown={(e) => onDragStart(e, i)}
-                          onTouchStart={(e) => onDragStart(e, i)}
-                        >
-                          <span>{i + 1}. </span>
-                          <span className=" bg-gray-300 text-sm rounded-sm truncate">
-                            {item.dance}
-                          </span>
-                          {'  '}
-                          {item.name}
-                        </p>
-                        <div className="  h-8 w-8 m-1">
-                          <PlayerButtons
-                            icon="Play"
-                            color="#504deb"
-                            color2="#FFFFFF"
-                            size={32}
-                            onButtonPress={() => {
-                              setSongToSave(item.url);
-                              if (
-                                item.introduction !== undefined &&
-                                item.introduction !== ''
-                              )
-                                setSongIntroduction(item.introduction);
-                              setSongName(item.name);
-                              setCurrentIndex(i);
-                              setCurrentDance(item.dance);
-                              setCurrentRate(
-                                item.rate !== null ? item.rate : 1
-                              );
-                              setRevealSaveModal(true);
-                            }}
-                          />
-                        </div>
-                        <button
-                          onClick={() => {
-                            let newDB = songDB.filter(
-                              (item2) => item2.id !== item.id
-                            );
-                            setSongDB(newDB);
-                          }}
-                          className="  fill-alertcolor  stroke-alertcolor  rounded-md border-alertcolor  w-8 h-8 mt-2 hover:scale-110 transition-all duration-150 ease-in-out"
-                        >
-                          <ShowIcon icon={'Close'} stroke={'2'} />
-                        </button>
-                      </li>
-                    </React.Fragment>
-                  ))}
-                  {placeholderIndex === songDB.length && (
+      <div
+        className={`w-full h-[350px] border border-black p-1 rounded-md ${
+          draggedIndex !== null ? 'overflow-hidden' : 'overflow-x-auto'
+        } mb-4 `}
+      >
+        <div className="flex flex-col flex-wrap items-center justify-start relative">
+          <ul
+            ref={listRef}
+            className="w-full mx-auto mt-8 bg-lightMainBG dark:bg-darkMainBG rounded-lg shadow-md  relative"
+          >
+            {songDB.map((item, i) => (
+              <React.Fragment key={item.name}>
+                {i === placeholderIndex &&
+                  draggedIndex !== null &&
+                  draggedIndex !== i && (
                     <li className="h-12 bg-blue-100 border-2 border-blue-300 border-dashed"></li>
                   )}
-                </ul>
-                {dragging && draggedIndex !== null && (
-                  <div
-                    ref={ghostRef}
-                    className="fixed px-4 py-2 bg-white shadow-lg rounded opacity-80 pointer-events-none"
-                    style={{
-                      left: `${5}px`,
-                      top: `${
-                        topMargin + (placeholderIndex! + 1) * itemHeight
-                      }px`,
-                      width: listRef.current
-                        ? `${listRef.current.offsetWidth - 32}px`
-                        : 'auto',
-                    }}
-                  >
-                    <p className=" text-center max-w-[300px]">
-                      <span>{draggedIndex + 1}. </span>
-                      <span className=" bg-gray-300 text-sm rounded-sm truncate">
-                        {songDB[draggedIndex].dance}
-                      </span>
-                      {'  '}
-                      {songDB[draggedIndex].name}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="space-y-4 flex flex-row flex-wrap justify-center items-center w-full">
-              <div className="flex flex-col justify-center items-center">
-                <label className="block mb-2">What dance is it?</label>
-                <select
-                  value={dance}
-                  onChange={(e) => setDance(e.target.value)}
-                  className="w-20 h-9 bg-white rounded-lg border border-[#776548] text-[#444] text-left"
+                <li
+                  className={`px-4 flex items-center justify-between relative h-fit min-h-[2.5rem] border-b last:border-b-0 cursor-move hover:bg-gray-50 transition-colors duration-150 ease-in-out 
+                          ${i === draggedIndex ? 'hidden' : ''}`}
+                  style={{ userSelect: 'none' }}
                 >
-                  {dances.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-                <input
-                  type="text"
-                  placeholder="Enter dance"
-                  value={dance}
-                  onChange={(e) => setDance(e.target.value)}
-                  className="w-full p-2 m-1 border border-gray-300 rounded mb-2"
-                />
-                <div>
-                  <label className="block mb-2">Playback Speed</label>
-                  <Slider
-                    min={0.5}
-                    max={2}
-                    step={0.01}
-                    value={rate}
-                    onChange={(newValue) => setRate(newValue)}
-                    thumbColor="#4a5568"
-                  />
-                  <span>{`${(rate * 100).toFixed(0)}%`}</span>
-                  <input
-                    type="number"
-                    className="mt-2 text-sm h-8 rounded-md w-14 float-right text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG border border-lightMainColor dark:border-darkMainColor"
-                    min={0.5}
-                    max={2}
-                    value={rate}
-                    onChange={(e) => {
-                      setRate(e.target.valueAsNumber);
+                  <p
+                    className=" text-left w-full "
+                    style={{ userSelect: 'none' }}
+                    onMouseDown={(e) => onDragStart(e, i)}
+                    onTouchStart={(e) => onDragStart(e, i)}
+                  >
+                    <span>{i + 1}. </span>
+                    <span className=" bg-gray-300 text-sm rounded-sm truncate">
+                      {item.dance}
+                    </span>
+                    {'  '}
+                    {item.name}
+                  </p>
+                  <div className="  h-8 w-8 m-1">
+                    <PlayerButtons
+                      icon="Play"
+                      color="#504deb"
+                      color2="#FFFFFF"
+                      size={32}
+                      onButtonPress={() => {
+                        setSongToSave(item.url);
+                        if (
+                          item.introduction !== undefined &&
+                          item.introduction !== ''
+                        )
+                          setSongIntroduction(item.introduction);
+                        setSongName(item.name);
+                        setCurrentIndex(i);
+                        setCurrentDance(item.dance);
+                        setCurrentRate(item.rate !== null ? item.rate : 1);
+                        setRevealSaveModal(true);
+                      }}
+                    />
+                  </div>
+                  <button
+                    onClick={() => {
+                      let newDB = songDB.filter(
+                        (item2) => item2.id !== item.id
+                      );
+                      setSongDB(newDB);
                     }}
-                  />
-                </div>
-                <input
-                  id="file-input3"
-                  type="file"
-                  accept="*.mdb"
-                  onChange={handleFileAdd}
-                  className="hidden"
-                />
-                <input
-                  id="file-input2"
-                  type="file"
-                  accept="audio/*"
-                  onChange={handleSongAdd}
-                  className="hidden"
-                />
-              </div>
-
-              <button
-                className="btnFancy"
-                onClick={() => {
-                  document.getElementById('file-input3')?.click();
-                }}
-              >
-                Use Existing Playlist
-              </button>
-              <button
-                className="btnFancy"
-                onClick={() => {
-                  document.getElementById('file-input2')?.click();
-                }}
-              >
-                Add song to Local Playlist
-              </button>
-              <div className=" flex flex-col items-center justify-center m-1.5">
-                <PlayerButtons
-                  icon={'Save'}
-                  color="#504deb"
-                  color2="#FFFFFF"
-                  size={50}
-                  onButtonPress={() => {
-                    save_File(JSON.stringify([...songDB]), playlistName);
-                  }}
-                />
-                {'Save Playlist'}
-              </div>
-              <div className=" flex flex-col items-center justify-center m-1">
-                <PlayerButtons
-                  icon={'AddPlayList'}
-                  color="#504deb"
-                  color2="#FFFFFF"
-                  size={50}
-                  onButtonPress={() => {
-                    onChoice(songDB);
-                  }}
-                />
-                {'Add to Current Playlist'}
-              </div>
+                    className="  fill-alertcolor  stroke-alertcolor  rounded-md border-alertcolor  w-8 h-8 mt-2 hover:scale-110 transition-all duration-150 ease-in-out"
+                  >
+                    <ShowIcon icon={'Close'} stroke={'2'} />
+                  </button>
+                </li>
+              </React.Fragment>
+            ))}
+            {placeholderIndex === songDB.length && (
+              <li className="h-12 bg-blue-100 border-2 border-blue-300 border-dashed"></li>
+            )}
+          </ul>
+          {dragging && draggedIndex !== null && (
+            <div
+              ref={ghostRef}
+              className="fixed px-4 py-2 bg-white shadow-lg rounded opacity-80 pointer-events-none"
+              style={{
+                left: `${5}px`,
+                top: `${topMargin + (placeholderIndex! + 1) * itemHeight}px`,
+                width: listRef.current
+                  ? `${listRef.current.offsetWidth - 32}px`
+                  : 'auto',
+              }}
+            >
+              <p className=" text-center max-w-[300px]">
+                <span>{draggedIndex + 1}. </span>
+                <span className=" bg-gray-300 text-sm rounded-sm truncate">
+                  {songDB[draggedIndex].dance}
+                </span>
+                {'  '}
+                {songDB[draggedIndex].name}
+              </p>
             </div>
-          {/* </div>
+          )}
+        </div>
+      </div>
+      <div className="space-y-4 flex flex-row flex-wrap justify-center items-center w-full">
+        <div className="flex flex-col justify-center items-center">
+          <label className="block mb-2">What dance is it?</label>
+          <select
+            value={dance}
+            onChange={(e) => setDance(e.target.value)}
+            className="w-20 h-9 bg-white rounded-lg border border-[#776548] text-[#444] text-left"
+          >
+            {dances.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+          <input
+            type="text"
+            placeholder="Enter dance"
+            value={dance}
+            onChange={(e) => setDance(e.target.value)}
+            className="w-full p-2 m-1 border border-gray-300 rounded mb-2"
+          />
+          <div>
+            <label className="block mb-2">Playback Speed</label>
+            <Slider
+              min={0.5}
+              max={2}
+              step={0.01}
+              value={rate}
+              onChange={(newValue) => setRate(newValue)}
+              thumbColor="#4a5568"
+            />
+            <span>{`${(rate * 100).toFixed(0)}%`}</span>
+            <input
+              type="number"
+              className="mt-2 text-sm h-8 rounded-md w-14 float-right text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG border border-lightMainColor dark:border-darkMainColor"
+              min={0.5}
+              max={2}
+              value={rate}
+              onChange={(e) => {
+                setRate(e.target.valueAsNumber);
+              }}
+            />
+          </div>
+          <input
+            id="file-input3"
+            type="file"
+            accept="*.mdb"
+            onChange={handleFileAdd}
+            className="hidden"
+          />
+          <input
+            id="file-input2"
+            type="file"
+            accept="audio/*"
+            onChange={handleSongAdd}
+            className="hidden"
+          />
+        </div>
+
+        <button
+          className="btnFancy"
+          onClick={() => {
+            document.getElementById('file-input3')?.click();
+          }}
+        >
+          Use Existing Playlist
+        </button>
+        <button
+          className="btnFancy"
+          onClick={() => {
+            document.getElementById('file-input2')?.click();
+          }}
+        >
+          Add song to Local Playlist
+        </button>
+        <div className=" flex flex-col items-center justify-center m-1.5">
+          <PlayerButtons
+            icon={'Save'}
+            color="#504deb"
+            color2="#FFFFFF"
+            size={50}
+            onButtonPress={() => {
+              save_File(JSON.stringify([...songDB]), playlistName);
+            }}
+          />
+          {'Save Playlist'}
+        </div>
+        <div className=" flex flex-col items-center justify-center m-1">
+          <PlayerButtons
+            icon={'AddPlayList'}
+            color="#504deb"
+            color2="#FFFFFF"
+            size={50}
+            onButtonPress={() => {
+              onChoice(songDB);
+            }}
+          />
+          {'Add to Current Playlist'}
+        </div>
+      </div>
+      {/* </div>
         </div>
       </div> */}
     </AnimateModalLayoutNew>
@@ -936,50 +933,62 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
         });
         onReturn();
       }}
-    > 
-          <div className="flex justify-between items-center w-full">
-            <h4 className="text-lg font-semibold mb-2">Playlist</h4>
-            <div className=" flex flex-col items-center justify-center mt-1.5 mr-7">
-              <PlayerButtons
-                icon={'Save'}
-                color="#504deb"
-                color2="#FFFFFF"
-                size={50}
-                onButtonPress={() => {
-                  if (playlist.length === 0) {
-                    alert('Playlist is empty');
-                    return;
-                  } else if (playlist.length < 47) {
-                    save_File(JSON.stringify([...playlist]), 'musicDB.sdb');
-                  } else {
-                    let newPlaylist = playlist.slice(0, 47);
-                    save_File(JSON.stringify([...newPlaylist]), 'musicDB.sdb');
-                    save_File(
-                      JSON.stringify([...playlist.slice(47)]),
-                      'musicDB part 2.sdb'
-                    );
-                  }
-                  console.log(playlist.map((item) => item.introduction));
-                }}
-              />
-              {'Save Playlist'}
-            </div>
-          </div>
+    >
+      <div className="flex justify-between items-center w-full">
+        <h4 className="text-lg font-semibold mb-2">Playlist</h4>
+        <div className=" flex flex-col items-center justify-center mt-1.5 mr-7">
+          <PlayerButtons
+            icon={'Save'}
+            color="#504deb"
+            color2="#FFFFFF"
+            size={50}
+            onButtonPress={() => {
+              if (playlist.length === 0) {
+                alert('Playlist is empty');
+                return;
+              } else if (playlist.length < 47) {
+                save_File(JSON.stringify([...playlist]), 'musicDB.sdb');
+              } else {
+                let newPlaylist = playlist.slice(0, 47);
+                save_File(JSON.stringify([...newPlaylist]), 'musicDB.sdb');
+                save_File(
+                  JSON.stringify([...playlist.slice(47)]),
+                  'musicDB part 2.sdb'
+                );
+              }
+              console.log(playlist.map((item) => item.introduction));
+            }}
+          />
+          {'Save Playlist'}
+        </div>
+      </div>
 
-          <DraggableList
+      <PlaylistModal
+        onMoveItem={(reorderFromIndex, toIndex) => {
+          const newPlaylist = [...playlist];
+          const [movedItem] = newPlaylist.splice(reorderFromIndex, 1);
+          newPlaylist.splice(toIndex, 0, movedItem);
+          onUpdate(newPlaylist);
+        }}
+        currentIndex={currentSongIndex}
+        onItemClick={(index: number) => onSongChange(index)}
+        onDeleteItem={(index: number) => {
+          // const newPlaylist = [...playlist];
+          // newPlaylist.splice(index, 1);
+          console.log('delete index: ', index);
+          onRemoveSong(index);
+        }}
+        list={playlist.map((item, i) => ({
+          danceName: item.dance ?? '',
+          songName: item.name,
+          speed: item.rate ?? 1,
+          id: i,
+        }))}
+      />
+      {/* <DraggableList
             initialItems={itemsList}
             onItemMove={(dragIndex, hoverIndex) => {
-              // setItemsList(prev => {
-              //   const newItems = [...prev];
-              //   const draggedItem = newItems[dragIndex];
 
-              //   // Remove the dragged item
-              //   newItems.splice(dragIndex, 1);
-              //   // Insert at the new position
-              //   newItems.splice(hoverIndex, 0, draggedItem);
-
-              //   return newItems;
-              // });
               const newPlaylist = [...playlist];
               const itemToMove = newPlaylist[dragIndex];
               newPlaylist.splice(dragIndex, 1);
@@ -1000,7 +1009,7 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
             }
             itemHeight={56}
             autoScrollSpeed={15}
-          /> 
+          />  */}
     </AnimateModalLayoutNew>
   );
 };
@@ -1017,7 +1026,7 @@ const page: React.FC = () => {
   const [addToDBSong, setAddToDBSong] = useState<Song | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [commentFrequency, setCommentFrequency] = useState(3);
-  const [isPlaylistOpen, setIsPlaylistOpen] = useState(false); 
+  const [isPlaylistOpen, setIsPlaylistOpen] = useState(false);
   const [isChooseSongWebModal, setIsChooseSongWebModal] = useState(false);
   const [autoPlayMode, setAutoPlayMode] = useState(false);
   const [autoPlayList, setAutoPlayList] = useState(false);
@@ -1511,7 +1520,7 @@ const page: React.FC = () => {
           onLoad={(a) => setLoading(a)}
         />
       )}
-      
+
       {isAddToDBOpen && (
         <AddToDbModal
           isOpen={isAddToDBOpen}

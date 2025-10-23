@@ -38,7 +38,12 @@ export type TBannerEvent  = {
   image: string;
   eventtype: string;
 };
-
+export type TDanceItemType ={
+  id: number;
+  danceName: string;
+  songName: string;
+  speed: number;
+}
 export type AudioFile = {
   id: string;
   name: string;
