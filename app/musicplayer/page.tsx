@@ -21,6 +21,7 @@ import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { generateIntroduction, speak } from './actions';
 import { AudioFileWithSettings } from '@/types/screen-settings';
 import { processAndStitchAudio } from './LocalActions';
+import AnimateModalLayoutNew from '@/components/AnimatedModalLayoutNew';
 
 interface MusicPlayerProps {
   rateSet: number;
@@ -305,184 +306,115 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     onChangeFade(fadeLength);
   }, [fadeLength]);
   return (
-    <AnimateModalLayout
-      visibility={isOpen}
-      onReturn={() => {
-        sleep(1200).then(() => onClose());
-      }}
-    >
-      <div className="blurFilter border-0 rounded-md p-2 shadow-2xl w-[90%] max-w-[450px] max-h-[85%] overflow-y-auto md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70">
-        <div className="w-full h-full flex flex-col justify-center items-center border rounded-md border-lightMainColor dark:border-darkMainColor relative p-2">
-          <div className="container mx-auto p-4">
-            <h2 className="text-2xl font-bold">Settings</h2>
-            <div className="space-y-4">
-              <div>
-                <label className="block mb-2">Song Length</label>
-                <Slider
-                  min={1000}
-                  max={600000}
-                  step={1000}
-                  value={songLength}
-                  onChange={(newValue) => setSongLength(newValue)}
-                  thumbColor="#4a5568"
-                />
-                <span>{`${Math.floor(songLength / 60000)}m ${Math.floor(
-                  (songLength % 60000) / 1000
-                )}s`}</span>
-                <input
-                  type="number"
-                  className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG border border-lightMainColor dark:border-darkMainColor"
-                  min={1}
-                  max={600}
-                  value={songLength / 1000}
-                  onChange={(e) => {
-                    setSongLength(e.target.valueAsNumber * 1000);
-                  }}
-                />
-              </div>
-              <div>
-                <label className="block mb-2">Playback Speed</label>
-                <Slider
-                  min={0.5}
-                  max={2}
-                  step={0.01}
-                  value={rate}
-                  onChange={(newValue) => setRate(newValue)}
-                  thumbColor="#4a5568"
-                />
-                <span>{`${(rate * 100).toFixed(0)}%`}</span>
-                <input
-                  type="number"
-                  className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG border border-lightMainColor dark:border-darkMainColor"
-                  min={0.5}
-                  max={2}
-                  value={rate}
-                  onChange={(e) => {
-                    setRate(e.target.valueAsNumber);
-                  }}
-                />
-              </div>
-              <div>
-                <label className="block mb-2">Delay in seconds</label>
-                <Slider
-                  min={1000}
-                  max={60000}
-                  step={1000}
-                  value={delayLength}
-                  onChange={(newValue) => setDelayLength(newValue)}
-                  thumbColor="#4a5568"
-                />
-                <span>{`${Math.floor(delayLength / 60000)}m ${Math.floor(
-                  (delayLength % 60000) / 1000
-                )}s`}</span>
-                <input
-                  type="number"
-                  className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG border border-lightMainColor dark:border-darkMainColor"
-                  min={1}
-                  max={60}
-                  value={delayLength / 1000}
-                  onChange={(e) => {
-                    setDelayLength(e.target.valueAsNumber * 1000);
-                  }}
-                />
-              </div>
-              <div>
-                <label className="block mb-2">Fade out in seconds</label>
-                <Slider
-                  min={0}
-                  max={60000}
-                  step={1000}
-                  value={fadeLength}
-                  onChange={(newValue) => setFadeLength(newValue)}
-                  thumbColor="#4a5568"
-                />
-                <span>{`${Math.floor(fadeLength / 60000)}m ${Math.floor(
-                  (fadeLength % 60000) / 1000
-                )}s`}</span>
-                <input
-                  type="number"
-                  className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG border border-lightMainColor dark:border-darkMainColor"
-                  min={1}
-                  max={60}
-                  value={fadeLength / 1000}
-                  onChange={(e) => {
-                    setFadeLength(e.target.valueAsNumber * 1000);
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </AnimateModalLayout>
-  );
-};
-interface ChooseMusicModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onChoice: (song: Song) => void;
-}
-
-const ChooseMusicModal: React.FC<ChooseMusicModalProps> = ({
-  isOpen,
-  onChoice,
-  onClose,
-}) => {
-  const [songLink, setSongLink] = useState('');
-  const [songTag, setSongTag] = useState('');
-
-  return (
-    <AnimateModalLayout
+    <AnimateModalLayoutNew
       visibility={isOpen}
       onReturn={() => {
         onClose();
       }}
+      containerClassName="blurFilter border-0 rounded-md p-2 shadow-2xl w-[90%] max-w-[450px] h-[65vh] overflow-y-auto md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70"
     >
-      <div className="blurFilter border-0 rounded-md p-2 shadow-2xl w-[90%] max-w-[450px] max-h-[85%] overflow-y-auto md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70">
-        <div className="w-full h-full flex flex-col justify-center items-center border rounded-md border-lightMainColor dark:border-darkMainColor relative p-2">
-          <div className="container mx-auto p-4">
-            <h2 className="text-2xl font-bold">Choose music from link or </h2>
-            <div className="space-y-4">
-              <div>
-                <label className="block mb-2">Link</label>
-                <input
-                  type="text"
-                  value={songLink}
-                  className="w-full p-2 border border-gray-300 rounded"
-                  onChange={(e) => setSongLink(e.target.value)}
-                />
-              </div>
-              <div>
-                <label className="block mb-2">Song name or tag</label>
-                <input
-                  type="text"
-                  value={songTag}
-                  className="w-full p-2 border border-gray-300 rounded"
-                  onChange={(e) => setSongTag(e.target.value)}
-                />
-              </div>
-              <button
-                className="btnFancy"
-                onClick={() => {
-                  onChoice({
-                    url: songLink,
-                    name: songTag,
-                    rate: 1,
-                    dance: '',
-                    id: '',
-                  });
-                  onClose();
-                }}
-              >
-                Choose
-              </button>
-            </div>
+      <div className="w-full flex flex-col justify-center items-center mx-auto p-4">
+        <h2 className="text-2xl font-bold">Settings</h2>
+     
+          <div className="w-full">
+            <label className="block mb-2">Song Length</label>
+            <Slider
+              min={1000}
+              max={600000}
+              step={1000}
+              value={songLength}
+              onChange={(newValue) => setSongLength(newValue)}
+              thumbColor="#4a5568"
+            />
+            <span>{`${Math.floor(songLength / 60000)}m ${Math.floor(
+              (songLength % 60000) / 1000
+            )}s`}</span>
+            <input
+              type="number"
+              className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG border border-lightMainColor dark:border-darkMainColor"
+              min={1}
+              max={600}
+              value={songLength / 1000}
+              onChange={(e) => {
+                setSongLength(e.target.valueAsNumber * 1000);
+              }}
+            />
           </div>
-        </div>
+          <div  className="w-full">
+            <label className="block mb-2">Playback Speed</label>
+            <Slider
+              min={0.5}
+              max={2}
+              step={0.01}
+              value={rate}
+              onChange={(newValue) => setRate(newValue)}
+              thumbColor="#4a5568"
+            />
+            <span>{`${(rate * 100).toFixed(0)}%`}</span>
+            <input
+              type="number"
+              className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG border border-lightMainColor dark:border-darkMainColor"
+              min={0.5}
+              max={2}
+              value={rate}
+              onChange={(e) => {
+                setRate(e.target.valueAsNumber);
+              }}
+            />
+          </div>
+          <div  className="w-full">
+            <label className="block mb-2">Delay in seconds</label>
+            <Slider
+              min={1000}
+              max={60000}
+              step={1000}
+              value={delayLength}
+              onChange={(newValue) => setDelayLength(newValue)}
+              thumbColor="#4a5568"
+            />
+            <span>{`${Math.floor(delayLength / 60000)}m ${Math.floor(
+              (delayLength % 60000) / 1000
+            )}s`}</span>
+            <input
+              type="number"
+              className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG border border-lightMainColor dark:border-darkMainColor"
+              min={1}
+              max={60}
+              value={delayLength / 1000}
+              onChange={(e) => {
+                setDelayLength(e.target.valueAsNumber * 1000);
+              }}
+            />
+          </div>
+          <div  className="w-full">
+            <label className="block mb-2">Fade out in seconds</label>
+            <Slider
+              min={0}
+              max={60000}
+              step={1000}
+              value={fadeLength}
+              onChange={(newValue) => setFadeLength(newValue)}
+              thumbColor="#4a5568"
+            />
+            <span>{`${Math.floor(fadeLength / 60000)}m ${Math.floor(
+              (fadeLength % 60000) / 1000
+            )}s`}</span>
+            <input
+              type="number"
+              className="mt-2 text-sm h-8 w-14 float-right rounded-md text-lightMainColor bg-lightMainBG dark:text-darkMainColor dark:bg-darkMainBG border border-lightMainColor dark:border-darkMainColor"
+              min={1}
+              max={60}
+              value={fadeLength / 1000}
+              onChange={(e) => {
+                setFadeLength(e.target.valueAsNumber * 1000);
+              }}
+            />
+          </div> 
       </div>
-    </AnimateModalLayout>
+    </AnimateModalLayoutNew>
   );
 };
+
 interface AddToDbModalProps {
   isOpen: boolean;
   song: Song | null;
@@ -671,8 +603,9 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
   };
 
   return (
-    <AnimateModalLayout
+    <AnimateModalLayoutNew
       visibility={isOpen}
+      containerClassName='blurFilter border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-[1170px]  flex justify-center items-center flex-col   md:w-[80svw] bg-lightMainBG dark:bg-darkMainBG h-[70svh] md:h-[85svh]'
       onReturn={() => {
         window.removeEventListener('beforeunload', handleOnBeforeUnload, {
           capture: true,
@@ -722,7 +655,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
           });
         }}
       />
-      <div
+      {/* <div
         className={`blurFilter border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-[1170px]  flex justify-center items-center flex-col   md:w-[80svw] bg-lightMainBG dark:bg-darkMainBG h-[70svh] md:h-[85svh]
         }`}
       >
@@ -735,7 +668,7 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
           <div
             id="containedDiv"
             className={`absolute top-0 left-0 flex flex-col w-full p-1 justify-center items-center`}
-          >
+          > */}
             <h2 className="text-xl font-bold mb-4">Songs in Local playlist</h2>
 
             <div
@@ -940,10 +873,10 @@ const AddToDbModal: React.FC<AddToDbModalProps> = ({
                 {'Add to Current Playlist'}
               </div>
             </div>
-          </div>
+          {/* </div>
         </div>
-      </div>
-    </AnimateModalLayout>
+      </div> */}
+    </AnimateModalLayoutNew>
   );
 };
 
@@ -994,20 +927,19 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
   }, [playlist]);
 
   return (
-    <AnimateModalLayout
+    <AnimateModalLayoutNew
       visibility={isVisible}
+      containerClassName="blurFilter border-0 rounded-md p-2 shadow-2xl w-[90%] max-w-[450px] h-[85vh] overflow-y-auto md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70"
       onReturn={() => {
         window.removeEventListener('beforeunload', handleOnBeforeUnload, {
           capture: true,
         });
         onReturn();
       }}
-    >
-      <div className="blurFilter border-0 rounded-md p-2 shadow-2xl w-[90%] max-w-[450px] max-h-[85%] overflow-y-auto md:w-full md:mt-8 bg-lightMainBG/70 dark:bg-darkMainBG/70">
-        <div className="w-full max-w-md mx-auto mt-4 relative">
+    > 
           <div className="flex justify-between items-center w-full">
             <h4 className="text-lg font-semibold mb-2">Playlist</h4>
-            <div className=" flex flex-col items-center justify-center m-1.5">
+            <div className=" flex flex-col items-center justify-center mt-1.5 mr-7">
               <PlayerButtons
                 icon={'Save'}
                 color="#504deb"
@@ -1064,14 +996,12 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
             currentIndex={currentSongIndex}
             onItemClick={(index: number) => onSongChange(index)}
             containerClassName={
-              'h-[350px]  w-full border border-lightMainColor dark:border-darkMainColor p-1 rounded-lg my-1 overflow-hidden'
+              'h-[70vh]  w-full border border-lightMainColor dark:border-darkMainColor p-1 rounded-lg my-1 overflow-hidden'
             }
             itemHeight={56}
             autoScrollSpeed={15}
-          />
-        </div>
-      </div>
-    </AnimateModalLayout>
+          /> 
+    </AnimateModalLayoutNew>
   );
 };
 
@@ -1087,8 +1017,7 @@ const page: React.FC = () => {
   const [addToDBSong, setAddToDBSong] = useState<Song | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [commentFrequency, setCommentFrequency] = useState(3);
-  const [isPlaylistOpen, setIsPlaylistOpen] = useState(false);
-  const [isChooseMusicOpen, setIsChooseMusicOpen] = useState(false);
+  const [isPlaylistOpen, setIsPlaylistOpen] = useState(false); 
   const [isChooseSongWebModal, setIsChooseSongWebModal] = useState(false);
   const [autoPlayMode, setAutoPlayMode] = useState(false);
   const [autoPlayList, setAutoPlayList] = useState(false);
@@ -1107,7 +1036,6 @@ const page: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [autoPlayIndex, setAutoPlayIndex] = useState(0);
   const [progress, setProgress] = useState<number>(0);
-  
 
   const loadAudioBufferFromUrl = async (
     url: string,
@@ -1117,7 +1045,7 @@ const page: React.FC = () => {
     const arrayBuffer = await response.arrayBuffer();
     return await audioContext.decodeAudioData(arrayBuffer);
   };
- 
+
   const [webSongs, setWebSongs] = useState<
     {
       url: string;
@@ -1551,7 +1479,9 @@ const page: React.FC = () => {
           choosenPlaylist={
             playlists.filter((playlist) => playlist.id == choosenPlaylist)[0]
           }
-          onClose={() => sleep(1200).then(() => setIsChoosePlaylistsModal(false))}
+          onClose={() =>
+            sleep(1200).then(() => setIsChoosePlaylistsModal(false))
+          }
           onLoad={(a) => setLoading(a)}
         />
       )}
@@ -1581,13 +1511,7 @@ const page: React.FC = () => {
           onLoad={(a) => setLoading(a)}
         />
       )}
-      {isChooseMusicOpen && (
-        <ChooseMusicModal
-          isOpen={isChooseMusicOpen}
-          onChoice={(song) => setPlaylist([...playlist, song])}
-          onClose={() => setIsChooseMusicOpen(false)}
-        />
-      )}
+      
       {isAddToDBOpen && (
         <AddToDbModal
           isOpen={isAddToDBOpen}
@@ -1800,58 +1724,58 @@ const page: React.FC = () => {
                   />
                   <span className="text-center">Make Playlist</span>
                 </div>
-                  <div className=" flex flex-col items-center justify-center m-1.5">
-                    <PlayerButtons
-                      icon={'Save'}
-                      color="#504deb"
-                      color2="#FFFFFF"
-                      size={50}
-                      onButtonPress={async () => {
-                        if (playlist.length === 0) {
-                          alert('Playlist is empty');
-                          return;
-                        } else {
-                          const audioContext = new AudioContext();
-                          const result: AudioFileWithSettings[] =
-                            await Promise.all(
-                              playlist.map(async (item, index) => {
-                                const buffer = await loadAudioBufferFromUrl(
-                                  item.url,
-                                  audioContext
-                                );
-                                return {
-                                  id: `track-${index}`,
-                                  name: `Track ${index + 1}`,
-                                  duration: buffer.duration,
-                                  audioBuffer: buffer,
-                                  speed: item.rate !== null ? item.rate : 1,
-                                };
-                              })
-                            );
+                <div className=" flex flex-col items-center justify-center m-1.5">
+                  <PlayerButtons
+                    icon={'Save'}
+                    color="#504deb"
+                    color2="#FFFFFF"
+                    size={50}
+                    onButtonPress={async () => {
+                      if (playlist.length === 0) {
+                        alert('Playlist is empty');
+                        return;
+                      } else {
+                        const audioContext = new AudioContext();
+                        const result: AudioFileWithSettings[] =
+                          await Promise.all(
+                            playlist.map(async (item, index) => {
+                              const buffer = await loadAudioBufferFromUrl(
+                                item.url,
+                                audioContext
+                              );
+                              return {
+                                id: `track-${index}`,
+                                name: `Track ${index + 1}`,
+                                duration: buffer.duration,
+                                audioBuffer: buffer,
+                                speed: item.rate !== null ? item.rate : 1,
+                              };
+                            })
+                          );
 
-                          processAndStitchAudio(
-                            result,
-                            songLength / 1000,
-                            fadeTime / 1000,
-                            delayLength / 1000,
-                            (progress) => {
-                              setProgress(progress);
-                              // console.log(`Progress: ${progress.toFixed(2)}%`);
-                            }
-                          ).then((downloadUrl) => {
-                            setProgress(0);
-                            const a = document.createElement('a');
-                            a.href = downloadUrl;
-                            a.download = 'stitched_playlist.mp3';
-                            document.body.appendChild(a);
-                            a.click();
-                            document.body.removeChild(a);
-                          });
-                        }
-                      }}
-                    />
-                    {'Save as MP3s'}
-                  </div>
+                        processAndStitchAudio(
+                          result,
+                          songLength / 1000,
+                          fadeTime / 1000,
+                          delayLength / 1000,
+                          (progress) => {
+                            setProgress(progress);
+                            // console.log(`Progress: ${progress.toFixed(2)}%`);
+                          }
+                        ).then((downloadUrl) => {
+                          setProgress(0);
+                          const a = document.createElement('a');
+                          a.href = downloadUrl;
+                          a.download = 'stitched_playlist.mp3';
+                          document.body.appendChild(a);
+                          a.click();
+                          document.body.removeChild(a);
+                        });
+                      }
+                    }}
+                  />
+                  <span className="text-center">Save as MP3s</span>
+                </div>
                 <div className="flex flex-col items-center justify-center mx-2">
                   <PlayerButtons
                     icon={'DigitalDJ'}
