@@ -86,19 +86,15 @@ const page: FC<pageProps> = ({}) => {
               </button>
               <button
                 className="flex flex-col justify-center items-center h-28 w-28 p-1 m-1 border  shadow-2xl shadow-lightMainColor dark:shadow-darkMainColor rounded-md"
-                onClick={() => router.replace('/admin/financial')}
+                onClick={() => router.replace('/admin/qrcode')}
               >
                 <div className=" h-full w-full  border border-lightMainColor dark:border-darkMainColor/70 rounded-md">
                   <div className=" h-16 w-16 m-auto">
-                    <ShowIcon icon={'FinanceLogo'} stroke={'0.01'} />
+                    <ShowIcon icon={'QRCode'} stroke={'0.01'} />
                   </div>
-                  <p className="text-center">Studio finance</p>
-
-
+                  <p className="text-center leading-[0.9rem]">Make QR Code</p>
                 </div>
               </button>
-
-
             </div>
           </div>
         </div>
