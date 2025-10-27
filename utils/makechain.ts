@@ -205,7 +205,7 @@ export const makeChain = async (chat_history: BaseMessage[], input: string) => {
   //   pineconeIndex,
   // });
   const client = new Pinecone({ apiKey: process.env.PINECONE_API_KEY! });
-  const pineconeIndex = client.Index(process.env.PINECONE_INDEX!);
+  const pineconeIndex = client.index(process.env.PINECONE_INDEX!);
   const embeddings = new OpenAIEmbeddings({
     model: 'text-embedding-3-small',
   });
