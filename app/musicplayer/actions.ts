@@ -84,8 +84,8 @@ const response = await client.tts.bytes({
 
 // Convert the response to a Buffer and then to a base64 string.
 // This is to ensure the data is serializable when passing from server to client components.
-const buffer = Buffer.from(response);
-return buffer.toString('base64');
+const buffer = Buffer.from(response).toString('base64');
+return `data:audio/mpeg;base64,${buffer}`;
 }
 
 //Cathy - Coworker e8e5fffb-252c-436d-b842-8879b84445b6
