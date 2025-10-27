@@ -11,6 +11,52 @@ import {
 } from '@langchain/core/prompts';
 
 import process from 'node:process';
+import { Readable } from "stream";
+
+async function streamToBase64(
+  response: Readable | ArrayBuffer | Uint8Array | Buffer
+): Promise<string> {
+  if (response instanceof Readable) {
+    const chunks: Uint8Array[] = [];
+    const encoder = new TextEncoder();
+
+    for await (const chunk of response) {
+      if (typeof chunk === 'string') {
+        chunks.push(encoder.encode(chunk));
+      } else if (Buffer.isBuffer(chunk)) {
+        chunks.push(new Uint8Array(chunk.buffer, chunk.byteOffset, chunk.byteLength));
+      } else if (chunk instanceof Uint8Array) {
+        chunks.push(chunk);
+      } else {
+        chunks.push(new Uint8Array(chunk as ArrayBufferLike));
+      }
+    }
+
+    const totalLength = chunks.reduce((total, chunk) => total + chunk.byteLength, 0);
+    const merged = new Uint8Array(totalLength);
+    let offset = 0;
+
+    for (const chunk of chunks) {
+      merged.set(chunk, offset);
+      offset += chunk.byteLength;
+    }
+
+    return `data:audio/mpeg;base64,${Buffer.from(merged).toString("base64")}`;
+  }
+
+  let merged: Uint8Array;
+  if (Buffer.isBuffer(response)) {
+    merged = new Uint8Array(response.buffer, response.byteOffset, response.byteLength);
+  } else if (response instanceof Uint8Array) {
+    merged = response;
+  } else if (response instanceof ArrayBuffer) {
+    merged = new Uint8Array(response);
+  } else {
+    throw new TypeError('Unsupported response type for streamToBase64');
+  }
+
+  return `data:audio/mpeg;base64,${Buffer.from(merged).toString("base64")}`;
+}
 
 interface PlaylistSong {
   name: string;
@@ -80,10 +126,8 @@ export async function speak(text: string) {
 
   // Convert the response to a Buffer and then to a base64 string.
   // This is to ensure the data is serializable when passing from server to client components.
-  const fileContent = response;
-  const base64Content = Buffer.from(fileContent).toString('base64');
-  const base64Uri = `data:audio/mpeg;base64,${base64Content}`;
-  return base64Uri;
+  
+  return await streamToBase64(response);
 }
 
 //Cathy - Coworker e8e5fffb-252c-436d-b842-8879b84445b6
