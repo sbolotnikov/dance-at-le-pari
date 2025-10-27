@@ -1785,7 +1785,7 @@ const page: React.FC = () => {
                   />
                   <span className="text-center">Save as MP3s</span>
                 </div>
-                <div className="flex flex-col items-center justify-center mx-2">
+                {/* <div className="flex flex-col items-center justify-center mx-2">
                   <PlayerButtons
                     icon={'DigitalDJ'}
                     color="#504deb"
@@ -1793,7 +1793,7 @@ const page: React.FC = () => {
                     size={50}
                     onButtonPress={() => {
                       if (playlist.length > 0) {
-                        setLoading(true);
+                        // setLoading(true);
                         generateIntroduction(
                           playlist.map((song, index) => ({
                             dance:
@@ -1811,13 +1811,14 @@ const page: React.FC = () => {
                             null
                         )
                           .then(async (res) => {
+                            alert(res.join('\n'))
                             // let playlist1 = [...playlist];
                             for (let i = 0; i < res.length; i++) {
                               await playText(res[i], i);
                             }
-                            // res.forEach(async (intro, index) => {
-                            //   await playText(intro, index);
-                            // });
+                            res.forEach(async (intro, index) => {
+                              await playText(intro, index);
+                            });
                             const textIntros = res.map(
                               (intro, index) => `${index + 1}. ${intro}`
                             );
@@ -1835,9 +1836,9 @@ const page: React.FC = () => {
                     }}
                   />
                   <span className="text-center">Add Digital DJ</span>
-                </div>
+                </div> */}
               </div>
-            )}
+             )}
             {session?.user.role == 'Admin' && (
               <div className="w-full flex flex-row justify-between items-center mt-2">
                 <div className="flex flex-col items-center justify-center mx-2">
@@ -1869,8 +1870,8 @@ const page: React.FC = () => {
                 />
                 <span className="text-center">song</span>
               </div>
-            )}
-            {session?.user.role == 'Admin' && (
+             )}
+            {session?.user.role == 'Admin' && ( 
               <div className="w-full flex flex-row justify-start items-center">
                 <span className="min-w-fit">Auto Playlist Dances</span>
                 <select
@@ -1902,7 +1903,6 @@ const page: React.FC = () => {
                   <ShowIcon icon={'Edit'} stroke={'0.5'} />
                 </button>
               </div>
-              // )}
             )}
             {progress > 0 && (
               <div className="mt-6 max-w-md mx-auto">

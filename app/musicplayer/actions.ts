@@ -72,7 +72,7 @@ const response = await client.tts.bytes({
   modelId: "sonic-2",
   voice: {
     mode: "id",
-    id: "ed81fd13-2016-4a49-8fe3-c0d2761695fc",
+    id: "87748186-23bb-4158-a1eb-332911b0b708",
   },
   outputFormat: {
     container: "mp3",
@@ -89,7 +89,7 @@ return buffer.toString('base64');
 }
 
 //Cathy - Coworker e8e5fffb-252c-436d-b842-8879b84445b6
-//Zack - Sportsman ed81fd13-2016-4a49-8fe3-c0d2761695fc
+//regular party !! Zack - Sportsman ed81fd13-2016-4a49-8fe3-c0d2761695fc
 //Jake - Sidekick 729651dc-c6c3-4ee5-97fa-350da1f88600
 //Alaric - Wizard 87748186-23bb-4158-a1eb-332911b0b708
 
