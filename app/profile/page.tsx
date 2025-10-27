@@ -13,6 +13,7 @@ import { PageWrapper } from '@/components/page-wrapper';
 import Link from 'next/link';
 import LoadingScreen from '@/components/LoadingScreen';
 import { useDimensions } from '@/hooks/useDimensions';
+import { InvoiceModal } from '@/components/InvoiceModal';
 
 interface pageProps {}
 
@@ -23,6 +24,7 @@ const page: FC<pageProps> = () => {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const userNameRef = useRef<HTMLInputElement>(null);
+  const telephoneRef = useRef<HTMLInputElement>(null);
 
   const passwordConfirmRef = useRef<HTMLInputElement>(null);
   const [revealAlert, setRevealAlert] = useState(false);
@@ -38,6 +40,7 @@ const page: FC<pageProps> = () => {
   });
   const [loading, setLoading] = useState(false);
   const [revealCloud, setRevealCloud] = useState(false);
+  const [revealInvoices, setRevealInvoices] = useState(false);
   const router = useRouter();
   // const [scrolling, setScrolling] = useState(true);
   // const windowSize = useDimensions();
@@ -84,6 +87,11 @@ const page: FC<pageProps> = () => {
       setLoading(false);
     }
   };
+    const scrollIntoView = (ref: React.RefObject<HTMLInputElement>) => {
+    ref.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
+
   const onReturnAvatar = (decision1: string, fileLink: string) => {
     setRevealCloud(false);
     if (decision1 == 'Close') {
@@ -222,6 +230,13 @@ const page: FC<pageProps> = () => {
           extraSize={session?.user.role == 'Admin' ? true : false}
         />
       )}
+      {revealInvoices && (
+        <InvoiceModal
+          onReturn={() => setRevealInvoices(false)}
+          studentId={session?.user.id!}
+          styling={alertStyle}
+        />
+      )}
       {loading && <LoadingScreen />}
       <div className="blurFilter shadow-2xl w-[90%]  max-w-[450px] md:w-full h-[85svh]  bg-lightMainBG/70 dark:bg-darkMainBG/70 border-0 rounded-md  p-2 md:mb-3">
         <div
@@ -230,7 +245,7 @@ const page: FC<pageProps> = () => {
         >
           <div
             id="containedDiv"
-            className={`absolute top-0 left-0 flex flex-col w-full p-1 justify-center items-center `}
+            className={`absolute top-0 left-0 flex flex-col w-full p-1 justify-center items-center mb-32`}
           >
             <h2
               className="text-center w-[80%] font-semibold md:text-4xl uppercase relative"
@@ -295,7 +310,13 @@ const page: FC<pageProps> = () => {
               <Link href={'/purchases'}>
                 <button className="btnFancy w-[90%]">Purchases</button>
               </Link>
-
+              {session?.user.role === 'Student' && (
+               <button className="btnFancy w-[90%]" onClick={(e) => { 
+                e.preventDefault(); 
+                setRevealInvoices(true);
+                // Handle Invoices button click
+              }}>Invoices</button>
+              )}
               <label className="flex flex-col items-center p-1 rounded-t-md bottom-0">
                 Your Name:
                 <input
@@ -327,6 +348,7 @@ const page: FC<pageProps> = () => {
                   id="password"
                   type="password"
                   ref={passwordRef}
+                  onFocus={() => scrollIntoView(passwordRef)} 
                   placeholder="leave blank if not needed to change"
                 />
               </label>
@@ -338,6 +360,7 @@ const page: FC<pageProps> = () => {
                   id="passwordConfirm"
                   type="password"
                   ref={passwordConfirmRef}
+                  onFocus={() => scrollIntoView(passwordConfirmRef)} 
                   placeholder="leave blank if not needed to change"
                 />
               </label>
@@ -349,8 +372,7 @@ const page: FC<pageProps> = () => {
                   id="telephone"
                   type="tel"
                   placeholder="1234567890"
-                  required 
-                 
+                  onFocus={() => scrollIntoView(telephoneRef)}
                   onChange={(e) => {
                     setPhone(e.target.value);
                   }}
@@ -380,7 +402,7 @@ const page: FC<pageProps> = () => {
                 <label className="flex flex-col items-center p-1  rounded-t-md bottom-0">
                   Bio:
                   <textarea
-                    className="flex-1 outline-none bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor border-none rounded-md bg-main-bg p-0.5 mx-1 my-1"
+                    className="flex-1 outline-none bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor border-none rounded-md bg-main-bg w-full min-h-[120px] p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] resize-y mx-1 my-1"
                     name="bio"
                     id="bio"
                     placeholder="Enter your bio here"

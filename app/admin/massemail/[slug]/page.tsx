@@ -10,28 +10,29 @@ import { PageWrapper } from '@/components/page-wrapper';
 import ShowIcon from '@/components/svg/showIcon';
 import EditContactsModal from '@/components/EditContactsModal';
 import { useDimensions } from '@/hooks/useDimensions';
-import LoadingScreen from '@/components/LoadingScreen'; 
-import ShowSendingEmailResultsModal from '@/components/ShowSendingEmailResultsModal'; 
+import LoadingScreen from '@/components/LoadingScreen';
+import ShowSendingEmailResultsModal from '@/components/ShowSendingEmailResultsModal';
 type Props = {
   params: { slug: string };
 };
 
 export default function Page(params: { params: { slug: string } }) {
   const slug = params.params.slug;
-  const { data: session, status } = useSession(); 
+  const { data: session, status } = useSession();
   const router = useRouter();
   const [value, setValue] = useState('');
   const [title, setTitle] = useState('');
   const [loading, setLoading] = useState(false);
   const [vis, setVis] = useState(false);
   const [vis2, setVis2] = useState(false);
+  const [vis3, setVis3] = useState(false);
   const [revealModal, setRevealModal] = useState(false);
   const [revealModal1, setRevealModal1] = useState(false);
   const [sendingStatus, setSendingStatus] = useState<string[]>([]);
   const dimensions = useDimensions();
-  useEffect(()=>{
-    if (slug=='1') setRevealModal(true);
-  },[slug])
+  useEffect(() => {
+    if (slug == '1') setRevealModal(true);
+  }, [slug]);
   if (status === 'unauthenticated') {
     router.push('/');
   }
@@ -43,7 +44,43 @@ export default function Page(params: { params: { slug: string } }) {
   //   };
   const emailEditorRef = useRef<EditorRef>(null);
 
-  const exportHtml = (firstEmail:string) => {
+  const sendExtraEmails = (emails: string[]) => {
+    fetch('/api/admin/contacts_pull', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        status: 'Subscribed',
+        emailArray: emails,
+      }),
+    }).then((res) => {
+      res.json().then((data) => {
+          let contacts = data;
+          let name1 = '' as string;
+          let emailList = [] as { name: string; email: string }[];
+          const unlayer = emailEditorRef.current?.editor;
+          setRevealModal1(true);
+          unlayer?.exportHtml((data) => {
+            const { html } = data;
+
+            for (let i = 0; i < contacts.length; i++) {
+              name1 = contacts[i].name != null ? contacts[i].name + ' ' : '';
+              name1 += contacts[i].lastname != null ? contacts[i].lastname : '';
+              if (name1.trim().length == 0) name1 = 'Sir/Madam';
+              emailList.push({ name: name1, email: contacts[i].email });
+            }           
+            console.log(emailList);
+            sendConsecativeEmails(emailList, html, [] as string[], 1, 1);
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    });
+  };
+
+  const exportHtml = (firstEmail: string) => {
     fetch('/api/admin/contacts', {
       method: 'POST',
       headers: {
@@ -69,72 +106,115 @@ export default function Page(params: { params: { slug: string } }) {
               name1 += contacts[i].lastname != null ? contacts[i].lastname : '';
               if (name1.trim().length == 0) name1 = 'Sir/Madam';
               emailList.push({ name: name1, email: contacts[i].email });
-             
             }
-            emailList =emailList.sort((a, b) => (a.email > b.email) ? 1 : ((b.email > a.email) ? -1 : 0))
+            emailList = emailList.sort((a, b) =>
+              a.email > b.email ? 1 : b.email > a.email ? -1 : 0
+            );
             if (firstEmail.length > 0) {
-             let index = emailList.findIndex(contact => contact.email === firstEmail);
-             console.log(index)
-             if (index !== -1) {
-              emailList=emailList.slice(index);
-             }
+              let index = emailList.findIndex(
+                (contact) => contact.email === firstEmail
+              );
+              console.log(index);
+              if (index !== -1) {
+                emailList = emailList.slice(index);
+              }
             }
-            console.log(emailList)
-            sendConsecativeEmails(emailList,html,[] as string[],1,1);
-        
-            
-          }); 
+            console.log(emailList);
+            sendConsecativeEmails(emailList, html, [] as string[], 1, 1);
+          });
         })
         .catch((err) => {
           console.log(err);
         });
     });
   };
-  const sendConsecativeEmails = async(emailList:{ name: string; email: string }[],html:any, sentEmails:string[],counter:number,errNumber:number) => {
+  const sendConsecativeEmails = async (
+    emailList: { name: string; email: string }[],
+    html: any,
+    sentEmails: string[],
+    counter: number,
+    errNumber: number
+  ) => {
     if (emailList.length === 0) {
-      let el = sentEmails.filter(a =>!a.includes("Sent successfully")).map(a=>a.split(" ")[3]);
-            console.log(el)
-      setSendingStatus([...sentEmails,'Not Send: '+el]);
-      console.log(sentEmails)
+      let el = sentEmails
+        .filter((a) => !a.includes('Sent successfully'))
+        .map((a) => a.split(' ')[3]);
+      console.log(el);
+      setSendingStatus([...sentEmails, 'Not Send: ' + el]);
+      console.log(sentEmails);
       // setRevealModal1(false);
     } else {
-    const { name, email } = emailList.shift()!;
-    console.log(email, isEmailValid(email));
-    if (isEmailValid(email)) {    
-     fetch('/api/admin/email_mass_send', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        title,
-        message: html,
-        email: email,
-        name: name,
-      }),
-     })
-      .then(async (res) => {
-        const data = await res.json();
-        setSendingStatus([...sentEmails,  (sentEmails.length+1)+'. Sent successfully '+email]); 
-        await sleep(3000);
-        sendConsecativeEmails(emailList,html,[...sentEmails, (sentEmails.length+1)+'. Sent successfully '+email],1,1)
-      })
-      .catch(async (err) => {
-        
-        // console.log("batch size: ",counter,". ",errNumber*60,'seconds wait error, email:', email);
-          // await sleep(3000);
-          
-          // emailList.push({ name, email });
-          setSendingStatus([...sentEmails,(sentEmails.length+1)+'. Failed_to_send_email to ' + email,]); 
-          sendConsecativeEmails(emailList,html,[...sentEmails, (sentEmails.length+1)+'. Failed_to_send_email to ' + email],1,errNumber+1);
-      });
+      const { name, email } = emailList.shift()!;
+      console.log(email, isEmailValid(email));
+      if (isEmailValid(email)) {
+        fetch('/api/admin/email_mass_send', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            title,
+            message: html,
+            email: email,
+            name: name,
+          }),
+        })
+          .then(async (res) => {
+            const data = await res.json();
+            setSendingStatus([
+              ...sentEmails,
+              sentEmails.length + 1 + '. Sent successfully ' + email,
+            ]);
+            await sleep(3000);
+            sendConsecativeEmails(
+              emailList,
+              html,
+              [
+                ...sentEmails,
+                sentEmails.length + 1 + '. Sent successfully ' + email,
+              ],
+              1,
+              1
+            );
+          })
+          .catch(async (err) => {
+            // console.log("batch size: ",counter,". ",errNumber*60,'seconds wait error, email:', email);
+            // await sleep(3000);
+
+            // emailList.push({ name, email });
+            setSendingStatus([
+              ...sentEmails,
+              sentEmails.length + 1 + '. Failed_to_send_email to ' + email,
+            ]);
+            sendConsecativeEmails(
+              emailList,
+              html,
+              [
+                ...sentEmails,
+                sentEmails.length + 1 + '. Failed_to_send_email to ' + email,
+              ],
+              1,
+              errNumber + 1
+            );
+          });
+      } else {
+        setSendingStatus([
+          ...sentEmails,
+          sentEmails.length + 1 + '. Wrong email ' + email + ' . Skipped',
+        ]);
+        sendConsecativeEmails(
+          emailList,
+          html,
+          [
+            ...sentEmails,
+            sentEmails.length + 1 + '. Wrong email ' + email + ' . Skipped',
+          ],
+          1,
+          1
+        );
+      }
     }
-    else{
-    setSendingStatus([...sentEmails,  (sentEmails.length+1)+'. Wrong email '+email+' . Skipped']);
-    sendConsecativeEmails(emailList,html,[...sentEmails,(sentEmails.length+1)+'. Wrong email ' + email+' . Skipped'],1,1);
-    }
-    }
-  }
+  };
   const sendTestEmail = (email: string) => {
     const unlayer = emailEditorRef.current?.editor;
 
@@ -300,11 +380,14 @@ export default function Page(params: { params: { slug: string } }) {
               <div className=" w-full">{value}</div>
             </label>
             <div className="w-full">
-              <button className="btnFancy" onClick={ () => setVis2(true)}>
+              <button className="btnFancy" onClick={() => setVis2(true)}>
                 Send Emails
               </button>
               <button className="btnFancy" onClick={() => setVis(true)}>
                 Send test Email
+              </button>
+              <button className="btnFancy" onClick={() => setVis3(true)}>
+                Send extra Email
               </button>
               <button className="btnFancy" onClick={saveDesign}>
                 Save Design
@@ -348,7 +431,7 @@ export default function Page(params: { params: { slug: string } }) {
                 </button>
               </label>
             )}
-                        {vis2 && (
+            {vis2 && (
               <label className="flex flex-row items-center">
                 Start Emailing from:
                 <input
@@ -365,15 +448,44 @@ export default function Page(params: { params: { slug: string } }) {
                       document.getElementById('email2') as HTMLInputElement
                     ).value;
                     if (isEmailValid(email)) exportHtml(email);
-                    else exportHtml("");
+                    else exportHtml('');
                   }}
                 >
                   Send
                 </button>
               </label>
             )}
-            <div className='w-full h-full flex justify-center items-center'>
-            <EmailEditor ref={emailEditorRef} onReady={onReady} />
+            {vis3 && (
+              <label className="flex flex-row items-center">
+                Start Emailing from:
+                <textarea
+                  className="flex-1 outline-none border-none rounded-md   text-lightMainColor p-0.5 mx-1"
+                  id="emails"
+                  required
+                />
+                <button
+                  className="btnFancy"
+                  onClick={() => {
+                    setVis3(false);
+                    let emails = (
+                      document.getElementById('emails') as HTMLTextAreaElement
+                    ).value.split(',');
+                    emails.forEach((email) => {
+                      if (!isEmailValid(email.trim())) {
+                        alert('Invalid email: ' + email);
+                        return;
+                      }
+                    });
+                    sendExtraEmails(emails);
+                    
+                  }}
+                >
+                  Send
+                </button>
+              </label>
+            )}
+            <div className="w-full h-full flex justify-center items-center">
+              <EmailEditor ref={emailEditorRef} onReady={onReady} />
             </div>
           </div>
         </div>

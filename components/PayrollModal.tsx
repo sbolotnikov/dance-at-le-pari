@@ -243,7 +243,7 @@ const PayrollModal = ({
     for (let i = 0; i < teacherDataObj.daysSchedule.length; i++) {
       tableDataTemp.push({
         date: new Date(
-          teacherDataObj.daysSchedule[i].dateString + ' 5:00:00.1'
+          `${teacherDataObj.daysSchedule[i].dateString}T05:00:00.100Z`
         ).toLocaleDateString('en-us', {
           weekday: 'short',
           year: 'numeric',

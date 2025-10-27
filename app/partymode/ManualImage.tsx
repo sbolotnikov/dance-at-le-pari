@@ -86,21 +86,32 @@ const ManualImage: React.FC<Props> = ({
     handleResize();
 
     return () => window.removeEventListener('resize', handleResize);
+    
   }, []);
 
-  const videoBGtrans = `${videoBG.split('&playlist')[0]}&mute=1&playlist${
+  var videoBGtrans = "";
+  videoBGtrans =videoBG.includes("https:") ?`${videoBG.split('&playlist')[0]}&mute=1&playlist${
     videoBG.split('&playlist')[1]
-  }`;
+  }` : videoBG;
 
   return (
     <div className="w-full h-full flex justify-start items-center relative">
-      {videoBG.length>0 &&<iframe
+      {videoBG.length>0 && videoBG.includes("https:")? <iframe
         className="w-full h-full"
         src={videoBGtrans}
         allow="autoplay;fullscreen;"
         frameBorder="0"
         allowFullScreen
-      ></iframe>}
+      ></iframe>: <video
+      src={videoBG}
+      autoPlay
+      muted
+      loop
+      className="w-full h-full object-cover"
+    >
+      <source src={videoBG} type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>}
       <div className="absolute inset-0" style={{ backgroundImage:`url(${showBackdrop?`/images/backdrop.png`:""})`, backgroundPosition: 'center', backgroundSize: 'cover'}}></div>
       <div
         className={`absolute left-[5%] right-[5%] transition-opacity `}

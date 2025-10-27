@@ -1,10 +1,10 @@
 {
   "scripts": {
-    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "dev": "next dev -H 0.0.0.0"
   },
   "name": "dance-at-le-pari-dance-studio",
   "version": "1.1.0",
@@ -12,7 +12,14 @@
   "author": "Sergey Bolotnikov",
   "license": "MIT",
   "private": true,
+  "engines": {
+    "node": "22.x"
+  },
   "dependencies": {
+    "@cartesia/cartesia-js": "^2.2.5",
+    "@ffmpeg/ffmpeg": "^0.12.15",
+    "@ffmpeg/util": "^0.12.2",
+    "@hookform/resolvers": "^5.1.1",
     "@langchain/core": "^0.3.5",
     "@langchain/openai": "^0.3.4",
     "@langchain/pinecone": "^0.1.1",
@@ -52,6 +59,7 @@
     "react-dom": "18.2.0",
     "react-email-editor": "^1.7.11",
     "react-firebase-hooks": "^5.1.1",
+    "react-hook-form": "^7.61.1",
     "react-iframe": "^1.8.5",
     "react-image-file-resizer": "^0.4.8",
     "react-pdf": "7.5.1",
@@ -65,9 +73,11 @@
     "tailwindcss": "3.3.2",
     "text-to-svg": "^3.1.5",
     "ts-node": "^10.9.1",
+    "twilio": "^5.10.2",
     "typescript": "^5.1.6",
     "uuid": "^9.0.0",
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "zod": "^4.0.9"
   },
   "devDependencies": {
     "@types/pg": "^8.11.6",

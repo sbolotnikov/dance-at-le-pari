@@ -174,7 +174,7 @@ function UserForm(props: UserType) {
         <textarea
           name="user_bio"
           id="user_bio"
-          className="w-80 outline-none bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor border-none rounded-md p-0.5 mx-1 my-1"
+          className="w-80  outline-none bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor border-none rounded-md p-0.5 mx-1 my-1"
           placeholder="Enter Bio"
           rows={4}
           defaultValue={bioLocal}

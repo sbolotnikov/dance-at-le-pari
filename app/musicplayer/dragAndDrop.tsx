@@ -9,6 +9,8 @@ interface Song {
     name: string;
     dance: string | null;
     id: string | null;
+    rate: number | undefined;
+    introduction?: string;
   }
 const DropPlace1: React.FC<{index:number, onStart: (index:number)=> void; onDrop:(index:number)=> void}> = ({index, onStart, onDrop}) => {
     const [showDrop, setShowDrop] = useState(false);
@@ -73,6 +75,7 @@ const TodoList: React.FC = () => {
           name: file.name,
           id: uuidv4(),
           dance: dance,
+          rate: rate,
         };
         console.log(newSong);
         setSongDB([...songDB, newSong]);

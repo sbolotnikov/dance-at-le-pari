@@ -1,22 +1,27 @@
  
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import ShowIcon from './svg/showIcon';
+import { on } from 'events';
 
 interface DraggableListProps {
-  initialItems: string[];
-  addItems: string[];
-  onListChange?: (items: string[]) => void;
+  initialItems: string[]; 
+  onItemMove?: (dragIndex: number, hoverIndex: number) => void;
   isTouching?:(isTouching:boolean)=>void;
   containerClassName?: string;
   itemHeight?: number;
+  currentIndex?: number;
+  onDeleteItem?: (index: number) => void;
+  onItemClick?: (index: number) => void;
   autoScrollSpeed?: number;
 }
 
 const DraggableList: React.FC<DraggableListProps> = ({
-  initialItems,
-  addItems,
-  onListChange,
+  initialItems, 
+  onItemMove,
   isTouching,
+  currentIndex,
+  onDeleteItem,
+  onItemClick,
   containerClassName = '',
   itemHeight = 48,
   autoScrollSpeed = 15
@@ -37,32 +42,15 @@ const DraggableList: React.FC<DraggableListProps> = ({
   
   // Notify parent component about list changes
   useEffect(() => {
-    if ((onListChange)&&(items.length<addItems.length))
-      {
-        setItems(addItems);
-        onListChange(addItems)
-      } else {
-      if (onListChange) {
-        onListChange(items);
-      }
-      
+    if (initialItems) {
+      setItems(initialItems);
     }
-  }, [items,addItems, onListChange]);
+  }, [initialItems]);
 
   const updateList = useCallback((dragIndex: number, hoverIndex: number) => {
     if (dragIndex === hoverIndex) return;
-    
-    setItems(prev => {
-      const newItems = [...prev];
-      const draggedItem = newItems[dragIndex];
-      
-      // Remove the dragged item
-      newItems.splice(dragIndex, 1);
-      // Insert at the new position
-      newItems.splice(hoverIndex, 0, draggedItem);
-      
-      return newItems;
-    });
+    onItemMove && onItemMove(dragIndex, hoverIndex);
+
   }, []);
   
   const handleDragStart = (index: number, e: React.DragEvent<HTMLLIElement>) => {
@@ -228,7 +216,13 @@ const DraggableList: React.FC<DraggableListProps> = ({
       }
     };
   }, []);
-  
+  // useEffect(() => {
+  //   if (onListChange) {
+  //     if (items.length > 0) {
+  //       onListChange(items);
+  //     }
+  //   }
+  // }, [items, onListChange]);
   return (
     <div className={`${containerClassName} relative`}>
     <ul
@@ -263,7 +257,7 @@ const DraggableList: React.FC<DraggableListProps> = ({
             margin: '4px 0',
             border: `1px solid ${dragging === index ? '#ed0808' : 'white'}`,
             borderRadius: '4px',
-            cursor: 'grab',
+            cursor: `${dragging === index ? 'grabbing' : 'grab'}`,
             height: `${itemHeight}px`,
             display: 'flex',
             alignItems: 'center',
@@ -273,19 +267,18 @@ const DraggableList: React.FC<DraggableListProps> = ({
             transform: touchDragging && dragging === index ? 'scale(1.02)' : 'scale(1)'
           }}
         >
-          <div className='drag-handle' style={{ marginRight: '10px', cursor: 'grab' }}>
+          <div className='drag-handle w-10' style={{ marginRight: '10px', cursor: 'grab' }}>
             ≡ {index+1}.
+            {currentIndex!==undefined && <input type="checkbox" checked={currentIndex === index} readOnly className="bg-transparent border-0 m-1 cursor-pointer focus:outline-none" onClick={(e) => { e.stopPropagation(); onItemClick && onItemClick(index); }} />}
           </div>
+          
           <div className="item-content" style={{ flexGrow: 1 }}>
             {item}
           </div>
           <button
                                 onClick={() => {
-                                  let newList = items.filter(
-                                    (item2, j) => j !== index
-                                  );
-                                  setItems(newList);
-                                  onListChange && onListChange(newList);
+                                   
+                                  onDeleteItem && onDeleteItem(index);
                                 }}
                                 className="  fill-alertcolor  stroke-alertcolor  rounded-md border-alertcolor  w-8 h-8 mt-2 hover:scale-110 transition-all duration-150 ease-in-out"
                               >

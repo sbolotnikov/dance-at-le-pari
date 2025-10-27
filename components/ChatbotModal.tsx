@@ -111,6 +111,9 @@ const ChatbotModal = ({ visibility, onReturn }: Props) => {
                   const res = await makeChain(
                     [],question
                  );
+                //  const res1 = await makeChainDJ(
+                //   [],question)
+                //   console.log('res1',res1);
                  setChatMessages([...chatMessages,question, res])
                  setQuestion('');
                  setLoading(false);

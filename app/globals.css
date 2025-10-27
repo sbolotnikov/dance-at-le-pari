@@ -188,6 +188,8 @@ body {
   cursor: pointer;
   transition: 0.4s;
   color: var(--accent-color);
+  fill: var(--accent-color);
+  stroke: var(--accent-color);
   border: 3px solid var(--accent-color);
   background-image: linear-gradient(
     to top,
@@ -199,10 +201,14 @@ body {
 }
 .btnFancy:hover {
   color: #fff;
+  fill: #fff;
+  stroke: #fff;
   background-position: 0% 100%;
 }
 .btnFancy:active {
   color: #fff;
+  fill: #fff;
+  stroke: #fff;
   background-position: 0% 100%;
 }
  

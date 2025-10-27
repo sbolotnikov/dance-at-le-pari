@@ -51,8 +51,9 @@ const ChoosePartyModal = ({ onReturn, onAlert }: Props) => {
     let arr1 = q.docs.map((doc) => doc.data());
     let arr2 = q.docs.map((doc) => doc.id);
     let arr = arr1.map((x, i) => ({ ...x, id: arr2[i] })) as PartyType[];
+    arr.sort((a, b) => a.name.localeCompare(b.name));
     console.log(arr);
-    setChoosenParty(arr2[0]);
+    setChoosenParty(arr[0].id);
     setParties(arr);
   }
 

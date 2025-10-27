@@ -3,12 +3,13 @@
 import { ChatOpenAI, OpenAIEmbeddings } from '@langchain/openai';
 import { ChatPromptTemplate, MessagesPlaceholder } from "@langchain/core/prompts";
 import { BaseMessage } from "@langchain/core/messages";
-import { createStuffDocumentsChain } from "langchain/chains/combine_documents";
-import { createHistoryAwareRetriever } from "langchain/chains/history_aware_retriever";
-import { createRetrievalChain } from "langchain/chains/retrieval";
-import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
-import { PineconeStore } from '@langchain/pinecone';
 import { Pinecone } from "@pinecone-database/pinecone";
+import { PineconeStore } from '@langchain/pinecone';
+import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
+import { createRetrievalChain } from "langchain/chains/retrieval";
+import { createHistoryAwareRetriever } from "langchain/chains/history_aware_retriever";
+import { createStuffDocumentsChain } from "langchain/chains/combine_documents";
+
 
 // import fs from 'fs';
 // import path from 'path';
@@ -302,3 +303,12 @@ export const updateRAG = async (text:string) => {
 
 
 }
+
+
+
+
+
+
+
+
+

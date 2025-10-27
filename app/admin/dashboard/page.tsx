@@ -7,6 +7,7 @@ import { useSession } from 'next-auth/react';
 interface pageProps {}
 
 const page: FC<pageProps> = ({}) => {
+
   const router = useRouter();
   const { data: session } = useSession();
 

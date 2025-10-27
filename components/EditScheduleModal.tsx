@@ -289,6 +289,7 @@ export default function EditScheduleModal({
                   isFocused ? 'mb-28' : ''
                 }`}
               >
+                {/* iphone  mb-28 */}
                 <h2 className="w-full text-center uppercase">
                   {role == 'Student'
                     ? 'Your event'
