@@ -2,7 +2,7 @@
 const nextConfig = {
   experimental: {
     
-    serverComponentsExternalPackages: ['@react-pdf/renderer'],
+     
   },
 };
 // const nextTranslate = require('next-translate');
