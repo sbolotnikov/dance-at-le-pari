@@ -2,13 +2,15 @@
 
 // import { makeChainDJ } from '@/utils/makechain';
 import { BaseMessage } from '@langchain/core/messages';
-import { CartesiaClient } from "@cartesia/cartesia-js";
+import { CartesiaClient } from '@cartesia/cartesia-js';
 
 import { ChatOpenAI } from '@langchain/openai';
-import { ChatPromptTemplate, MessagesPlaceholder } from "@langchain/core/prompts";
- 
+import {
+  ChatPromptTemplate,
+  MessagesPlaceholder,
+} from '@langchain/core/prompts';
 
-import process from "node:process";
+import process from 'node:process';
 
 interface PlaylistSong {
   name: string;
@@ -20,11 +22,10 @@ interface Party {
   id: string;
 }
 
-export async function generateIntroduction(  
-  playlist: PlaylistSong[], 
-  choosenParty:  string | null
+export async function generateIntroduction(
+  playlist: PlaylistSong[],
+  choosenParty: string | null
 ) {
- 
   let introductionArray: string[] = [];
   let introArray: BaseMessage[] = [];
   for (
@@ -32,60 +33,57 @@ export async function generateIntroduction(
     autoPlayIndex1 < playlist.length;
     autoPlayIndex1++
   ) {
-      if (playlist[autoPlayIndex1].dance!=="" && playlist[autoPlayIndex1].name!=="")
-      {
+    if (
+      playlist[autoPlayIndex1].dance !== '' &&
+      playlist[autoPlayIndex1].name !== ''
+    ) {
       const intro1 = await makeChainDJ(
         introArray,
         'Party theme:' + (choosenParty ? choosenParty : 'no party theme'),
-        'introduce Dance: ' +
-          playlist[autoPlayIndex1].dance, (autoPlayIndex1 === playlist.length - 1)? true:false
+        'introduce Dance: ' + playlist[autoPlayIndex1].dance,
+        autoPlayIndex1 === playlist.length - 1 ? true : false
       );
-//+ playlist[autoPlayIndex1].name,
+      //+ playlist[autoPlayIndex1].name,
       introArray = [
         ...introArray,
         [
           'human',
-          'Dance: ' +
-          playlist[autoPlayIndex1].dance +
-          ' - ' 
+          'Dance: ' + playlist[autoPlayIndex1].dance + ' - ',
         ] as unknown as BaseMessage,
         ['system', intro1] as unknown as BaseMessage,
       ];
       introductionArray = [...introductionArray, intro1];
-      }else introductionArray = [...introductionArray, ""]; 
-  
+    } else introductionArray = [...introductionArray, ''];
   }
   return introductionArray;
 }
 
+export async function speak(text: string) {
+  // Set up the client.
+  const client = new CartesiaClient({
+    apiKey: process.env.CARTESIA_API_KEY,
+  });
+  // Make the API call.
+  const response = await client.tts.bytes({
+    modelId: 'sonic-2',
+    voice: {
+      mode: 'id',
+      id: '87748186-23bb-4158-a1eb-332911b0b708',
+    },
+    outputFormat: {
+      container: 'mp3',
+      bitRate: 128000,
+      sampleRate: 44100,
+    },
+    transcript: text,
+  });
 
-export async function speak(  
-   text: string
-) {
- 
-// Set up the client.
-const client = new CartesiaClient({
-  apiKey: process.env.CARTESIA_API_KEY,
-});
-// Make the API call.
-const response = await client.tts.bytes({
-  modelId: "sonic-2",
-  voice: {
-    mode: "id",
-    id: "87748186-23bb-4158-a1eb-332911b0b708",
-  },
-  outputFormat: {
-    container: "mp3",
-    bitRate: 128000,
-    sampleRate: 44100,
-  },
-  transcript: text,
-});
-
-// Convert the response to a Buffer and then to a base64 string.
-// This is to ensure the data is serializable when passing from server to client components.
-const buffer = Buffer.from(response).toString('base64');
-return `data:audio/mpeg;base64,${buffer}`;
+  // Convert the response to a Buffer and then to a base64 string.
+  // This is to ensure the data is serializable when passing from server to client components.
+  const fileContent = response;
+  const base64Content = Buffer.from(fileContent).toString('base64');
+  const base64Uri = `data:audio/mpeg;base64,${base64Content}`;
+  return base64Uri;
 }
 
 //Cathy - Coworker e8e5fffb-252c-436d-b842-8879b84445b6
@@ -95,7 +93,12 @@ return `data:audio/mpeg;base64,${buffer}`;
 
 const cache = new Map<string, any>();
 
-export const makeChainDJ = async (chat_history: BaseMessage[],addToSystemPrompt:string, input: string, lastPrompt:boolean) => {
+export const makeChainDJ = async (
+  chat_history: BaseMessage[],
+  addToSystemPrompt: string,
+  input: string,
+  lastPrompt: boolean
+) => {
   const cacheKey = JSON.stringify({ chat_history, addToSystemPrompt, input });
 
   if (cache.has(cacheKey)) {
@@ -110,8 +113,9 @@ export const makeChainDJ = async (chat_history: BaseMessage[],addToSystemPrompt:
     timeout: undefined,
     maxRetries: 2,
   });
-//song and artist and dance name. Some times name has extra words and numbers. Do not use them. You need to come up with introduction to dance, song and mention song following
-  const djSystemPrompt = `
+  //song and artist and dance name. Some times name has extra words and numbers. Do not use them. You need to come up with introduction to dance, song and mention song following
+  const djSystemPrompt =
+    `
 You are a DJ at a dance party. Your name is DJ LePari.
 You are playing music and interacting with the crowd.
 You should be energetic, and fun. Your first message should be an introduction of yourself and welcome message to the party. 
@@ -123,12 +127,13 @@ Make sure to keep the energy high and the crowd engaged.
 Use exclamations, and fun phrases to keep the mood lively.
 Your responses should be suitable for a live dance party atmosphere.
 Remember to keep it fun, light-hearted, and engaging for all attendees.
-`+addToSystemPrompt;
-  const inputPrompt = input+(lastPrompt?"Last dance. greet people wish them goodnight":"");
+` + addToSystemPrompt;
+  const inputPrompt =
+    input + (lastPrompt ? 'Last dance. greet people wish them goodnight' : '');
   const djPrompt = ChatPromptTemplate.fromMessages([
-    ["system", djSystemPrompt],
-    new MessagesPlaceholder("chat_history"),
-    ["human", "{inputPrompt}"],
+    ['system', djSystemPrompt],
+    new MessagesPlaceholder('chat_history'),
+    ['human', '{inputPrompt}'],
   ]);
 
   const chain = djPrompt.pipe(llm);
@@ -140,11 +145,5 @@ Remember to keep it fun, light-hearted, and engaging for all attendees.
 
   cache.set(cacheKey, response.content);
 
-
   return response.content;
 };
-
-
-
- 
-
