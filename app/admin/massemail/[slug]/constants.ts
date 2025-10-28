@@ -44,14 +44,14 @@ export const SOCIAL_PLATFORM_COLORS: { [key in SocialPlatform]: string } = {
 };
 
 export const SOCIAL_ICON_URLS: { [key in SocialPlatform]: string } = {
-  Facebook: 'https://camo.githubusercontent.com/f76a9ecfb7384395d9fdeca88dec33c9ad36ad67d32e2156f493e310a622864c/68747470733a2f2f6564656e742e6769746875622e696f2f537570657254696e7949636f6e732f696d616765732f7376672f66616365626f6f6b2e737667',
-  Twitter: 'https://camo.githubusercontent.com/ab326066830e689c6ee9d64141aa935764d78b0ecd01e93eb90f00a729359f49/68747470733a2f2f6564656e742e6769746875622e696f2f537570657254696e7949636f6e732f696d616765732f7376672f747769747465722e737667',
-  Instagram: 'https://camo.githubusercontent.com/da1a9ba067cba3e9fed4978aca58ffc6e3abe151c74f722324bda199a97b27cf/68747470733a2f2f6564656e742e6769746875622e696f2f537570657254696e7949636f6e732f696d616765732f7376672f696e7374616772616d2e737667',
-  LinkedIn: 'https://camo.githubusercontent.com/e9592fd6ea20b888ed3c7621d8c7257835af4f2e7232e92f5db4e9e2e4e91380/68747470733a2f2f6564656e742e6769746875622e696f2f537570657254696e7949636f6e732f696d616765732f7376672f6c696e6b6564696e2e737667',
-  YouTube: 'https://camo.githubusercontent.com/ce941b1ba54f5e7b42f93d7812a530fd272a26c919f3c27119f66f938e4e238b/68747470733a2f2f6564656e742e6769746875622e696f2f537570657254696e7949636f6e732f696d616765732f7376672f796f75747562652e737667',
-  Pinterest: 'https://camo.githubusercontent.com/e9128fdba1dea870c75e9eadc8570db30cef72ee057be33c7c611ddb1bbd9980/68747470733a2f2f6564656e742e6769746875622e696f2f537570657254696e7949636f6e732f696d616765732f7376672f70696e7465726573742e737667',
+  Facebook: 'https://www.leparidancenter.com/images/icons/facebook.png',
+  Twitter: 'https://www.leparidancenter.com/images/icons/twitter.png',
+  Instagram: 'https://www.leparidancenter.com/images/icons/instagram.png',
+  LinkedIn: 'https://www.leparidancenter.com/images/icons/linkedin.png',
+  YouTube: 'https://www.leparidancenter.com/images/icons/youtube.png',
+  Pinterest: 'https://www.leparidancenter.com/images/icons/pinterest.png',
   Website: 'https://www.leparidancenter.com/icon-152x152.png',
-  Email: 'https://camo.githubusercontent.com/103e288a5e9194c4cbbaf416dd7652c1fa89a4b15e11b75a6bc3c8a136c22fcd/68747470733a2f2f6564656e742e6769746875622e696f2f537570657254696e7949636f6e732f696d616765732f7376672f656d61696c2e737667',
+  Email: 'https://www.leparidancenter.com/images/icons/mail.png',
 };
 
 export const GOOGLE_FONTS = [
