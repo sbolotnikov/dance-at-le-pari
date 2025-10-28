@@ -29,6 +29,7 @@ function page() {
   const [revealAlert, setRevealAlert] = useState(false);
   const [newName, setNewName] = useState('');
   const [newBio, setNewBio] = useState('');
+  const [newTelephone, setNewTelephone] = useState('');
   const [revealAvatarSelect, setRevealAvatarSelect] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserType>({} as UserType);
   const router = useRouter();
@@ -118,6 +119,23 @@ function page() {
     });
     setRevealAlert(true);
   };
+
+const handleTelephoneUpdate =(id: number, telephone: string) => {
+    setSelectedId(id);
+    setNewTelephone(telephone);
+    setAlertStyle({
+      variantHead: 'danger',
+      heading: 'Warning!',
+      text: `Are you sure about changing user's telephone to ${telephone}?`,
+      color1: 'danger',
+      button1: 'Update Telephone',
+      color2: 'secondary',
+      button2: 'Cancel',
+      inputField: '',
+    });
+    setRevealAlert(true);
+  };
+
   const handleBioUpdate =(id: number, bio: string) => {
     setSelectedId(id);
     setNewBio(bio);
@@ -174,7 +192,20 @@ function page() {
       }).then(() => {
         location.reload();
       });
-    }   else setSelectedId(0);
+    } else if (decision1 == 'Update Telephone'){
+      fetch('/api/admin/upd_user', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: selectedId,
+          telephone: newTelephone,
+        }),
+      }).then(() => {
+        location.reload();
+      });
+    } else setSelectedId(0);
   };
   const onReturnAvatar = (decision1: string, fileLink: string) => {
     setRevealAvatarSelect(false);
@@ -307,6 +338,7 @@ function page() {
                       updateImg={handleImgUpdate}
                       updateName={handleNameUpdate}
                       updateBio={handleBioUpdate}
+                      updateTelephone={handleTelephoneUpdate}
                     />
                   );
                 })}

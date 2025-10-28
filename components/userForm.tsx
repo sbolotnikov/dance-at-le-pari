@@ -12,17 +12,20 @@ interface UserType {
     color?: string;
     id: number;
     bio?:string;
+    telephone?:string;
   };
   delUser: (id: number, name: string) => void;
   updateImg: (id: number, image: string) => void;
   updateName: (id: number, name: string) => void;
   updateBio: (id: number, bio: string) => void;
+  updateTelephone: (id: number, telephone: string) => void;
 }
 function UserForm(props: UserType) { 
   const [isEditVisible, setIsEditVisible] = useState(false);
   const [isBioVisible, setIsBioVisible] = useState(false);
   const [bioLocal, setBioLocal] = useState(props.user.bio);
   const userNameRef = useRef<HTMLInputElement>(null);
+  const userTelephoneRef = useRef<HTMLInputElement>(null);
   const userBioRef = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
     setBioLocal(props.user.bio);
@@ -160,6 +163,32 @@ function UserForm(props: UserType) {
               props.updateName(props.user.id, userNameRef.current!.value!);
           }}
           ref={userNameRef}
+        />
+      )}
+      {!isEditVisible ? (<div className="w-24 flex flex-col items-center justify-center" onClick={(e) => {
+            e.preventDefault();
+            setIsEditVisible(true);
+          }}>
+       {props.user.telephone && (<div className="text-center">{props.user.telephone}</div>)}
+
+     </div>   ) : (
+        <input
+          name="user_telephone"
+          id="user_telephone"
+          className="w-24 outline-none bg-menuBGColor text-darkMainColor dark:text-menuBGColor dark:bg-darkMainColor border-none rounded-md p-0.5 mx-1 my-1"
+          type="text"
+          placeholder="Enter Telephone"
+          defaultValue={props.user.telephone}
+          onBlur={(e) => {
+            e.preventDefault();
+            setIsEditVisible(false);
+            if (
+              userTelephoneRef.current!.value !== '' &&
+              userTelephoneRef.current!.value !== props.user.telephone
+            )
+              props.updateTelephone(props.user.id, userTelephoneRef.current!.value!);
+          }}
+          ref={userTelephoneRef}
         />
       )}
       {bioLocal ? (!isBioVisible ? (
