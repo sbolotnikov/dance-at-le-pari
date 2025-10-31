@@ -313,6 +313,7 @@ export default function Page(params: { params: { slug: string } }) {
             <label className="flex flex-col items-center w-[95%]">
               {' '}
               Transform link for sharing{' '}
+              <div className="flex flex-row justify-between items-center w-full">
               <input
                 type="text"
                 placeholder="Enter link here"
@@ -326,6 +327,16 @@ export default function Page(params: { params: { slug: string } }) {
                   )
                 }
               />
+              <button
+                className="btnFancy"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setValue('');
+                }}
+              >
+                Clear
+              </button>
+              </div>
               <div className=" w-full">{value}</div>
             </label>
             {vis && (
