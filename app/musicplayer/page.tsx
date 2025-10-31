@@ -963,53 +963,44 @@ const PlaylistManager: React.FC<PlaylistManagerProps> = ({
         </div>
       </div>
 
-      <PlaylistModal
-        onMoveItem={(reorderFromIndex, toIndex) => {
-          const newPlaylist = [...playlist];
-          const [movedItem] = newPlaylist.splice(reorderFromIndex, 1);
-          newPlaylist.splice(toIndex, 0, movedItem);
+    <PlaylistModal
+      onMoveItem={(reorderFromIndex, toIndex) => {
+        const newPlaylist = [...playlist];
+        const [movedItem] = newPlaylist.splice(reorderFromIndex, 1);
+        newPlaylist.splice(toIndex, 0, movedItem);
+        onUpdate(newPlaylist);
+      }}
+      onEditItem={(updatedItem) => {
+        // updatedItem is expected to be { id: number; danceName: string; songName: string; speed: number }
+        const newPlaylist = [...playlist];
+        const idx = updatedItem.id;
+        if (idx >= 0 && idx < newPlaylist.length) {
+          const existing = newPlaylist[idx];
+          newPlaylist[idx] = {
+            ...existing,
+            name: updatedItem.songName,
+            dance: updatedItem.danceName || null,
+            rate: updatedItem.speed ?? null,
+          };
           onUpdate(newPlaylist);
-        }}
-        currentIndex={currentSongIndex}
-        onItemClick={(index: number) => onSongChange(index)}
-        onDeleteItem={(index: number) => {
-          // const newPlaylist = [...playlist];
-          // newPlaylist.splice(index, 1);
-          console.log('delete index: ', index);
-          onRemoveSong(index);
-        }}
-        list={playlist.map((item, i) => ({
-          danceName: item.dance ?? '',
-          songName: item.name,
-          speed: item.rate ?? 1,
-          id: i,
-        }))}
-      />
-      {/* <DraggableList
-            initialItems={itemsList}
-            onItemMove={(dragIndex, hoverIndex) => {
-
-              const newPlaylist = [...playlist];
-              const itemToMove = newPlaylist[dragIndex];
-              newPlaylist.splice(dragIndex, 1);
-              newPlaylist.splice(hoverIndex, 0, itemToMove);
-              onUpdate(newPlaylist);
-            }}
-            onDeleteItem={(index: number) => {
-              // const newPlaylist = [...playlist];
-              // newPlaylist.splice(index, 1);
-              console.log('delete index: ', index);
-              onRemoveSong(index);
-            }}
-            isTouching={(isTouching: boolean) => setDragging(isTouching)}
-            currentIndex={currentSongIndex}
-            onItemClick={(index: number) => onSongChange(index)}
-            containerClassName={
-              'h-[70vh]  w-full border border-lightMainColor dark:border-darkMainColor p-1 rounded-lg my-1 overflow-hidden'
-            }
-            itemHeight={56}
-            autoScrollSpeed={15}
-          />  */}
+        }
+      }}
+      currentIndex={currentSongIndex}
+      onItemClick={(index: number) => onSongChange(index)}
+      onDeleteItem={(index: number) => {
+        // const newPlaylist = [...playlist];
+        // newPlaylist.splice(index, 1);
+        console.log('delete index: ', index);
+        onRemoveSong(index);
+      }}
+      list={playlist.map((item, i) => ({
+        danceName: item.dance ?? '',
+        songName: item.name,
+        speed: item.rate ?? 1,
+        id: i,
+      }))}
+    />
+ 
     </AnimateModalLayoutNew>
   );
 };
@@ -1284,7 +1275,16 @@ const page: React.FC = () => {
   const handleSongChange = (index: number) => {
     setCurrentSongIndex(index);
     setRate(playlist[index].rate !== null ? playlist[index].rate : 1);
+    sleep(1200).then(() => {
+          setRate(
+            playlist[index].rate !== null
+              ? playlist[index].rate! + 0.0001
+              : 1
+          );
+        });
   };
+
+
   useEffect(() => {
     console.log(currentSongIndex, 'in useeffect', playlist);
     if (currentSongIndex >= 0 && playlist.length > 0 && choosenParty != '') {

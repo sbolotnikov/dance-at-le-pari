@@ -41,7 +41,7 @@ const EditDanceModal: React.FC<EditDanceModalProps> = ({
       newErrors.songName = 'Song name is required.';
       isValid = false;
     }
-    const speedNum = parseInt(formData.speed, 10);
+    const speedNum = parseFloat(formData.speed);
     if (isNaN(speedNum) || speedNum <= 0) {
       newErrors.speed = 'Speed must be a positive number.';
       isValid = false;
@@ -63,7 +63,7 @@ const EditDanceModal: React.FC<EditDanceModalProps> = ({
         ...item,
         danceName: formData.danceName.trim(),
         songName: formData.songName.trim(),
-        speed: parseInt(formData.speed, 10),
+        speed: parseFloat(formData.speed),
       });
     }
   };

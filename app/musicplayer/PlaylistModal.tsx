@@ -2,19 +2,18 @@ import React, { useState, useEffect } from 'react';
 import DanceItem from './DanceItem';
 import EditDanceModal from './EditDanceModal';
 import { TDanceItemType } from '@/types/screen-settings';
-import { on } from 'events';
 
 interface PlaylistModalProps {
  
   list: TDanceItemType[];
     onMoveItem: (fromIndex: number, toIndex: number) => void;
+    onEditItem: (updatedItem: TDanceItemType) => void;
     onDeleteItem: (id: number) => void;
     currentIndex: number;
     onItemClick: (index: number) => void;
 }
 
-const PlaylistModal: React.FC<PlaylistModalProps> = ({ list, onMoveItem, onDeleteItem, currentIndex, onItemClick }) => {
-  const [currentList, setCurrentList] = useState<TDanceItemType[]>(list);
+const PlaylistModal: React.FC<PlaylistModalProps> = ({ list, onMoveItem, onEditItem, onDeleteItem, currentIndex, onItemClick }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [itemToEdit, setItemToEdit] = useState<TDanceItemType | null>(null);
   const [reorderFromIndex, setReorderFromIndex] = useState<number | null>(null);
@@ -47,7 +46,7 @@ const PlaylistModal: React.FC<PlaylistModalProps> = ({ list, onMoveItem, onDelet
   };
 
   const handleEdit = (id: number) => {
-    const item = currentList.find(d => d.id === id);
+    const item = list.find(d => d.id === id);
     if (item) {
       setItemToEdit(item);
       setIsEditModalOpen(true);
@@ -60,9 +59,7 @@ const PlaylistModal: React.FC<PlaylistModalProps> = ({ list, onMoveItem, onDelet
   };
 
   const handleEditSubmit = (updatedItem: TDanceItemType) => {
-    setCurrentList(prevList =>
-      prevList.map(item => (item.id === updatedItem.id ? updatedItem : item))
-    );
+    onEditItem(updatedItem);
     closeEditModal();
   };
 
