@@ -94,8 +94,8 @@ const TablePage = ({
             return (
               <div
                 key={`row${index}`}
-                className={`blurFilter mx-5 my-1 max-w-1/2   rounded-md  border-0 shadow-xl transition duration-[800] ease-in-out opacity-${
-                  rowsChecked[index] ? 100 : 0
+                className={`blurFilter mx-5 my-1 max-w-1/2   rounded-md  border-0 shadow-xl transition duration-[800] ease-in-out ${
+                  rowsChecked[index] ? 'opacity-100' : 'opacity-0'
                 }`}
                 style={{transitionDelay: `${delayShow}ms`}}
               >

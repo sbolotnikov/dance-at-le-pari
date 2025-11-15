@@ -23,10 +23,18 @@ type Props = {
         const [text1, setText] = useState("");
     
       useEffect(() => {
-        console.log("message",message);
+        // console.log("message",message);
             if (message === '') return;
          let activeTable=parseInt(message.split('.')[0])-1;
          let activeRow=parseInt(message.split('.')[1])-1;
+         if (isNaN(activeTable) || isNaN(activeRow)) {
+            console.warn("Invalid table or row number in message:", message);
+            return;
+        }
+         if ( activeTable < 0 || activeRow < 0 || activeTable >= tablePages.length || activeRow >= (tablePages[activeTable].tableRows?.length || 0)) {
+            console.warn("Invalid table or row number in message:", message);
+            return;
+        }
             setImage(((tablePages[activeTable].rowsPictures!==undefined)&&(tablePages[activeTable].rowsPictures[activeRow]!==undefined))?tablePages[activeTable].rowsPictures[activeRow]:compLogo);
             setText(((tablePages[activeTable].tableRows!==undefined)&&(tablePages[activeTable].tableRows[activeRow]!==undefined))?tablePages[activeTable].tableRows[activeRow]:'');
             console.log("image",((tablePages[activeTable].rowsPictures!==undefined)&&(tablePages[activeTable].rowsPictures[activeRow]!==undefined))?tablePages[activeTable].rowsPictures[activeRow]:compLogo);
