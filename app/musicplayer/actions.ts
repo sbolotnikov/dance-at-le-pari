@@ -11,52 +11,63 @@ import {
 } from '@langchain/core/prompts';
 
 import process from 'node:process';
-import { Readable } from "stream";
+import { Readable } from 'node:stream';
+import { Buffer } from "buffer";
 
-async function streamToBase64(
-  response: Readable | ArrayBuffer | Uint8Array | Buffer
-): Promise<string> {
-  if (response instanceof Readable) {
-    const chunks: Uint8Array[] = [];
-    const encoder = new TextEncoder();
 
-    for await (const chunk of response) {
-      if (typeof chunk === 'string') {
-        chunks.push(encoder.encode(chunk));
-      } else if (Buffer.isBuffer(chunk)) {
-        chunks.push(new Uint8Array(chunk.buffer, chunk.byteOffset, chunk.byteLength));
-      } else if (chunk instanceof Uint8Array) {
-        chunks.push(chunk);
-      } else {
-        chunks.push(new Uint8Array(chunk as ArrayBufferLike));
-      }
-    }
-
-    const totalLength = chunks.reduce((total, chunk) => total + chunk.byteLength, 0);
-    const merged = new Uint8Array(totalLength);
-    let offset = 0;
-
-    for (const chunk of chunks) {
-      merged.set(chunk, offset);
-      offset += chunk.byteLength;
-    }
-
-    return `data:audio/mpeg;base64,${Buffer.from(merged).toString("base64")}`;
-  }
-
-  let merged: Uint8Array;
-  if (Buffer.isBuffer(response)) {
-    merged = new Uint8Array(response.buffer, response.byteOffset, response.byteLength);
-  } else if (response instanceof Uint8Array) {
-    merged = response;
-  } else if (response instanceof ArrayBuffer) {
-    merged = new Uint8Array(response);
-  } else {
-    throw new TypeError('Unsupported response type for streamToBase64');
-  }
-
-  return `data:audio/mpeg;base64,${Buffer.from(merged).toString("base64")}`;
+interface Node18UniversalStreamWrapper {
+  readableStream: ReadableStream<Uint8Array>;
 }
+
+function hasReadableStream(
+  value: unknown
+): value is Node18UniversalStreamWrapper {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'readableStream' in value &&
+    value.readableStream instanceof ReadableStream
+  );
+}
+interface Node18UniversalStreamWrapper {
+  readableStream: ReadableStream<Uint8Array>;
+}
+
+function isUint8Array(value: unknown): value is Uint8Array {
+  return value instanceof Uint8Array;
+}
+
+function isArrayBuffer(value: unknown): value is ArrayBuffer {
+  return value instanceof ArrayBuffer;
+}
+
+async function toAudioDataUri(response: { body: ReadableStream }): Promise<string> {
+  const reader = response.body.getReader();
+  const chunks: Uint8Array[] = [];
+  
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      if (value) chunks.push(value);
+    }
+  } finally {
+    reader.releaseLock(); // Important: release the lock
+  }
+  
+  const totalLength = chunks.reduce((acc, chunk) => acc + chunk.length, 0);
+  const combined = new Uint8Array(totalLength);
+  let offset = 0;
+  for (const chunk of chunks) {
+    combined.set(chunk, offset);
+    offset += chunk.length;
+  }
+  
+  return `data:audio/mpeg;base64,${Buffer.from(combined).toString('base64')}`;
+}
+
+
+
 
 interface PlaylistSong {
   name: string;
@@ -103,32 +114,101 @@ export async function generateIntroduction(
   }
   return introductionArray;
 }
-
 export async function speak(text: string) {
-  // Set up the client.
+  // Validate inputs
+  if (!text || text.trim().length === 0) {
+    throw new Error('Text cannot be empty');
+  }
+
+  if (!process.env.CARTESIA_API_KEY) {
+    throw new Error('CARTESIA_API_KEY is not set');
+  }
+
   const client = new CartesiaClient({
     apiKey: process.env.CARTESIA_API_KEY,
   });
-  // Make the API call.
-  const response = await client.tts.bytes({
-    modelId: 'sonic-2',
-    voice: {
-      mode: 'id',
-      id: '87748186-23bb-4158-a1eb-332911b0b708',
-    },
-    outputFormat: {
-      container: 'mp3',
-      bitRate: 128000,
-      sampleRate: 44100,
-    },
-    transcript: text,
-  });
 
-  // Convert the response to a Buffer and then to a base64 string.
-  // This is to ensure the data is serializable when passing from server to client components.
-  
-  return await streamToBase64(response);
+  let response;
+  try {
+    response = await client.tts.bytes({
+      modelId: 'sonic-2',
+      voice: {
+        mode: 'id',
+        id: '34575e71-908f-4ab6-ab54-b08c95d6597d',
+      },
+      outputFormat: {
+        container: 'mp3',
+        bitRate: 128000,
+        sampleRate: 44100,
+      },
+      transcript: text,
+    });
+  } catch (error: any) {
+    console.error('Cartesia API error:', error);
+    throw new Error(`TTS API call failed: ${error.message || 'Unknown error'}`);
+  }
+
+  const toDataUri = (buffer: Buffer) =>
+    `data:audio/mpeg;base64,${buffer.toString('base64')}`;
+
+  const resp = response as any;
+
+  // Handle Node18UniversalStreamWrapper - use async iteration instead of getReader
+  if (resp && typeof resp === 'object' && 'readableStream' in resp) {
+    try {
+      const chunks: Uint8Array[] = [];
+      
+      // Use for-await to iterate over the stream (works with async iterables)
+      for await (const chunk of resp) {
+        if (chunk) {
+          chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+        }
+      }
+      
+      if (chunks.length === 0) {
+        throw new Error('No audio data received from TTS API');
+      }
+      
+      const combined = Buffer.concat(chunks);
+      return toDataUri(combined);
+    } catch (error: any) {
+      console.error('Stream reading error:', error);
+      throw new Error(`Failed to read audio stream: ${error.message}`);
+    }
+  }
+
+  // Handle Node.js Readable stream
+  if (resp instanceof Readable) {
+    const buffers: Buffer[] = [];
+    for await (const chunk of resp) {
+      buffers.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+    }
+    return toDataUri(Buffer.concat(buffers));
+  }
+
+  // Handle Buffer
+  if (Buffer.isBuffer(resp)) {
+    return toDataUri(resp);
+  }
+
+  // Handle Uint8Array
+  if (resp instanceof Uint8Array) {
+    return toDataUri(Buffer.from(resp));
+  }
+
+  // Handle ArrayBuffer
+  if (resp instanceof ArrayBuffer) {
+    return toDataUri(Buffer.from(new Uint8Array(resp)));
+  }
+
+  throw new Error(`Unsupported TTS response type: ${typeof resp}, constructor: ${resp?.constructor?.name}`);
 }
+
+//Katie friendly fixer f786b574-daa5-4673-aa0c-cbe3e8534c02
+// Ronald Thinker 5ee9feff-1265-424a-9d7f-8e4d431a12c7
+
+// Joey neibough guy !!!!!  34575e71-908f-4ab6-ab54-b08c95d6597d
+
 
 //Cathy - Coworker e8e5fffb-252c-436d-b842-8879b84445b6
 //regular party !! Zack - Sportsman ed81fd13-2016-4a49-8fe3-c0d2761695fc

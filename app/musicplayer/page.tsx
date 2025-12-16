@@ -1250,15 +1250,7 @@ const page: React.FC = () => {
 
   async function playText(text: string, index?: number) {
     if (text.trim() === '') return;
-    const base64Audio = await speak(text);
-    const byteCharacters = atob(base64Audio);
-    const byteNumbers = new Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-    const byteArray = new Uint8Array(byteNumbers);
-    const audioBlob = new Blob([byteArray], { type: 'audio/mpeg' });
-    const audioUrl = await fileToBase64(audioBlob);
+    const audioUrl = await speak(text)
 
     let playlist1 = [...playlist];
     if (index !== undefined) {
@@ -1761,7 +1753,7 @@ const page: React.FC = () => {
                               };
                             })
                           );
-
+                        alert('Starting processing and stitching...');
                         processAndStitchAudio(
                           result,
                           songLength / 1000,
