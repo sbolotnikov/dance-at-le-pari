@@ -120,6 +120,7 @@ const page: React.FC<Props> = () => {
     compChoice,
     showBackdrop,
     setCompID,
+    unmuteVideos
   } = usePartySettings();
   const [competition, setCompetition] = useState('T9FLgtEDmxQFYFTnfrvO');
   const { heat } = useComp(competition);
@@ -354,6 +355,7 @@ const page: React.FC<Props> = () => {
           originY={originY}
           showSVGAnimation={showSVGAnimation}
           particleTypes={particleTypes}
+          unmuteVideos={unmuteVideos}
           onReturn={() => setModalVisible(false)}
           onRenewInterval={() => setRefreshVar2(!refreshVar2)}
         />
@@ -634,10 +636,11 @@ const page: React.FC<Props> = () => {
                             (video) => video.name === e.target.value
                           );
                           if (selectedVideo) {
+                            console.log(unmuteVideos ? selectedVideo.link.replace('&mute=1', '') : selectedVideo.link)
                             handleChange(
                               {
                                 name: selectedVideo.name,
-                                link: selectedVideo.link,
+                                link: unmuteVideos ? selectedVideo.link.replace('&mute=1', '') : selectedVideo.link,
                               },
                               'videoChoice'
                             );
@@ -842,7 +845,17 @@ const page: React.FC<Props> = () => {
                       />
                       <p className="ml-2">Show heat number</p>
                     </div>
-
+                    <div className="flex flex-row mb-2.5 mt-2.5">
+                      <input
+                        type="checkbox"
+                        checked={unmuteVideos}
+                        onChange={(e) =>
+                          handleChange(e.target.checked, 'unmuteVideos')
+                        }
+                        className="self-center"
+                      />
+                      <p className="ml-2">Unmute Videos</p>
+                    </div>
                     <div className="flex flex-row justify-center items-center">
                       <div className="flex flex-col justify-center items-center">
                         {compsArr && (

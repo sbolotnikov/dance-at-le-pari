@@ -59,6 +59,7 @@ type Props = {
   heat: string;
   showBackdrop: boolean;
   showSVGAnimation: boolean;
+  unmuteVideos:boolean;
   onReturn: (submitten: string) => void;
   onRenewInterval: () => void;
 };
@@ -102,6 +103,7 @@ const ShowPlayingModal: React.FC<Props> = ({
   originY,
   showSVGAnimation,
   particleTypes,
+  unmuteVideos,
   heat,
   onReturn,
   onRenewInterval,
@@ -547,6 +549,7 @@ const ShowPlayingModal: React.FC<Props> = ({
               titleBarHider={titleBarHider}
               showBackdrop={showBackdrop}
               seconds={seconds}
+              unmuteVideos={unmuteVideos}
             />
           )}
           {mode === 'Auto' && (
@@ -625,7 +628,7 @@ const ShowPlayingModal: React.FC<Props> = ({
               ></div>}
             </div>
           )}
-          {showTable && (<TablePage tablePages={tablePages} tableChoice={tableChoice} fontSize={fontSize} fontSize2={fontSize2} picture1={compLogo.link} picture2={manualPicture.link} fontName={fontName} textColor={textColor}/>)}
+          {showTable && (<TablePage tablePages={tablePages} tableChoice={tableChoice} fontSize={fontSize} fontSize2={fontSize2} picture1={compLogo.link} picture2={manualPicture.link} fontName={fontName} colorBG={colorBG} textColor={textColor}/>)}
           {showSVGAnimation1 && (
             <div className="absolute inset-0 flex justify-center items-center">
               {windowSize.width! > 0 && windowSize.height! > 0 && (

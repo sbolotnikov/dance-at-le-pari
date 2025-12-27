@@ -49,6 +49,7 @@ interface PartyContextType {
     originY: number; 
     compChoice:string;
     particleTypes:string[];
+    unmuteVideos:boolean;
 }
 interface ReturnPartyContextType {
   image: string;
@@ -96,7 +97,7 @@ interface ReturnPartyContextType {
   compChoice:string;
   particleTypes:string[];
   setCompID: (id: string) => void;
-
+  unmuteVideos:boolean;
 } 
 export const PartyContext = createContext<ReturnPartyContextType >({} as ReturnPartyContextType );
 
@@ -142,6 +143,7 @@ export default function usePartySettings(): ReturnPartyContextType {
     originY: 0, 
     compChoice:"112",
     particleTypes:["star","kiss",'snowflake', 'heart', 'tower','LP',"maple",'rose','diamond','clover','streamer','lightning','hydrangea','fred'],
+    unmuteVideos:false,
   });
   
     
@@ -160,7 +162,7 @@ export default function usePartySettings(): ReturnPartyContextType {
       let party = {...value.data(), id:compID, } as PartyContextType;
       setPartyArray(party);
     }
-    if (error) console.log('error', error);
+    if (error) console.log(' Party error', error);
   }, [value, compID, error]);
   
   

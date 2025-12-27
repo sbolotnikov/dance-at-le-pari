@@ -8,6 +8,7 @@ type Props = {
   fontSize: number;
   fontSize2: number;
   textColor: string;
+  colorBG: string;
   fontName: string;
   picture1: string;
   picture2: string;
@@ -19,6 +20,7 @@ const TablePage = ({
   fontSize,
   fontSize2,
   textColor,
+  colorBG,
   fontName,
   picture1,
   picture2
@@ -70,7 +72,7 @@ const TablePage = ({
     <div className="w-full h-full  inset-0 absolute ">
       <div className="w-full h-full flex flex-col justify-center items-center relative">
         <div
-          className={`w-[97%] blurFilter h-1/6 mt-5 flex justify-centeritems-center border-0 shadow-xl relative`} 
+          className={`w-[97%] blurFilter h-1/6 mt-5 flex justify-centeritems-center  border-0 shadow-xl relative`} 
         >
             <AnimatedTextMessage
                   text={tablePages[tableChoice].name}
@@ -127,7 +129,7 @@ const TablePage = ({
                 rotateX: ['0deg', '0deg', '89deg', '89deg', '90deg'],
                 x: ['0vw', '0vw', '0vw', '0vw', '-100vw'],
               }}
-               className={`w-[1000px] h-[768px] blurFilter p-1 m-1 rounded-md flex flex-col items-center justify-center  border border-[${textColor}] `}
+               className={`w-[1000px] h-[768px] blurFilter bg-[${colorBG}] p-1 m-1 rounded-md flex flex-col items-center justify-center  border border-[${textColor}] `}
               // style={{ backgroundImage: `url(${tablePages[tableChoice].rowsPictures && tablePages[tableChoice].rowsPictures[choosenRow]?tablePages[tableChoice].rowsPictures[choosenRow]:""})`, backgroundSize: 'contain', backgroundPosition: 'center', boxShadow: '0 30px 40px rgba(0,0,0,.1)',
               //   backgroundRepeat: 'no-repeat', }}
              
