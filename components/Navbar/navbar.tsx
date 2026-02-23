@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store/store';
 import ChatbotModal from '../ChatbotModal';  
 import sleep from '@/utils/functions';
+import AlertMessage from '../alertMessage';
 
 type Props = {
   path: string;
@@ -36,6 +37,7 @@ const Navbar = ({ path, locale, children }: Props) => {
   const [cartState, setCartState] = useState(false);
   const [isChatbotModalOpen, setIsChatbotModalOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [isVisibleAlert, setIsVisibleAlert ] = useState(true);
   const { changeTheme, darkMode, hideNav } = useContext(
     SettingsContext
   ) as ScreenSettingsContextType;
@@ -362,6 +364,23 @@ const Navbar = ({ path, locale, children }: Props) => {
           />
         </div>
       </div>
+      {isVisibleAlert && <AlertMessage
+        visibility={true}
+        styling={{
+          variantHead: '',
+          heading: '',
+          text: '',
+          color1: 'success',
+          button1: 'OK',
+          color2: '',
+          button2: '',
+          inputField: 'false',
+        }}
+        onReturn={(val) => {
+          setIsVisibleAlert(false);
+          console.log('Alert returned:', val);
+        }}
+      />}
       {children}
 
       <div

@@ -225,32 +225,8 @@ export default function Page(params: { params: { slug: string } }) {
 
   return (
     <PageWrapper className="absolute top-0 left-0 w-full h-screen flex items-center md:items-end justify-center">
-      {revealModal && (
-        <EditContactsModal
-          visibility={revealModal}
-          onReturn={(mode) => {
-            if (mode == 0)
-              sleep(1200).then(() => {
-                setRevealModal(false);
-              });
-            if (mode == 1) {
-              setLoading(true);
-            }
-            if (mode == 2) setLoading(false);
-          }}
-        />
-      )}
-      {revealModal1 && (
-        <ShowSendingEmailResultsModal
-          visibility={revealModal1}
-          status={sendingStatus}
-          onReturn={() => {
-            sleep(1200).then(() => {
-              setRevealModal1(false);
-            });
-          }}
-        />
-      )}
+      
+ 
       {loading && <LoadingScreen />}
       <div
         className={`blurFilter border-0 rounded-md p-2 mt-2  shadow-2xl w-[95svw]  max-w-[1328px]  flex justify-center items-center flex-col  bg-lightMainBG dark:bg-darkMainBG h-[70svh] md:h-[85svh]
@@ -268,77 +244,20 @@ export default function Page(params: { params: { slug: string } }) {
               className="text-center font-semibold md:text-4xl uppercase"
               style={{ letterSpacing: '1px' }}
             >
-              Email Marketing
+              Urgent Message
             </h2>
 
-            <div className="group flex  cursor-pointer  flex-col justify-center items-center  absolute right-10 top-1">
-              <div className="  h-10 w-10 md:h-14 md:w-14 relative hover:scale-110 group-hover:animate-bounce stroke-lightMainColor dark:stroke-darkMainColor">
-                <div
-                  className="cursor-pointer h-10 w-10 md:h-14 md:w-14 border-2 rounded-md m-auto "
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setRevealModal(true);
-                  }}
-                >
-                  <ShowIcon icon={'MailList'} stroke={'0.1'} />
-                </div>
-              </div>
-              <p className=" tracking-widest transition duration-300 ease-in-out absolute leftt-0 -bottom-2 md:-bottom-4  rounded-md text-center text-lightMainColor dark:text-darkMainColor text-[6px] md:text-base dark:bg-darkMainBG      group-hover:inline-flex  ">
-                Contacts
-              </p>
-            </div>
+ 
             {dimensions.height! > 600 && (
               <div
                 id="icon"
                 className=" h-20 w-20 md:h-28 md:w-28 fill-lightMainColor stroke-lightMainColor dark:fill-darkMainColor dark:stroke-darkMainColor m-auto"
               >
-                <ShowIcon icon={'MassEmail'} stroke={'0.1'} />
+                <ShowIcon icon={'UrgentMessage'} stroke={'0.1'} />
               </div>
             )}
-            <label
-              className={`flex flex-col items-center w-[95%] ${
-                dimensions.height! < 600 ? 'mt-2' : ''
-              }`}
-            >
-              {' '}
-              Email Title{' '}
-              <input
-                type="text"
-                placeholder="Title"
-                value={title}
-                className="dark:bg-lightMainBG bg-darkMainBG dark:text-lightMainColor text-darkMainColor w-full p-1 rounded-md"
-                onChange={(e) => setTitle(e.target.value)}
-              />
-            </label>
-            <label className="flex flex-col items-center w-[95%]">
-              {' '}
-              Transform link for sharing{' '}
-              <div className="flex flex-row justify-between items-center w-full">
-              <input
-                type="text"
-                placeholder="Enter link here"
-                value={value}
-                className="dark:bg-lightMainBG bg-darkMainBG dark:text-lightMainColor text-darkMainColor w-full p-1 rounded-md"
-                onChange={(e) =>
-                  setValue(
-                    `https://drive.google.com/thumbnail?id=${
-                      e.target.value.split('/file/d/')[1].split('/')[0]
-                    }&sz=w1000`
-                  )
-                }
-              />
-              <button
-                className="btnFancy"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setValue('');
-                }}
-              >
-                Clear
-              </button>
-              </div>
-              <div className=" w-full">{value}</div>
-            </label>
+             
+            
             {vis && (
               <label className="flex flex-row items-center">
                 Email
@@ -387,34 +306,7 @@ export default function Page(params: { params: { slug: string } }) {
                 </button>
               </label>
             )}
-            {vis3 && (
-              <label className="flex flex-row items-center">
-                Start Emailing from:
-                <textarea
-                  className="flex-1 outline-none border-none rounded-md   text-lightMainColor p-0.5 mx-1"
-                  id="emails"
-                  required
-                />
-                <button
-                  className="btnFancy"
-                  onClick={() => {
-                    setVis3(false);
-                    let emails = (
-                      document.getElementById('emails') as HTMLTextAreaElement
-                    ).value.split(',');
-                    emails.forEach((email) => {
-                      if (!isEmailValid(email.trim())) {
-                        alert('Invalid email: ' + email);
-                        return;
-                      }
-                    });
-                    sendExtraEmails(emails);
-                  }}
-                >
-                  Send
-                </button>
-              </label>
-            )}
+ 
             <HTMLGenerator
               onSendEmails={(option, html) => {
                 setHtmlContent(html);

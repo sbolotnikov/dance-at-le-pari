@@ -14,8 +14,9 @@ import { DroppedItem } from './types';
 
 interface HTMLGeneratorProps {
     onSendEmails: (option: number,html:string) => void;
+    noEmailOption?: boolean; // Optional prop to hide the send email button
 }
-const HTMLGenerator: React.FC<HTMLGeneratorProps> = ({ onSendEmails }) => {
+const HTMLGenerator: React.FC<HTMLGeneratorProps> = ({ onSendEmails, noEmailOption }) => {
   const { state: emailData, setState: setEmailData, undo, redo, canUndo, canRedo } = useHistory<EmailRow[]>([]);
   const [globalStyles, setGlobalStyles] = useState<GlobalStyles>(DEFAULT_GLOBAL_STYLES);
   const [selectedElementId, setSelectedElementId] = useState<string | null>(null);

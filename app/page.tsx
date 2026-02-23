@@ -51,6 +51,7 @@ export default async function Home() {
 
   return (
     <PageWrapper className="absolute inset-0 flex flex-col justify-start items-center mt-10 md:mt-20 ">
+      
       <div className="w-full h-1/5 relative overflow-auto rounded-md">
         {events && <BannerGallery events={events} seconds={7} />}
       </div>
