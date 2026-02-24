@@ -292,3 +292,12 @@ model InvoiceSession {
 
   @@map("invoice_sessions")
 }
+
+model UrgentMessage {
+  id          Int      @id @default(autoincrement())
+  htmlContent String
+  pages       String[]
+  enabled     Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

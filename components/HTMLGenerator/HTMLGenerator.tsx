@@ -1,5 +1,5 @@
 
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { useHistory } from './hooks/useHistory';
 import { EmailRow, Element, GlobalStyles, PreviewMode } from './types';
 import { generateHtml } from './utils/htmlGenerator';
@@ -13,15 +13,33 @@ import { DEFAULT_GLOBAL_STYLES } from './constants';
 import { DroppedItem } from './types';
 
 interface HTMLGeneratorProps {
-    onSendEmails: (option: number,html:string) => void;
+    onSendEmails: (option: number,html:string, pages?:string[]) => void;
     noEmailOption?: boolean; // Optional prop to hide the send email button
+    mode?: 'email' | 'message';
+    initialHtml?: string;
+    initialPages?: string[];
 }
-const HTMLGenerator: React.FC<HTMLGeneratorProps> = ({ onSendEmails, noEmailOption }) => {
+const HTMLGenerator: React.FC<HTMLGeneratorProps> = ({ onSendEmails, noEmailOption, mode, initialHtml, initialPages }) => {
   const { state: emailData, setState: setEmailData, undo, redo, canUndo, canRedo } = useHistory<EmailRow[]>([]);
   const [globalStyles, setGlobalStyles] = useState<GlobalStyles>(DEFAULT_GLOBAL_STYLES);
   const [selectedElementId, setSelectedElementId] = useState<string | null>(null);
   const [previewMode, setPreviewMode] = useState<PreviewMode>('desktop');
   const [showCode, setShowCode] = useState<boolean>(false); 
+  const [selectedPages, setSelectedPages] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (initialHtml) {
+      const { rows, styles } = parseHtml(initialHtml);
+      setEmailData(rows);
+      setGlobalStyles(styles);
+    }
+  }, [initialHtml, setEmailData]);
+
+  useEffect(() => {
+    if (initialPages) {
+      setSelectedPages(initialPages);
+    }
+  }, [initialPages]); 
 
   // Find the currently selected element by id
   const selectedElement = useMemo<Element | null>(() => {
@@ -209,7 +227,10 @@ const HTMLGenerator: React.FC<HTMLGeneratorProps> = ({ onSendEmails, noEmailOpti
         onJsonImport={handleJsonImport}
         emailData={emailData}
         globalStyles={globalStyles}
-        onSendEmails={(option) => onSendEmails(option, generatedHtml)}
+        onSendEmails={(option, pages) => onSendEmails(option, generatedHtml, pages)}
+        selectedPages={selectedPages}
+        onSelectedPagesChange={setSelectedPages}
+        mode={mode}
       />
       <div className="flex flex-1 overflow-hidden">
         <Sidebar />

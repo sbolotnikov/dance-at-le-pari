@@ -364,7 +364,7 @@ const Navbar = ({ path, locale, children }: Props) => {
           />
         </div>
       </div>
-      {isVisibleAlert && <AlertMessage
+      {/* {isVisibleAlert && <AlertMessage
         visibility={true}
         styling={{
           variantHead: '',
@@ -380,7 +380,7 @@ const Navbar = ({ path, locale, children }: Props) => {
           setIsVisibleAlert(false);
           console.log('Alert returned:', val);
         }}
-      />}
+      />} */}
       {children}
 
       <div

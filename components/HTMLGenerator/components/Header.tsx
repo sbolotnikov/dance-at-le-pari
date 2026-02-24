@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { PreviewMode, EmailRow, GlobalStyles } from '../types';
 import {
   DesktopIcon,
@@ -26,7 +26,10 @@ interface HeaderProps {
   onJsonImport: (json: string) => void;
   emailData: EmailRow[];
   globalStyles: GlobalStyles;
-  onSendEmails: (option: number) => void;
+  onSendEmails: (option: number, pages?: string[]) => void;
+  selectedPages?: string[];
+  onSelectedPagesChange?: (pages: string[]) => void;
+  mode?: 'email' | 'message';
 }
 
 const Header: React.FC<HeaderProps> = ({
@@ -44,9 +47,14 @@ const Header: React.FC<HeaderProps> = ({
   emailData,
   globalStyles,
   onSendEmails,
+  selectedPages,
+  onSelectedPagesChange,
+  mode = 'email',
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const jsonFileInputRef = useRef<HTMLInputElement>(null);
+  const [showPageSelection, setShowPageSelection] = useState(false);
+  const pages = ['home', 'calendar', 'about_us', 'dancing', 'extra'];
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -117,19 +125,79 @@ const Header: React.FC<HeaderProps> = ({
     { mode: 'mobile', icon: <MobileIcon /> },
   ];
 
+  const handlePageSelection = (page: string) => {
+    if (onSelectedPagesChange && selectedPages) {
+      if (page === 'all') {
+        if (selectedPages.length === pages.length) {
+          onSelectedPagesChange([]);
+        } else {
+          onSelectedPagesChange(pages);
+        }
+      } else {
+        if (selectedPages.includes(page)) {
+          onSelectedPagesChange(selectedPages.filter((p) => p !== page));
+        } else {
+          onSelectedPagesChange([...selectedPages, page]);
+        }
+      }
+    }
+  };
+
   return (
     <header className="  border-b border-slate-200 px-4 py-2 flex flex-col items-center justify-between   z-20">
       <div className="w-full flex flex-row items-center justify-center ">
-        <button className="btnFancy " onClick={() => onSendEmails(2)}>
-          Send Emails
-        </button>
-        <button className="btnFancy" onClick={() => onSendEmails(1)}>
-          Send test Email
-        </button>
-        <button className="btnFancy" onClick={() => onSendEmails(3)}>
-          Send extra Email
-        </button>
+        {mode === 'email' && (
+          <>
+            <button className="btnFancy " onClick={() => onSendEmails(2)}>
+              Send Emails
+            </button>
+            <button className="btnFancy" onClick={() => onSendEmails(1)}>
+              Send test Email
+            </button>
+            <button className="btnFancy" onClick={() => onSendEmails(3)}>
+              Send extra Email
+            </button>
+          </>
+        )}
+        {mode === 'message' && selectedPages && onSelectedPagesChange && (
+          <button className="btnFancy" onClick={() => setShowPageSelection(!showPageSelection)}>
+            Post a message
+          </button>
+        )}
       </div>
+      {showPageSelection && selectedPages && onSelectedPagesChange && (
+        <div className="w-full flex flex-col items-center justify-center my-2">
+          <div className="flex flex-wrap gap-2">
+            <label className="flex items-center gap-1">
+              <input
+                type="checkbox"
+                checked={selectedPages.length === pages.length}
+                onChange={() => handlePageSelection('all')}
+              />
+              All
+            </label>
+            {pages.map((page) => (
+              <label key={page} className="flex items-center gap-1">
+                <input
+                  type="checkbox"
+                  checked={selectedPages.includes(page)}
+                  onChange={() => handlePageSelection(page)}
+                />
+                {page}
+              </label>
+            ))}
+          </div>
+          <button
+            className="btnFancy mt-2"
+            onClick={() => {
+              onSendEmails(4, selectedPages);
+              setShowPageSelection(false);
+            }}
+          >
+            Save Message
+          </button>
+        </div>
+      )}
       <div className="w-full flex items-center justify-between">
         <div className="flex items-center gap-2">
           {previewModes.map(({ mode, icon }) => (
