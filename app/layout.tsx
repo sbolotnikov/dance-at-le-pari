@@ -88,7 +88,7 @@ export default function RootLayoutFC({
             id="mainPage"
             className="fixed w-screen h-[100svh] p-0 m-0 items-center justify-center overflow-hidden text-lightMainColor dark:text-darkMainColor bg-lightMainBG dark:bg-darkMainBG"
           >
-            <Navbar path={''} locale={'EN'}>
+            <Navbar locale={'EN'}>
               {children}
             </Navbar>
           </main>

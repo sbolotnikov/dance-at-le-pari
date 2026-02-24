@@ -4,6 +4,7 @@ import {
   TDance,
   TEvent,
   TPriceOption,
+  TUrgentMessage,
 } from '@/types/screen-settings';
 import { createContext, useState, useEffect } from 'react';
 type Props = {
@@ -17,6 +18,7 @@ export const SettingsProvider = ({ children }: Props) => {
   const [darkMode, setDarkMode] = useState(false);
   const [hideNav, setHideNav] = useState(false);
   const [events, setEvents] = useState<TEvent[]>([]);
+  const [urgentMessages, setUrgentMessages] = useState<TUrgentMessage[]>([]);
   const [hours, setHours] = useState<string[]>([]);
   const [selectedWeddingPackages, setSelectedWeddingPackages] = useState<number[]>([]);
   const [specialWeddingPackage, setSpecialWeddingPackage] = useState<number>(-1);
@@ -53,6 +55,7 @@ export const SettingsProvider = ({ children }: Props) => {
           eventtype: '',
         },...data.events,]);
         setHours(data.hours);
+        setUrgentMessages(data.urgentMessages);
         setGiftCertificates(data.giftCertificates.priceOptions);
         setGSImage(data.giftCertificates.img);
         console.log(data);
@@ -77,6 +80,7 @@ export const SettingsProvider = ({ children }: Props) => {
         dances,
         giftCertificates,
         gsImage,
+        urgentMessages,
       }}
     >
       {children}

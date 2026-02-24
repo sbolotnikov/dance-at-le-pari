@@ -13,8 +13,14 @@ export type ScreenSettingsContextType = {
   dances: TDance[];
   giftCertificates:TPriceOption[]
   gsImage: string;
+  urgentMessages: TUrgentMessage[];
 };
- 
+type TUrgentMessage = {
+  id: number;
+  htmlContent: string;
+  pages: string[];
+  enabled: boolean; // Add enabled field
+}; 
 export type TComment = {
   id: string;
   createdAt: string;

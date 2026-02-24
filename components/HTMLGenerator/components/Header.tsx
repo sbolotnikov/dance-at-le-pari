@@ -54,7 +54,7 @@ const Header: React.FC<HeaderProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const jsonFileInputRef = useRef<HTMLInputElement>(null);
   const [showPageSelection, setShowPageSelection] = useState(false);
-  const pages = ['home', 'calendar', 'about_us', 'dancing', 'extra'];
+  const [pageInputValue, setPageInputValue] = useState('');
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -125,21 +125,20 @@ const Header: React.FC<HeaderProps> = ({
     { mode: 'mobile', icon: <MobileIcon /> },
   ];
 
-  const handlePageSelection = (page: string) => {
-    if (onSelectedPagesChange && selectedPages) {
-      if (page === 'all') {
-        if (selectedPages.length === pages.length) {
-          onSelectedPagesChange([]);
-        } else {
-          onSelectedPagesChange(pages);
-        }
-      } else {
-        if (selectedPages.includes(page)) {
-          onSelectedPagesChange(selectedPages.filter((p) => p !== page));
-        } else {
-          onSelectedPagesChange([...selectedPages, page]);
-        }
+  const handlePageInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault();
+      const newPage = pageInputValue.trim();
+      if (newPage && onSelectedPagesChange && selectedPages && !selectedPages.includes(newPage)) {
+        onSelectedPagesChange([...selectedPages, newPage]);
       }
+      setPageInputValue('');
+    }
+  };
+
+  const handleRemovePage = (pageToRemove: string) => {
+    if (onSelectedPagesChange && selectedPages) {
+      onSelectedPagesChange(selectedPages.filter((page) => page !== pageToRemove));
     }
   };
 
@@ -167,26 +166,24 @@ const Header: React.FC<HeaderProps> = ({
       </div>
       {showPageSelection && selectedPages && onSelectedPagesChange && (
         <div className="w-full flex flex-col items-center justify-center my-2">
-          <div className="flex flex-wrap gap-2">
-            <label className="flex items-center gap-1">
-              <input
-                type="checkbox"
-                checked={selectedPages.length === pages.length}
-                onChange={() => handlePageSelection('all')}
-              />
-              All
-            </label>
-            {pages.map((page) => (
-              <label key={page} className="flex items-center gap-1">
-                <input
-                  type="checkbox"
-                  checked={selectedPages.includes(page)}
-                  onChange={() => handlePageSelection(page)}
-                />
-                {page}
-              </label>
-            ))}
-          </div>
+          <div className="flex flex-wrap gap-2 mb-2">
+          {selectedPages.map((page) => (
+            <div key={page} className="flex items-center gap-1 bg-gray-200 rounded-full px-2 py-1 text-sm">
+              {page}
+              <button onClick={() => handleRemovePage(page)} className="text-red-500">
+                &times;
+              </button>
+            </div>
+          ))}
+        </div>
+        <input
+          type="text"
+          value={pageInputValue}
+          onChange={(e) => setPageInputValue(e.target.value)}
+          onKeyDown={handlePageInputKeyDown}
+          placeholder="Add a page and press Enter"
+          className="w-full p-2 border rounded-md"
+        />
           <button
             className="btnFancy mt-2"
             onClick={() => {

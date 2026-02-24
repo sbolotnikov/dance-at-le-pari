@@ -15,10 +15,10 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store/store';
 import ChatbotModal from '../ChatbotModal';  
 import sleep from '@/utils/functions';
-import AlertMessage from '../alertMessage';
+import { usePathname } from 'next/navigation';
+import AlertMessageFull from '../alertMessageFull';
 
 type Props = {
-  path: string;
   locale?: string | undefined;
   children?: React.ReactNode;
 };
@@ -31,19 +31,33 @@ type CartItem = {
   amount: number;
 };
 
-const Navbar = ({ path, locale, children }: Props) => {
-  const [style1, setStyle1] = useState({ display: 'none' });
+const Navbar = ({  locale, children }: Props) => {
   const [burgerState, setBurgerState] = useState(false);
   const [cartState, setCartState] = useState(false);
   const [isChatbotModalOpen, setIsChatbotModalOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [isVisibleAlert, setIsVisibleAlert ] = useState(true);
-  const { changeTheme, darkMode, hideNav } = useContext(
+  const [messageVisible, setMessageVisible] = useState(false);
+  const [HTMLMessage, setHTMLMessage] = useState('');
+  const pathname = usePathname();
+  const { changeTheme, darkMode, hideNav, urgentMessages } = useContext(
     SettingsContext
   ) as ScreenSettingsContextType;
   const { data: session } = useSession();
   const windowSize = useDimensions();
   const { items } = useSelector((state: RootState) => state.cart);
+  useEffect(() =>{
+      console.log('PATH:', pathname);
+      let pathVar = pathname.split('/')[1];
+      if (pathname == '/') {pathVar = 'home'}
+      console.log('Path Variable:', pathVar);
+      let filteredMessages = urgentMessages.filter(message => message.pages.includes(pathVar));
+      console.log('Filtered Messages:', filteredMessages);
+      if (filteredMessages.length > 0) {
+        setMessageVisible(true);
+        setHTMLMessage(filteredMessages[0].htmlContent);
+      }
+
+  }, [pathname, urgentMessages])
   useEffect(() => {
     if (windowSize.width !== undefined) {
       if (windowSize.width! < 768) {
@@ -593,6 +607,9 @@ const Navbar = ({ path, locale, children }: Props) => {
               }}
             />
           </div>
+        )}
+        {messageVisible && (
+          <AlertMessageFull visibility={messageVisible} _html={HTMLMessage} onReturn={()=>setMessageVisible(false)}/>
         )}
       </div>
     </nav>

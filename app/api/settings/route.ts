@@ -30,6 +30,13 @@ export async function GET() {
       if (eventsArray.filter(item=>item.templateID==settings!.front_templates_ids[i])[0]!=undefined)
        events1.push(eventsArray.filter(item=>item.templateID==settings!.front_templates_ids[i])[0])
     }    
+    let urgentMessages: any[] = [];
+      urgentMessages = await prisma.urgentMessage.findMany({
+        where: {
+          enabled: true,
+        },
+      });
+    
     await prisma.$disconnect()
 
 
@@ -40,7 +47,7 @@ export async function GET() {
         JSON.stringify({ message: 'No such template exist',status: 422}),
       );
     }
-  return new NextResponse(JSON.stringify({events, hours, giftCertificates,wedding:{packages:settings?.weddingPackages, special:settings?.specialPackage}} ), {
+  return new NextResponse(JSON.stringify({events, hours, giftCertificates,wedding:{packages:settings?.weddingPackages, special:settings?.specialPackage}, urgentMessages: urgentMessages} ), {
     status: 201,
   });
 }

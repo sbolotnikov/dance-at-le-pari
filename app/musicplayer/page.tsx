@@ -1496,7 +1496,9 @@ const page: React.FC = () => {
             ...rest,
             rate: rate === null ? undefined : rate,
           }))}
-          onClose={() => setIsChooseSongWebModal(false)}
+          onClose={() =>
+            sleep(1200).then(() => setIsChooseSongWebModal(false))
+          }
           onPlay={(song) => {
             setPlaylist([
               ...playlist,

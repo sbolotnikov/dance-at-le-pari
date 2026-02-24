@@ -1,82 +1,163 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
-import sleep, { isEmailValid } from '@/utils/functions';
+import { useSession } from 'next-auth/react'; 
 import { useRouter } from 'next/navigation';
 import { PageWrapper } from '@/components/page-wrapper';
-import ShowIcon from '@/components/svg/showIcon';
-import EditContactsModal from '@/components/EditContactsModal';
+import ShowIcon from '@/components/svg/showIcon'; 
 import { useDimensions } from '@/hooks/useDimensions';
-import LoadingScreen from '@/components/LoadingScreen';
-import ShowSendingEmailResultsModal from '@/components/ShowSendingEmailResultsModal';
+import LoadingScreen from '@/components/LoadingScreen'; 
 import HTMLGenerator from '@/components/HTMLGenerator/HTMLGenerator';
+import EditPagesModal from '@/components/EditPagesModal';
+import { TUrgentMessage } from '@/types/screen-settings';
+import AlertMessage from '@/components/alertMessage';
+import AlertMessageFull from '@/components/alertMessageFull';
+import sleep from '@/utils/functions';
 
-type UrgentMessage = {
-  id: number;
-  htmlContent: string;
-  pages: string[];
-};
 
-export default function Page() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
+
+export default function Page() { 
   const [htmlContent, setHtmlContent] = useState('');
   const [loading, setLoading] = useState(false);
-  const [urgentMessages, setUrgentMessages] = useState<UrgentMessage[]>([]);
-  const [editingMessage, setEditingMessage] = useState<UrgentMessage | null>(
+  const [visibleAlert, setVisibleAlert] = useState(true);
+  const [urgentMessages, setUrgentMessages] = useState<TUrgentMessage[]>([]);
+  const [editingMessage, setEditingMessage] = useState<TUrgentMessage | null>(
     null
   );
-  const [previewMessage, setPreviewMessage] = useState<UrgentMessage | null>(
+  const [editingPagesMessage, setEditingPagesMessage] =
+    useState<TUrgentMessage | null>(null);
+  const [previewMessage, setPreviewMessage] = useState<TUrgentMessage | null>(
     null
   );
 
   const dimensions = useDimensions();
 
-  // Mock data for initial state
-  useEffect(() => {
-    setUrgentMessages([
-      {
-        id: 1,
-        htmlContent: '<h1>Welcome to our website!</h1>',
-        pages: ['home'],
-      },
-      {
-        id: 2,
-        htmlContent: '<h2>Special event this weekend!</h2>',
-        pages: ['calendar', 'extra'],
-      },
-    ]);
-  }, []);
-
-  const handleSaveMessage = (html: string, pages: string[]) => {
-    if (editingMessage) {
-      // Update existing message
-      setUrgentMessages(
-        urgentMessages.map((msg) =>
-          msg.id === editingMessage.id ? { ...msg, htmlContent: html, pages } : msg
-        )
-      );
-      setEditingMessage(null);
-    } else {
-      // Create new message
-      const newMessage: UrgentMessage = {
-        id: Date.now(),
-        htmlContent: html,
-        pages: pages,
-      };
-      setUrgentMessages([...urgentMessages, newMessage]);
+  const fetchUrgentMessages = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/admin/urgent-messages');
+      if (!res.ok) {
+        throw new Error('Failed to fetch urgent messages');
+      }
+      const data: TUrgentMessage[] = await res.json();
+      setUrgentMessages(data);
+    } catch (error) {
+      console.error('Error fetching urgent messages:', error);
+      // Optionally, display an error message to the user
+    } finally {
+      setLoading(false);
     }
-    setHtmlContent('');
   };
 
-  const handleEditMessage = (message: UrgentMessage) => {
+  useEffect(() => {
+    fetchUrgentMessages();
+  }, []);
+
+  const handleSaveMessage = async (html: string, pages: string[]) => {
+    setLoading(true);
+    try {
+      if (editingMessage) {
+        // Update existing message
+        const res = await fetch(`/api/admin/urgent-messages/${editingMessage.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ htmlContent: html, pages, enabled: editingMessage.enabled }),
+        });
+        if (!res.ok) {
+          throw new Error('Failed to update urgent message');
+        }
+        setEditingMessage(null);
+      } else {
+        // Create new message
+        const res = await fetch('/api/admin/urgent-messages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ htmlContent: html, pages, enabled: true }), // New messages are enabled by default
+        });
+        if (!res.ok) {
+          throw new Error('Failed to create urgent message');
+        }
+      }
+      setHtmlContent('');
+      fetchUrgentMessages(); // Refresh the list
+    } catch (error) {
+      console.error('Error saving urgent message:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEditMessage = (message: TUrgentMessage) => {
     setEditingMessage(message);
     setHtmlContent(message.htmlContent);
   };
 
-  const handleDeleteMessage = (id: number) => {
-    setUrgentMessages(urgentMessages.filter((msg) => msg.id !== id));
+  const handleDeleteMessage = async (id: number) => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/admin/urgent-messages/${id}`, {
+        method: 'DELETE',
+      });
+      if (!res.ok) {
+        throw new Error('Failed to delete urgent message');
+      }
+      fetchUrgentMessages(); // Refresh the list
+    } catch (error) {
+      console.error('Error deleting urgent message:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSavePages = async (messageId: number, pages: string[]) => {
+    setLoading(true);
+    try {
+      const messageToUpdate = urgentMessages.find(msg => msg.id === messageId);
+      if (!messageToUpdate) {
+        throw new Error('Message not found for page update');
+      }
+      const res = await fetch(`/api/admin/urgent-messages/${messageId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...messageToUpdate, pages }),
+      });
+      if (!res.ok) {
+        throw new Error('Failed to update message pages');
+      }
+      setEditingPagesMessage(null);
+      fetchUrgentMessages(); // Refresh the list
+    } catch (error) {
+      console.error('Error saving pages:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleToggleEnabled = async (message: TUrgentMessage) => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/admin/urgent-messages/${message.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...message, enabled: !message.enabled }),
+      });
+      if (!res.ok) {
+        throw new Error('Failed to toggle urgent message status');
+      }
+      fetchUrgentMessages(); // Refresh the list
+    } catch (error) {
+      console.error('Error toggling message status:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -87,7 +168,7 @@ export default function Page() {
         }`}
       >
         <div
-          id="wrapperDiv"
+          id="mainPage"
           className="w-full h-full relative  p-1 overflow-auto border border-lightMainColor dark:border-darkMainColor rounded-md flex flex-col justify-center items-center"
         >
           <div
@@ -134,7 +215,7 @@ export default function Page() {
                     <div
                       dangerouslySetInnerHTML={{ __html: msg.htmlContent }}
                     />
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
                       Pages: {msg.pages.join(', ')}
                     </p>
                     <div className="flex gap-2 mt-2">
@@ -143,6 +224,12 @@ export default function Page() {
                         onClick={() => handleEditMessage(msg)}
                       >
                         Edit
+                      </button>
+                      <button
+                        className="btnFancy"
+                        onClick={() => setEditingPagesMessage(msg)}
+                      >
+                        Edit Pages
                       </button>
                       <button
                         className="btnFancy"
@@ -156,6 +243,12 @@ export default function Page() {
                       >
                         Preview
                       </button>
+                      <button
+                        className="btnFancy"
+                        onClick={() => handleToggleEnabled(msg)}
+                      >
+                        {msg.enabled ? 'Disable' : 'Enable'}
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -165,19 +258,20 @@ export default function Page() {
         </div>
       </div>
       {previewMessage && (
-        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-4 rounded-md">
-            <div
-              dangerouslySetInnerHTML={{ __html: previewMessage.htmlContent }}
-            />
-            <button
-              className="btnFancy mt-4"
-              onClick={() => setPreviewMessage(null)}
-            >
-              Close
-            </button>
-          </div>
-        </div>
+        <AlertMessageFull
+          visibility={!!previewMessage}
+          _html={previewMessage.htmlContent}
+          onReturn={() =>setPreviewMessage(null)}
+        />
+      )}
+      {editingPagesMessage && (
+        <EditPagesModal
+          message={editingPagesMessage}
+          onClose={() => setEditingPagesMessage(null)}
+          onSave={(pages) => {
+            handleSavePages(editingPagesMessage.id, pages);
+          }}
+        />
       )}
     </PageWrapper>
   );

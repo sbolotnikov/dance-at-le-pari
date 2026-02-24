@@ -145,7 +145,7 @@ const ContainerLoaded = () => {
 
 export default function Home() {
   // const [events, setEvents] = useState<TEventArray | null>(null);
-  const { events } = useContext(SettingsContext) as ScreenSettingsContextType;
+  const { events, urgentMessages } = useContext(SettingsContext) as ScreenSettingsContextType;
   const windowSize = useDimensions();
   const [bigScreen, setBigScreen] = useState(false);
 
