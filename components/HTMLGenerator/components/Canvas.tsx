@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { EmailRow, PreviewMode, DroppedItem, EmailColumn, Element as EmailElementType, GlobalStyles } from '../types';
 import EmailElement from './EmailElemement';
 
@@ -19,11 +19,11 @@ const DropIndicator: React.FC = () => (
 
 const Canvas: React.FC<CanvasProps> = ({ emailData, onDrop, onSelectElement, selectedElementId, onDeleteElement, previewMode, globalStyles }) => {
     const [dragOver, setDragOver] = useState<{rowIndex: number, colIndex: number, position: number} | null>(null);
+    const lastCalculatedPosition = useRef<{rowIndex: number, colIndex: number, position: number} | null>(null);
 
     const handleDragOver = (e: React.DragEvent, rowIndex: number, colIndex: number) => {
         e.preventDefault();
         const target = e.currentTarget as HTMLDivElement;
-        const rect = target.getBoundingClientRect();
         const children = Array.from(target.children).filter(child => child.classList.contains('email-element-wrapper'));
         
         let position = children.length;
@@ -36,14 +36,16 @@ const Canvas: React.FC<CanvasProps> = ({ emailData, onDrop, onSelectElement, sel
         }
         
         setDragOver({ rowIndex, colIndex, position });
+        lastCalculatedPosition.current = { rowIndex, colIndex, position };
     };
 
     const handleLayoutDragOver = (e: React.DragEvent, rowIndex: number) => {
         e.preventDefault();
         setDragOver({rowIndex, colIndex: -1, position: 0});
+        lastCalculatedPosition.current = {rowIndex, colIndex: -1, position: 0};
     };
 
-    const handleDrop = (e: React.DragEvent, rowIndex: number, colIndex: number, position: number) => {
+    const handleDrop = (e: React.DragEvent, rowIndex: number, colIndex: number) => {
         e.preventDefault();
         e.stopPropagation(); // Stop event from bubbling up to parent drop zones
         setDragOver(null);
@@ -63,6 +65,16 @@ const Canvas: React.FC<CanvasProps> = ({ emailData, onDrop, onSelectElement, sel
             
             // After parsing, validate the structure of the object.
             if (item && typeof item === 'object' && item.type) {
+                const target = e.currentTarget as HTMLDivElement;
+                const children = Array.from(target.children).filter(child => child.classList.contains('email-element-wrapper'));
+                let position = children.length;
+                for (let i = 0; i < children.length; i++) {
+                    const childRect = children[i].getBoundingClientRect();
+                    if (e.clientY < childRect.top + childRect.height / 2) {
+                        position = i;
+                        break;
+                    }
+                }
                 onDrop(item, rowIndex, colIndex, position);
             } else {
                 console.warn("Dropped item has invalid structure:", item);
@@ -80,6 +92,7 @@ const Canvas: React.FC<CanvasProps> = ({ emailData, onDrop, onSelectElement, sel
         const relatedTarget = e.relatedTarget as HTMLElement;
         if (!e.currentTarget.contains(relatedTarget)) {
             setDragOver(null);
+            lastCalculatedPosition.current = null;
         }
     };
 
@@ -106,14 +119,14 @@ const Canvas: React.FC<CanvasProps> = ({ emailData, onDrop, onSelectElement, sel
                 className="shadow-lg transition-all duration-300 mx-auto" 
                 style={canvasStyle}
                 onDragLeave={handleDragLeave}
-                onDrop={(e) => handleDrop(e, (emailData || []).length -1, 0, 0)} // fallback drop
+                onDrop={(e) => handleDrop(e, (emailData || []).length -1, 0)} // fallback drop
             >
                 {(emailData || []).map((row, rowIndex) => (
                     <div 
                         key={row.id} 
                         className="border-b border-dashed border-slate-300 relative group"
                         onDragOver={(e) => handleLayoutDragOver(e, rowIndex)}
-                        onDrop={(e) => handleDrop(e, rowIndex, -1, 0)}
+                        onDrop={(e) => handleDrop(e, rowIndex, -1)}
                     >
                          {dragOver?.rowIndex === rowIndex && dragOver.colIndex === -1 && <DropIndicator />}
                         <div className="flex">
@@ -139,7 +152,7 @@ const Canvas: React.FC<CanvasProps> = ({ emailData, onDrop, onSelectElement, sel
                                         key={col.id} 
                                         style={columnStyle}
                                         className="border-r border-dashed border-slate-300 last:border-r-0 p-2 min-h-[50px]"
-                                        onDrop={(e) => handleDrop(e, rowIndex, colIndex, dragOver?.position || 0)}
+                                        onDrop={(e) => handleDrop(e, rowIndex, colIndex)}
                                         onDragOver={(e) => handleDragOver(e, rowIndex, colIndex)}
                                     >
                                        { (col.elements || []).length === 0 && dragOver?.rowIndex === rowIndex && dragOver?.colIndex === colIndex && (
@@ -166,9 +179,9 @@ const Canvas: React.FC<CanvasProps> = ({ emailData, onDrop, onSelectElement, sel
                 {(!emailData || emailData.length === 0) && (
                      <div
                         className="w-full min-h-[200px] flex items-center justify-center border-2 border-dashed border-slate-300 rounded-lg"
-                        onDragOver={(e) => { e.preventDefault(); setDragOver({rowIndex: 0, colIndex: 0, position: 0})}}
-                        onDrop={(e) => handleDrop(e, 0, 0, 0)}
-                        onDragLeave={() => setDragOver(null)}
+                        onDragOver={(e) => { e.preventDefault(); setDragOver({rowIndex: 0, colIndex: 0, position: 0}); lastCalculatedPosition.current = {rowIndex: 0, colIndex: 0, position: 0}; }}
+                        onDrop={(e) => handleDrop(e, 0, 0)}
+                        onDragLeave={() => { setDragOver(null); lastCalculatedPosition.current = null; }}
                     >
                         {dragOver ? <DropIndicator /> : <p className="text-slate-500">Drag a component or layout here to start</p>}
                     </div>
