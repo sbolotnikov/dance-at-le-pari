@@ -29,7 +29,7 @@ const DraggableItem: React.FC<{ name: string; type: DraggableType; columns?: num
 
   return (
     <div
-      ref={draggableRef} // Assign ref for touch drag
+      ref={draggableRef as React.RefObject<HTMLDivElement>} // Assign ref for touch drag
       draggable={!isGlobalDragging} // Only allow native drag if not touch dragging
       onDragStart={handleNativeDragStart} // Keep native drag for desktop
       className="flex flex-col items-center justify-center p-2 text-center bg-white border border-slate-200 rounded-lg cursor-grab hover:shadow-md hover:border-brand-primary transition-all"
