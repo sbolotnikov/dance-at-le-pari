@@ -1,26 +1,37 @@
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { COMPONENT_TYPES, LAYOUT_TYPES } from '../constants';
 import { DroppedItem, DraggableType } from '../types';
 import { TextIcon, ImageIcon, ButtonIcon, DividerIcon, SpacerIcon, SocialIcon, ColumnsIcon } from './icons';
+import { useTouchDrag } from '../hooks/useTouchDrag';
+import { useDragContext } from '../hooks/DragContext';
 
 const DraggableItem: React.FC<{ name: string; type: DraggableType; columns?: number; widths?: string[]; children: React.ReactNode; }> = ({ name, type, columns, widths, children }) => {
-  const handleDragStart = (e: React.DragEvent) => {
-    const item: DroppedItem = { type };
+  const { isDragging: isGlobalDragging } = useDragContext(); // Get global dragging state
+  const item: DroppedItem = useMemo(() => {
+    const baseItem: DroppedItem = { type };
     if (columns) {
-        item.columns = columns;
+      baseItem.columns = columns;
     }
     if (widths) {
-        item.widths = widths;
+      baseItem.widths = widths;
     }
+    return baseItem;
+  }, [type, columns, widths]);
+
+  const { draggableRef } = useTouchDrag({ item });
+
+  // Handle native drag for desktop
+  const handleNativeDragStart = (e: React.DragEvent) => {
     e.dataTransfer.setData('application/json', JSON.stringify(item));
     e.dataTransfer.effectAllowed = 'move';
   };
 
   return (
     <div
-      draggable
-      onDragStart={handleDragStart}
+      ref={draggableRef} // Assign ref for touch drag
+      draggable={!isGlobalDragging} // Only allow native drag if not touch dragging
+      onDragStart={handleNativeDragStart} // Keep native drag for desktop
       className="flex flex-col items-center justify-center p-2 text-center bg-white border border-slate-200 rounded-lg cursor-grab hover:shadow-md hover:border-brand-primary transition-all"
     >
       {children}

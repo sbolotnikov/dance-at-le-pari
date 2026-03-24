@@ -386,6 +386,41 @@ body {
 }
 
 
+
+
+
+/* scroll bar color styles */
+.scrollable {  
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #991b1b transparent;
+}
+
+/* Chrome, Edge, and Safari */
+.scrollable::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollable::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+  background: #991b1b;
+  border-radius: 10px;
+}
+
+.scrollable::-webkit-scrollbar-thumb:hover {
+  background: #7f1d1d;
+}
+
+
+
+
+
+
+
 .blurFilter {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter:blur(12px);

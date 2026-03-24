@@ -1,7 +1,12 @@
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { EmailRow, PreviewMode, DroppedItem, EmailColumn, Element as EmailElementType, GlobalStyles } from '../types';
 import EmailElement from './EmailElemement';
+import { useTouchDrop, TouchDropHandle } from '../hooks/useTouchDrop'; // Updated import
+import { useDragContext } from '../hooks/DragContext'; // New import
+import EmptyCanvasDropTarget from './EmptyCanvasDropTarget'; // New import
+import  CanvasRow  from '@/components/HTMLGenerator/components/CanvasRow'; // New import
+import  CanvasColumn  from '@/components/HTMLGenerator/components/CanvasColumn'; // New import
 
 interface CanvasProps {
   emailData: EmailRow[];
@@ -13,13 +18,14 @@ interface CanvasProps {
   globalStyles: GlobalStyles;
 }
 
-const DropIndicator: React.FC = () => (
+export const DropIndicator: React.FC = () => (
     <div className="h-1 bg-blue-500 rounded-full my-2 animate-pulse" />
 );
 
 const Canvas: React.FC<CanvasProps> = ({ emailData, onDrop, onSelectElement, selectedElementId, onDeleteElement, previewMode, globalStyles }) => {
     const [dragOver, setDragOver] = useState<{rowIndex: number, colIndex: number, position: number} | null>(null);
     const lastCalculatedPosition = useRef<{rowIndex: number, colIndex: number, position: number} | null>(null);
+    const { isDragging: isTouchDragging, draggedItem, setDraggedItem, setIsDragging } = useDragContext(); // Added draggedItem, setDraggedItem, setIsDragging
 
     const handleDragOver = (e: React.DragEvent, rowIndex: number, colIndex: number) => {
         e.preventDefault();
@@ -96,6 +102,84 @@ const Canvas: React.FC<CanvasProps> = ({ emailData, onDrop, onSelectElement, sel
         }
     };
 
+    const registeredDropTargets = useRef<TouchDropHandle[]>([]); // New: Registry for droppable areas
+
+    // New: Function to register a droppable area
+    const registerDropTarget = useCallback((target: TouchDropHandle) => {
+        registeredDropTargets.current.push(target);
+        return () => {
+            registeredDropTargets.current = registeredDropTargets.current.filter(t => t !== target);
+        };
+    }, []);
+
+    // Global touchmove handler
+    const handleGlobalTouchMove = useCallback((e: TouchEvent) => {
+        if (!isTouchDragging || !draggedItem) return;
+        e.preventDefault(); // Prevent scrolling during drag
+
+        const touch = e.touches[0];
+        let foundOverTarget = false;
+
+        registeredDropTargets.current.forEach(target => {
+            const isOver = target.isPointOver(touch.clientX, touch.clientY);
+            target.setIsOver(isOver); // Update isOver state for each target
+            if (isOver) {
+                foundOverTarget = true;
+            }
+        });
+        // Optionally, update a global dragOver state for the Canvas if needed for visual feedback
+        // For now, relying on individual target's isOver
+    }, [isTouchDragging, draggedItem]);
+
+    // Global touchend handler
+    const handleGlobalTouchEnd = useCallback((e: TouchEvent) => {
+        if (!isTouchDragging || !draggedItem) return;
+        
+        const touch = e.changedTouches[0];
+        let dropped = false;
+
+        // Find the drop target the touch ended over
+        for (const target of registeredDropTargets.current) {
+            if (target.isPointOver(touch.clientX, touch.clientY)) {
+                const dropData = target.getDropData(e);
+                if (dropData) {
+                    target.onDrop(draggedItem, dropData.rowIndex, dropData.colIndex, dropData.position);
+                    dropped = true;
+                    break;
+                }
+            }
+        }
+
+        // Reset drag state
+        setDraggedItem(null);
+        setIsDragging(false);
+        registeredDropTargets.current.forEach(target => target.setIsOver(false)); // Clear all isOver states
+
+        // Clean up global listeners
+        window.removeEventListener('touchmove', handleGlobalTouchMove);
+        window.removeEventListener('touchend', handleGlobalTouchEnd);
+        window.removeEventListener('touchcancel', handleGlobalTouchEnd);
+
+    }, [isTouchDragging, draggedItem, setDraggedItem, setIsDragging]);
+
+    // Effect to attach/detach global listeners
+    useEffect(() => {
+        if (isTouchDragging) {
+            window.addEventListener('touchmove', handleGlobalTouchMove, { passive: false });
+            window.addEventListener('touchend', handleGlobalTouchEnd);
+            window.addEventListener('touchcancel', handleGlobalTouchEnd);
+        } else {
+            window.removeEventListener('touchmove', handleGlobalTouchMove);
+            window.removeEventListener('touchend', handleGlobalTouchEnd);
+            window.removeEventListener('touchcancel', handleGlobalTouchEnd);
+        }
+        return () => {
+            window.removeEventListener('touchmove', handleGlobalTouchMove);
+            window.removeEventListener('touchend', handleGlobalTouchEnd);
+            window.removeEventListener('touchcancel', handleGlobalTouchEnd);
+        };
+    }, [isTouchDragging, handleGlobalTouchMove, handleGlobalTouchEnd]);
+
     const getPreviewSize = () => {
         switch (previewMode) {
             case 'tablet': return '768px';
@@ -106,7 +190,8 @@ const Canvas: React.FC<CanvasProps> = ({ emailData, onDrop, onSelectElement, sel
     
     const canvasStyle: React.CSSProperties = {
         width: getPreviewSize(),
-        maxWidth: '100%',
+        minWidth: '200px', // Ensure minimum width
+        // Removed maxWidth: '100%' to allow extension
         background: globalStyles.contentBackground,
         color: globalStyles.textColor,
         fontFamily: globalStyles.fontFamily,
@@ -122,69 +207,25 @@ const Canvas: React.FC<CanvasProps> = ({ emailData, onDrop, onSelectElement, sel
                 onDrop={(e) => handleDrop(e, (emailData || []).length -1, 0)} // fallback drop
             >
                 {(emailData || []).map((row, rowIndex) => (
-                    <div 
-                        key={row.id} 
-                        className="border-b border-dashed border-slate-300 relative group"
-                        onDragOver={(e) => handleLayoutDragOver(e, rowIndex)}
-                        onDrop={(e) => handleDrop(e, rowIndex, -1)}
-                    >
-                         {dragOver?.rowIndex === rowIndex && dragOver.colIndex === -1 && <DropIndicator />}
-                        <div className="flex">
-                            {(row.columns || []).map((col, colIndex) => {
-                                // Robustness fix: Find any element with verticalAlign to control the column's flex alignment.
-                                const elementWithVA = (col.elements || []).find(el => el.style.verticalAlign);
-                                const columnVerticalAlign = elementWithVA ? elementWithVA.style.verticalAlign : 'top';
-                                
-                                const flexAlignMap = {
-                                    top: 'flex-start',
-                                    middle: 'center',
-                                    bottom: 'flex-end',
-                                };
-                                const columnStyle = {
-                                    width: col.style.width as string,
-                                    display: 'flex',
-                                    flexDirection: 'column' as const,
-                                    justifyContent: flexAlignMap[columnVerticalAlign as 'top' | 'middle' | 'bottom'] || 'flex-start',
-                                };
-
-                                return (
-                                    <div 
-                                        key={col.id} 
-                                        style={columnStyle}
-                                        className="border-r border-dashed border-slate-300 last:border-r-0 p-2 min-h-[50px]"
-                                        onDrop={(e) => handleDrop(e, rowIndex, colIndex)}
-                                        onDragOver={(e) => handleDragOver(e, rowIndex, colIndex)}
-                                    >
-                                       { (col.elements || []).length === 0 && dragOver?.rowIndex === rowIndex && dragOver?.colIndex === colIndex && (
-                                            <DropIndicator />
-                                        )}
-                                        {(col.elements || []).map((el: EmailElementType, elIndex: number) => (
-                                            <React.Fragment key={el.id}>
-                                                {dragOver?.rowIndex === rowIndex && dragOver?.colIndex === colIndex && dragOver?.position === elIndex && <DropIndicator />}
-                                                <EmailElement
-                                                    element={el}
-                                                    onSelect={() => onSelectElement(el.id)}
-                                                    isSelected={selectedElementId === el.id}
-                                                    onDelete={() => onDeleteElement(el.id)}
-                                                />
-                                            </React.Fragment>
-                                        ))}
-                                        {dragOver?.rowIndex === rowIndex && dragOver?.colIndex === colIndex && dragOver?.position === (col.elements || []).length && <DropIndicator />}
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </div>
+                    <CanvasRow
+                        key={row.id}
+                        row={row}
+                        rowIndex={rowIndex}
+                        emailData={emailData}
+                        onDrop={onDrop}
+                        onSelectElement={onSelectElement}
+                        selectedElementId={selectedElementId}
+                        onDeleteElement={onDeleteElement}
+                        previewMode={previewMode}
+                        globalStyles={globalStyles}
+                        handleDragOver={handleDragOver}
+                        handleDrop={handleDrop}
+                        dragOver={dragOver}
+                        registerDropTarget={registerDropTarget} // New prop
+                    />
                 ))}
                 {(!emailData || emailData.length === 0) && (
-                     <div
-                        className="w-full min-h-[200px] flex items-center justify-center border-2 border-dashed border-slate-300 rounded-lg"
-                        onDragOver={(e) => { e.preventDefault(); setDragOver({rowIndex: 0, colIndex: 0, position: 0}); lastCalculatedPosition.current = {rowIndex: 0, colIndex: 0, position: 0}; }}
-                        onDrop={(e) => handleDrop(e, 0, 0)}
-                        onDragLeave={() => { setDragOver(null); lastCalculatedPosition.current = null; }}
-                    >
-                        {dragOver ? <DropIndicator /> : <p className="text-slate-500">Drag a component or layout here to start</p>}
-                    </div>
+                     <EmptyCanvasDropTarget onDrop={onDrop} registerDropTarget={registerDropTarget} />
                 )}
             </div>
         </div>

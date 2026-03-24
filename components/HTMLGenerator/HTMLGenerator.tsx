@@ -12,6 +12,8 @@ import CodeView from './components/CodeView';
 import { DEFAULT_GLOBAL_STYLES } from './constants';
 import { DroppedItem } from './types';
 
+import { DragProvider } from './hooks/DragContext';
+
 interface HTMLGeneratorProps {
     onSendEmails: (option: number,html:string, pages?:string[]) => void;
     noEmailOption?: boolean; // Optional prop to hide the send email button
@@ -212,55 +214,57 @@ const HTMLGenerator: React.FC<HTMLGeneratorProps> = ({ onSendEmails, noEmailOpti
   const generatedHtml = useMemo(() => generateHtml(emailData, globalStyles), [emailData, globalStyles]);
 
   return (
-    <div className="flex flex-col h-screen font-sans antialiased text-slate-800 border rounded-md m-1">
-      <Header
-        onPreviewChange={setPreviewMode}
-        currentPreview={previewMode}
-        onUndo={undo}
-        onRedo={redo}
-        canUndo={canUndo}
-        canRedo={canRedo}
-        onToggleCode={() => setShowCode(s => !s)}
-        showCode={showCode}
-        onHtmlImport={handleHtmlImport}
-        generatedHtml={generatedHtml}
-        onJsonImport={handleJsonImport}
-        emailData={emailData}
-        globalStyles={globalStyles}
-        onSendEmails={(option, pages) => onSendEmails(option, generatedHtml, pages)}
-        selectedPages={selectedPages}
-        onSelectedPagesChange={setSelectedPages}
-        mode={mode}
-      />
-      <div className="flex flex-1 overflow-hidden">
-        <Sidebar />
-        <main 
-          className="flex-1 overflow-auto p-4 md:p-8"
-          style={{ background: globalStyles.background }}
-        >
-          <Canvas
-            emailData={emailData}
-            onDrop={handleDrop}
-            onSelectElement={setSelectedElementId}
-            selectedElementId={selectedElementId}
-            onDeleteElement={handleElementDelete}
-            previewMode={previewMode}
-            globalStyles={globalStyles}
-          />
-        </main>
-        {showCode ? (
-          <CodeView code={generatedHtml} />
-        ) : (
-          <PropertiesPanel
-            selectedElement={selectedElement}
-            onUpdate={handleElementUpdate}
-            globalStyles={globalStyles}
-            onGlobalStylesUpdate={setGlobalStyles}
-          />
-        )}
+    <DragProvider>
+      <div className="flex flex-col h-screen font-sans antialiased text-slate-800 border rounded-md m-1">
+        <Header
+          onPreviewChange={setPreviewMode}
+          currentPreview={previewMode}
+          onUndo={undo}
+          onRedo={redo}
+          canUndo={canUndo}
+          canRedo={canRedo}
+          onToggleCode={() => setShowCode(s => !s)}
+          showCode={showCode}
+          onHtmlImport={handleHtmlImport}
+          generatedHtml={generatedHtml}
+          onJsonImport={handleJsonImport}
+          emailData={emailData}
+          globalStyles={globalStyles}
+          onSendEmails={(option, pages) => onSendEmails(option, generatedHtml, pages)}
+          selectedPages={selectedPages}
+          onSelectedPagesChange={setSelectedPages}
+          mode={mode}
+        />
+        <div className="flex flex-1 overflow-hidden min-w-[776px]">
+          <Sidebar />
+          <main 
+            className="flex-1 overflow-auto p-4 md:p-8"
+            style={{ background: globalStyles.background }}
+          >
+            <Canvas
+              emailData={emailData}
+              onDrop={handleDrop}
+              onSelectElement={setSelectedElementId}
+              selectedElementId={selectedElementId}
+              onDeleteElement={handleElementDelete}
+              previewMode={previewMode}
+              globalStyles={globalStyles}
+            />
+          </main>
+          {showCode ? (
+            <CodeView code={generatedHtml} />
+          ) : (
+            <PropertiesPanel
+              selectedElement={selectedElement}
+              onUpdate={handleElementUpdate}
+              globalStyles={globalStyles}
+              onGlobalStylesUpdate={setGlobalStyles}
+            />
+          )}
+        </div>
+   
       </div>
- 
-    </div>
+    </DragProvider>
   );
 }
 export default HTMLGenerator;

@@ -43,7 +43,7 @@ export const DaySchedule = ({ day, users,role, onClick, onEventClick }: Props) =
       <span onClick={onClick} className={classNameDay}>
         {day.value === 'padding' ? '' : day.value}
       </span>
-      <div className="h-[80px] w-full flex flex-col relative overflow-y-auto">
+      <div className="h-[80px] w-full flex flex-col relative overflow-y-auto scrollable" >
         <div className=" w-full  flex flex-col absolute top-0 left-0 ">
           {day.event != null &&
             day.event.length > 0 &&
