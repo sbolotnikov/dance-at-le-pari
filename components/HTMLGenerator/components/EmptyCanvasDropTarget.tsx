@@ -57,7 +57,7 @@ const EmptyCanvasDropTarget: React.FC<EmptyCanvasDropTargetProps> = ({ onDrop, r
 
   return (
     <div
-      ref={touchDropHandle.dropRef} // Use dropRef from touchDropHandle
+      ref={touchDropHandle.dropRef as React.RefObject<HTMLDivElement>} // Use dropRef from touchDropHandle
       className="w-full min-h-[200px] flex items-center justify-center border-2 border-dashed border-slate-300 rounded-lg"
       onDragOver={!isTouchDragging ? handleNativeDragOver : undefined}
       onDrop={!isTouchDragging ? handleNativeDrop : undefined}
